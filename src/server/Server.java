@@ -13,13 +13,21 @@ public class Server implements Runnable {
 	
 	private Queue<Integer> lastTickRates = new LinkedList<Integer>();
 	public Map<String, Object> serverData = new HashMap<String, Object>();
+
+	private ServerLayer networking;
 	
 	public Server()
 	{
 		this.serverData.put("status",  ServerStatus.Stopped);
 	}
+	
+	public boolean ErrorEnd()
+	{
+		this.serverData.put("status", ServerStatus.Stopped);
+		return false;
+	}
 
-	public void RunServer()
+	public boolean RunServer()
 	{
 		this.log = new Log("server.log", true);
 		this.log.println("Medieval Madness Server v0.1 - \"Proofie Penguin\"");
@@ -28,15 +36,22 @@ public class Server implements Runnable {
 		if(this.serverData.get("status") != ServerStatus.Stopped)
 		{
 			this.log.printf("Server :: Start() :: The server cannot be started because it is already running\n");
-			return;
+			return ErrorEnd();
 		}
 		
 		// initalise serverData
 		serverData.put("atps",  0);
 		serverData.put("start_time", System.currentTimeMillis());
 		serverData.put("status", ServerStatus.Starting);
+		serverData.put("listen_port", 14121);
 		
 		// prepare stuff here
+		this.networking = new ServerLayer((Integer) this.serverData.get("listen_port"));
+		if(!this.networking.Start())
+		{
+			this.log.printf("Server :: Start() :: Unable to start the networking system");
+			return ErrorEnd();
+		}
 		
 		this.runThread = new Thread(this);
 		this.runThread.start();
@@ -64,7 +79,7 @@ public class Server implements Runnable {
 		
 		// finished - exit
 		this.serverData.put("status", ServerStatus.Stopped);
-		return;
+		return true;
 		
 	}
 	
