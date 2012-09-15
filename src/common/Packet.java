@@ -11,6 +11,11 @@ public class Packet {
 		
 	}
 	
+	public Packet(byte[] b) {
+		for(int i = 0; i < b.length; i++)
+			data.add(b[i]);
+	}
+	
 	public void addByte(Byte b)
 	{
 		data.add(b);

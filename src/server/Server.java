@@ -17,12 +17,41 @@ public class Server implements Runnable {
 	private Map<String, Command> serverCommands = new HashMap<String, Command>();
 	public Map<String, Object> serverData = new HashMap<String, Object>();
 	
+	public int maxFib = 0;
+	public int[] fibNumbers = new int[500];
+	public Queue<Integer> fibQueue = new LinkedList<Integer>();
+	int fibTicks = 0;
 
 	private ServerLayer networking;
+	
+	private void genFib(int n)
+	{
+		if(fibNumbers[n] != 0)
+			return;
+		
+		if(fibNumbers[n-1] == 0)
+		{
+			fibQueue.add(n-1);
+			fibQueue.add(n);
+		}
+		else if(fibNumbers[n-2] == 0)
+		{
+			fibQueue.add(n-2);
+			fibQueue.add(n);
+		}
+		else
+		{
+			fibNumbers[n] = fibNumbers[n-1] + fibNumbers[n-2];
+		}
+		fibTicks++;
+	}
 	
 	public Server()
 	{
 		this.serverData.put("status",  ServerStatus.Stopped);
+
+		fibNumbers[0] = 1;
+		fibNumbers[1] = 1;
 	}
 	
 	public boolean ErrorEnd()
@@ -97,7 +126,14 @@ public class Server implements Runnable {
 	
 	public void Tick(long elapsedTimeMillis)
 	{
-		
+		if(fibQueue.isEmpty())
+			return;
+		else
+		{
+			int val = fibQueue.remove();
+			System.out.printf("Generating: %d\n", val);
+			genFib(val);
+		}
 	}
 
 	@Override
@@ -155,7 +191,7 @@ public class Server implements Runnable {
 				}
 			}
 			else
-				System.out.printf("{WARNING} Server can't keep up - ticks are taking too long");
+				this.log.printf("{WARNING} Server can't keep up - ticks are taking too long");
 		}
 	}
 	
@@ -192,6 +228,18 @@ public class Server implements Runnable {
 				options += str;
 			}
 			System.out.printf("Availble commands:\n\t%s\n", options);
+		}
+		else if(args[0].equals("fibtest"))
+			genFib(Integer.parseInt(args[1]));
+		else if(args[0].equals("fiblist"))
+		{
+			for(int i = 0; i < fibNumbers.length; i++)
+				System.out.printf("%d ", fibNumbers[i]);
+			System.out.printf("\n");
+		}
+		else if(args[0].equals("fibticks"))
+		{
+			System.out.printf("Fibticks=%d\n", this.fibTicks);
 		}
 		else
 			System.out.printf("Unrecognised command. Enter 'help' for a list of available commands");

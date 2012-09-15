@@ -164,7 +164,7 @@ public class RenderFrame extends JFrame {
 					ct = System.currentTimeMillis();
 					ftimes.add(ct);
 					if (ct - lt > 33) {
-						System.out.println("Detected frametime = " + (ct - lt) + "ms.");
+						//System.out.println("Detected frametime = " + (ct - lt) + "ms.");
 						t_lastbad = ct;
 					}
 				} else {

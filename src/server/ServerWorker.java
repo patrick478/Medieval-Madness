@@ -3,6 +3,8 @@ package server;
 import java.nio.channels.*;
 import java.util.*;
 
+import common.Packet;
+
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
 	private Server parentServer;
@@ -45,9 +47,10 @@ public class ServerWorker implements Runnable {
 			}
 			
 			System.out.printf("Recieved %d byte%s\n\t", dataEvent.data.length, (dataEvent.data.length == 1 ? "s" : ""));
-			for(int i = 0; i < dataEvent.data.length; i++)
-				System.out.printf("0x%02X", dataEvent.data[i]);
-			System.out.printf("\n\n");
+			Packet p = new Packet(dataEvent.data);
+			int nFib = ((int)p.getByte()) - 48;
+			if(this.parentServer.maxFib < nFib) this.parentServer.maxFib = nFib; 
+			System.out.printf("Client requested the first %d numbers of the fib sequence.\n", nFib);
 			
 			//dataEvent.server.send(dataEvent.socket, dataEvent.data);
 		}
