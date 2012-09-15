@@ -17,6 +17,8 @@ public class Profiler {
 	private Map<String, Long> last = new HashMap<String, Long>();
 	private Map<String, Long> current = new HashMap<String, Long>();
 	private Map<String, Long> cumulative = new HashMap<String, Long>();
+	private long last_prof = 0;
+	private long cumulative_prof = 0;
 	private final long t_start;
 	private long t_lastreset = 0;
 	private long dt_lastreset = 0;
@@ -30,11 +32,14 @@ public class Profiler {
 	}
 
 	public void startSection(String id) {
+		long tp = timenanos();
 		if (do_autoreset && timenanos() - t_lastreset > dt_autoreset) reset();
 		current.put(id, timenanos());
+		cumulative_prof += timenanos() - tp;
 	}
 
 	public long endSection(String id) {
+		long tp = timenanos();
 		Long t;
 		t = current.get(id);
 		if (t == null) return -1L;
@@ -42,6 +47,7 @@ public class Profiler {
 		Long tc;
 		if ((tc = cumulative.get(id)) == null) tc = 0L;
 		cumulative.put(id, t + tc);
+		cumulative_prof += timenanos() - tp;
 		return t;
 	}
 
@@ -49,8 +55,10 @@ public class Profiler {
 		current.clear();
 		Map<String, Long> mtemp = last;
 		last = cumulative;
+		last_prof = cumulative_prof;
 		cumulative = mtemp;
 		cumulative.clear();
+		cumulative_prof = 0;
 		dt_lastreset = timenanos() - t_lastreset;
 		t_lastreset = timenanos();
 		if (reset_output != null) {
@@ -63,6 +71,7 @@ public class Profiler {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sprintf(" -- Profile @ %.4fs (%.4fs) -- \n", (t_lastreset - t_start) / 1000000000d,
 				dt_lastreset / 1000000000d));
+		sb.append(sprintf("$Profiler : %.4f (%.4fs)\n", last_prof / (double) dt_lastreset, last_prof / 1000000000d));
 		for (String id : last.keySet()) {
 			sb.append(sprintf("%s : %.4f (%.4fs)\n", id, getLastRatio(id), getLast(id) / 1000000000d));
 		}

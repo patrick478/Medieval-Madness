@@ -63,8 +63,10 @@ final class PolygonPipeline {
 			}
 			// do near plane clipping. can't guarantee proj vertices make sense
 			// until near plane cull
+			profiler.startSection("I3D_polypipe-nearclip");
 			unpackPolygon(unsafe, pBase, pPoly0, pdata, i);
 			long pPoly = clipPolygon(unsafe, pBase, pPoly0, 0, 0, 1, 0.2);
+			profiler.endSection("I3D_polypipe-nearclip");
 			// note that even if no vertices are emitted from the clipper,
 			// vcount can still be read and will be zero
 			int vcount = unsafe.getInt(pPoly + 32);
@@ -92,6 +94,7 @@ final class PolygonPipeline {
 			}
 
 			// lighting
+			profiler.startSection("I3D_polypipe-light");
 			final long pMtl = pBase + ((cross_z < 0) ? 0x00000900 : 0x00040900);
 			final long pPolyColor = pBase + 0x000B0900;
 
@@ -114,12 +117,15 @@ final class PolygonPipeline {
 					}
 				}
 			}
+			profiler.endSection("I3D_polypipe-light");
 
 			// clip other planes
+			profiler.startSection("I3D_polypipe-clip");
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
+			profiler.endSection("I3D_polypipe-clip");
 
 			vcount = unsafe.getInt(pPoly + 32);
 			if (vcount < 3) {
@@ -128,6 +134,7 @@ final class PolygonPipeline {
 			}
 
 			// triangulation
+			profiler.startSection("I3D_polypipe-triangulate");
 			long pPolyVert1 = pPoly + 64;
 			long pPolyVert2 = pPoly + 128;
 			long pEnd = pPoly + vcount * 64;
@@ -138,8 +145,9 @@ final class PolygonPipeline {
 				unsafe.copyMemory(pPoly, pTri + 64, 64);
 				unsafe.copyMemory(pPolyVert1, pTri + 128, 64);
 				unsafe.copyMemory(pPolyVert2, pTri + 192, 64);
-				TrianglePerspectiveRasteriser.verifyTriangle(unsafe, pBase, pTri);
+				// TrianglePerspectiveRasteriser.verifyTriangle(unsafe, pBase, pTri);
 			}
+			profiler.endSection("I3D_polypipe-triangulate");
 
 		}
 		
