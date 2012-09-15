@@ -184,7 +184,7 @@ public class Engine extends Thread {
 			
 			long t2 = timenanos();
 			
-			// System.out.printf("%.4f | %.4f\n", (t1 - t0) / (double)(t2 - t0), (t2 - t1) / (double)(t2 - t0));
+ System.out.printf("%.4f | %.4f\n", (t1 - t0) / (double)(t2 - t0), (t2 - t1) / (double)(t2 - t0));
 
 		}
 
