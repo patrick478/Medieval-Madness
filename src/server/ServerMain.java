@@ -5,5 +5,6 @@ public class ServerMain {
 	{
 		Server s = new Server();
 		s.RunServer();
+		return;
 	}
 }

@@ -8,11 +8,11 @@ import common.*;
 public class Server implements Runnable {
 	public static final int TICKS_PER_SECOND = 100;
 	
-	private Log log;
+	public Log log;
 	private Thread runThread;
 	
 	private Queue<Integer> lastTickRates = new LinkedList<Integer>();
-	public Map<String, Object> serverData = new HashMap<String, Object>();
+	private Map<String, Object> serverData = new HashMap<String, Object>();
 
 	private ServerLayer networking;
 	
@@ -23,7 +23,7 @@ public class Server implements Runnable {
 	
 	public boolean ErrorEnd()
 	{
-		this.serverData.put("status", ServerStatus.Stopped);
+		this.setStatus(ServerStatus.Stopped);
 		return false;
 	}
 
@@ -41,12 +41,13 @@ public class Server implements Runnable {
 		
 		// initalise serverData
 		serverData.put("atps",  0);
-		serverData.put("start_time", System.currentTimeMillis());
-		serverData.put("status", ServerStatus.Starting);
+		serverData.put("start_time_millis", System.currentTimeMillis());
 		serverData.put("listen_port", 14121);
 		
+		serverData.put("status", ServerStatus.Starting);
+		
 		// prepare stuff here
-		this.networking = new ServerLayer((Integer) this.serverData.get("listen_port"));
+		this.networking = new ServerLayer((Integer) this.serverData.get("listen_port"), this);
 		if(!this.networking.Start())
 		{
 			this.log.printf("Server :: Start() :: Unable to start the networking system");
@@ -68,17 +69,22 @@ public class Server implements Runnable {
 			}
 		} while(this.HandleCommandLine(input));
 		
+		this.log.printf("Server is shutting down\n");
+		
 		// start exiting
-		this.serverData.put("status", ServerStatus.Stopping);
+		this.setStatus(ServerStatus.Stopping);
 		
 		try {
 			this.runThread.join();
+			this.networking.stopAndWait();
 		} catch (InterruptedException e) {
 			System.out.printf("Server :: Run() :: %s\n", e.toString());
 		}
-		
+				
 		// finished - exit
-		this.serverData.put("status", ServerStatus.Stopped);
+		this.setStatus(ServerStatus.Stopped);
+		this.log.close();
+		
 		return true;
 		
 	}
@@ -97,8 +103,8 @@ public class Server implements Runnable {
 		long elapsedTimeSinceLastTick = System.currentTimeMillis();
 		int numTicks = 0;
 		
-		this.serverData.put("status", ServerStatus.Running);
-		this.log.printf("Server :: run() :: Started in %fs\n", (System.currentTimeMillis() - ((Long)this.serverData.get("start_time"))) / 1000.0f);
+		this.setStatus(ServerStatus.Running);
+		this.log.printf("Server started in %.2fs\n", (System.currentTimeMillis() - ((Long)this.serverData.get("start_time_millis"))) / 1000.0f);
 		
 		while(true)
 		{
@@ -139,16 +145,29 @@ public class Server implements Runnable {
 				}
 				catch(Exception e)
 				{
-					System.out.printf("Server :: Run() :: %s", e.toString());
+					System.out.printf("{ERROR} %s", e.toString());
 				}
 			}
 			else
-				System.out.printf("Server :: Run() :: Server can't keep up - ticks are taking too long");
+				System.out.printf("{WARNING} Server can't keep up - ticks are taking too long");
 		}
+	}
+	
+	public void setStatus(ServerStatus st)
+	{
+		this.serverData.put("status",  st);
+		this.log.printf("{STATUS} Server status changed to %s\n", st.toString());
+	}
+	
+	public ServerStatus getStatus()
+	{
+		return (ServerStatus) this.serverData.get("status");
 	}
 	
 	public boolean HandleCommandLine(String msg)
 	{
+		if(msg == null || msg.length() == 0) return false;
+		
 		msg = msg.trim();
 		String args[] = msg.split(" ");
 		if(args[0].equals("print"))
@@ -156,7 +175,16 @@ public class Server implements Runnable {
 			if(args.length == 2)
 				this.PrintVariable(args[1]);
 			else
-				System.out.printf("You must specify one variable to print\n");
+			{
+				String options = "";
+				for(String str : this.serverData.keySet())
+				{
+					if(options.length() > 0)
+						options += " | ";
+					options += str;
+				}
+				System.out.printf("You must specify one variable to print\nAvaible variables:\n\t%s\n", options);
+			}
 		}
 		else if(args[0].equals("exit") || args[0].equals("quit"))
 		{

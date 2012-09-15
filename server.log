@@ -1,2 +1,20 @@
-Medieval Madness Server v0.1 - "Proofie Penguin"
-Server :: run() :: Started in 0.038000s
+[Sat Sep 15 20:35:18 NZST 2012] Medieval Madness Server v0.1 - "Proofie Penguin"
+
+[Sat Sep 15 20:35:18 NZST 2012] ListenWorker :: starting up
+
+[Sat Sep 15 20:35:18 NZST 2012] ServerWorker :: starting up
+
+[Sat Sep 15 20:35:18 NZST 2012] {STATUS} Server status changed to Running
+
+[Sat Sep 15 20:35:18 NZST 2012] Server started in 0.04s
+
+[Sat Sep 15 20:35:23 NZST 2012] Server is shutting down
+
+[Sat Sep 15 20:35:23 NZST 2012] {STATUS} Server status changed to Stopping
+
+[Sat Sep 15 20:35:24 NZST 2012] ListenWorker :: detected shutdown - stopping
+
+[Sat Sep 15 20:35:25 NZST 2012] ServerWorker :: detected shutdown - stopping
+
+[Sat Sep 15 20:35:25 NZST 2012] {STATUS} Server status changed to Stopped
+

@@ -5,6 +5,11 @@ import java.util.*;
 
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
+	private Server parentServer;
+	
+	public ServerWorker(Server s) {
+		this.parentServer = s;
+	}
 	
 	public void processData(ServerLayer server, SocketChannel sc, byte[] data, int dsize)
 	{
@@ -20,16 +25,22 @@ public class ServerWorker implements Runnable {
 	public void run() {
 		ServerDataEvent dataEvent;
 		
-		while(true)
+		boolean exiting = false;
+		
+		this.parentServer.log.printf("ServerWorker :: starting up\n");
+		
+		while(!exiting)
 		{
 			synchronized(queue) {
 				while(queue.isEmpty()) {
 					try {
 						queue.wait();
 					} catch(InterruptedException ie) {
-						// TODO: Blank catch.. really?
+						exiting = true;
+						break;
 					}
 				}
+				if(exiting) break;
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
@@ -37,7 +48,10 @@ public class ServerWorker implements Runnable {
 			for(int i = 0; i < dataEvent.data.length; i++)
 				System.out.printf("0x%02X", dataEvent.data[i]);
 			System.out.printf("\n\n");
+			
 			//dataEvent.server.send(dataEvent.socket, dataEvent.data);
 		}
+		
+		this.parentServer.log.printf("ServerWorker :: detected shutdown - stopping\n");
 	}	
 }
