@@ -1,5 +1,6 @@
 package initial3d.renderer;
 
+import initial3d.Profiler;
 import sun.misc.Unsafe;
 import static initial3d.renderer.Util.*;
 
@@ -11,8 +12,10 @@ final class PolygonPipeline {
 	// all vectors must be transformed before calling to this class
 
 	private final RasteriserWorker[] workers;
+	private final Profiler profiler;
 
-	PolygonPipeline(int threads) {
+	PolygonPipeline(int threads, Profiler profiler_) {
+		profiler = profiler_;
 		workers = new RasteriserWorker[threads];
 		for (int i = 0; i < threads; i++) {
 			RasteriserWorker rw = new RasteriserWorker();
@@ -23,6 +26,9 @@ final class PolygonPipeline {
 
 	/** Entry point. Stride is in ints. */
 	final void processPolygons(Unsafe unsafe, long pBase, int[] pdata, int poffset, int pstride, int pcount) {
+		
+		profiler.startSection("I3D_polypipe");
+		
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 		final int shademodel = unsafe.getInt(pBase + 0x00000034);
 		final boolean lighting = ((flags & 0x20L) != 0);
@@ -46,6 +52,8 @@ final class PolygonPipeline {
 
 		// init pEx
 		unsafe.putLong(pBase + 0x00000084, pBase + 0x00840900);
+		
+		profiler.startSection("I3D_polypipe_cull-clip-light-triangulate");
 
 		for (int i = poffset; i < (pcount * pstride); i += pstride) {
 			// fewer than 3 vertices => not really a polygon (this shouldn't
@@ -134,6 +142,10 @@ final class PolygonPipeline {
 			}
 
 		}
+		
+		profiler.endSection("I3D_polypipe_cull-clip-light-triangulate");
+		
+		profiler.startSection("I3D_polypipe_rasterise");
 
 		// rasterise, this parallelises nicely
 		int totallines = unsafe.getInt(pBase + 0x00000004);
@@ -149,6 +161,10 @@ final class PolygonPipeline {
 		for (RasteriserWorker rw : workers) {
 			rw.waitUntilDone();
 		}
+		
+		profiler.endSection("I3D_polypipe_rasterise");
+		
+		profiler.endSection("I3D_polypipe");
 
 	}
 
