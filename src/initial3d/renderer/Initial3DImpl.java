@@ -6,6 +6,9 @@ import initial3d.linearmath.*;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.HashMap;
+import java.util.Map;
+
 import sun.misc.Unsafe;
 
 @SuppressWarnings("restriction")
@@ -17,22 +20,21 @@ class Initial3DImpl extends Initial3D {
 	protected final long pBase;
 
 	protected final AbstractMatrixStack[] matrixstacks = new AbstractMatrixStack[12];
-
-	private AbstractMatrixStack activeStack;
+	protected AbstractMatrixStack activeStack;
 
 	protected final VectorBuffer defaultvectorbuf;
 	protected final VectorBuffer defaultvectorcolorbuf;
 	protected VectorBuffer v_vbo, vt_vbo, vn_vbo, vc_vbo;
-
 	protected final double[][] zerovector = new double[4][1];
 	protected final double[][] onevector = new double[][] { { 1d }, { 1d }, { 1d }, { 1d } };
-
 	protected VectorBuffer begin_v_vbo, begin_vt_vbo, begin_vn_vbo, begin_vc_vbo;
 
 	protected int[] protopoly = new int[256];
 
 	protected PolygonPipeline polypipe;
 	protected Finisher finisher;
+
+	protected Profiler profiler;
 
 	Initial3DImpl() {
 		unsafe = Util.getUnsafe();
@@ -76,8 +78,10 @@ class Initial3DImpl extends Initial3D {
 		begin_vc_vbo = createVectorBuffer(64);
 		begin_vc_vbo.put(onevector);
 
-		polypipe = new PolygonPipeline(2);
-		finisher = new Finisher(2);
+		profiler = new Profiler();
+
+		polypipe = new PolygonPipeline(2, profiler);
+		finisher = new Finisher(2, profiler);
 
 		// enable default states
 		enable(CULL_FACE | DEPTH_TEST | AUTO_ZFLIP | WRITE_FRAME | WRITE_COLOR | WRITE_Z);
@@ -93,6 +97,11 @@ class Initial3DImpl extends Initial3D {
 	@Override
 	protected void finalize() {
 		unsafe.freeMemory(pBase);
+	}
+
+	@Override
+	public Profiler getProfiler() {
+		return profiler;
 	}
 
 	protected void putInt(long q, int val) {
@@ -578,6 +587,7 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void extractBuffer(int bufferbit, BufferedImage bi) {
+		profiler.startSection("I3D_extractBuffer()");
 		// this method is so full of assumptions it's not funny...
 		int[] bidata = ((DataBufferInt) (bi.getRaster().getDataBuffer())).getData();
 		// get framebuffer if nothing else
@@ -587,7 +597,7 @@ class Initial3DImpl extends Initial3D {
 		if (bufferbit == ID_BUFFER_BIT) pBuffer = 0x07E00900 + pBase;
 
 		unsafe.copyMemory(null, pBuffer, bidata, unsafe.arrayBaseOffset(int[].class), bidata.length * 4);
-
+		profiler.endSection("I3D_extractBuffer()");
 	}
 
 	@Override
@@ -663,6 +673,7 @@ class Initial3DImpl extends Initial3D {
 	@Override
 	public void end() {
 		initPipelineGeneral();
+		profiler.startSection("I3D_transform_vectors");
 		// transform using modelviewproj
 		Util.multiply4VectorBlock_pos_unsafe(unsafe, pBase + 0x000C0900, begin_v_vbo.count(),
 				((VectorBufferImpl) begin_v_vbo).getBasePointer(), pBase + 0x00080B80);
@@ -678,6 +689,7 @@ class Initial3DImpl extends Initial3D {
 		// copy vertex colors
 		Util.copy4VectorBlock_unsafe(unsafe, pBase + 0x006C0900, ((VectorBufferImpl) begin_vc_vbo).getBasePointer(),
 				begin_vc_vbo.count());
+		profiler.endSection("I3D_transform_vectors");
 
 		int mode = getInt(0x00000038);
 
@@ -699,6 +711,7 @@ class Initial3DImpl extends Initial3D {
 		if (startindex + count > pbuf.count()) throw new IllegalArgumentException();
 		if (count < 1) throw new IllegalArgumentException();
 		initPipelineGeneral();
+		profiler.startSection("I3D_transform_vectors");
 		// transform using modelviewproj
 		Util.multiply4VectorBlock_pos_unsafe(unsafe, pBase + 0x000C0900, v_vbo.count(),
 				((VectorBufferImpl) v_vbo).getBasePointer(), pBase + 0x00080B80);
@@ -714,6 +727,7 @@ class Initial3DImpl extends Initial3D {
 		// copy vertex colors
 		Util.copy4VectorBlock_unsafe(unsafe, pBase + 0x006C0900, ((VectorBufferImpl) vc_vbo).getBasePointer(),
 				vc_vbo.count());
+		profiler.endSection("I3D_transform_vectors");
 
 		PolygonBufferImpl pbuf_ = (PolygonBufferImpl) pbuf;
 		polypipe.processPolygons(unsafe, pBase, pbuf_.polygonData(), pbuf_.stride() * startindex, pbuf_.stride(), count);
@@ -723,7 +737,7 @@ class Initial3DImpl extends Initial3D {
 	public void finish() {
 		finisher.finish(unsafe, pBase);
 	}
-	
+
 	@Override
 	public void finish(int[] framebuffer) {
 		finisher.finish_array(unsafe, pBase, framebuffer);

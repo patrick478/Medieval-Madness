@@ -157,6 +157,8 @@ public abstract class Initial3D {
 	// poly modes
 	public static final int POLY_FILL = 0;
 	public static final int POLY_OUTLINE = 1;
+	
+	public abstract Profiler getProfiler();
 
 	public abstract void viewportSize(int w, int h);
 

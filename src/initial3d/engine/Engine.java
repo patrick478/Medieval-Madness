@@ -24,6 +24,7 @@ public class Engine extends Thread {
 	private final Camera cam = new Camera();
 
 	private Initial3D i3d;
+	private int shademodel = 1;
 
 	private volatile boolean handlecamera;
 
@@ -97,6 +98,10 @@ public class Engine extends Thread {
 
 		double dt = 0;
 		long t = time();
+		
+		Profiler profiler = i3d.getProfiler();
+		profiler.setAutoResetEnabled(true);
+		profiler.setResetOutput(System.out);
 
 		while (true) {
 			
@@ -123,6 +128,8 @@ public class Engine extends Thread {
 			i3d.lightdv(LIGHT0, POSITION, light0p);
 			i3d.popMatrix();
 
+			profiler.startSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
+			
 			for (MeshContext mc : meshcontexts) {
 				if (mc == null) continue;
 
@@ -177,6 +184,10 @@ public class Engine extends Thread {
 
 			i3d.finish(bidata);
 			
+			profiler.endSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
+			
+			profiler.startSection("I3D-engine_display");
+			
 			long t1 = timenanos();
 
 			//i3d.extractBuffer(FRAME_BUFFER_BIT, bi);
@@ -184,7 +195,9 @@ public class Engine extends Thread {
 			
 			long t2 = timenanos();
 			
- System.out.printf("%.4f | %.4f\n", (t1 - t0) / (double)(t2 - t0), (t2 - t1) / (double)(t2 - t0));
+			// System.out.printf("%.4f | %.4f\n", (t1 - t0) / (double)(t2 - t0), (t2 - t1) / (double)(t2 - t0));
+			
+			profiler.endSection("I3D-engine_display");
 
 		}
 
@@ -193,9 +206,11 @@ public class Engine extends Thread {
 	private void processCameraControl(double dt) {
 		if (frame.pollKey(KeyEvent.VK_1)) {
 			i3d.shadeModel(SHADEMODEL_FLAT);
+			shademodel = 1;
 		}
 		if (frame.pollKey(KeyEvent.VK_2)) {
 			i3d.shadeModel(SHADEMODEL_GOURARD);
+			shademodel = 2;
 		}
 
 		if (frame.pollKey(KeyEvent.VK_F5)) {

@@ -1,5 +1,6 @@
 package initial3d.renderer;
 
+import initial3d.Profiler;
 import sun.misc.Unsafe;
 
 @SuppressWarnings("restriction")
@@ -7,8 +8,10 @@ class Finisher {
 
 	private final FinisherWorker[] workers;
 	private final FinisherArrayWorker[] arrayworkers;
+	private final Profiler profiler;
 
-	public Finisher(int threads) {
+	public Finisher(int threads, Profiler profiler_) {
+		profiler = profiler_;
 		workers = new FinisherWorker[threads];
 		arrayworkers = new FinisherArrayWorker[threads];
 		for (int i = 0; i < threads; i++) {
@@ -21,6 +24,9 @@ class Finisher {
 
 	/** Entry point. */
 	final void finish(Unsafe unsafe, long pBase) {
+		
+		profiler.startSection("I3D_finish");
+		
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 
 		// parallel finishing
@@ -42,6 +48,8 @@ class Finisher {
 		if ((flags & 0x20000L) != 0) {
 			unsafe.putInt(pBase + 0x00000068, -unsafe.getInt(pBase + 0x00000068));
 		}
+		
+		profiler.endSection("I3D_finish");
 	}
 
 	private static final void finishRegion(Unsafe unsafe, long pBase, int Yi, int Yf) {
@@ -94,6 +102,9 @@ class Finisher {
 
 	/** Entry point for using array as framebuffer. */
 	final void finish_array(Unsafe unsafe, long pBase, int[] framebuffer) {
+		
+		profiler.startSection("I3D_finish-array");
+		
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 
 		// parallel finishing
@@ -115,6 +126,8 @@ class Finisher {
 		if ((flags & 0x20000L) != 0) {
 			unsafe.putInt(pBase + 0x00000068, -unsafe.getInt(pBase + 0x00000068));
 		}
+		
+		profiler.endSection("I3D_finish-array");
 	}
 
 	private static final void finishRegion_array(Unsafe unsafe, long pBase, int[] framebuffer, int Yi, int Yf) {
