@@ -49,7 +49,6 @@ public class ServerWorker implements Runnable {
 			System.out.printf("Recieved %d byte%s\n\t", dataEvent.data.length, (dataEvent.data.length == 1 ? "s" : ""));
 			Packet p = new Packet(dataEvent.data);
 			int nFib = ((int)p.getByte()) - 48;
-			if(this.parentServer.maxFib < nFib) this.parentServer.maxFib = nFib; 
 			System.out.printf("Client requested the first %d numbers of the fib sequence.\n", nFib);
 			
 			//dataEvent.server.send(dataEvent.socket, dataEvent.data);
