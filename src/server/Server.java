@@ -3,6 +3,8 @@ package server;
 import java.io.*;
 import java.util.*;
 
+import server.commands.PrintCommand;
+
 import common.*;
 
 public class Server implements Runnable {
@@ -12,7 +14,9 @@ public class Server implements Runnable {
 	private Thread runThread;
 	
 	private Queue<Integer> lastTickRates = new LinkedList<Integer>();
-	private Map<String, Object> serverData = new HashMap<String, Object>();
+	private Map<String, Command> serverCommands = new HashMap<String, Command>();
+	public Map<String, Object> serverData = new HashMap<String, Object>();
+	
 
 	private ServerLayer networking;
 	
@@ -56,6 +60,8 @@ public class Server implements Runnable {
 		
 		this.runThread = new Thread(this);
 		this.runThread.start();
+		
+		this.serverCommands.put("print",  new PrintCommand(this));
 		
 		// read console commands
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
@@ -170,33 +176,26 @@ public class Server implements Runnable {
 		
 		msg = msg.trim();
 		String args[] = msg.split(" ");
-		if(args[0].equals("print"))
-		{
-			if(args.length == 2)
-				this.PrintVariable(args[1]);
-			else
-			{
-				String options = "";
-				for(String str : this.serverData.keySet())
-				{
-					if(options.length() > 0)
-						options += " | ";
-					options += str;
-				}
-				System.out.printf("You must specify one variable to print\nAvaible variables:\n\t%s\n", options);
-			}
-		}
+		if(this.serverCommands.containsKey(args[0]))
+			this.serverCommands.get(args[0]).execute(args);
 		else if(args[0].equals("exit") || args[0].equals("quit"))
 		{
 			return false;
 		}
+		else if(args[0].equals("help"))
+		{
+			String options = "";
+			for(String str : this.serverCommands.keySet())
+			{
+				if(options.length() > 0)
+					options += " | ";
+				options += str;
+			}
+			System.out.printf("Availble commands:\n\t%s\n", options);
+		}
+		else
+			System.out.printf("Unrecognised command. Enter 'help' for a list of available commands");
 		
 		return true;
-	}
-	
-	public void PrintVariable(String variable)
-	{
-		if(this.serverData.containsKey(variable))
-			System.out.printf("%s=%s\n", variable, this.serverData.get(variable));
 	}
 }
