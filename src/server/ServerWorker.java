@@ -46,10 +46,16 @@ public class ServerWorker implements Runnable {
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
-			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
+			//System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
 			Packet p = new Packet(dataEvent.data);
+			int a = p.getShort();
+			int b = p.getShort();
+			int result = a * b;
+			Packet reply = new Packet();
+			//System.out.printf("Client %s requested %d*%d. Result=%d\n", dataEvent.session, a, b, result);
+			reply.addShort(result);
 			
-			//dataEvent.server.send(dataEvent.socket, dataEvent.data);
+			dataEvent.server.send(dataEvent.socket, reply.getData());
 		}
 		
 		this.parentServer.log.printf("ServerWorker :: detected shutdown - stopping\n");

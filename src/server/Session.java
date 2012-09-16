@@ -1,5 +1,11 @@
 package server;
 
-public class Session {
+import java.nio.channels.*;
 
+public class Session {
+	private SocketChannel socket;
+	
+	public Session() {
+		
+	}
 }

@@ -1,7 +1,12 @@
-[Sun Sep 16 13:06:47 NZST 2012] (SessionMngr) Session manager started
+[Sun Sep 16 15:29:18 NZST 2012] (SessionMngr) Session manager started
 
-[Sun Sep 16 13:06:47 NZST 2012] (SessionMngr) Created new session: 1347757607075
+[Sun Sep 16 15:33:29 NZST 2012] (SessionMngr) Created new session: 1347766409680
 
-[Sun Sep 16 13:06:51 NZST 2012] (SessionMngr) Deleted session: 1347757607075
+[Sun Sep 16 15:34:20 NZST 2012] (SessionMngr) Deleted session: 1347766409680
 
-[Sun Sep 16 13:06:57 NZST 2012] (SessionMngr) Shutting down
+[Sun Sep 16 15:34:33 NZST 2012] (SessionMngr) Created new session: 1347766473163
+
+[Sun Sep 16 15:34:33 NZST 2012] (SessionMngr) Deleted session: 1347766473163
+
+[Sun Sep 16 15:34:52 NZST 2012] (SessionMngr) Shutting down
+

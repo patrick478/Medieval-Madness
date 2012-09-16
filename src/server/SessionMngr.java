@@ -24,7 +24,7 @@ public class SessionMngr {
 	
 	public void shutdown()
 	{
-		this.log.printf("Shutting down");
+		this.log.printf("Shutting down\n");
 		this.log.close();
 	}
 	
@@ -44,6 +44,10 @@ public class SessionMngr {
 			sessionList.remove(id);
 		
 		this.log.printf("Deleted session: %s\n", id);
+	}
+	
+	public int numSessions() {
+		return this.sessionList.size();
 	}
 	
 	private String getUnusedIdentifier() {

@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import server.commands.PrintCommand;
+import server.commands.SessionCommand;
 
 import common.*;
 
@@ -61,6 +62,10 @@ public class Server implements Runnable {
 		this.runThread.start();
 		
 		this.serverCommands.put("print",  new PrintCommand(this));
+		this.serverCommands.put("session",  new SessionCommand(this));
+		
+		// warm the session manager
+		SessionMngr.getInstance();
 		
 		// read console commands
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));

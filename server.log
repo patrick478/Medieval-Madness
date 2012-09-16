@@ -1,22 +1,24 @@
-[Sun Sep 16 13:06:40 NZST 2012] Medieval Madness Server v0.1 - "Proofie Penguin"
+[Sun Sep 16 15:29:18 NZST 2012] Medieval Madness Server v0.1 - "Proofie Penguin"
 
-[Sun Sep 16 13:06:40 NZST 2012] ListenWorker :: starting up
+[Sun Sep 16 15:29:18 NZST 2012] ListenWorker :: starting up
 
-[Sun Sep 16 13:06:40 NZST 2012] ServerWorker :: starting up
+[Sun Sep 16 15:29:18 NZST 2012] ServerWorker :: starting up
 
-[Sun Sep 16 13:06:40 NZST 2012] {STATUS} Server status changed to Running
+[Sun Sep 16 15:29:18 NZST 2012] {STATUS} Server status changed to Running
 
-[Sun Sep 16 13:06:40 NZST 2012] Server started in 0.04s
+[Sun Sep 16 15:29:18 NZST 2012] Server started in 0.04s
 
-[Sun Sep 16 13:06:47 NZST 2012] Accepted new client [SessionID=1347757607075]
+[Sun Sep 16 15:33:29 NZST 2012] Accepted new client [SessionID=1347766409680]
 
-[Sun Sep 16 13:06:55 NZST 2012] Server is shutting down
+[Sun Sep 16 15:34:33 NZST 2012] Accepted new client [SessionID=1347766473163]
 
-[Sun Sep 16 13:06:55 NZST 2012] {STATUS} Server status changed to Stopping
+[Sun Sep 16 15:34:50 NZST 2012] Server is shutting down
 
-[Sun Sep 16 13:06:56 NZST 2012] ListenWorker :: detected shutdown - stopping
+[Sun Sep 16 15:34:50 NZST 2012] {STATUS} Server status changed to Stopping
 
-[Sun Sep 16 13:06:57 NZST 2012] ServerWorker :: detected shutdown - stopping
+[Sun Sep 16 15:34:51 NZST 2012] ListenWorker :: detected shutdown - stopping
 
-[Sun Sep 16 13:06:57 NZST 2012] {STATUS} Server status changed to Stopped
+[Sun Sep 16 15:34:52 NZST 2012] ServerWorker :: detected shutdown - stopping
+
+[Sun Sep 16 15:34:52 NZST 2012] {STATUS} Server status changed to Stopped
 

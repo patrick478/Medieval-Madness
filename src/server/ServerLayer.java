@@ -5,7 +5,7 @@ import java.net.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.nio.channels.spi.*;
-import java.util.Iterator;
+import java.util.*;
 
 import common.Log;
 import common.NetworkLayer;
@@ -28,6 +28,9 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 	private Thread workerThread;
 	
 	private  ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+
+	private List<ChangeRequest> changeRequests = new LinkedList<ChangeRequest>();
+	private HashMap<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 	
 	public ServerLayer(int port, Server server)
 	{
@@ -94,6 +97,22 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		
 		while(!this.parentServer.getStatus().equals(ServerStatus.Stopping)) {
 			try {
+				// process changes
+				synchronized(this.changeRequests) {
+					Iterator<ChangeRequest> changes = this.changeRequests.iterator();
+					while(changes.hasNext()) {
+						ChangeRequest change = changes.next();
+						switch(change.type) {
+							case ChangeRequest.CHANGEOPS:
+								SelectionKey key = change.socket.keyFor(this.selector);
+								key.interestOps(change.ops);
+								break;
+						}
+					}
+					this.changeRequests.clear();
+				}
+				
+				// wait for an event
 				this.selector.select();
 				if(Thread.interrupted()) break;
 				
@@ -108,8 +127,10 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 					
 					if(key.isAcceptable())
 						this.accept(key);
-					else if(key.isReadable());
+					else if(key.isReadable())
 						this.read(key);
+					else if(key.isWritable())
+						this.write(key);
 				}
 			} catch(Exception e)
 			{
@@ -161,6 +182,24 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		this.worker.processData(this, sc, this.readBuffer.array(), rx, id);
 	}
 	
+	private void write(SelectionKey key) throws IOException {
+		SocketChannel sc = (SocketChannel)key.channel();
+		synchronized (this.pendingData) {
+			List<ByteBuffer> queue = this.pendingData.get(sc);
+			while(!queue.isEmpty()) {
+				ByteBuffer buf = queue.get(0);
+				sc.write(buf);
+				if(buf.remaining() > 0)
+					break;
+				queue.remove(0);
+			}
+			
+			if(queue.isEmpty()) {
+				key.interestOps(SelectionKey.OP_READ);
+			}
+		}
+	}
+	
 	private void accept(SelectionKey key) throws IOException {
 		ServerSocketChannel ssc = (ServerSocketChannel)key.channel();
 		
@@ -189,5 +228,22 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		
 		this.listenChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
 		return socketSelector;
+	}
+
+	public void send(SocketChannel socket, byte[] data) {
+		synchronized(this.changeRequests)
+		{
+			this.changeRequests.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+			
+			synchronized(this.pendingData) {
+				List<ByteBuffer> queue = this.pendingData.get(socket);
+				if(queue == null) {
+					queue = new ArrayList<ByteBuffer>();
+					this.pendingData.put(socket, queue);
+				}
+				queue.add(ByteBuffer.wrap(data));
+			}
+		}
+		this.selector.wakeup();
 	}
 }
