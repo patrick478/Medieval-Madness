@@ -155,6 +155,7 @@ class Finisher {
 				float iZ = unsafe.getFloat(pZ);
 				iZ *= zsign;
 				if (iZ < 0 && zwrite) {
+					// TODO be more explicit about when the finisher should insert background color
 					// nothing written this frame
 					// only if zwrite enabled
 					unsafe.putFloat(pZ, zsign);

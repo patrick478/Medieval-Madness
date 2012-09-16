@@ -99,6 +99,7 @@ public final class Vec3 {
 				field_flatx.set(v, null);
 				field_flaty.set(v, null);
 				field_flatz.set(v, null);
+				//System.out.println("Vec3 reclaimed");
 				return v;
 			} catch (IllegalAccessException e) {
 				// shouldn't happen

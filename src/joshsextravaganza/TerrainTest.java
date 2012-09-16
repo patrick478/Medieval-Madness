@@ -1,6 +1,8 @@
 package joshsextravaganza;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import comp261.modelview.MeshLoader;
@@ -105,34 +107,36 @@ public class TerrainTest {
 
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();
-		Material mtl = new Material();
-		mtl.kd[0] = 0.1f;
-		mtl.kd[1] = 0.5f;
-		mtl.kd[2] = 0.1f;
-		mtl.ks[0] = 0.1f;
-		mtl.ks[1] = 0.1f;
-		mtl.ks[2] = 0.1f;
-		mtl.ka[1] = 0.3f;
-		MeshContext mc = new MeshContext(terr_mesh, mtl);
+		Material terr_mtl = new Material();
+		terr_mtl.kd[0] = 0.1f;
+		terr_mtl.kd[1] = 0.5f;
+		terr_mtl.kd[2] = 0.1f;
+		terr_mtl.ks[0] = 0.1f;
+		terr_mtl.ks[1] = 0.1f;
+		terr_mtl.ks[2] = 0.1f;
+		terr_mtl.ka[1] = 0.3f;
+		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl);
 
 		// BOX / BALL / MONKEY !!!
-		Mesh entity_mesh = TerrainTest.getBox();
-		
-		
+		List<Mesh> entity_meshlist = new ArrayList<Mesh>();
+		entity_meshlist.add(TerrainTest.getBox());
+
 		FileInputStream fis = new FileInputStream("ball.txt");
-		entity_mesh = MeshLoader.loadComp261(fis);
+		entity_meshlist = MeshLoader.loadComp261(fis);
 		fis.close();
-		
-		
-		Material boxMtl = new Material();
-		boxMtl.kd[0] = 0.6f;
-		boxMtl.kd[1] = 0.1f;
-		boxMtl.kd[2] = 0.1f;
-		boxMtl.ks[0] = 0.3f;
-		boxMtl.ks[1] = 0.3f;
-		boxMtl.ks[2] = 0.3f;
-		boxMtl.ka[0] = 0.6f;
-		MeshContext boxMc = new MeshContext(entity_mesh, boxMtl);
+
+		Material entity_mtl = new Material();
+		entity_mtl.kd[0] = 0.6f;
+		entity_mtl.kd[1] = 0.1f;
+		entity_mtl.kd[2] = 0.1f;
+		entity_mtl.ks[0] = 0.3f;
+		entity_mtl.ks[1] = 0.3f;
+		entity_mtl.ks[2] = 0.3f;
+		entity_mtl.ka[0] = 0.6f;
+		List<MeshContext> mclist = new ArrayList<MeshContext>();
+		for (Mesh m : entity_meshlist) {
+			mclist.add(new MeshContext(m, entity_mtl));
+		}
 
 		final int WIDTH = 848;
 		final int HEIGHT = 480;
@@ -140,8 +144,10 @@ public class TerrainTest {
 		Engine eng = new Engine(WIDTH, HEIGHT, true);
 		eng.start();
 
-		eng.addMeshContext(mc);
-		eng.addMeshContext(boxMc);
+		eng.addMeshContext(terr_mc);
+		for (MeshContext mc : mclist) {
+			eng.addMeshContext(mc);
+		}
 		eng.getCamera().setPosition(Vec3.create(TerrainTest.SIZE / 2, 10, TerrainTest.SIZE / 2));
 
 		double[][] temp = Matrix.create(4, 4);
@@ -150,10 +156,12 @@ public class TerrainTest {
 		double[][] rotateX = Matrix.createIdentity(4);
 		double[][] rotateY = Matrix.createIdentity(4);
 		double[][] translate = Matrix.create(4, 4);
-		//TransformationMatrix4D.translate(selfcentre, -0.5, -0.5, -0.5);
+		// TransformationMatrix4D.translate(selfcentre, -0.5, -0.5, -0.5);
 		TransformationMatrix4D.rotateY(rotateY, Math.PI / 4);
-		boxMc.setTransform(translate);
-
+		for (MeshContext mc : mclist) {
+			mc.setTransform(translate);
+		}
+		
 		double x = 0, z = 0;
 		Perlin p = new Perlin(32);
 
@@ -163,8 +171,10 @@ public class TerrainTest {
 			TransformationMatrix4D.rotateX(rotateX, x * 4);
 
 			Matrix.multiplyChain(temp, xform, selfcentre, rotateX, rotateY, translate);
-			boxMc.setTransform(xform);
-
+			for (MeshContext mc : mclist) {
+				mc.setTransform(xform);
+			}
+			
 			x += 0.01;
 			z += 0.01;
 

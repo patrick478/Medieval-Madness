@@ -13,7 +13,7 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream fis = new FileInputStream("ball.txt");
-		Mesh mesh = MeshLoader.loadComp261(fis);
+		Mesh mesh = MeshLoader.loadComp261(fis).get(0);
 		fis.close();
 
 		Material mtl = new Material();
