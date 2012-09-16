@@ -22,6 +22,7 @@ public class Engine extends Thread {
 	private final RenderFrame frame;
 	private final int width, height;
 	private final Camera cam = new Camera();
+	private final double sky_z = 47;
 
 	private Initial3D i3d;
 	private int shademodel = 1;
@@ -98,16 +99,16 @@ public class Engine extends Thread {
 
 		double dt = 0;
 		long t = time();
-		
+
 		Profiler profiler = i3d.getProfiler();
 		profiler.setAutoResetEnabled(true);
 		profiler.setResetOutput(System.out);
 
-		final double sky_z = 47;
-		
+		i3d.matrixMode(PROJ);
+		i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
+		i3d.initFog();
+
 		while (true) {
-			
-			long t0 = timenanos();
 
 			processMeshContextChanges();
 
@@ -117,9 +118,6 @@ public class Engine extends Thread {
 			if (handlecamera) processCameraControl(dt);
 
 			cam.loadTransformTo(i3d);
-
-			i3d.matrixMode(PROJ);
-			i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
 
 			// draw meshes, with lighting
 			i3d.enable(LIGHTING);
@@ -131,7 +129,7 @@ public class Engine extends Thread {
 			i3d.popMatrix();
 
 			profiler.startSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
-			
+
 			for (MeshContext mc : meshcontexts) {
 				if (mc == null) continue;
 
@@ -156,49 +154,45 @@ public class Engine extends Thread {
 			}
 
 			// draw sky
-			i3d.disable(LIGHTING);
-			i3d.matrixMode(MODEL);
-			i3d.pushMatrix();
-			i3d.loadIdentity();
-			i3d.matrixMode(VIEW);
-			i3d.pushMatrix();
-			i3d.loadIdentity();
-			i3d.begin(POLYGON);
-			i3d.normal3d(0, 0, -1);
-			i3d.color3d(0.4, 0.4, 1);
-			i3d.vertex3d(9000, -100, sky_z);
-			i3d.vertex3d(-9000, -100, sky_z);
-			i3d.vertex3d(-9000, 100, sky_z);
-			i3d.vertex3d(9000, 100, sky_z);
-			i3d.end();
-			i3d.begin(POLYGON);
-			i3d.normal3d(0, -1, 0);
-			i3d.color3d(0.4, 0.4, 1);
-			i3d.vertex3d(9000, 100, -100);
-			i3d.vertex3d(9000, 100, sky_z);
-			i3d.vertex3d(-9000, 100, sky_z);
-			i3d.vertex3d(-9000, 100, -100);
-			i3d.end();
-			i3d.popMatrix();
-			i3d.matrixMode(MODEL);
-			i3d.popMatrix();
+//			i3d.disable(LIGHTING);
+//			i3d.matrixMode(MODEL);
+//			i3d.pushMatrix();
+//			i3d.loadIdentity();
+//			i3d.matrixMode(VIEW);
+//			i3d.pushMatrix();
+//			i3d.loadIdentity();
+//			i3d.begin(POLYGON);
+//			i3d.normal3d(0, 0, -1);
+//			i3d.color3d(0.4, 0.4, 0.1);
+//			i3d.vertex3d(9000, -100, sky_z);
+//			i3d.vertex3d(-9000, -100, sky_z);
+//			i3d.vertex3d(-9000, 100, sky_z);
+//			i3d.vertex3d(9000, 100, sky_z);
+//			i3d.end();
+//			i3d.begin(POLYGON);
+//			i3d.normal3d(0, -1, 0);
+//			i3d.color3d(0.4, 0.4, 0.1);
+//			i3d.vertex3d(9000, 100, -100);
+//			i3d.vertex3d(9000, 100, sky_z);
+//			i3d.vertex3d(-9000, 100, sky_z);
+//			i3d.vertex3d(-9000, 100, -100);
+//			i3d.end();
+//			i3d.popMatrix();
+//			i3d.matrixMode(MODEL);
+//			i3d.popMatrix();
 			// end sky
 
 			i3d.finish(bidata);
-			
-			profiler.endSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
-			
-			profiler.startSection("I3D-engine_display");
-			
-			long t1 = timenanos();
 
-			//i3d.extractBuffer(FRAME_BUFFER_BIT, bi);
+			profiler.endSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
+
+			profiler.startSection("I3D-engine_display");
+
+			// i3d.extractBuffer(FRAME_BUFFER_BIT, bi);
 			frame.display(bi);
-			
-			long t2 = timenanos();
-			
+
 			// System.out.printf("%.4f | %.4f\n", (t1 - t0) / (double)(t2 - t0), (t2 - t1) / (double)(t2 - t0));
-			
+
 			profiler.endSection("I3D-engine_display");
 
 		}
@@ -214,6 +208,13 @@ public class Engine extends Thread {
 			i3d.shadeModel(SHADEMODEL_GOURARD);
 			shademodel = 2;
 		}
+		if (frame.pollKey(KeyEvent.VK_BACK_QUOTE)) {
+			if (i3d.isEnabled(CULL_FACE)) {
+				i3d.disable(CULL_FACE);
+			} else {
+				i3d.enable(CULL_FACE);
+			}
+		}
 
 		if (frame.pollKey(KeyEvent.VK_F5)) {
 			frame.setCursorVisible(!frame.isCursorVisible());
@@ -223,6 +224,13 @@ public class Engine extends Thread {
 		}
 		if (frame.pollKey(KeyEvent.VK_F11)) {
 			frame.setFullscreen(!frame.isFullscreen());
+		}
+
+		if (frame.pollKey(KeyEvent.VK_F7)) {
+			i3d.matrixMode(PROJ);
+			i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(),
+					frame.getRenderWidth() / (double) frame.getRenderHeight());
+			i3d.initFog();
 		}
 
 		Vec3 cnorm = cam.getNormal().flattenY().unit();

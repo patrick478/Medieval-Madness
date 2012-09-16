@@ -154,6 +154,51 @@ class Initial3DImpl extends Initial3D {
 	}
 
 	@Override
+	public void initFog() {
+		// depends on matrices
+		initPipelineGeneral();
+		
+		int projtype = getInt(0x00000030);
+
+		// if perspective projection, setup correction factors
+		if (projtype == 1) {
+			int w = getInt(0x00000000);
+			int h = getInt(0x00000004);
+			long pTemp = pBase + 0x000B6A10;
+			long pFC = pBase + 0x08E00900;
+			long pEnd = pFC + w * h * 16;
+			int centre_x = w / 2;
+			int centre_y = h / 2;
+			double xscale = 2d / w;
+			double yscale = 2d / h;
+			int x = 0, y = 0;
+
+			for (; pFC < pEnd; pFC += 16) {
+				// pixel position on near plane
+				unsafe.putDouble(pTemp, (x - centre_x) * xscale);
+				unsafe.putDouble(pTemp + 8, (y - centre_y) * yscale);
+				unsafe.putDouble(pTemp + 16, 0d);
+				// transform position through inverse projection
+				multiply4VectorBlock_pos_unsafe(unsafe, pTemp, 1, pTemp, pBase + 0x00080D00);
+				// normalise
+				normalise4VectorBlock_unsafe(unsafe, pTemp, pTemp, 1);
+				// grab z component of normalised vector - dot prod with (0,0,1)
+				float fc = (float) unsafe.getDouble(pTemp + 16);
+				// write derived values
+				float m = 1.5f;
+				unsafe.putFloat(pFC + 4, 255f * m);
+				unsafe.putFloat(pFC + 8, 4096f * m * fc);
+				x++;
+				if (x >= w) {
+					x = 0;
+					y++;
+				}
+			}
+		}
+
+	}
+
+	@Override
 	public void viewportSize(int w, int h) {
 		putInt(0x00000000, w);
 		putInt(0x00000004, h);
@@ -587,7 +632,7 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void extractBuffer(int bufferbit, BufferedImage bi) {
-		profiler.startSection("I3D_extractBuffer()");
+		profiler.startSection("I3D_extract_buffer");
 		// this method is so full of assumptions it's not funny...
 		int[] bidata = ((DataBufferInt) (bi.getRaster().getDataBuffer())).getData();
 		// get framebuffer if nothing else
@@ -597,7 +642,7 @@ class Initial3DImpl extends Initial3D {
 		if (bufferbit == ID_BUFFER_BIT) pBuffer = 0x07E00900 + pBase;
 
 		unsafe.copyMemory(null, pBuffer, bidata, unsafe.arrayBaseOffset(int[].class), bidata.length * 4);
-		profiler.endSection("I3D_extractBuffer()");
+		profiler.endSection("I3D_extract_buffer");
 	}
 
 	@Override

@@ -159,6 +159,8 @@ public abstract class Initial3D {
 	public static final int POLY_OUTLINE = 1;
 	
 	public abstract Profiler getProfiler();
+	
+	public abstract void initFog();
 
 	public abstract void viewportSize(int w, int h);
 

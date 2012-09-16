@@ -109,7 +109,7 @@ final class TrianglePerspectiveRasteriser {
 		final float col_r = unsafe.getFloat(pTri + 116);
 		final float col_g = unsafe.getFloat(pTri + 120);
 		final float col_b = unsafe.getFloat(pTri + 124);
-		
+
 		// barycentric stuff for interpolation
 		// maybs don't do this for polys with a small number of pixels?
 		final double DY23d = Y2d - Y3d;
@@ -228,16 +228,16 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
-//									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
-//									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
-									
-									int ir = col_r >= 1f ? 255 : (int) (col_r * 255f);
-									int ig = col_g >= 1f ? 255 : (int) (col_g * 255f);
-									int ib = col_b >= 1f ? 255 : (int) (col_b * 255f);
-									
-									unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
-									
+									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
+									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
+									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
+
+									// int ir = col_r >= 1f ? 255 : (int) (col_r * 255f);
+									// int ig = col_g >= 1f ? 255 : (int) (col_g * 255f);
+									// int ib = col_b >= 1f ? 255 : (int) (col_b * 255f);
+									//
+									// unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
+
 								}
 
 							}
@@ -267,15 +267,15 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
-//									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
-//									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
-									
-									int ir = col_r >= 1f ? 255 : (int) (col_r * 255f);
-									int ig = col_g >= 1f ? 255 : (int) (col_g * 255f);
-									int ib = col_b >= 1f ? 255 : (int) (col_b * 255f);
-									
-									unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
+									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
+									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
+									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
+
+									// int ir = col_r >= 1f ? 255 : (int) (col_r * 255f);
+									// int ig = col_g >= 1f ? 255 : (int) (col_g * 255f);
+									// int ib = col_b >= 1f ? 255 : (int) (col_b * 255f);
+									//
+									// unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
 								}
 							}
 
@@ -560,15 +560,15 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
-									
-									int ir = (int) (clamp(cR, cRmin, cRmax) * 255f);
-									int ig = (int) (clamp(cG, cGmin, cGmax) * 255f);
-									int ib = (int) (clamp(cB, cBmin, cBmax) * 255f);
-									
-									unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
+									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+
+									// int ir = (int) (clamp(cR, cRmin, cRmax) * 255f);
+									// int ig = (int) (clamp(cG, cGmin, cGmax) * 255f);
+									// int ib = (int) (clamp(cB, cBmin, cBmax) * 255f);
+									//
+									// unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
 								}
 
 							}
@@ -607,15 +607,15 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
-									
-									int ir = (int) (clamp(cR, cRmin, cRmax) * 255f);
-									int ig = (int) (clamp(cG, cGmin, cGmax) * 255f);
-									int ib = (int) (clamp(cB, cBmin, cBmax) * 255f);
-									
-									unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
+									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+
+									// int ir = (int) (clamp(cR, cRmin, cRmax) * 255f);
+									// int ig = (int) (clamp(cG, cGmin, cGmax) * 255f);
+									// int ib = (int) (clamp(cB, cBmin, cBmax) * 255f);
+									//
+									// unsafe.putInt(pColor + ix * 16, 0xFF000000 | (ir << 16) | (ig << 8) | ib);
 								}
 
 							}
