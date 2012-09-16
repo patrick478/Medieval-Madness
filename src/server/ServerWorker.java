@@ -13,12 +13,12 @@ public class ServerWorker implements Runnable {
 		this.parentServer = s;
 	}
 	
-	public void processData(ServerLayer server, SocketChannel sc, byte[] data, int dsize)
+	public void processData(ServerLayer server, SocketChannel sc, byte[] data, int dsize, String id)
 	{
 		byte[] dataCopy = new byte[dsize];
 		System.arraycopy(data, 0, dataCopy, 0, dsize);
 		synchronized(queue) {
-			queue.add(new ServerDataEvent(server, sc, dataCopy));
+			queue.add(new ServerDataEvent(server, sc, dataCopy, id));
 			queue.notify();
 		}
 	}
@@ -46,10 +46,8 @@ public class ServerWorker implements Runnable {
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
-			System.out.printf("Recieved %d byte%s\n\t", dataEvent.data.length, (dataEvent.data.length == 1 ? "s" : ""));
+			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
 			Packet p = new Packet(dataEvent.data);
-			int nFib = ((int)p.getByte()) - 48;
-			System.out.printf("Client requested the first %d numbers of the fib sequence.\n", nFib);
 			
 			//dataEvent.server.send(dataEvent.socket, dataEvent.data);
 		}

@@ -97,10 +97,10 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 				this.selector.select();
 				if(Thread.interrupted()) break;
 				
-				Iterator selectedKeys = this.selector.selectedKeys().iterator();
+				Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
 				while(selectedKeys.hasNext())
 				{
-					SelectionKey key = (SelectionKey)selectedKeys.next();
+					SelectionKey key = selectedKeys.next();
 					selectedKeys.remove();
 					
 					if(!key.isValid())
@@ -143,30 +143,35 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		} catch(IOException ex) {
 			key.cancel();
 			sc.close();
-			// TODO: Deregister the client from the sessions list
+			SessionMngr.getInstance().destroySession((String)key.attachment());
 			return;
 		}
 		
 		if(rx == -1)
 		{
 			// clean shutdown
-			// TODO: Degregister the client from the network sessions list
+			SessionMngr.getInstance().destroySession((String)key.attachment());
 			sc.close();
 			key.cancel();
 			return;
 		}
 		
-		this.worker.processData(this, sc, this.readBuffer.array(), rx);
+		String id = (String) key.attachment();
+		
+		this.worker.processData(this, sc, this.readBuffer.array(), rx, id);
 	}
 	
 	private void accept(SelectionKey key) throws IOException {
 		ServerSocketChannel ssc = (ServerSocketChannel)key.channel();
-		key.attach("123");
+		
+		
 		
 		SocketChannel sc = ssc.accept();
 		sc.configureBlocking(false);
 		
-		sc.register(this.selector,  SelectionKey.OP_READ);		
+		String sesID = SessionMngr.getInstance().createSession();
+		sc.register(this.selector,  SelectionKey.OP_READ, sesID);
+		this.log.printf("Accepted new client [SessionID=%s]\n", sesID);
 	}
 	
 	private Selector createSelector() throws IOException {

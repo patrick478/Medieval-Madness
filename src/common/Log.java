@@ -8,6 +8,8 @@ public class Log
 	private FileWriter fileOut;
 	private boolean writeToConsole = false;
 	public static final String osNewline = System.getProperty("line.separator");
+	private String prefix = "";
+	
 	public Log(String file, boolean writeToConsole)
 	{
 		try {
@@ -19,12 +21,17 @@ public class Log
 		this.writeToConsole = writeToConsole;
 	}
 	
+	public void setPrefix(String prefix)
+	{
+		this.prefix = prefix;
+	}
+	
 	public void printf(String format, Object ... args)
 	{
 		
 		Date now = new Date();
 		String dtnow = now.toString();
-		String output = String.format("[%s] %s", dtnow, String.format(format,  args));
+		String output = String.format("[%s] %s%s", dtnow, this.prefix, String.format(format,  args));
 		if(this.writeToConsole)
 			System.out.printf(output);
 		

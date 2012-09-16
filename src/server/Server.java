@@ -85,6 +85,8 @@ public class Server implements Runnable {
 		} catch (InterruptedException e) {
 			System.out.printf("Server :: Run() :: %s\n", e.toString());
 		}
+		
+		SessionMngr.getInstance().shutdown();
 				
 		// finished - exit
 		this.setStatus(ServerStatus.Stopped);
