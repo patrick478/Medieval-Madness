@@ -103,6 +103,8 @@ public class Engine extends Thread {
 		profiler.setAutoResetEnabled(true);
 		profiler.setResetOutput(System.out);
 
+		final double sky_z = 47;
+		
 		while (true) {
 			
 			long t0 = timenanos();
@@ -117,7 +119,7 @@ public class Engine extends Thread {
 			cam.loadTransformTo(i3d);
 
 			i3d.matrixMode(PROJ);
-			i3d.loadPerspectiveFOV(0.1, 50, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
+			i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
 
 			// draw meshes, with lighting
 			i3d.enable(LIGHTING);
@@ -164,17 +166,17 @@ public class Engine extends Thread {
 			i3d.begin(POLYGON);
 			i3d.normal3d(0, 0, -1);
 			i3d.color3d(0.4, 0.4, 1);
-			i3d.vertex3d(9000, -100, 100);
-			i3d.vertex3d(-9000, -100, 100);
-			i3d.vertex3d(-9000, 100, 100);
-			i3d.vertex3d(9000, 100, 100);
+			i3d.vertex3d(9000, -100, sky_z);
+			i3d.vertex3d(-9000, -100, sky_z);
+			i3d.vertex3d(-9000, 100, sky_z);
+			i3d.vertex3d(9000, 100, sky_z);
 			i3d.end();
 			i3d.begin(POLYGON);
 			i3d.normal3d(0, -1, 0);
 			i3d.color3d(0.4, 0.4, 1);
 			i3d.vertex3d(9000, 100, -100);
-			i3d.vertex3d(9000, 100, 100);
-			i3d.vertex3d(-9000, 100, 100);
+			i3d.vertex3d(9000, 100, sky_z);
+			i3d.vertex3d(-9000, 100, sky_z);
 			i3d.vertex3d(-9000, 100, -100);
 			i3d.end();
 			i3d.popMatrix();

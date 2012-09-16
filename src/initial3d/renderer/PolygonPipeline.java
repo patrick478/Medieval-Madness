@@ -26,9 +26,9 @@ final class PolygonPipeline {
 
 	/** Entry point. Stride is in ints. */
 	final void processPolygons(Unsafe unsafe, long pBase, int[] pdata, int poffset, int pstride, int pcount) {
-		
+
 		profiler.startSection("I3D_polypipe");
-		
+
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 		final int shademodel = unsafe.getInt(pBase + 0x00000034);
 		final boolean lighting = ((flags & 0x20L) != 0);
@@ -52,7 +52,7 @@ final class PolygonPipeline {
 
 		// init pEx
 		unsafe.putLong(pBase + 0x00000084, pBase + 0x00840900);
-		
+
 		profiler.startSection("I3D_polypipe_cull-clip-light-triangulate");
 
 		for (int i = poffset; i < (pcount * pstride); i += pstride) {
@@ -63,15 +63,28 @@ final class PolygonPipeline {
 			}
 			// do near plane clipping. can't guarantee proj vertices make sense
 			// until near plane cull
-			profiler.startSection("I3D_polypipe-nearclip");
+			// profiler.startSection("I3D_polypipe-nearclip");
 			unpackPolygon(unsafe, pBase, pPoly0, pdata, i);
 			long pPoly = clipPolygon(unsafe, pBase, pPoly0, 0, 0, 1, 0.2);
-			profiler.endSection("I3D_polypipe-nearclip");
+			// profiler.endSection("I3D_polypipe-nearclip");
 			// note that even if no vertices are emitted from the clipper,
 			// vcount can still be read and will be zero
 			int vcount = unsafe.getInt(pPoly + 32);
 			if (vcount < 3) {
 				// drop degenerate poly
+				continue;
+			}
+
+			// far cull (experimental)
+			// profiler.startSection("I3D_polypipe-farcull");
+			long pEnd = pPoly + vcount * 64;
+			int far_cull_count = 0;
+			for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
+				if (unsafe.getDouble(unsafe.getLong(pPolyVert) + 16) > 1d) far_cull_count++;
+			}
+			// profiler.endSection("I3D_polypipe-farcull");
+			if (far_cull_count >= vcount) {
+				// all vertices over projection far plane
 				continue;
 			}
 
@@ -93,39 +106,13 @@ final class PolygonPipeline {
 				continue;
 			}
 
-			// lighting
-			profiler.startSection("I3D_polypipe-light");
-			final long pMtl = pBase + ((cross_z < 0) ? 0x00000900 : 0x00040900);
-			final long pPolyColor = pBase + 0x000B0900;
-
-			if (lighting) {
-				float opacity = unsafe.getFloat(pMtl + 16);
-				if (shademodel == 1) {
-					unsafe.putFloat(pPolyColor, opacity);
-					calculatePolygonLight(unsafe, pBase, pMtl, pPoly, pPolyColor + 4);
-					// copy poly lighting for each vertex
-					long pEnd = pPoly + vcount * 64;
-					for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
-						unsafe.copyMemory(pPolyColor, pPolyVert + 48, 16);
-					}
-				} else if (shademodel == 2) {
-					// do lighting for each vertex
-					long pEnd = pPoly + vcount * 64;
-					for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
-						unsafe.putFloat(pPolyVert + 48, opacity);
-						calculateVertexLight(unsafe, pBase, pMtl, pPolyVert, pPolyVert + 52);
-					}
-				}
-			}
-			profiler.endSection("I3D_polypipe-light");
-
 			// clip other planes
-			profiler.startSection("I3D_polypipe-clip");
+			// profiler.startSection("I3D_polypipe-clip");
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
 			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
-			profiler.endSection("I3D_polypipe-clip");
+			// profiler.endSection("I3D_polypipe-clip");
 
 			vcount = unsafe.getInt(pPoly + 32);
 			if (vcount < 3) {
@@ -133,11 +120,36 @@ final class PolygonPipeline {
 				continue;
 			}
 
+			// lighting
+			// profiler.startSection("I3D_polypipe-light");
+			final long pMtl = pBase + ((cross_z < 0) ? 0x00000900 : 0x00040900);
+
+			if (lighting) {
+				float opacity = unsafe.getFloat(pMtl + 16);
+				if (shademodel == 1) {
+					unsafe.putFloat(pPoly + 48, opacity);
+					calculatePolygonLight(unsafe, pBase, pMtl, pPoly, pPoly + 48 + 4);
+					// copy poly lighting for each vertex
+					pEnd = pPoly + vcount * 64;
+					for (long pPolyVert = pPoly + 64; pPolyVert < pEnd; pPolyVert += 64) {
+						unsafe.copyMemory(pPoly + 48, pPolyVert + 48, 16);
+					}
+				} else if (shademodel == 2) {
+					// do lighting for each vertex
+					pEnd = pPoly + vcount * 64;
+					for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
+						unsafe.putFloat(pPolyVert + 48, opacity);
+						calculateVertexLight(unsafe, pBase, pMtl, pPolyVert, pPolyVert + 52);
+					}
+				}
+			}
+			// profiler.endSection("I3D_polypipe-light");
+
 			// triangulation
-			profiler.startSection("I3D_polypipe-triangulate");
+			// profiler.startSection("I3D_polypipe-triangulate");
 			long pPolyVert1 = pPoly + 64;
 			long pPolyVert2 = pPoly + 128;
-			long pEnd = pPoly + vcount * 64;
+			pEnd = pPoly + vcount * 64;
 
 			for (; pPolyVert2 < pEnd; pPolyVert1 += 64, pPolyVert2 += 64, pTri += 256) {
 				unsafe.putInt(pTri, cross_z < 0 ? -1 : cross_z > 0 ? 1 : 0);
@@ -147,12 +159,12 @@ final class PolygonPipeline {
 				unsafe.copyMemory(pPolyVert2, pTri + 192, 64);
 				// TrianglePerspectiveRasteriser.verifyTriangle(unsafe, pBase, pTri);
 			}
-			profiler.endSection("I3D_polypipe-triangulate");
+			// profiler.endSection("I3D_polypipe-triangulate");
 
 		}
-		
+
 		profiler.endSection("I3D_polypipe_cull-clip-light-triangulate");
-		
+
 		profiler.startSection("I3D_polypipe_rasterise");
 
 		// rasterise, this parallelises nicely
@@ -169,9 +181,9 @@ final class PolygonPipeline {
 		for (RasteriserWorker rw : workers) {
 			rw.waitUntilDone();
 		}
-		
+
 		profiler.endSection("I3D_polypipe_rasterise");
-		
+
 		profiler.endSection("I3D_polypipe");
 
 	}
@@ -221,7 +233,7 @@ final class PolygonPipeline {
 
 		long pPolyVertA = pPolyIn;
 		long pPolyVertB = pPolyIn + 64;
-		
+
 		// skip altogether if input isn't at least a triangle
 		if (pPolyOut - pPolyIn >= 192) {
 			// if first vertex inside, emit it
@@ -384,8 +396,7 @@ final class PolygonPipeline {
 
 		for (; pTri < pTriEnd; pTri += 256) {
 			if (projtype == 1 && (frontface ? fmode : bmode) == 0 /*
-																 * perspective
-																 * proj + fill
+																 * perspective proj + fill
 																 */) {
 				// invz + uv + nv interpolation (this one's gonna suck to write)
 
@@ -408,10 +419,7 @@ final class PolygonPipeline {
 				}
 
 			} else if (projtype == 0 && (frontface ? fmode : bmode) == 0 /*
-																		 * ortho
-																		 * proj
-																		 * +
-																		 * fill
+																		 * ortho proj + fill
 																		 */) {
 
 			} else if ((frontface ? fmode : bmode) == 1 /* outline */) {
