@@ -23,7 +23,7 @@ public class loadtest {
 		
 		if(testSocket == null)
 		{
-			System.out.println("Connection failed. Exiting..\n");
+			System.out.println("Connection failed. Exiting..\r\n");
 			return;
 		}
 		
@@ -31,6 +31,9 @@ public class loadtest {
 		
 		InputStream is = testSocket.getInputStream();
 		OutputStream os = testSocket.getOutputStream();
+		
+		int success = 0;
+		int failure = 0;
 		
 		Packet p = new Packet();
 		Packet reply = new Packet();
@@ -48,9 +51,15 @@ public class loadtest {
 			reply = new Packet(data);
 			int result = (int)reply.getShort();
 			if(result == (a * b))
-				System.out.printf("Success. Server replied with %d\n", result);
+			{
+				success++;
+				System.out.printf("Success. Server replied with %d\r\n", result);
+			}
 			else
-				System.out.printf("Failed. Server replied with %d\n", result);
+			{
+				failure++;
+				System.out.printf("Failed. Server replied with %d\r\n", result);
+			}
 			
 			try {
 				Thread.sleep(interval);
@@ -59,11 +68,18 @@ public class loadtest {
 				e.printStackTrace();
 			}
 		}
+		
+		os.close();
+		is.close();
+		testSocket.close();
+		
+		System.out.printf("Test complete. Success: %d. Failure: %d. Percentage Pass: %%%f\r\n", success, failure, ((float)success/(float)500) * 100);
+		
 	}
 	
 	public static Socket tryConnect(String address, int port) {
 		Socket testSocket = null;
-		System.out.printf("Attempting to connect to %s:%d\n", address, port);
+		System.out.printf("Attempting to connect to %s:%d\r\n", address, port);
 		for(int i = 0; i < 3; i++)
 		{
 			System.out.printf("Connection attempt %d... ", i+1);
@@ -79,7 +95,7 @@ public class loadtest {
 			
 			if(testSocket != null && testSocket.isConnected()) 
 			{
-				System.out.printf("Success!\n");
+				System.out.printf("Success!\r\n");
 				return testSocket;
 			}
 		}

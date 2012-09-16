@@ -12,6 +12,7 @@ public class SessionCommand extends Command {
 
 	@Override
 	public void execute(String[] args) {
+		if(args.length < 2) System.out.printf("No session command inputted\n");
 		if(args[1].equals("count"))
 		{
 			System.out.printf("There are currently %d active sessions\n", SessionMngr.getInstance().numSessions());

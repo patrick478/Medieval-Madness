@@ -1,24 +1,2030 @@
-[Sun Sep 16 15:29:18 NZST 2012] Medieval Madness Server v0.1 - "Proofie Penguin"
+[Sun Sep 16 17:37:10 NZST 2012] Medieval Madness Server v0.1 - "Proofie Penguin"
 
-[Sun Sep 16 15:29:18 NZST 2012] ListenWorker :: starting up
+[Sun Sep 16 17:37:11 NZST 2012] ListenWorker :: starting up
 
-[Sun Sep 16 15:29:18 NZST 2012] ServerWorker :: starting up
+[Sun Sep 16 17:37:11 NZST 2012] ServerWorker :: starting up
 
-[Sun Sep 16 15:29:18 NZST 2012] {STATUS} Server status changed to Running
+[Sun Sep 16 17:37:11 NZST 2012] {STATUS} Server status changed to Running
 
-[Sun Sep 16 15:29:18 NZST 2012] Server started in 0.04s
+[Sun Sep 16 17:37:11 NZST 2012] Server started in 0.04s
 
-[Sun Sep 16 15:33:29 NZST 2012] Accepted new client [SessionID=1347766409680]
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837886]
 
-[Sun Sep 16 15:34:33 NZST 2012] Accepted new client [SessionID=1347766473163]
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837901]
 
-[Sun Sep 16 15:34:50 NZST 2012] Server is shutting down
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837909]
 
-[Sun Sep 16 15:34:50 NZST 2012] {STATUS} Server status changed to Stopping
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837914]
 
-[Sun Sep 16 15:34:51 NZST 2012] ListenWorker :: detected shutdown - stopping
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837935]
 
-[Sun Sep 16 15:34:52 NZST 2012] ServerWorker :: detected shutdown - stopping
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837940]
 
-[Sun Sep 16 15:34:52 NZST 2012] {STATUS} Server status changed to Stopped
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837951]
+
+[Sun Sep 16 17:37:17 NZST 2012] Accepted new client [SessionID=1347773837994]
+
+[Sun Sep 16 17:37:18 NZST 2012] Accepted new client [SessionID=1347773838004]
+
+[Sun Sep 16 17:37:18 NZST 2012] Accepted new client [SessionID=1347773838020]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038153]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038249]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038348]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038405]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038544]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038545]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038546]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038550]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038751]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038754]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038755]
+
+[Sun Sep 16 17:40:38 NZST 2012] Accepted new client [SessionID=1347774038901]
+
+[Sun Sep 16 17:40:39 NZST 2012] Accepted new client [SessionID=1347774039549]
+
+[Sun Sep 16 17:40:39 NZST 2012] Accepted new client [SessionID=1347774039550]
+
+[Sun Sep 16 17:40:39 NZST 2012] Accepted new client [SessionID=1347774039555]
+
+[Sun Sep 16 17:40:39 NZST 2012] Accepted new client [SessionID=1347774039556]
+
+[Sun Sep 16 17:40:39 NZST 2012] Accepted new client [SessionID=1347774039602]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040246]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040255]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040256]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040398]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040401]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040440]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040443]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040604]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040643]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040644]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040656]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040657]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040699]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040704]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040847]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040862]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040942]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040947]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040951]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040956]
+
+[Sun Sep 16 17:40:40 NZST 2012] Accepted new client [SessionID=1347774040998]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041038]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041049]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041097]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041145]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041155]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041156]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041158]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041248]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041249]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041258]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041269]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041270]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041349]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041443]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041448]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041744]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041944]
+
+[Sun Sep 16 17:40:41 NZST 2012] Accepted new client [SessionID=1347774041998]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042047]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042052]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042097]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042147]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042148]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042153]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042342]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042354]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042361]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042362]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042368]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042369]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042372]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042375]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042399]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042440]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042448]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042452]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042558]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042573]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042574]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042645]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042647]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042743]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042802]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042847]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042913]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042918]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042948]
+
+[Sun Sep 16 17:40:42 NZST 2012] Accepted new client [SessionID=1347774042949]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043057]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043058]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043098]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043247]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043253]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043299]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043340]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043545]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043748]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043795]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043823]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043824]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043905]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043943]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043944]
+
+[Sun Sep 16 17:40:43 NZST 2012] Accepted new client [SessionID=1347774043948]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044142]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044152]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044304]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044341]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044547]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044549]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044553]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044660]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044750]
+
+[Sun Sep 16 17:40:44 NZST 2012] Accepted new client [SessionID=1347774044854]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045050]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045098]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045144]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045203]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045248]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045343]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045477]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045516]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045743]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045749]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045783]
+
+[Sun Sep 16 17:40:45 NZST 2012] Accepted new client [SessionID=1347774045846]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046096]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046150]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046151]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046242]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046395]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046444]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046715]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046839]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046842]
+
+[Sun Sep 16 17:40:46 NZST 2012] Accepted new client [SessionID=1347774046942]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047003]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047196]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047350]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047642]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047650]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047739]
+
+[Sun Sep 16 17:40:47 NZST 2012] Accepted new client [SessionID=1347774047897]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048069]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048096]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048249]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048397]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048450]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048699]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048740]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048743]
+
+[Sun Sep 16 17:40:48 NZST 2012] Accepted new client [SessionID=1347774048954]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049055]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049322]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049446]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049452]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049500]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049515]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049697]
+
+[Sun Sep 16 17:40:49 NZST 2012] Accepted new client [SessionID=1347774049850]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774049999]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050150]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050174]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050247]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050248]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050254]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050350]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050560]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050746]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050747]
+
+[Sun Sep 16 17:40:50 NZST 2012] Accepted new client [SessionID=1347774050803]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051103]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051104]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051143]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051263]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051555]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051745]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051870]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051871]
+
+[Sun Sep 16 17:40:51 NZST 2012] Accepted new client [SessionID=1347774051962]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052114]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052206]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052254]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052441]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052497]
+
+[Sun Sep 16 17:40:52 NZST 2012] Accepted new client [SessionID=1347774052750]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053045]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053049]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053242]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053243]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053353]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053544]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053754]
+
+[Sun Sep 16 17:40:53 NZST 2012] Accepted new client [SessionID=1347774053901]
+
+[Sun Sep 16 17:40:54 NZST 2012] Accepted new client [SessionID=1347774054156]
+
+[Sun Sep 16 17:40:54 NZST 2012] Accepted new client [SessionID=1347774054358]
+
+[Sun Sep 16 17:40:54 NZST 2012] Accepted new client [SessionID=1347774054364]
+
+[Sun Sep 16 17:40:54 NZST 2012] Accepted new client [SessionID=1347774054654]
+
+[Sun Sep 16 17:40:54 NZST 2012] Accepted new client [SessionID=1347774054722]
+
+[Sun Sep 16 17:40:55 NZST 2012] Accepted new client [SessionID=1347774055011]
+
+[Sun Sep 16 17:40:55 NZST 2012] Accepted new client [SessionID=1347774055148]
+
+[Sun Sep 16 17:40:55 NZST 2012] Accepted new client [SessionID=1347774055447]
+
+[Sun Sep 16 17:40:55 NZST 2012] Accepted new client [SessionID=1347774055801]
+
+[Sun Sep 16 17:40:55 NZST 2012] Accepted new client [SessionID=1347774055990]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056052]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056102]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056402]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056751]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056908]
+
+[Sun Sep 16 17:40:56 NZST 2012] Accepted new client [SessionID=1347774056910]
+
+[Sun Sep 16 17:40:57 NZST 2012] Accepted new client [SessionID=1347774057239]
+
+[Sun Sep 16 17:40:57 NZST 2012] Accepted new client [SessionID=1347774057552]
+
+[Sun Sep 16 17:40:57 NZST 2012] Accepted new client [SessionID=1347774057646]
+
+[Sun Sep 16 17:40:57 NZST 2012] Accepted new client [SessionID=1347774057647]
+
+[Sun Sep 16 17:40:57 NZST 2012] Accepted new client [SessionID=1347774057902]
+
+[Sun Sep 16 17:40:58 NZST 2012] Accepted new client [SessionID=1347774058043]
+
+[Sun Sep 16 17:40:58 NZST 2012] Accepted new client [SessionID=1347774058196]
+
+[Sun Sep 16 17:40:58 NZST 2012] Accepted new client [SessionID=1347774058597]
+
+[Sun Sep 16 17:40:58 NZST 2012] Accepted new client [SessionID=1347774058745]
+
+[Sun Sep 16 17:40:58 NZST 2012] Accepted new client [SessionID=1347774058764]
+
+[Sun Sep 16 17:40:59 NZST 2012] Accepted new client [SessionID=1347774059142]
+
+[Sun Sep 16 17:40:59 NZST 2012] Accepted new client [SessionID=1347774059247]
+
+[Sun Sep 16 17:40:59 NZST 2012] Accepted new client [SessionID=1347774059394]
+
+[Sun Sep 16 17:40:59 NZST 2012] Accepted new client [SessionID=1347774059447]
+
+[Sun Sep 16 17:40:59 NZST 2012] Accepted new client [SessionID=1347774059848]
+
+[Sun Sep 16 17:41:00 NZST 2012] Accepted new client [SessionID=1347774060198]
+
+[Sun Sep 16 17:41:00 NZST 2012] Accepted new client [SessionID=1347774060449]
+
+[Sun Sep 16 17:41:00 NZST 2012] Accepted new client [SessionID=1347774060503]
+
+[Sun Sep 16 17:41:00 NZST 2012] Accepted new client [SessionID=1347774060652]
+
+[Sun Sep 16 17:41:01 NZST 2012] Accepted new client [SessionID=1347774061167]
+
+[Sun Sep 16 17:41:01 NZST 2012] Accepted new client [SessionID=1347774061268]
+
+[Sun Sep 16 17:41:01 NZST 2012] Accepted new client [SessionID=1347774061551]
+
+[Sun Sep 16 17:41:01 NZST 2012] Accepted new client [SessionID=1347774061706]
+
+[Sun Sep 16 17:41:01 NZST 2012] Accepted new client [SessionID=1347774061797]
+
+[Sun Sep 16 17:41:02 NZST 2012] Accepted new client [SessionID=1347774062146]
+
+[Sun Sep 16 17:41:02 NZST 2012] Accepted new client [SessionID=1347774062150]
+
+[Sun Sep 16 17:41:02 NZST 2012] Accepted new client [SessionID=1347774062395]
+
+[Sun Sep 16 17:41:02 NZST 2012] Accepted new client [SessionID=1347774062791]
+
+[Sun Sep 16 17:41:02 NZST 2012] Accepted new client [SessionID=1347774062861]
+
+[Sun Sep 16 17:41:03 NZST 2012] Accepted new client [SessionID=1347774063256]
+
+[Sun Sep 16 17:41:03 NZST 2012] Accepted new client [SessionID=1347774063447]
+
+[Sun Sep 16 17:41:03 NZST 2012] Accepted new client [SessionID=1347774063985]
+
+[Sun Sep 16 17:41:04 NZST 2012] Accepted new client [SessionID=1347774064001]
+
+[Sun Sep 16 17:41:04 NZST 2012] Accepted new client [SessionID=1347774064316]
+
+[Sun Sep 16 17:41:04 NZST 2012] Accepted new client [SessionID=1347774064591]
+
+[Sun Sep 16 17:41:04 NZST 2012] Accepted new client [SessionID=1347774064854]
+
+[Sun Sep 16 17:41:05 NZST 2012] Accepted new client [SessionID=1347774065051]
+
+[Sun Sep 16 17:41:05 NZST 2012] Accepted new client [SessionID=1347774065324]
+
+[Sun Sep 16 17:41:05 NZST 2012] Accepted new client [SessionID=1347774065426]
+
+[Sun Sep 16 17:41:05 NZST 2012] Accepted new client [SessionID=1347774065576]
+
+[Sun Sep 16 17:41:06 NZST 2012] Accepted new client [SessionID=1347774066003]
+
+[Sun Sep 16 17:41:06 NZST 2012] Accepted new client [SessionID=1347774066252]
+
+[Sun Sep 16 17:41:06 NZST 2012] Accepted new client [SessionID=1347774066341]
+
+[Sun Sep 16 17:41:06 NZST 2012] Accepted new client [SessionID=1347774066901]
+
+[Sun Sep 16 17:41:07 NZST 2012] Accepted new client [SessionID=1347774067092]
+
+[Sun Sep 16 17:41:07 NZST 2012] Accepted new client [SessionID=1347774067343]
+
+[Sun Sep 16 17:41:07 NZST 2012] Accepted new client [SessionID=1347774067350]
+
+[Sun Sep 16 17:41:07 NZST 2012] Accepted new client [SessionID=1347774067595]
+
+[Sun Sep 16 17:41:08 NZST 2012] Accepted new client [SessionID=1347774068000]
+
+[Sun Sep 16 17:41:08 NZST 2012] Accepted new client [SessionID=1347774068714]
+
+[Sun Sep 16 17:41:09 NZST 2012] Accepted new client [SessionID=1347774069043]
+
+[Sun Sep 16 17:41:09 NZST 2012] Accepted new client [SessionID=1347774069044]
+
+[Sun Sep 16 17:41:09 NZST 2012] Accepted new client [SessionID=1347774069597]
+
+[Sun Sep 16 17:41:09 NZST 2012] Accepted new client [SessionID=1347774069897]
+
+[Sun Sep 16 17:41:10 NZST 2012] Accepted new client [SessionID=1347774070561]
+
+[Sun Sep 16 17:41:10 NZST 2012] Accepted new client [SessionID=1347774070910]
+
+[Sun Sep 16 17:41:11 NZST 2012] Accepted new client [SessionID=1347774071045]
+
+[Sun Sep 16 17:41:11 NZST 2012] Accepted new client [SessionID=1347774071999]
+
+[Sun Sep 16 17:41:12 NZST 2012] Accepted new client [SessionID=1347774072354]
+
+[Sun Sep 16 17:41:12 NZST 2012] Accepted new client [SessionID=1347774072545]
+
+[Sun Sep 16 17:41:12 NZST 2012] Accepted new client [SessionID=1347774072642]
+
+[Sun Sep 16 17:41:12 NZST 2012] Accepted new client [SessionID=1347774072849]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073156]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073597]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073656]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073660]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073817]
+
+[Sun Sep 16 17:41:13 NZST 2012] Accepted new client [SessionID=1347774073949]
+
+[Sun Sep 16 17:41:14 NZST 2012] Accepted new client [SessionID=1347774074048]
+
+[Sun Sep 16 17:41:14 NZST 2012] Accepted new client [SessionID=1347774074280]
+
+[Sun Sep 16 17:41:14 NZST 2012] Accepted new client [SessionID=1347774074750]
+
+[Sun Sep 16 17:41:14 NZST 2012] Accepted new client [SessionID=1347774074854]
+
+[Sun Sep 16 17:41:15 NZST 2012] Accepted new client [SessionID=1347774075203]
+
+[Sun Sep 16 17:41:15 NZST 2012] Accepted new client [SessionID=1347774075348]
+
+[Sun Sep 16 17:41:15 NZST 2012] Accepted new client [SessionID=1347774075696]
+
+[Sun Sep 16 17:41:15 NZST 2012] Accepted new client [SessionID=1347774075769]
+
+[Sun Sep 16 17:41:15 NZST 2012] Accepted new client [SessionID=1347774075853]
+
+[Sun Sep 16 17:41:16 NZST 2012] Accepted new client [SessionID=1347774076562]
+
+[Sun Sep 16 17:41:16 NZST 2012] Accepted new client [SessionID=1347774076898]
+
+[Sun Sep 16 17:41:16 NZST 2012] Accepted new client [SessionID=1347774076948]
+
+[Sun Sep 16 17:41:17 NZST 2012] Accepted new client [SessionID=1347774077304]
+
+[Sun Sep 16 17:41:18 NZST 2012] Accepted new client [SessionID=1347774078272]
+
+[Sun Sep 16 17:41:18 NZST 2012] Accepted new client [SessionID=1347774078419]
+
+[Sun Sep 16 17:41:19 NZST 2012] Accepted new client [SessionID=1347774079052]
+
+[Sun Sep 16 17:41:20 NZST 2012] Accepted new client [SessionID=1347774080057]
+
+[Sun Sep 16 17:41:22 NZST 2012] Accepted new client [SessionID=1347774082592]
+
+[Sun Sep 16 17:41:24 NZST 2012] Accepted new client [SessionID=1347774084297]
+
+[Sun Sep 16 17:41:25 NZST 2012] Accepted new client [SessionID=1347774085393]
+
+[Sun Sep 16 17:41:27 NZST 2012] Accepted new client [SessionID=1347774087495]
+
+[Sun Sep 16 17:41:27 NZST 2012] Accepted new client [SessionID=1347774087712]
+
+[Sun Sep 16 17:41:27 NZST 2012] Accepted new client [SessionID=1347774087713]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090198]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090203]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090204]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090310]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090394]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090427]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090598]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090704]
+
+[Sun Sep 16 17:41:30 NZST 2012] Accepted new client [SessionID=1347774090804]
+
+[Sun Sep 16 17:41:31 NZST 2012] Accepted new client [SessionID=1347774091098]
+
+[Sun Sep 16 17:41:31 NZST 2012] Accepted new client [SessionID=1347774091102]
+
+[Sun Sep 16 17:41:31 NZST 2012] Accepted new client [SessionID=1347774091427]
+
+[Sun Sep 16 17:41:31 NZST 2012] Accepted new client [SessionID=1347774091559]
+
+[Sun Sep 16 17:41:31 NZST 2012] Accepted new client [SessionID=1347774091562]
+
+[Sun Sep 16 17:41:32 NZST 2012] Accepted new client [SessionID=1347774092110]
+
+[Sun Sep 16 17:41:32 NZST 2012] Accepted new client [SessionID=1347774092138]
+
+[Sun Sep 16 17:41:32 NZST 2012] Accepted new client [SessionID=1347774092232]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094002]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094080]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094115]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094116]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094199]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094209]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094210]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094235]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094236]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094302]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094304]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094338]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094339]
+
+[Sun Sep 16 17:41:34 NZST 2012] Accepted new client [SessionID=1347774094913]
+
+[Sun Sep 16 17:41:35 NZST 2012] Accepted new client [SessionID=1347774095101]
+
+[Sun Sep 16 17:41:35 NZST 2012] Accepted new client [SessionID=1347774095398]
+
+[Sun Sep 16 17:41:35 NZST 2012] Accepted new client [SessionID=1347774095967]
+
+[Sun Sep 16 17:41:35 NZST 2012] Accepted new client [SessionID=1347774095995]
+
+[Sun Sep 16 17:41:36 NZST 2012] Accepted new client [SessionID=1347774096516]
+
+[Sun Sep 16 17:41:36 NZST 2012] Accepted new client [SessionID=1347774096518]
+
+[Sun Sep 16 17:41:36 NZST 2012] Accepted new client [SessionID=1347774096615]
+
+[Sun Sep 16 17:41:36 NZST 2012] Accepted new client [SessionID=1347774096720]
+
+[Sun Sep 16 17:41:37 NZST 2012] Accepted new client [SessionID=1347774097109]
+
+[Sun Sep 16 17:41:37 NZST 2012] Accepted new client [SessionID=1347774097195]
+
+[Sun Sep 16 17:41:37 NZST 2012] Accepted new client [SessionID=1347774097196]
+
+[Sun Sep 16 17:41:38 NZST 2012] Accepted new client [SessionID=1347774098322]
+
+[Sun Sep 16 17:41:38 NZST 2012] Accepted new client [SessionID=1347774098817]
+
+[Sun Sep 16 17:41:38 NZST 2012] Accepted new client [SessionID=1347774098907]
+
+[Sun Sep 16 17:41:39 NZST 2012] Accepted new client [SessionID=1347774099306]
+
+[Sun Sep 16 17:41:39 NZST 2012] Accepted new client [SessionID=1347774099706]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100194]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100225]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100503]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100736]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100804]
+
+[Sun Sep 16 17:41:40 NZST 2012] Accepted new client [SessionID=1347774100805]
+
+[Sun Sep 16 17:41:41 NZST 2012] Accepted new client [SessionID=1347774101181]
+
+[Sun Sep 16 17:41:41 NZST 2012] Accepted new client [SessionID=1347774101505]
+
+[Sun Sep 16 17:41:41 NZST 2012] Accepted new client [SessionID=1347774101508]
+
+[Sun Sep 16 17:41:41 NZST 2012] Accepted new client [SessionID=1347774101825]
+
+[Sun Sep 16 17:41:41 NZST 2012] Accepted new client [SessionID=1347774101927]
+
+[Sun Sep 16 17:41:42 NZST 2012] Accepted new client [SessionID=1347774102094]
+
+[Sun Sep 16 17:41:42 NZST 2012] Accepted new client [SessionID=1347774102231]
+
+[Sun Sep 16 17:41:42 NZST 2012] Accepted new client [SessionID=1347774102271]
+
+[Sun Sep 16 17:41:42 NZST 2012] Accepted new client [SessionID=1347774102792]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103096]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103300]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103303]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103399]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103429]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103830]
+
+[Sun Sep 16 17:41:43 NZST 2012] Accepted new client [SessionID=1347774103996]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104023]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104131]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104299]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104627]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104735]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104892]
+
+[Sun Sep 16 17:41:44 NZST 2012] Accepted new client [SessionID=1347774104973]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105131]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105199]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105427]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105693]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105711]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105777]
+
+[Sun Sep 16 17:41:45 NZST 2012] Accepted new client [SessionID=1347774105892]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106227]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106291]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106305]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106610]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106894]
+
+[Sun Sep 16 17:41:46 NZST 2012] Accepted new client [SessionID=1347774106899]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107139]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107140]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107498]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107510]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107610]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107906]
+
+[Sun Sep 16 17:41:47 NZST 2012] Accepted new client [SessionID=1347774107993]
+
+[Sun Sep 16 17:41:48 NZST 2012] Accepted new client [SessionID=1347774108054]
+
+[Sun Sep 16 17:41:48 NZST 2012] Accepted new client [SessionID=1347774108325]
+
+[Sun Sep 16 17:41:48 NZST 2012] Accepted new client [SessionID=1347774108707]
+
+[Sun Sep 16 17:41:48 NZST 2012] Accepted new client [SessionID=1347774108749]
+
+[Sun Sep 16 17:41:49 NZST 2012] Accepted new client [SessionID=1347774109103]
+
+[Sun Sep 16 17:41:49 NZST 2012] Accepted new client [SessionID=1347774109530]
+
+[Sun Sep 16 17:41:49 NZST 2012] Accepted new client [SessionID=1347774109617]
+
+[Sun Sep 16 17:41:49 NZST 2012] Accepted new client [SessionID=1347774109705]
+
+[Sun Sep 16 17:41:49 NZST 2012] Accepted new client [SessionID=1347774109792]
+
+[Sun Sep 16 17:41:50 NZST 2012] Accepted new client [SessionID=1347774110111]
+
+[Sun Sep 16 17:41:50 NZST 2012] Accepted new client [SessionID=1347774110232]
+
+[Sun Sep 16 17:41:50 NZST 2012] Accepted new client [SessionID=1347774110435]
+
+[Sun Sep 16 17:41:50 NZST 2012] Accepted new client [SessionID=1347774110697]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111001]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111143]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111165]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111526]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111606]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111630]
+
+[Sun Sep 16 17:41:51 NZST 2012] Accepted new client [SessionID=1347774111893]
+
+[Sun Sep 16 17:41:52 NZST 2012] Accepted new client [SessionID=1347774112185]
+
+[Sun Sep 16 17:41:52 NZST 2012] Accepted new client [SessionID=1347774112494]
+
+[Sun Sep 16 17:41:52 NZST 2012] Accepted new client [SessionID=1347774112508]
+
+[Sun Sep 16 17:41:52 NZST 2012] Accepted new client [SessionID=1347774112509]
+
+[Sun Sep 16 17:41:52 NZST 2012] Accepted new client [SessionID=1347774112937]
+
+[Sun Sep 16 17:41:53 NZST 2012] Accepted new client [SessionID=1347774113004]
+
+[Sun Sep 16 17:41:53 NZST 2012] Accepted new client [SessionID=1347774113059]
+
+[Sun Sep 16 17:41:53 NZST 2012] Accepted new client [SessionID=1347774113103]
+
+[Sun Sep 16 17:41:53 NZST 2012] Accepted new client [SessionID=1347774113529]
+
+[Sun Sep 16 17:41:53 NZST 2012] Accepted new client [SessionID=1347774113732]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114040]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114305]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114594]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114685]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114800]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114836]
+
+[Sun Sep 16 17:41:54 NZST 2012] Accepted new client [SessionID=1347774114911]
+
+[Sun Sep 16 17:41:55 NZST 2012] Accepted new client [SessionID=1347774115422]
+
+[Sun Sep 16 17:41:55 NZST 2012] Accepted new client [SessionID=1347774115529]
+
+[Sun Sep 16 17:41:55 NZST 2012] Accepted new client [SessionID=1347774115582]
+
+[Sun Sep 16 17:41:55 NZST 2012] Accepted new client [SessionID=1347774115632]
+
+[Sun Sep 16 17:41:55 NZST 2012] Accepted new client [SessionID=1347774115718]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116011]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116389]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116391]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116492]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116658]
+
+[Sun Sep 16 17:41:56 NZST 2012] Accepted new client [SessionID=1347774116830]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117134]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117135]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117398]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117493]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117699]
+
+[Sun Sep 16 17:41:57 NZST 2012] Accepted new client [SessionID=1347774117708]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118194]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118265]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118543]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118636]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118814]
+
+[Sun Sep 16 17:41:58 NZST 2012] Accepted new client [SessionID=1347774118815]
+
+[Sun Sep 16 17:41:59 NZST 2012] Accepted new client [SessionID=1347774119011]
+
+[Sun Sep 16 17:41:59 NZST 2012] Accepted new client [SessionID=1347774119199]
+
+[Sun Sep 16 17:41:59 NZST 2012] Accepted new client [SessionID=1347774119504]
+
+[Sun Sep 16 17:41:59 NZST 2012] Accepted new client [SessionID=1347774119705]
+
+[Sun Sep 16 17:42:00 NZST 2012] Accepted new client [SessionID=1347774120098]
+
+[Sun Sep 16 17:42:00 NZST 2012] Accepted new client [SessionID=1347774120113]
+
+[Sun Sep 16 17:42:00 NZST 2012] Accepted new client [SessionID=1347774120405]
+
+[Sun Sep 16 17:42:00 NZST 2012] Accepted new client [SessionID=1347774120792]
+
+[Sun Sep 16 17:42:00 NZST 2012] Accepted new client [SessionID=1347774120863]
+
+[Sun Sep 16 17:42:01 NZST 2012] Accepted new client [SessionID=1347774121216]
+
+[Sun Sep 16 17:42:01 NZST 2012] Accepted new client [SessionID=1347774121394]
+
+[Sun Sep 16 17:42:01 NZST 2012] Accepted new client [SessionID=1347774121400]
+
+[Sun Sep 16 17:42:01 NZST 2012] Accepted new client [SessionID=1347774121501]
+
+[Sun Sep 16 17:42:01 NZST 2012] Accepted new client [SessionID=1347774121993]
+
+[Sun Sep 16 17:42:02 NZST 2012] Accepted new client [SessionID=1347774122256]
+
+[Sun Sep 16 17:42:02 NZST 2012] Accepted new client [SessionID=1347774122495]
+
+[Sun Sep 16 17:42:02 NZST 2012] Accepted new client [SessionID=1347774122626]
+
+[Sun Sep 16 17:42:02 NZST 2012] Accepted new client [SessionID=1347774122894]
+
+[Sun Sep 16 17:42:02 NZST 2012] Accepted new client [SessionID=1347774122902]
+
+[Sun Sep 16 17:42:03 NZST 2012] Accepted new client [SessionID=1347774123314]
+
+[Sun Sep 16 17:42:03 NZST 2012] Accepted new client [SessionID=1347774123370]
+
+[Sun Sep 16 17:42:03 NZST 2012] Accepted new client [SessionID=1347774123406]
+
+[Sun Sep 16 17:42:03 NZST 2012] Accepted new client [SessionID=1347774123629]
+
+[Sun Sep 16 17:42:03 NZST 2012] Accepted new client [SessionID=1347774123941]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124034]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124096]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124342]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124394]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124395]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124578]
+
+[Sun Sep 16 17:42:04 NZST 2012] Accepted new client [SessionID=1347774124726]
+
+[Sun Sep 16 17:42:05 NZST 2012] Accepted new client [SessionID=1347774125252]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126192]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126306]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126393]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126398]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126798]
+
+[Sun Sep 16 17:42:06 NZST 2012] Accepted new client [SessionID=1347774126958]
+
+[Sun Sep 16 17:42:07 NZST 2012] Accepted new client [SessionID=1347774127293]
+
+[Sun Sep 16 17:42:07 NZST 2012] Accepted new client [SessionID=1347774127506]
+
+[Sun Sep 16 17:42:07 NZST 2012] Accepted new client [SessionID=1347774127581]
+
+[Sun Sep 16 17:42:07 NZST 2012] Accepted new client [SessionID=1347774127873]
+
+[Sun Sep 16 17:42:07 NZST 2012] Accepted new client [SessionID=1347774127892]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128192]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128229]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128413]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128643]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128764]
+
+[Sun Sep 16 17:42:08 NZST 2012] Accepted new client [SessionID=1347774128925]
+
+[Sun Sep 16 17:42:09 NZST 2012] Accepted new client [SessionID=1347774129215]
+
+[Sun Sep 16 17:42:09 NZST 2012] Accepted new client [SessionID=1347774129382]
+
+[Sun Sep 16 17:42:09 NZST 2012] Accepted new client [SessionID=1347774129427]
+
+[Sun Sep 16 17:42:09 NZST 2012] Accepted new client [SessionID=1347774129567]
+
+[Sun Sep 16 17:42:09 NZST 2012] Accepted new client [SessionID=1347774129898]
+
+[Sun Sep 16 17:42:10 NZST 2012] Accepted new client [SessionID=1347774130117]
+
+[Sun Sep 16 17:42:10 NZST 2012] Accepted new client [SessionID=1347774130316]
+
+[Sun Sep 16 17:42:10 NZST 2012] Accepted new client [SessionID=1347774130528]
+
+[Sun Sep 16 17:42:10 NZST 2012] Accepted new client [SessionID=1347774130843]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131031]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131111]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131338]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131495]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131696]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131795]
+
+[Sun Sep 16 17:42:11 NZST 2012] Accepted new client [SessionID=1347774131909]
+
+[Sun Sep 16 17:42:12 NZST 2012] Accepted new client [SessionID=1347774132130]
+
+[Sun Sep 16 17:42:12 NZST 2012] Accepted new client [SessionID=1347774132698]
+
+[Sun Sep 16 17:42:12 NZST 2012] Accepted new client [SessionID=1347774132728]
+
+[Sun Sep 16 17:42:12 NZST 2012] Accepted new client [SessionID=1347774132729]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133192]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133292]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133410]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133411]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133661]
+
+[Sun Sep 16 17:42:13 NZST 2012] Accepted new client [SessionID=1347774133663]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134070]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134306]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134419]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134599]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134600]
+
+[Sun Sep 16 17:42:14 NZST 2012] Accepted new client [SessionID=1347774134637]
+
+[Sun Sep 16 17:42:15 NZST 2012] Accepted new client [SessionID=1347774135105]
+
+[Sun Sep 16 17:42:15 NZST 2012] Accepted new client [SessionID=1347774135301]
+
+[Sun Sep 16 17:42:15 NZST 2012] Accepted new client [SessionID=1347774135429]
+
+[Sun Sep 16 17:42:15 NZST 2012] Accepted new client [SessionID=1347774135695]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136016]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136017]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136121]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136338]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136432]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136602]
+
+[Sun Sep 16 17:42:16 NZST 2012] Accepted new client [SessionID=1347774136798]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137004]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137309]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137310]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137597]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137598]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137983]
+
+[Sun Sep 16 17:42:17 NZST 2012] Accepted new client [SessionID=1347774137996]
+
+[Sun Sep 16 17:42:18 NZST 2012] Accepted new client [SessionID=1347774138096]
+
+[Sun Sep 16 17:42:18 NZST 2012] Accepted new client [SessionID=1347774138332]
+
+[Sun Sep 16 17:42:18 NZST 2012] Accepted new client [SessionID=1347774138727]
+
+[Sun Sep 16 17:42:18 NZST 2012] Accepted new client [SessionID=1347774138805]
+
+[Sun Sep 16 17:42:19 NZST 2012] Accepted new client [SessionID=1347774139292]
+
+[Sun Sep 16 17:42:19 NZST 2012] Accepted new client [SessionID=1347774139817]
+
+[Sun Sep 16 17:42:19 NZST 2012] Accepted new client [SessionID=1347774139941]
+
+[Sun Sep 16 17:42:20 NZST 2012] Accepted new client [SessionID=1347774140316]
+
+[Sun Sep 16 17:42:20 NZST 2012] Accepted new client [SessionID=1347774140629]
+
+[Sun Sep 16 17:42:20 NZST 2012] Accepted new client [SessionID=1347774140637]
+
+[Sun Sep 16 17:42:20 NZST 2012] Accepted new client [SessionID=1347774140697]
+
+[Sun Sep 16 17:42:20 NZST 2012] Accepted new client [SessionID=1347774140897]
+
+[Sun Sep 16 17:42:21 NZST 2012] Accepted new client [SessionID=1347774141106]
+
+[Sun Sep 16 17:42:21 NZST 2012] Accepted new client [SessionID=1347774141400]
+
+[Sun Sep 16 17:42:21 NZST 2012] Accepted new client [SessionID=1347774141618]
+
+[Sun Sep 16 17:42:21 NZST 2012] Accepted new client [SessionID=1347774141908]
+
+[Sun Sep 16 17:42:22 NZST 2012] Accepted new client [SessionID=1347774142011]
+
+[Sun Sep 16 17:42:22 NZST 2012] Accepted new client [SessionID=1347774142096]
+
+[Sun Sep 16 17:42:22 NZST 2012] Accepted new client [SessionID=1347774142705]
+
+[Sun Sep 16 17:42:22 NZST 2012] Accepted new client [SessionID=1347774142831]
+
+[Sun Sep 16 17:42:23 NZST 2012] Accepted new client [SessionID=1347774143001]
+
+[Sun Sep 16 17:42:23 NZST 2012] Accepted new client [SessionID=1347774143195]
+
+[Sun Sep 16 17:42:23 NZST 2012] Accepted new client [SessionID=1347774143452]
+
+[Sun Sep 16 17:42:23 NZST 2012] Accepted new client [SessionID=1347774143595]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144027]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144182]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144183]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144456]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144703]
+
+[Sun Sep 16 17:42:24 NZST 2012] Accepted new client [SessionID=1347774144713]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145122]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145125]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145260]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145505]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145605]
+
+[Sun Sep 16 17:42:25 NZST 2012] Accepted new client [SessionID=1347774145828]
+
+[Sun Sep 16 17:42:26 NZST 2012] Accepted new client [SessionID=1347774146496]
+
+[Sun Sep 16 17:42:26 NZST 2012] Accepted new client [SessionID=1347774146607]
+
+[Sun Sep 16 17:42:26 NZST 2012] Accepted new client [SessionID=1347774146909]
+
+[Sun Sep 16 17:42:27 NZST 2012] Accepted new client [SessionID=1347774147074]
+
+[Sun Sep 16 17:42:27 NZST 2012] Accepted new client [SessionID=1347774147075]
+
+[Sun Sep 16 17:42:27 NZST 2012] Accepted new client [SessionID=1347774147108]
+
+[Sun Sep 16 17:42:27 NZST 2012] Accepted new client [SessionID=1347774147424]
+
+[Sun Sep 16 17:42:27 NZST 2012] Accepted new client [SessionID=1347774147708]
+
+[Sun Sep 16 17:42:28 NZST 2012] Accepted new client [SessionID=1347774148074]
+
+[Sun Sep 16 17:42:28 NZST 2012] Accepted new client [SessionID=1347774148333]
+
+[Sun Sep 16 17:42:28 NZST 2012] Accepted new client [SessionID=1347774148596]
+
+[Sun Sep 16 17:42:29 NZST 2012] Accepted new client [SessionID=1347774149204]
+
+[Sun Sep 16 17:42:29 NZST 2012] Accepted new client [SessionID=1347774149269]
+
+[Sun Sep 16 17:42:29 NZST 2012] Accepted new client [SessionID=1347774149619]
+
+[Sun Sep 16 17:42:29 NZST 2012] Accepted new client [SessionID=1347774149775]
+
+[Sun Sep 16 17:42:30 NZST 2012] Accepted new client [SessionID=1347774150013]
+
+[Sun Sep 16 17:42:30 NZST 2012] Accepted new client [SessionID=1347774150458]
+
+[Sun Sep 16 17:42:30 NZST 2012] Accepted new client [SessionID=1347774150697]
+
+[Sun Sep 16 17:42:30 NZST 2012] Accepted new client [SessionID=1347774150800]
+
+[Sun Sep 16 17:42:30 NZST 2012] Accepted new client [SessionID=1347774150927]
+
+[Sun Sep 16 17:42:31 NZST 2012] Accepted new client [SessionID=1347774151344]
+
+[Sun Sep 16 17:42:31 NZST 2012] Accepted new client [SessionID=1347774151511]
+
+[Sun Sep 16 17:42:31 NZST 2012] Accepted new client [SessionID=1347774151512]
+
+[Sun Sep 16 17:42:31 NZST 2012] Accepted new client [SessionID=1347774151727]
+
+[Sun Sep 16 17:42:32 NZST 2012] Accepted new client [SessionID=1347774152025]
+
+[Sun Sep 16 17:42:32 NZST 2012] Accepted new client [SessionID=1347774152227]
+
+[Sun Sep 16 17:42:32 NZST 2012] Accepted new client [SessionID=1347774152598]
+
+[Sun Sep 16 17:42:32 NZST 2012] Accepted new client [SessionID=1347774152911]
+
+[Sun Sep 16 17:42:33 NZST 2012] Accepted new client [SessionID=1347774153063]
+
+[Sun Sep 16 17:42:33 NZST 2012] Accepted new client [SessionID=1347774153257]
+
+[Sun Sep 16 17:42:33 NZST 2012] Accepted new client [SessionID=1347774153462]
+
+[Sun Sep 16 17:42:33 NZST 2012] Accepted new client [SessionID=1347774153926]
+
+[Sun Sep 16 17:42:34 NZST 2012] Accepted new client [SessionID=1347774154012]
+
+[Sun Sep 16 17:42:34 NZST 2012] Accepted new client [SessionID=1347774154103]
+
+[Sun Sep 16 17:42:34 NZST 2012] Accepted new client [SessionID=1347774154611]
+
+[Sun Sep 16 17:42:34 NZST 2012] Accepted new client [SessionID=1347774154731]
+
+[Sun Sep 16 17:42:35 NZST 2012] Accepted new client [SessionID=1347774155103]
+
+[Sun Sep 16 17:42:35 NZST 2012] Accepted new client [SessionID=1347774155688]
+
+[Sun Sep 16 17:42:35 NZST 2012] Accepted new client [SessionID=1347774155826]
+
+[Sun Sep 16 17:42:35 NZST 2012] Accepted new client [SessionID=1347774155896]
+
+[Sun Sep 16 17:42:36 NZST 2012] Accepted new client [SessionID=1347774156305]
+
+[Sun Sep 16 17:42:36 NZST 2012] Accepted new client [SessionID=1347774156496]
+
+[Sun Sep 16 17:42:36 NZST 2012] Accepted new client [SessionID=1347774156662]
+
+[Sun Sep 16 17:42:37 NZST 2012] Accepted new client [SessionID=1347774157165]
+
+[Sun Sep 16 17:42:37 NZST 2012] Accepted new client [SessionID=1347774157199]
+
+[Sun Sep 16 17:42:37 NZST 2012] Accepted new client [SessionID=1347774157388]
+
+[Sun Sep 16 17:42:37 NZST 2012] Accepted new client [SessionID=1347774157628]
+
+[Sun Sep 16 17:42:37 NZST 2012] Accepted new client [SessionID=1347774157931]
+
+[Sun Sep 16 17:42:38 NZST 2012] Accepted new client [SessionID=1347774158452]
+
+[Sun Sep 16 17:42:38 NZST 2012] Accepted new client [SessionID=1347774158917]
+
+[Sun Sep 16 17:42:38 NZST 2012] Accepted new client [SessionID=1347774158977]
+
+[Sun Sep 16 17:42:39 NZST 2012] Accepted new client [SessionID=1347774159055]
+
+[Sun Sep 16 17:42:39 NZST 2012] Accepted new client [SessionID=1347774159113]
+
+[Sun Sep 16 17:42:39 NZST 2012] Accepted new client [SessionID=1347774159298]
+
+[Sun Sep 16 17:42:39 NZST 2012] Accepted new client [SessionID=1347774159720]
+
+[Sun Sep 16 17:42:39 NZST 2012] Accepted new client [SessionID=1347774159723]
+
+[Sun Sep 16 17:42:40 NZST 2012] Accepted new client [SessionID=1347774160287]
+
+[Sun Sep 16 17:42:40 NZST 2012] Accepted new client [SessionID=1347774160516]
+
+[Sun Sep 16 17:42:40 NZST 2012] Accepted new client [SessionID=1347774160623]
+
+[Sun Sep 16 17:42:40 NZST 2012] Accepted new client [SessionID=1347774160902]
+
+[Sun Sep 16 17:42:41 NZST 2012] Accepted new client [SessionID=1347774161327]
+
+[Sun Sep 16 17:42:41 NZST 2012] Accepted new client [SessionID=1347774161477]
+
+[Sun Sep 16 17:42:41 NZST 2012] Accepted new client [SessionID=1347774161601]
+
+[Sun Sep 16 17:42:41 NZST 2012] Accepted new client [SessionID=1347774161776]
+
+[Sun Sep 16 17:42:41 NZST 2012] Accepted new client [SessionID=1347774161808]
+
+[Sun Sep 16 17:42:42 NZST 2012] Accepted new client [SessionID=1347774162421]
+
+[Sun Sep 16 17:42:42 NZST 2012] Accepted new client [SessionID=1347774162505]
+
+[Sun Sep 16 17:42:42 NZST 2012] Accepted new client [SessionID=1347774162706]
+
+[Sun Sep 16 17:42:43 NZST 2012] Accepted new client [SessionID=1347774163027]
+
+[Sun Sep 16 17:42:43 NZST 2012] Accepted new client [SessionID=1347774163130]
+
+[Sun Sep 16 17:42:43 NZST 2012] Accepted new client [SessionID=1347774163438]
+
+[Sun Sep 16 17:42:43 NZST 2012] Accepted new client [SessionID=1347774163528]
+
+[Sun Sep 16 17:42:43 NZST 2012] Accepted new client [SessionID=1347774163934]
+
+[Sun Sep 16 17:42:44 NZST 2012] Accepted new client [SessionID=1347774164300]
+
+[Sun Sep 16 17:42:44 NZST 2012] Accepted new client [SessionID=1347774164627]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165003]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165129]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165486]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165636]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165637]
+
+[Sun Sep 16 17:42:45 NZST 2012] Accepted new client [SessionID=1347774165957]
+
+[Sun Sep 16 17:42:46 NZST 2012] Accepted new client [SessionID=1347774166501]
+
+[Sun Sep 16 17:42:46 NZST 2012] Accepted new client [SessionID=1347774166562]
+
+[Sun Sep 16 17:42:46 NZST 2012] Accepted new client [SessionID=1347774166606]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167096]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167123]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167501]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167629]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167645]
+
+[Sun Sep 16 17:42:47 NZST 2012] Accepted new client [SessionID=1347774167942]
+
+[Sun Sep 16 17:42:48 NZST 2012] Accepted new client [SessionID=1347774168295]
+
+[Sun Sep 16 17:42:48 NZST 2012] Accepted new client [SessionID=1347774168505]
+
+[Sun Sep 16 17:42:48 NZST 2012] Accepted new client [SessionID=1347774168631]
+
+[Sun Sep 16 17:42:48 NZST 2012] Accepted new client [SessionID=1347774168833]
+
+[Sun Sep 16 17:42:49 NZST 2012] Accepted new client [SessionID=1347774169017]
+
+[Sun Sep 16 17:42:49 NZST 2012] Accepted new client [SessionID=1347774169315]
+
+[Sun Sep 16 17:42:49 NZST 2012] Accepted new client [SessionID=1347774169430]
+
+[Sun Sep 16 17:42:49 NZST 2012] Accepted new client [SessionID=1347774169486]
+
+[Sun Sep 16 17:42:49 NZST 2012] Accepted new client [SessionID=1347774169945]
+
+[Sun Sep 16 17:42:50 NZST 2012] Accepted new client [SessionID=1347774170351]
+
+[Sun Sep 16 17:42:50 NZST 2012] Accepted new client [SessionID=1347774170432]
+
+[Sun Sep 16 17:42:50 NZST 2012] Accepted new client [SessionID=1347774170738]
+
+[Sun Sep 16 17:42:50 NZST 2012] Accepted new client [SessionID=1347774170866]
+
+[Sun Sep 16 17:42:51 NZST 2012] Accepted new client [SessionID=1347774171231]
+
+[Sun Sep 16 17:42:51 NZST 2012] Accepted new client [SessionID=1347774171515]
+
+[Sun Sep 16 17:42:51 NZST 2012] Accepted new client [SessionID=1347774171517]
+
+[Sun Sep 16 17:42:51 NZST 2012] Accepted new client [SessionID=1347774171519]
+
+[Sun Sep 16 17:42:52 NZST 2012] Accepted new client [SessionID=1347774172239]
+
+[Sun Sep 16 17:42:52 NZST 2012] Accepted new client [SessionID=1347774172285]
+
+[Sun Sep 16 17:42:52 NZST 2012] Accepted new client [SessionID=1347774172289]
+
+[Sun Sep 16 17:42:52 NZST 2012] Accepted new client [SessionID=1347774172827]
+
+[Sun Sep 16 17:42:52 NZST 2012] Accepted new client [SessionID=1347774172899]
+
+[Sun Sep 16 17:42:53 NZST 2012] Accepted new client [SessionID=1347774173188]
+
+[Sun Sep 16 17:42:53 NZST 2012] Accepted new client [SessionID=1347774173414]
+
+[Sun Sep 16 17:42:53 NZST 2012] Accepted new client [SessionID=1347774173558]
+
+[Sun Sep 16 17:42:53 NZST 2012] Accepted new client [SessionID=1347774173965]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174028]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174132]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174407]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174448]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174865]
+
+[Sun Sep 16 17:42:54 NZST 2012] Accepted new client [SessionID=1347774174906]
+
+[Sun Sep 16 17:42:55 NZST 2012] Accepted new client [SessionID=1347774175208]
+
+[Sun Sep 16 17:42:55 NZST 2012] Accepted new client [SessionID=1347774175227]
+
+[Sun Sep 16 17:42:55 NZST 2012] Accepted new client [SessionID=1347774175627]
+
+[Sun Sep 16 17:42:55 NZST 2012] Accepted new client [SessionID=1347774175702]
+
+[Sun Sep 16 17:42:56 NZST 2012] Accepted new client [SessionID=1347774176108]
+
+[Sun Sep 16 17:42:56 NZST 2012] Accepted new client [SessionID=1347774176399]
+
+[Sun Sep 16 17:42:56 NZST 2012] Accepted new client [SessionID=1347774176411]
+
+[Sun Sep 16 17:42:56 NZST 2012] Accepted new client [SessionID=1347774176699]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177078]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177098]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177288]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177405]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177498]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177793]
+
+[Sun Sep 16 17:42:57 NZST 2012] Accepted new client [SessionID=1347774177867]
+
+[Sun Sep 16 17:42:58 NZST 2012] Accepted new client [SessionID=1347774178225]
+
+[Sun Sep 16 17:42:58 NZST 2012] Accepted new client [SessionID=1347774178227]
+
+[Sun Sep 16 17:42:58 NZST 2012] Accepted new client [SessionID=1347774178292]
+
+[Sun Sep 16 17:42:58 NZST 2012] Accepted new client [SessionID=1347774178814]
+
+[Sun Sep 16 17:42:59 NZST 2012] Accepted new client [SessionID=1347774179104]
+
+[Sun Sep 16 17:42:59 NZST 2012] Accepted new client [SessionID=1347774179112]
+
+[Sun Sep 16 17:42:59 NZST 2012] Accepted new client [SessionID=1347774179296]
+
+[Sun Sep 16 17:42:59 NZST 2012] Accepted new client [SessionID=1347774179619]
+
+[Sun Sep 16 17:43:00 NZST 2012] Accepted new client [SessionID=1347774180024]
+
+[Sun Sep 16 17:43:00 NZST 2012] Accepted new client [SessionID=1347774180130]
+
+[Sun Sep 16 17:43:00 NZST 2012] Accepted new client [SessionID=1347774180302]
+
+[Sun Sep 16 17:43:00 NZST 2012] Accepted new client [SessionID=1347774180626]
+
+[Sun Sep 16 17:43:00 NZST 2012] Accepted new client [SessionID=1347774180693]
+
+[Sun Sep 16 17:43:01 NZST 2012] Accepted new client [SessionID=1347774181112]
+
+[Sun Sep 16 17:43:01 NZST 2012] Accepted new client [SessionID=1347774181113]
+
+[Sun Sep 16 17:43:01 NZST 2012] Accepted new client [SessionID=1347774181192]
+
+[Sun Sep 16 17:43:01 NZST 2012] Accepted new client [SessionID=1347774181410]
+
+[Sun Sep 16 17:43:01 NZST 2012] Accepted new client [SessionID=1347774181826]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182001]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182165]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182238]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182644]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182645]
+
+[Sun Sep 16 17:43:02 NZST 2012] Accepted new client [SessionID=1347774182653]
+
+[Sun Sep 16 17:43:03 NZST 2012] Accepted new client [SessionID=1347774183293]
+
+[Sun Sep 16 17:43:03 NZST 2012] Accepted new client [SessionID=1347774183417]
+
+[Sun Sep 16 17:43:03 NZST 2012] Accepted new client [SessionID=1347774183803]
+
+[Sun Sep 16 17:43:03 NZST 2012] Accepted new client [SessionID=1347774183827]
+
+[Sun Sep 16 17:43:03 NZST 2012] Accepted new client [SessionID=1347774183923]
+
+[Sun Sep 16 17:43:04 NZST 2012] Accepted new client [SessionID=1347774184033]
+
+[Sun Sep 16 17:43:04 NZST 2012] Accepted new client [SessionID=1347774184433]
+
+[Sun Sep 16 17:43:04 NZST 2012] Accepted new client [SessionID=1347774184504]
+
+[Sun Sep 16 17:43:04 NZST 2012] Accepted new client [SessionID=1347774184602]
+
+[Sun Sep 16 17:43:04 NZST 2012] Accepted new client [SessionID=1347774184800]
+
+[Sun Sep 16 17:43:05 NZST 2012] Accepted new client [SessionID=1347774185374]
+
+[Sun Sep 16 17:43:05 NZST 2012] Accepted new client [SessionID=1347774185600]
+
+[Sun Sep 16 17:43:05 NZST 2012] Accepted new client [SessionID=1347774185635]
+
+[Sun Sep 16 17:43:06 NZST 2012] Accepted new client [SessionID=1347774186131]
+
+[Sun Sep 16 17:43:06 NZST 2012] Accepted new client [SessionID=1347774186420]
+
+[Sun Sep 16 17:43:06 NZST 2012] Accepted new client [SessionID=1347774186705]
+
+[Sun Sep 16 17:43:06 NZST 2012] Accepted new client [SessionID=1347774186727]
+
+[Sun Sep 16 17:43:06 NZST 2012] Accepted new client [SessionID=1347774186998]
+
+[Sun Sep 16 17:43:07 NZST 2012] Accepted new client [SessionID=1347774187199]
+
+[Sun Sep 16 17:43:07 NZST 2012] Accepted new client [SessionID=1347774187305]
+
+[Sun Sep 16 17:43:07 NZST 2012] Accepted new client [SessionID=1347774187700]
+
+[Sun Sep 16 17:43:07 NZST 2012] Accepted new client [SessionID=1347774187828]
+
+[Sun Sep 16 17:43:08 NZST 2012] Accepted new client [SessionID=1347774188218]
+
+[Sun Sep 16 17:43:08 NZST 2012] Accepted new client [SessionID=1347774188347]
+
+[Sun Sep 16 17:43:08 NZST 2012] Accepted new client [SessionID=1347774188801]
+
+[Sun Sep 16 17:43:09 NZST 2012] Accepted new client [SessionID=1347774189015]
+
+[Sun Sep 16 17:43:09 NZST 2012] Accepted new client [SessionID=1347774189297]
+
+[Sun Sep 16 17:43:09 NZST 2012] Accepted new client [SessionID=1347774189299]
+
+[Sun Sep 16 17:43:09 NZST 2012] Accepted new client [SessionID=1347774189507]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190002]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190359]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190504]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190654]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190752]
+
+[Sun Sep 16 17:43:10 NZST 2012] Accepted new client [SessionID=1347774190996]
+
+[Sun Sep 16 17:43:11 NZST 2012] Accepted new client [SessionID=1347774191235]
+
+[Sun Sep 16 17:43:11 NZST 2012] Accepted new client [SessionID=1347774191402]
+
+[Sun Sep 16 17:43:11 NZST 2012] Accepted new client [SessionID=1347774191609]
+
+[Sun Sep 16 17:43:11 NZST 2012] Accepted new client [SessionID=1347774191929]
+
+[Sun Sep 16 17:43:12 NZST 2012] Accepted new client [SessionID=1347774192098]
+
+[Sun Sep 16 17:43:12 NZST 2012] Accepted new client [SessionID=1347774192312]
+
+[Sun Sep 16 17:43:12 NZST 2012] Accepted new client [SessionID=1347774192430]
+
+[Sun Sep 16 17:43:12 NZST 2012] Accepted new client [SessionID=1347774192722]
+
+[Sun Sep 16 17:43:12 NZST 2012] Accepted new client [SessionID=1347774192909]
+
+[Sun Sep 16 17:43:13 NZST 2012] Accepted new client [SessionID=1347774193094]
+
+[Sun Sep 16 17:43:13 NZST 2012] Accepted new client [SessionID=1347774193310]
+
+[Sun Sep 16 17:43:13 NZST 2012] Accepted new client [SessionID=1347774193517]
+
+[Sun Sep 16 17:43:13 NZST 2012] Accepted new client [SessionID=1347774193518]
+
+[Sun Sep 16 17:43:13 NZST 2012] Accepted new client [SessionID=1347774193995]
+
+[Sun Sep 16 17:43:14 NZST 2012] Accepted new client [SessionID=1347774194027]
+
+[Sun Sep 16 17:43:14 NZST 2012] Accepted new client [SessionID=1347774194376]
+
+[Sun Sep 16 17:43:14 NZST 2012] Accepted new client [SessionID=1347774194835]
+
+[Sun Sep 16 17:43:14 NZST 2012] Accepted new client [SessionID=1347774194902]
+
+[Sun Sep 16 17:43:15 NZST 2012] Accepted new client [SessionID=1347774195353]
+
+[Sun Sep 16 17:43:15 NZST 2012] Accepted new client [SessionID=1347774195411]
+
+[Sun Sep 16 17:43:15 NZST 2012] Accepted new client [SessionID=1347774195626]
+
+[Sun Sep 16 17:43:15 NZST 2012] Accepted new client [SessionID=1347774195929]
+
+[Sun Sep 16 17:43:16 NZST 2012] Accepted new client [SessionID=1347774196133]
+
+[Sun Sep 16 17:43:16 NZST 2012] Accepted new client [SessionID=1347774196310]
+
+[Sun Sep 16 17:43:16 NZST 2012] Accepted new client [SessionID=1347774196430]
+
+[Sun Sep 16 17:43:16 NZST 2012] Accepted new client [SessionID=1347774196994]
+
+[Sun Sep 16 17:43:17 NZST 2012] Accepted new client [SessionID=1347774197032]
+
+[Sun Sep 16 17:43:17 NZST 2012] Accepted new client [SessionID=1347774197126]
+
+[Sun Sep 16 17:43:17 NZST 2012] Accepted new client [SessionID=1347774197234]
+
+[Sun Sep 16 17:43:17 NZST 2012] Accepted new client [SessionID=1347774197641]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198006]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198048]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198099]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198532]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198594]
+
+[Sun Sep 16 17:43:18 NZST 2012] Accepted new client [SessionID=1347774198963]
+
+[Sun Sep 16 17:43:19 NZST 2012] Accepted new client [SessionID=1347774199096]
+
+[Sun Sep 16 17:43:19 NZST 2012] Accepted new client [SessionID=1347774199234]
+
+[Sun Sep 16 17:43:19 NZST 2012] Accepted new client [SessionID=1347774199606]
+
+[Sun Sep 16 17:43:19 NZST 2012] Accepted new client [SessionID=1347774199700]
+
+[Sun Sep 16 17:43:19 NZST 2012] Accepted new client [SessionID=1347774199917]
+
+[Sun Sep 16 17:43:20 NZST 2012] Accepted new client [SessionID=1347774200184]
+
+[Sun Sep 16 17:43:20 NZST 2012] Accepted new client [SessionID=1347774200404]
+
+[Sun Sep 16 17:43:20 NZST 2012] Accepted new client [SessionID=1347774200601]
+
+[Sun Sep 16 17:43:20 NZST 2012] Accepted new client [SessionID=1347774200700]
+
+[Sun Sep 16 17:43:21 NZST 2012] Accepted new client [SessionID=1347774201005]
+
+[Sun Sep 16 17:43:21 NZST 2012] Accepted new client [SessionID=1347774201250]
+
+[Sun Sep 16 17:43:21 NZST 2012] Accepted new client [SessionID=1347774201412]
+
+[Sun Sep 16 17:43:21 NZST 2012] Accepted new client [SessionID=1347774201719]
+
+[Sun Sep 16 17:43:21 NZST 2012] Accepted new client [SessionID=1347774201999]
+
+[Sun Sep 16 17:43:22 NZST 2012] Accepted new client [SessionID=1347774202028]
+
+[Sun Sep 16 17:43:22 NZST 2012] Accepted new client [SessionID=1347774202279]
+
+[Sun Sep 16 17:43:22 NZST 2012] Accepted new client [SessionID=1347774202799]
+
+[Sun Sep 16 17:43:22 NZST 2012] Accepted new client [SessionID=1347774202810]
+
+[Sun Sep 16 17:43:22 NZST 2012] Accepted new client [SessionID=1347774202848]
+
+[Sun Sep 16 17:43:23 NZST 2012] Accepted new client [SessionID=1347774203106]
+
+[Sun Sep 16 17:43:23 NZST 2012] Accepted new client [SessionID=1347774203109]
+
+[Sun Sep 16 17:43:23 NZST 2012] Accepted new client [SessionID=1347774203307]
+
+[Sun Sep 16 17:43:23 NZST 2012] Accepted new client [SessionID=1347774203600]
+
+[Sun Sep 16 17:43:23 NZST 2012] Accepted new client [SessionID=1347774203995]
+
+[Sun Sep 16 17:43:24 NZST 2012] Accepted new client [SessionID=1347774204409]
+
+[Sun Sep 16 17:43:24 NZST 2012] Accepted new client [SessionID=1347774204706]
+
+[Sun Sep 16 17:43:24 NZST 2012] Accepted new client [SessionID=1347774204929]
+
+[Sun Sep 16 17:43:24 NZST 2012] Accepted new client [SessionID=1347774204980]
+
+[Sun Sep 16 17:43:25 NZST 2012] Accepted new client [SessionID=1347774205334]
+
+[Sun Sep 16 17:43:25 NZST 2012] Accepted new client [SessionID=1347774205713]
+
+[Sun Sep 16 17:43:25 NZST 2012] Accepted new client [SessionID=1347774205716]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206014]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206015]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206309]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206599]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206702]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206830]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206966]
+
+[Sun Sep 16 17:43:26 NZST 2012] Accepted new client [SessionID=1347774206972]
+
+[Sun Sep 16 17:43:27 NZST 2012] Accepted new client [SessionID=1347774207107]
+
+[Sun Sep 16 17:43:27 NZST 2012] Accepted new client [SessionID=1347774207305]
+
+[Sun Sep 16 17:43:27 NZST 2012] Accepted new client [SessionID=1347774207427]
+
+[Sun Sep 16 17:43:27 NZST 2012] Accepted new client [SessionID=1347774207800]
+
+[Sun Sep 16 17:43:27 NZST 2012] Accepted new client [SessionID=1347774207833]
+
+[Sun Sep 16 17:43:28 NZST 2012] Accepted new client [SessionID=1347774208009]
+
+[Sun Sep 16 17:43:28 NZST 2012] Accepted new client [SessionID=1347774208208]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774208305]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215852]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215853]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215854]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215855]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215856]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215868]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215879]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215888]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215889]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215899]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215900]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215901]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215902]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215904]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215906]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215907]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215908]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215909]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215910]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215912]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215913]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215914]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215915]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215916]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215917]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215918]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215919]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215920]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215921]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215922]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215923]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215924]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215925]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215926]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215927]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215928]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215929]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215930]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215933]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215935]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215936]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215938]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215939]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215940]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215941]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215942]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215944]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215945]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215948]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215951]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215952]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215953]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215954]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215955]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215956]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215959]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215961]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215962]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215964]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215971]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215972]
+
+[Sun Sep 16 17:43:35 NZST 2012] Accepted new client [SessionID=1347774215973]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216003]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216032]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216039]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216044]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216082]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216088]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216089]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216090]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216100]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216102]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216103]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216104]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216112]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216122]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216168]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216199]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216212]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216216]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216217]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216236]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216243]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216244]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216246]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216292]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216293]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216305]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216322]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216323]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216328]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216332]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216333]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216448]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216509]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216707]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216930]
+
+[Sun Sep 16 17:43:36 NZST 2012] Accepted new client [SessionID=1347774216998]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217105]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217122]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217151]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217155]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217203]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217207]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217338]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217420]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217660]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217727]
+
+[Sun Sep 16 17:43:37 NZST 2012] Accepted new client [SessionID=1347774217733]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218166]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218175]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218288]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218301]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218316]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218368]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218371]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218413]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218456]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218458]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218586]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218606]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218614]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218677]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218694]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218703]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218711]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218716]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218775]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218784]
+
+[Sun Sep 16 17:43:38 NZST 2012] Accepted new client [SessionID=1347774218844]
+
+[Sun Sep 16 17:43:39 NZST 2012] Accepted new client [SessionID=1347774219172]
 
