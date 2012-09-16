@@ -15,6 +15,7 @@ public class SessionMngr {
 	
 	private Map<String, Session> sessionList = new HashMap<String, Session>();
 	private Log log = new Log("sessions.log", true);
+	private long totalSessions = 0;
 	
 	public SessionMngr()
 	{
@@ -33,6 +34,7 @@ public class SessionMngr {
 		String id = getUnusedIdentifier();
 		Session ses = new Session();
 		sessionList.put(id, ses);
+		totalSessions++;
 		
 		this.log.printf("Created new session: %s\n", id);
 		return id;
