@@ -66,18 +66,19 @@ class Finisher {
 		float fog_b = 0.8f;
 		int fog_col = 0xFF000000 | ((int) (fog_r * 255f) << 16) | ((int) (fog_g * 255f) << 8) | (int) (fog_b * 255f);
 
-		boolean zwrite = ((flags & 0x100000L) != 0);
-		// if frame write enabled and fog enabled
-		if ((flags & 0x40000L) != 0 && (flags & 0x10L) != 0) {
+		final boolean zwrite = ((flags & 0x100000L) != 0);
+		final boolean depth_test = (flags & 0x8L) != 0;
+		final boolean fill_bg = zwrite && depth_test;
+		// if frame write enabled, fog enabled, and depth test enabled
+		// fog can't be done if depth doesn't make sense
+		if ((flags & 0x40000L) != 0 && (flags & 0x10L) != 0 && depth_test) {
 			while (frameoffset < frameend) {
 				float iZ = unsafe.getFloat(pZ);
 				iZ *= zsign;
-				if (iZ < 0 && zwrite) {
-					// TODO be more explicit about when the finisher should insert background color
+				if (iZ < 0 && fill_bg) {
 					// nothing written this frame
-					// only if zwrite enabled
+					// only if zwrite enabled and depth test enabled
 					unsafe.putFloat(pZ, zsign);
-					// unsafe.putInt(pFrame, 0x00000000);
 					unsafe.putInt(framebuffer, frameoffset, fog_col);
 					pZ += 4;
 					frameoffset += 4;
@@ -112,17 +113,13 @@ class Finisher {
 				frameoffset += 4;
 				pZ += 4;
 			}
-		}
-
-		// if frame write enabled and fog disabled
-		if ((flags & 0x40000L) != 0 && (flags & 0x10L) == 0) {
+		} else {
 			while (frameoffset < frameend) {
 				float iZ = unsafe.getFloat(pZ);
 				iZ *= zsign;
-				if (iZ < 0 && zwrite) {
-					// TODO be more explicit about when the finisher should insert background color
+				if (iZ < 0 && fill_bg) {
 					// nothing written this frame
-					// only if zwrite enabled
+					// only if zwrite enabled and depth test enabled
 					unsafe.putFloat(pZ, zsign);
 					unsafe.putInt(framebuffer, frameoffset, 0xFF000000);
 					pZ += 4;
@@ -151,6 +148,8 @@ class Finisher {
 				pZ += 4;
 			}
 		}
+		
+		// TODO proper blending ?
 
 	}
 

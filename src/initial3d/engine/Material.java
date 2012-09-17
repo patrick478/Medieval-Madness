@@ -16,7 +16,7 @@ public class Material {
 
 	public final Color ka, kd, ks, ke;
 	public final float shininess, opacity;
-	
+
 	// theoretically, opacity in diffuse alpha, shininess in spec alpha
 	public final Texture map_kd, map_ks, map_ke;
 
@@ -31,11 +31,11 @@ public class Material {
 		map_ks = null;
 		map_ke = null;
 	}
-	
+
 	public Material(Color kd_, Color ks_, float shininess_) {
 		this(DEFAULT_KA, kd_, ks_, DEFAULT_KE, shininess_, DEFAULT_OPACITY);
 	}
-	
+
 	public Material(Material basemtl, Texture map_kd_, Texture map_ks_, Texture map_ke_) {
 		ka = basemtl.ka;
 		kd = basemtl.kd;
@@ -43,13 +43,13 @@ public class Material {
 		ke = basemtl.ke;
 		shininess = basemtl.shininess;
 		opacity = basemtl.opacity;
-		if (map_kd_.size() == map_ks_.size() && map_ks_.size() == map_ke_.size()) {
-			map_kd = map_kd_;
-			map_ks = map_ks_;
-			map_ke = map_ke_;
-		} else {
-			throw new IllegalArgumentException("Texture sizes must all match.");
-		}
+
+		if (map_kd_ == null) throw new IllegalArgumentException();
+		
+		map_kd = map_kd_;
+		map_ks = map_ks_;
+		map_ke = map_ke_;
+
 	}
 
 }

@@ -64,23 +64,23 @@ public final class Util {
 		x = x * (1.5f - (x2 * x * x));
 		return x;
 	}
-	
+
 	public static final double clamp(double value, double lower, double upper) {
 		return value < lower ? lower : value > upper ? upper : value;
 	}
-	
+
 	public static final float clamp(float value, float lower, float upper) {
 		return value < lower ? lower : value > upper ? upper : value;
 	}
-	
+
 	public static final long clamp(long value, long lower, long upper) {
 		return value < lower ? lower : value > upper ? upper : value;
 	}
-	
+
 	public static final int clamp(int value, int lower, int upper) {
 		return value < lower ? lower : value > upper ? upper : value;
 	}
-	
+
 	/** Wrapper for <code>System.currentTimeMillis()</code>. */
 	public static final long time() {
 		return System.currentTimeMillis();
@@ -289,7 +289,7 @@ public final class Util {
 			pdTarget += 8;
 		}
 	}
-	
+
 	/**
 	 * Normalise a block of 4D vectors in a <code>sun.misc.Unsafe</code> manner.
 	 * 
@@ -303,9 +303,9 @@ public final class Util {
 			double s0 = unsafe.getDouble(pdSource);
 			double s1 = unsafe.getDouble(pdSource += 8);
 			double s2 = unsafe.getDouble(pdSource += 8);
-			
+
 			double im = 1d / Math.sqrt(s0 * s0 + s1 * s1 + s2 * s2);
-			
+
 			// write normalised vector to target
 			unsafe.putDouble(pdTarget, s0 * im);
 			unsafe.putDouble(pdTarget += 8, s1 * im);

@@ -183,6 +183,8 @@ public abstract class Initial3D {
 	public abstract void materialfv(int face, int pname, float[] v);
 
 	public abstract void materialf(int face, int pname, float v);
+	
+	public abstract void texImage2D(int face, Texture map_kd, Texture map_ks, Texture map_ke);
 
 	public abstract void objectID(int id);
 

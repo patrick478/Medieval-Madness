@@ -6,6 +6,8 @@ import initial3d.linearmath.*;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.Arrays;
+
 import sun.misc.Unsafe;
 
 @SuppressWarnings("restriction")
@@ -26,16 +28,18 @@ class Initial3DImpl extends Initial3D {
 	protected final double[][] onevector = new double[][] { { 1d }, { 1d }, { 1d }, { 1d } };
 	protected VectorBuffer begin_v_vbo, begin_vt_vbo, begin_vn_vbo, begin_vc_vbo;
 
+	protected final Texture tex_black;
+
 	protected int[] protopoly = new int[256];
 
 	protected PolygonPipeline polypipe;
 	protected Finisher finisher;
 
 	protected Profiler profiler;
-	
-	protected Object framebuffer = null;
+
+	protected int[] framebuffer = null;
 	protected long qFrame = 0x00DC0900;
-	protected long frame_stride = 2048;
+	protected int frame_stride = 2048;
 
 	Initial3DImpl() {
 		unsafe = Util.getUnsafe();
@@ -79,6 +83,9 @@ class Initial3DImpl extends Initial3D {
 		begin_vc_vbo = createVectorBuffer(64);
 		begin_vc_vbo.put(onevector);
 
+		tex_black = createTexture(1);
+		tex_black.setPixel(0, 0, 1f, 0f, 0f, 0f);
+
 		profiler = new Profiler();
 
 		polypipe = new PolygonPipeline(2, profiler);
@@ -92,6 +99,7 @@ class Initial3DImpl extends Initial3D {
 		cullFace(BACK);
 		materialf(FRONT_AND_BACK, OPACITY, 1f);
 		materialf(FRONT_AND_BACK, SHININESS, 1f);
+		texImage2D(FRONT_AND_BACK, tex_black, tex_black, tex_black);
 		sceneAmbientfv(new float[] { 0.1f, 0.1f, 0.1f });
 	}
 
@@ -158,7 +166,7 @@ class Initial3DImpl extends Initial3D {
 	public void initFog() {
 		// depends on matrices
 		initPipelineGeneral();
-		
+
 		int projtype = getInt(0x00000030);
 
 		// if perspective projection, setup correction factors
@@ -279,6 +287,32 @@ class Initial3DImpl extends Initial3D {
 	}
 
 	@Override
+	public void texImage2D(int face, Texture map_kd, Texture map_ks, Texture map_ke) {
+		if (face < FRONT || face > FRONT_AND_BACK) throw new IllegalArgumentException();
+		int qMtlFront = 0x00000900;
+		int qMtlBack = 0x00040900;
+
+		if (map_kd == null) throw new IllegalArgumentException();
+		// if spec or emission missing -> black
+		if (map_ks == null) map_ks = tex_black;
+		if (map_ke == null) map_ke = tex_black;
+
+		if ((face & FRONT) != 0) {
+			putLong(qMtlFront + 64, ((TextureImpl) map_kd).getTexturePointer());
+			putLong(qMtlFront + 72, ((TextureImpl) map_ks).getTexturePointer());
+			putLong(qMtlFront + 80, ((TextureImpl) map_ke).getTexturePointer());
+
+		}
+		if ((face & BACK) != 0) {
+			putLong(qMtlBack + 64, ((TextureImpl) map_kd).getTexturePointer());
+			putLong(qMtlBack + 72, ((TextureImpl) map_ks).getTexturePointer());
+			putLong(qMtlBack + 80, ((TextureImpl) map_ke).getTexturePointer());
+
+		}
+
+	}
+
+	@Override
 	public void objectID(int id) {
 		putInt(0x00000064, id);
 	}
@@ -290,14 +324,20 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void clear(int bflags) {
-		if ((bflags & FRAME_BUFFER_BIT) > 0) clearBuffer(0x00DC0900, 0x1000000);
+		if ((bflags & FRAME_BUFFER_BIT) > 0) {
+			if (framebuffer == null) {
+				clearBuffer(0x00DC0900, 0x1000000);
+			} else {
+				Arrays.fill(framebuffer, 0);
+			}
+		}
 		if ((bflags & COLOR_BUFFER_BIT) > 0) clearBuffer(0x01DC0900, 0x4000000);
 		if ((bflags & Z_BUFFER_BIT) > 0) clearBuffer(0x05DC0900, 0x1000000);
 		if ((bflags & STENCIL_BUFFER_BIT) > 0) clearBuffer(0x06E00900, 0x1000000);
 		if ((bflags & ID_BUFFER_BIT) > 0) clearBuffer(0x07E00900, 0x1000000);
 	}
 
-	/** Clear a region of memory. Size must be a multiple of 8. */
+	/** Clear a region of memory. */
 	protected void clearBuffer(long qBuffer, long size) {
 		unsafe.setMemory(pBase + qBuffer, size, (byte) 0);
 	}
@@ -783,7 +823,7 @@ class Initial3DImpl extends Initial3D {
 	public void finish() {
 		finisher.finish(unsafe, pBase, framebuffer, qFrame);
 	}
-	
+
 	@Override
 	public void useFrameBuffer(int[] framebuffer_, int stride) {
 		framebuffer = framebuffer_;

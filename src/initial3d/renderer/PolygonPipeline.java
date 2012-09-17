@@ -351,11 +351,7 @@ final class PolygonPipeline {
 		// prepare to normalise V
 		float imV = Util.fastInverseSqrt(Vx * Vx + Vy * Vy + Vz * Vz);
 
-		LightingEquations.runPhong(unsafe, pBase, pOutput, unsafe.getFloat(pMtl + 4), unsafe.getFloat(pMtl + 8),
-				unsafe.getFloat(pMtl + 12), unsafe.getFloat(pMtl + 20), unsafe.getFloat(pMtl + 24),
-				unsafe.getFloat(pMtl + 28), unsafe.getFloat(pMtl + 36), unsafe.getFloat(pMtl + 40),
-				unsafe.getFloat(pMtl + 44), unsafe.getFloat(pMtl + 32), Nx, Ny, Nz, Vx * imV, Vy * imV, Vz * imV, Vx,
-				Vy, Vz);
+		LightingEquations.runPhong2(unsafe, pBase, pOutput, pMtl, Nx, Ny, Nz, Vx * imV, Vy * imV, Vz * imV, Vx, Vy, Vz);
 	}
 
 	private static final void calculateVertexLight(Unsafe unsafe, long pBase, long pMtl, long pPolyVert, long pOutput) {
@@ -377,11 +373,7 @@ final class PolygonPipeline {
 		// prepare to normalise V
 		float imV = Util.fastInverseSqrt(Vx * Vx + Vy * Vy + Vz * Vz);
 
-		LightingEquations.runPhong(unsafe, pBase, pOutput, unsafe.getFloat(pMtl + 4), unsafe.getFloat(pMtl + 8),
-				unsafe.getFloat(pMtl + 12), unsafe.getFloat(pMtl + 20), unsafe.getFloat(pMtl + 24),
-				unsafe.getFloat(pMtl + 28), unsafe.getFloat(pMtl + 36), unsafe.getFloat(pMtl + 40),
-				unsafe.getFloat(pMtl + 44), unsafe.getFloat(pMtl + 32), Nx, Ny, Nz, Vx * imV, Vy * imV, Vz * imV, Vx,
-				Vy, Vz);
+		LightingEquations.runPhong2(unsafe, pBase, pOutput, pMtl, Nx, Ny, Nz, Vx * imV, Vy * imV, Vz * imV, Vx, Vy, Vz);
 	}
 
 	private static final void rasteriseTriangleBuffer(Unsafe unsafe, long pBase, long pTri, long pTriEnd, int Yi, int Yf) {
@@ -393,38 +385,56 @@ final class PolygonPipeline {
 		final int bmode = unsafe.getInt(pBase + 0x00000040);
 		final int shademodel = unsafe.getInt(pBase + 0x00000034);
 		final int projtype = unsafe.getInt(pBase + 0x00000030);
+		final boolean tex2d = (flags & 0x10000L) != 0;
+		final boolean depth_test = (flags & 0x8L) != 0;
+		final boolean colorwrite = (flags & 0x80000L) != 0;
 
 		for (; pTri < pTriEnd; pTri += 256) {
-			if (projtype == 1 && (frontface ? fmode : bmode) == 0 /*
-																 * perspective proj + fill
-																 */) {
-				// invz + uv + nv interpolation (this one's gonna suck to write)
+			if (projtype == 1) {
+				// persepective projection
 
-				// invz + uv + color interpolation (only for gourard)
+				if ((frontface ? fmode : bmode) == 0) {
+					// fill polys
+					if (tex2d) {
+						if (shademodel == 2 && colorwrite) {
+							// interpolate iZ + color + uv
+							// shouldn't need to interpolate color if not writing to color buffer
+							TrianglePerspectiveRasteriser.rasteriseTriangle_z_color_uv(unsafe, pBase, pTri, Yi, Yf);
 
-				if (shademodel == 2) {
-					// invz + color interpolation (only for gourard)
-					TrianglePerspectiveRasteriser.rasteriseTriangle_color(unsafe, pBase, pTri, Yi, Yf);
+						} else {
+							// interpolate iZ + uv
+							TrianglePerspectiveRasteriser.rasteriseTriangle_z_uv(unsafe, pBase, pTri, Yi, Yf);
+
+						}
+
+					} else {
+						if (shademodel == 2 && colorwrite) {
+							// interpolate iZ + color
+							// shouldn't need to interpolate color if not writing to color buffer
+							TrianglePerspectiveRasteriser.rasteriseTriangle_z_color(unsafe, pBase, pTri, Yi, Yf);
+
+						} else if (depth_test) {
+							// interpolate iZ
+							TrianglePerspectiveRasteriser.rasteriseTriangle_z(unsafe, pBase, pTri, Yi, Yf);
+
+						} else {
+							// interpolate... nothing!
+							// stencil-only passes should end up here
+							TrianglePerspectiveRasteriser.rasteriseTriangle(unsafe, pBase, pTri, Yi, Yf);
+						}
+
+					}
+
+				} else if ((frontface ? fmode : bmode) == 1) {
+					// outline polys
+
 				}
-				// invz + uv interpolation
 
-				else if (shademodel == 3) {
-					// invz + nv interpolation
-					TrianglePerspectiveRasteriser.rasteriseTriangle_nv(unsafe, pBase, pTri, Yi, Yf);
-				}
-
-				else {
-					// just invz interpolation
-					TrianglePerspectiveRasteriser.rasteriseTriangle(unsafe, pBase, pTri, Yi, Yf);
-				}
-
-			} else if (projtype == 0 && (frontface ? fmode : bmode) == 0 /*
-																		 * ortho proj + fill
-																		 */) {
-
-			} else if ((frontface ? fmode : bmode) == 1 /* outline */) {
+			} else if (projtype == 0) {
+				// orthographic projection
 
 			}
+
 		}
 	}
 

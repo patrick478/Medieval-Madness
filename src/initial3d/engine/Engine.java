@@ -111,6 +111,14 @@ public class Engine extends Thread {
 		i3d.initFog();
 		
 		float[] coltemp = new float[3];
+		
+		Texture tx = Initial3D.createTexture(64);
+		for (int u = 0; u < 64; u++) {
+			for (int v = 0; v < 64; v++) {
+				tx.setPixel(u, v, 1f, 0.2f, (float) Math.random(), 0.2f);
+				
+			}
+		}
 
 		while (true) {
 
@@ -148,12 +156,19 @@ public class Engine extends Thread {
 				i3d.materialfv(FRONT, EMISSION, mtl.ke.toArray(coltemp));
 				i3d.materialf(FRONT, OPACITY, mtl.opacity);
 				i3d.materialf(FRONT, SHININESS, mtl.shininess);
+				
+				if (mtl.map_kd != null) {
+					i3d.enable(TEXTURE_2D);
+					i3d.texImage2D(FRONT, mtl.map_kd, null, null);
+				}
 
 				i3d.vertexData(mlod.vertices);
 				i3d.texCoordData(mlod.texcoords);
 				i3d.normalData(mlod.normals);
 
 				i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
+				
+				i3d.disable(TEXTURE_2D);
 
 			}
 
@@ -185,6 +200,37 @@ public class Engine extends Thread {
 //			i3d.matrixMode(MODEL);
 //			i3d.popMatrix();
 			// end sky
+			
+//			i3d.disable(LIGHTING);
+//			i3d.matrixMode(MODEL);
+//			i3d.pushMatrix();
+//			i3d.loadIdentity();
+//			
+//			i3d.matrixMode(VIEW);
+//			i3d.pushMatrix();
+//			i3d.loadIdentity();
+//			
+//			i3d.texImage2D(FRONT, tx, null, null);
+//			i3d.enable(TEXTURE_2D);
+//			
+//			i3d.begin(POLYGON);
+//			
+//			i3d.color3d(1, 1, 1);
+//			i3d.texCoord2d(1, 1);
+//			i3d.vertex3d(-1, -1, 30);
+//			i3d.texCoord2d(1, 0);
+//			i3d.vertex3d(-1, 1, 30);
+//			i3d.texCoord2d(0, 0);
+//			i3d.vertex3d(1, 1, 3);
+//			i3d.texCoord2d(0, 1);
+//			i3d.vertex3d(1, -1, 3);
+//			
+//			i3d.end();
+//			i3d.disable(TEXTURE_2D);
+//			
+//			i3d.popMatrix();
+//			i3d.matrixMode(MODEL);
+//			i3d.popMatrix();
 
 			i3d.finish();
 

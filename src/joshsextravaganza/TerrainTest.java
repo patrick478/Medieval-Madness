@@ -7,6 +7,8 @@ import java.util.Random;
 
 import comp261.modelview.MeshLoader;
 
+import initial3d.Initial3D;
+import initial3d.Texture;
 import initial3d.engine.Color;
 import initial3d.engine.Engine;
 import initial3d.engine.Material;
@@ -29,7 +31,7 @@ public class TerrainTest {
 
 		Perlin p = new Perlin(32);
 
-		MeshLOD mlod0 = new MeshLOD(SIZE * SIZE * 2, 3, SIZE * SIZE * 2, 1, SIZE * SIZE * 2, 1);
+		MeshLOD mlod0 = new MeshLOD(SIZE * SIZE * 2, 3, SIZE * SIZE * 2, 10, SIZE * SIZE * 2, 1);
 
 		int[][] ind = new int[(SIZE + 1)][(SIZE + 1)];
 
@@ -52,6 +54,8 @@ public class TerrainTest {
 
 		Random r = new Random(32);
 
+		int[] tri_vt = new int[] { mlod0.addTexCoord(0, 0), mlod0.addTexCoord(1, 0), mlod0.addTexCoord(0, 1) };
+
 		// add polygons by theorized indexed values ^^;
 		for (int z = 0; z < SIZE; z++) {
 			for (int x = 0; x < SIZE; x++) {
@@ -60,13 +64,13 @@ public class TerrainTest {
 				if (r.nextBoolean()) {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x + 1][z + 1] };
 					tri1 = new int[] { ind[x][z], ind[x][z + 1], ind[x + 1][z + 1] };
-					mlod0.addPolygon(tri0, null, tri0, null);
-					mlod0.addPolygon(tri1, null, tri1, null);
+					mlod0.addPolygon(tri0, tri_vt, tri0, null);
+					mlod0.addPolygon(tri1, tri_vt, tri1, null);
 				} else {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x][z + 1] };
 					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1], ind[x + 1][z + 1] };
-					mlod0.addPolygon(tri0, null, tri0, null);
-					mlod0.addPolygon(tri1, null, tri1, null);
+					mlod0.addPolygon(tri0, tri_vt, tri0, null);
+					mlod0.addPolygon(tri1, tri_vt, tri1, null);
 				}
 
 			}
@@ -108,8 +112,18 @@ public class TerrainTest {
 
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();
-		Material terr_mtl = new Material(new Color(0.1f, 0.5f, 0.1f), new Color(0.1f, 0.1f, 0.1f), 1f);
-
+		Material terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
+		
+		Texture terr_tx = Initial3D.createTexture(32);
+		
+		for (int u = 0; u < 32; u++) {
+			for (int v = 0; v < 32; v++) {
+				terr_tx.setPixel(u, v, 1f, 0.3f, (float) (Math.random() * 0.4 + 0.3), 0.3f);
+			}
+		}
+		
+		terr_mtl = new Material(terr_mtl, terr_tx, null, null);
+		
 		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl);
 
 		// BOX / BALL / MONKEY !!!
@@ -120,7 +134,8 @@ public class TerrainTest {
 		entity_meshlist = MeshLoader.loadComp261(fis);
 		fis.close();
 
-		Material entity_mtl = new Material(new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), 1);
+		Material entity_mtl = new Material(Color.BLACK, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f),
+				new Color(0f, 0f, 0f), 1f, 1f);
 
 		List<MeshContext> mclist = new ArrayList<MeshContext>();
 		for (Mesh m : entity_meshlist) {
@@ -150,27 +165,25 @@ public class TerrainTest {
 		for (MeshContext mc : mclist) {
 			mc.setTransform(translate);
 		}
-		
+
 		double x = 0, z = 0;
 		Perlin p = new Perlin(32);
-		
-		
+
 		while (true) {
-			double last = mapHeight(p, (int)x, (int)z);
-			double next = mapHeight(p, (int)x+1, (int)z+1);
-			
-			TransformationMatrix4D.translate(translate, x * 2,
-					((x-(int)x)*(next-last)+last) + 0.9, z * 2);
-			
-//			TransformationMatrix4D.translate(translate, x * 2,
-//					8 * p.getNoise(x / (double) SIZE, z / (double) SIZE, 0, 8) + 0.5, z * 2);
+			double last = mapHeight(p, (int) x, (int) z);
+			double next = mapHeight(p, (int) x + 1, (int) z + 1);
+
+			TransformationMatrix4D.translate(translate, x * 2, ((x - (int) x) * (next - last) + last) + 0.9, z * 2);
+
+			// TransformationMatrix4D.translate(translate, x * 2,
+			// 8 * p.getNoise(x / (double) SIZE, z / (double) SIZE, 0, 8) + 0.5, z * 2);
 			TransformationMatrix4D.rotateX(rotateX, x * 4);
 
 			Matrix.multiplyChain(temp, xform, selfcentre, rotateX, rotateY, translate);
 			for (MeshContext mc : mclist) {
 				mc.setTransform(xform);
 			}
-			
+
 			x += 0.01;
 			z += 0.01;
 
