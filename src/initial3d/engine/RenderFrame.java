@@ -241,6 +241,7 @@ public class RenderFrame extends JFrame {
 			gd.setFullScreenWindow(this);
 			setBounds(bounds);
 			canvas.setBounds(bounds);
+			System.out.println("RenderFrame : Going fullscreen, using page flipping: " + bs.getCapabilities().isPageFlipping());
 		} else {
 			gd.setFullScreenWindow(null);
 			canvas.createBufferStrategy(2);
@@ -280,7 +281,7 @@ public class RenderFrame extends JFrame {
 	}
 
 	/**
-	 * Set the visibility of the cursor over this frame. The cursor can only be hidden if seting a custom cursor is
+	 * Set the visibility of the cursor over this frame. The cursor can only be hidden if setting a custom cursor is
 	 * allowed.
 	 */
 	public void setCursorVisible(boolean b) {

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import comp261.modelview.MeshLoader;
 
+import initial3d.engine.Color;
 import initial3d.engine.Engine;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
@@ -107,14 +108,8 @@ public class TerrainTest {
 
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();
-		Material terr_mtl = new Material();
-		terr_mtl.kd[0] = 0.1f;
-		terr_mtl.kd[1] = 0.5f;
-		terr_mtl.kd[2] = 0.1f;
-		terr_mtl.ks[0] = 0.1f;
-		terr_mtl.ks[1] = 0.1f;
-		terr_mtl.ks[2] = 0.1f;
-		terr_mtl.ka[1] = 0.3f;
+		Material terr_mtl = new Material(new Color(0.1f, 0.5f, 0.1f), new Color(0.1f, 0.1f, 0.1f), 1f);
+
 		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl);
 
 		// BOX / BALL / MONKEY !!!
@@ -125,14 +120,8 @@ public class TerrainTest {
 		entity_meshlist = MeshLoader.loadComp261(fis);
 		fis.close();
 
-		Material entity_mtl = new Material();
-		entity_mtl.kd[0] = 0.6f;
-		entity_mtl.kd[1] = 0.1f;
-		entity_mtl.kd[2] = 0.1f;
-		entity_mtl.ks[0] = 0.3f;
-		entity_mtl.ks[1] = 0.3f;
-		entity_mtl.ks[2] = 0.3f;
-		entity_mtl.ka[0] = 0.6f;
+		Material entity_mtl = new Material(new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), 1);
+
 		List<MeshContext> mclist = new ArrayList<MeshContext>();
 		for (Mesh m : entity_meshlist) {
 			mclist.add(new MeshContext(m, entity_mtl));

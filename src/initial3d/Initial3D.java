@@ -27,6 +27,10 @@ public abstract class Initial3D {
 	public static final PolygonBuffer createPolygonBuffer(int capacity, int maxvertices) {
 		return Initial3DFactory.createPolygonBuffer(capacity, maxvertices);
 	}
+	
+	public static final Texture createTexture(int size) {
+		return Initial3DFactory.createTexture(size);
+	}
 
 	// shared
 	public static final int ZERO = 0;
@@ -188,8 +192,6 @@ public abstract class Initial3D {
 	 */
 	public abstract void finish();
 	
-	public abstract void finish(int[] framebuffer);
-
 	public abstract void flipZSign();
 
 	public abstract void clear(int bflags);
@@ -276,8 +278,11 @@ public abstract class Initial3D {
 
 	// image? stuff
 
+	// TODO this method is shit change it
 	public abstract void extractBuffer(int bufferbit, BufferedImage bi);
 
 	public abstract int queryBuffer(int bufferbit, int x, int y);
+	
+	public abstract void useFrameBuffer(int[] framebuffer, int stride);
 
 }

@@ -1,5 +1,6 @@
 package comp261.modelview;
 
+import initial3d.engine.Color;
 import initial3d.engine.Engine;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
@@ -16,14 +17,8 @@ public class Test {
 		Mesh mesh = MeshLoader.loadComp261(fis).get(0);
 		fis.close();
 
-		Material mtl = new Material();
-		mtl.kd[0] = 0.6f;
-		mtl.kd[1] = 0.1f;
-		mtl.kd[2] = 0.1f;
-		mtl.ks[0] = 0.4f;
-		mtl.ks[1] = 0.4f;
-		mtl.ks[2] = 0.4f;
-
+		Material mtl = new Material(new Color(0.6f, 0.1f, 0.1f), new Color(0.4f, 0.4f, 0.4f), 1f);
+		
 		MeshContext mc = new MeshContext(mesh, mtl);
 
 		final int WIDTH = 1024;

@@ -6,9 +6,6 @@ import initial3d.linearmath.*;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.HashMap;
-import java.util.Map;
-
 import sun.misc.Unsafe;
 
 @SuppressWarnings("restriction")
@@ -35,6 +32,10 @@ class Initial3DImpl extends Initial3D {
 	protected Finisher finisher;
 
 	protected Profiler profiler;
+	
+	protected Object framebuffer = null;
+	protected long qFrame = 0x00DC0900;
+	protected long frame_stride = 2048;
 
 	Initial3DImpl() {
 		unsafe = Util.getUnsafe();
@@ -355,27 +356,27 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void blendFunc(int sfactor, int dfactor) {
-		// TODO
+		// TODO blend func
 	}
 
 	@Override
 	public void alphaFunc(int func, float ref) {
-		// TODO
+		// TODO alpha func
 	}
 
 	@Override
 	public void depthFunc(int func) {
-		// TODO
+		// TODO depth func
 	}
 
 	@Override
 	public void stencilFunc(int func, int ref, int mask) {
-		// TODO
+		// TODO stencil func
 	}
 
 	@Override
 	public void stencilOp(int sfail, int dfail, int dpass) {
-		// TODO
+		// TODO stencil op
 	}
 
 	protected final long getLightQPointer(long light) {
@@ -647,7 +648,7 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public int queryBuffer(int bufferbit, int x, int y) {
-		// TODO
+		// TODO query buffer
 		return 0;
 	}
 
@@ -780,12 +781,19 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void finish() {
-		finisher.finish(unsafe, pBase);
+		finisher.finish(unsafe, pBase, framebuffer, qFrame);
 	}
-
+	
 	@Override
-	public void finish(int[] framebuffer) {
-		finisher.finish_array(unsafe, pBase, framebuffer);
+	public void useFrameBuffer(int[] framebuffer_, int stride) {
+		framebuffer = framebuffer_;
+		if (framebuffer == null) {
+			qFrame = 0x00DC0900;
+			frame_stride = 2048;
+		} else {
+			qFrame = unsafe.arrayBaseOffset(int[].class);
+			frame_stride = stride;
+		}
 	}
 
 }

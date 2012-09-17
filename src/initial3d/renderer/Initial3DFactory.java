@@ -2,6 +2,7 @@ package initial3d.renderer;
 
 import initial3d.Initial3D;
 import initial3d.PolygonBuffer;
+import initial3d.Texture;
 import initial3d.VectorBuffer;
 
 public class Initial3DFactory {
@@ -22,6 +23,10 @@ public class Initial3DFactory {
 
 	public static final PolygonBuffer createPolygonBuffer(int capacity, int maxvertices) {
 		return new PolygonBufferImpl(capacity, maxvertices);
+	}
+	
+	public static final Texture createTexture(int size) {
+		return new TextureImpl(size);
 	}
 
 }

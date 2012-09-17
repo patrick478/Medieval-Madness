@@ -69,6 +69,8 @@ public class Engine extends Thread {
 
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] bidata = ((DataBufferInt) (bi.getRaster().getDataBuffer())).getData();
+		
+		i3d.useFrameBuffer(bidata, width);
 
 		i3d.viewportSize(width, height);
 
@@ -107,6 +109,8 @@ public class Engine extends Thread {
 		i3d.matrixMode(PROJ);
 		i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
 		i3d.initFog();
+		
+		float[] coltemp = new float[3];
 
 		while (true) {
 
@@ -138,10 +142,10 @@ public class Engine extends Thread {
 				MeshLOD mlod = mc.getMesh().get(0);
 				Material mtl = mc.getMaterial();
 
-				i3d.materialfv(FRONT, AMBIENT, mtl.ka);
-				i3d.materialfv(FRONT, DIFFUSE, mtl.kd);
-				i3d.materialfv(FRONT, SPECULAR, mtl.ks);
-				i3d.materialfv(FRONT, EMISSION, mtl.ke);
+				i3d.materialfv(FRONT, AMBIENT, mtl.ka.toArray(coltemp));
+				i3d.materialfv(FRONT, DIFFUSE, mtl.kd.toArray(coltemp));
+				i3d.materialfv(FRONT, SPECULAR, mtl.ks.toArray(coltemp));
+				i3d.materialfv(FRONT, EMISSION, mtl.ke.toArray(coltemp));
 				i3d.materialf(FRONT, OPACITY, mtl.opacity);
 				i3d.materialf(FRONT, SHININESS, mtl.shininess);
 
@@ -182,7 +186,7 @@ public class Engine extends Thread {
 //			i3d.popMatrix();
 			// end sky
 
-			i3d.finish(bidata);
+			i3d.finish();
 
 			profiler.endSection(shademodel == 2 ? "I3D-engine_draw-gourard" : "I3D-engine_draw-flat");
 
@@ -208,11 +212,18 @@ public class Engine extends Thread {
 			i3d.shadeModel(SHADEMODEL_GOURARD);
 			shademodel = 2;
 		}
-		if (frame.pollKey(KeyEvent.VK_BACK_QUOTE)) {
+		if (frame.pollKey(KeyEvent.VK_3)) {
 			if (i3d.isEnabled(CULL_FACE)) {
 				i3d.disable(CULL_FACE);
 			} else {
 				i3d.enable(CULL_FACE);
+			}
+		}
+		if (frame.pollKey(KeyEvent.VK_4)) {
+			if (i3d.isEnabled(FOG)) {
+				i3d.disable(FOG);
+			} else {
+				i3d.enable(FOG);
 			}
 		}
 
@@ -256,8 +267,8 @@ public class Engine extends Thread {
 			cam.move(cup.scale(dt * 3));
 		}
 
-		int mx = frame.pollMouseTravelX(100);
-		int my = frame.pollMouseTravelY(100);
+		int mx = frame.pollMouseTravelX();
+		int my = frame.pollMouseTravelY();
 
 		// 200px == pi / 4 ??
 
