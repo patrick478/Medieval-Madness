@@ -143,9 +143,9 @@ class Finisher {
 		long arrayoffset = unsafe.arrayBaseOffset(int[].class) + Yi * width * 4;
 		long arrayend = arrayoffset + width * (Yf - Yi) * 4;
 
-		float fog_r = 0.8f;
-		float fog_g = 0.3f;
-		float fog_b = 0.3f;
+		float fog_r = 0.5f;
+		float fog_g = 0.5f;
+		float fog_b = 0.8f;
 		int fog_col = 0xFF000000 | ((int) (fog_r * 255f) << 16) | ((int) (fog_g * 255f) << 8) | (int) (fog_b * 255f);
 
 		boolean zwrite = ((flags & 0x100000L) != 0);

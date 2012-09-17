@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -233,11 +234,17 @@ public class RenderFrame extends JFrame {
 	/** Set whether this frame should be fullscreen or not. */
 	public void setFullscreen(boolean b) {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		// TODO recreate buffer strategy?
-		if (b) {
+		if (b && gd.isFullScreenSupported()) {
+			Rectangle bounds = gd.getDefaultConfiguration().getBounds();
+			canvas.createBufferStrategy(2);
+			bs = canvas.getBufferStrategy();
 			gd.setFullScreenWindow(this);
+			setBounds(bounds);
+			canvas.setBounds(bounds);
 		} else {
 			gd.setFullScreenWindow(null);
+			canvas.createBufferStrategy(2);
+			bs = canvas.getBufferStrategy();
 		}
 
 	}

@@ -164,10 +164,17 @@ public class TerrainTest {
 		
 		double x = 0, z = 0;
 		Perlin p = new Perlin(32);
-
+		
+		
 		while (true) {
+			double last = mapHeight(p, (int)x, (int)z);
+			double next = mapHeight(p, (int)x+1, (int)z+1);
+			
 			TransformationMatrix4D.translate(translate, x * 2,
-					8 * p.getNoise(x / (double) SIZE, z / (double) SIZE, 0, 8) + 0.5, z * 2);
+					((x-(int)x)*(next-last)+last) + 0.9, z * 2);
+			
+//			TransformationMatrix4D.translate(translate, x * 2,
+//					8 * p.getNoise(x / (double) SIZE, z / (double) SIZE, 0, 8) + 0.5, z * 2);
 			TransformationMatrix4D.rotateX(rotateX, x * 4);
 
 			Matrix.multiplyChain(temp, xform, selfcentre, rotateX, rotateY, translate);
