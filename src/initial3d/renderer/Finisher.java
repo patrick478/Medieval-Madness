@@ -52,7 +52,7 @@ class Finisher {
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final int height = unsafe.getInt(pBase + 0x00000004);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 
 		long pColor = pBase + 0x01DC0900 + Yi * width * 16; // float4, ARGB
 		long pZ = pBase + 0x05DC0900 + Yi * width * 4; // float
