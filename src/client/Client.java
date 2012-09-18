@@ -1,10 +1,12 @@
 package client;
 
+import client.networking.*;
 import common.Log;
 
 public class Client {
 	private GameState gameState;
 	private Log log;
+	private NetworkClient net;
 	
 	protected boolean running = false;
 	
@@ -13,6 +15,7 @@ public class Client {
 	public Client()
 	{
 		this.log = new Log("client.log", true);
+		this.net = new NetworkClient(this);
 	}
 	
 	public void setState(GameState newState)
