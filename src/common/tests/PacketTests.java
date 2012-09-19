@@ -4,13 +4,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import common.Packet;
+import common.DataPacket;
 
 public class PacketTests {
 	
 	@Test
 	public void TestByte() {
-		Packet p = new Packet();
+		DataPacket p = new DataPacket();
 		
 		p.addByte((byte)'j');
 		assertEquals(p.getByte(), (byte)'j');
@@ -24,7 +24,7 @@ public class PacketTests {
 	
 	@Test
 	public void TestShort() {
-		Packet p = new Packet();
+		DataPacket p = new DataPacket();
 		
 		short test = 2;
 		p.addShort(test);

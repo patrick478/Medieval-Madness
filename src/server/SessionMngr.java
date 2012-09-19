@@ -34,7 +34,7 @@ public class SessionMngr {
 		String id = getUnusedIdentifier();
 		Session ses = new Session();
 		sessionList.put(id, ses);
-		totalSessions++;
+		this.totalSessions++;
 		
 		this.log.printf("Created new session: %s\n", id);
 		return id;

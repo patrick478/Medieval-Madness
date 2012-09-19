@@ -3,7 +3,7 @@ package server;
 import java.nio.channels.*;
 import java.util.*;
 
-import common.Packet;
+import common.DataPacket;
 
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
@@ -46,12 +46,12 @@ public class ServerWorker implements Runnable {
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
-			//System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
-			Packet p = new Packet(dataEvent.data);
+			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
+			DataPacket p = new DataPacket(dataEvent.data);
 			int a = p.getShort();
 			int b = p.getShort();
 			int result = a * b;
-			Packet reply = new Packet();
+			DataPacket reply = new DataPacket();
 			//System.out.printf("Client %s requested %d*%d. Result=%d\n", dataEvent.session, a, b, result);
 			reply.addShort(result);
 			
