@@ -1057,9 +1057,9 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_min = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				float dUV_dxy_max = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
 				// float exponent -1 => level 0, exponent -2 => level 1
-				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_min) + 0x00140000) & 0x7F800000) >>> 23);
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
 
 				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
 				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
@@ -1469,9 +1469,9 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_min = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				float dUV_dxy_max = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
 				// float exponent -1 => level 0, exponent -2 => level 1
-				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_min) + 0x00140000) & 0x7F800000) >>> 23);
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
 
 				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
 				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
