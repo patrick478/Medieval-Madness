@@ -52,6 +52,17 @@ public class SessionMngr {
 		return this.sessionList.size();
 	}
 	
+	public long totalSessions() {
+		return this.totalSessions;
+	}
+	
+	public Session getSession(String id)
+	{
+		if(sessionList.containsKey(id))
+			return sessionList.get(id);
+		return null;
+	}
+	
 	private String getUnusedIdentifier() {
 		String id = null;
 		while(id == null || sessionList.containsKey(id))

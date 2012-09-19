@@ -17,6 +17,10 @@ public class SessionCommand extends Command {
 		{
 			System.out.printf("There are currently %d active sessions\n", SessionMngr.getInstance().numSessions());
 		}
+		else if(args[1].equals("total"))
+		{
+			System.out.printf("There have been a total of %d sessions\n",  SessionMngr.getInstance().totalSessions());
+		}
 		else
 			System.out.printf("Unrecognised session command\n");
 	}

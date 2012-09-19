@@ -1,9 +1,8 @@
 package initial3d.engine;
 
-import java.lang.reflect.Field;
+import initial3d.linearmath.TransformationMatrix4D;
+
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Vec3 represents an immutable 3-dimensional vector.
@@ -24,11 +23,7 @@ public final class Vec3 {
 
 	// private cache
 
-	private static BlockingQueue<Vec3> reclaim = null;
-	private static Field field_x, field_y, field_z, field_m, field_im, field_unitvec, field_negvec, field_flatx,
-			field_flaty, field_flatz;
-
-	// magnitude can never be < 0
+	// magnitude can never be < 0, so -1 means not initialised
 	private double m = -1;
 	private double im = -1;
 	private Vec3 unitvec, negvec, flatx, flaty, flatz;
@@ -42,100 +37,60 @@ public final class Vec3 {
 		z = z_;
 	}
 
-	@Override
-	protected void finalize() {
-		// avoid null pointers without explicit sync
-		// doesn't really matter if vec gets added to old reclaim queue
-		BlockingQueue<Vec3> reclaimtarget = reclaim;
-		if (reclaimtarget != null) reclaimtarget.offer(this);
-	}
-
-	/**
-	 * Initialise the automatic reclamation of instances that would otherwise be
-	 * garbage-collected so that <code>create()</code> can recycle them.
-	 */
-	public static final boolean initReclaim(int capacity) {
-		try {
-			field_x = Vec3.class.getDeclaredField("x");
-			field_x.setAccessible(true);
-			field_y = Vec3.class.getDeclaredField("y");
-			field_y.setAccessible(true);
-			field_z = Vec3.class.getDeclaredField("z");
-			field_z.setAccessible(true);
-			field_m = Vec3.class.getDeclaredField("m");
-			field_m.setAccessible(true);
-			field_im = Vec3.class.getDeclaredField("im");
-			field_im.setAccessible(true);
-			field_unitvec = Vec3.class.getDeclaredField("unitvec");
-			field_unitvec.setAccessible(true);
-			field_negvec = Vec3.class.getDeclaredField("negvec");
-			field_negvec.setAccessible(true);
-			field_flatx = Vec3.class.getDeclaredField("flatx");
-			field_flatx.setAccessible(true);
-			field_flaty = Vec3.class.getDeclaredField("flaty");
-			field_flaty.setAccessible(true);
-			field_flatz = Vec3.class.getDeclaredField("flatz");
-			field_flatz.setAccessible(true);
-			reclaim = new LinkedBlockingQueue<Vec3>(capacity);
-			return true;
-		} catch (Exception e) {
-			reclaim = null;
-		}
-		return false;
-	}
-
+	/** Create a Vec 3 from components. */
 	public static final Vec3 create(double x, double y, double z) {
-		Vec3 v = null;
-		BlockingQueue<Vec3> reclaimfrom = reclaim;
-		if (reclaimfrom != null && (v = reclaimfrom.poll()) != null) {
-			try {
-				field_x.setDouble(v, x);
-				field_y.setDouble(v, y);
-				field_z.setDouble(v, z);
-				field_m.setDouble(v, -1);
-				field_im.setDouble(v, -1);
-				field_unitvec.set(v, null);
-				field_negvec.set(v, null);
-				field_flatx.set(v, null);
-				field_flaty.set(v, null);
-				field_flatz.set(v, null);
-				//System.out.println("Vec3 reclaimed");
-				return v;
-			} catch (IllegalAccessException e) {
-				// shouldn't happen
-			}
-		}
 		return new Vec3(x, y, z);
 	}
 
+	/** Create a Vec 3 by reading x, y, z components successively as doubles from a Scanner. */
 	public static final Vec3 create(Scanner scan) {
 		return create(scan.nextDouble(), scan.nextDouble(), scan.nextDouble());
 	}
 
+	/** Create a Vec 3 from its 2D column vector (row-major) array representation. */
 	public static final Vec3 create(double[][] v) {
 		return create(v[0][0], v[1][0], v[2][0]);
 	}
 
+	/**
+	 * Create a Vec3 that is the normal of a plane defined by 3 points such that the normal lies on the side of the
+	 * plane from which the points appear to be ordered anticlockwise, ie normal == (p1 - p0) x (p2 - p1).
+	 */
 	public static final Vec3 createPlaneNorm(Vec3 p0, Vec3 p1, Vec3 p2) {
 		return p1.sub(p0).cross(p2.sub(p1));
 	}
 
+	/** Create a Vec3 from the positive extremes (component-wise) of two Vec3s. */
+	public static final Vec3 positiveExtremes(Vec3 a, Vec3 b) {
+		return create(Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
+	}
+
+	/** Create a Vec3 from the negative extremes (component-wise) of two Vec3s. */
+	public static final Vec3 negativeExtremes(Vec3 a, Vec3 b) {
+		return create(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
+	}
+
 	/**
-	 * Compute the addition of this Vector3D and vec.
+	 * Compute the addition of this Vec3 and vec.
 	 */
 	public Vec3 add(Vec3 vec) {
 		return create(x + vec.x, y + vec.y, z + vec.z);
 	}
 
+	/** Compute the addition of this Vec3 and the Vec3 implied by the specified components. */
+	public Vec3 add(double dx, double dy, double dz) {
+		return create(x + dx, y + dy, z + dz);
+	}
+
 	/**
-	 * Compute the subtraction of vec from this Vector3D.
+	 * Compute the subtraction of vec from this Vec3.
 	 */
 	public Vec3 sub(Vec3 vec) {
 		return create(x - vec.x, y - vec.y, z - vec.z);
 	}
 
 	/**
-	 * Generate a copy of this Vector3D, but pointing in the opposite direction.
+	 * Generate a copy of this Vec3, but pointing in the opposite direction.
 	 */
 	public Vec3 neg() {
 		if (negvec == null) negvec = create(-x, -y, -z);
@@ -143,21 +98,21 @@ public final class Vec3 {
 	}
 
 	/**
-	 * Compute the dot product of this Vector3D and vec.
+	 * Compute the dot product of this Vec3 and vec.
 	 */
 	public double dot(Vec3 vec) {
 		return x * vec.x + y * vec.y + z * vec.z;
 	}
 
 	/**
-	 * Compute the cross product of this Vector3D and vec.
+	 * Compute the cross product of this Vec3 and vec.
 	 */
 	public Vec3 cross(Vec3 vec) {
 		return create(y * vec.z - z * vec.y, z * vec.x - x * vec.z, x * vec.y - y * vec.x);
 	}
 
 	/**
-	 * Calculate the magnitude of the cross product of this Vector3D and vec.
+	 * Calculate the magnitude of the cross product of this Vec3 and vec.
 	 */
 	public double crossmag(Vec3 vec) {
 		return Math.sqrt(Math.pow(y * vec.z - z * vec.y, 2) + Math.pow(z * vec.x - x * vec.z, 2)
@@ -165,21 +120,21 @@ public final class Vec3 {
 	}
 
 	/**
-	 * Compute the included angle between this Vector3D and vec, in radians.
+	 * Compute the included angle between this Vec3 and vec, in radians.
 	 */
 	public double inc(Vec3 vec) {
 		return Math.acos(dot(vec) / (mag() * vec.mag()));
 	}
 
 	/**
-	 * Generate a copy of this Vector3D scaled by r.
+	 * Generate a copy of this Vec3 scaled by r.
 	 */
 	public Vec3 scale(double r) {
 		return create(x * r, y * r, z * r);
 	}
 
 	/**
-	 * Compute the magnitude of this Vector3D.
+	 * Compute the magnitude of this Vec3.
 	 */
 	public double mag() {
 		if (m < 0) m = Math.sqrt(x * x + y * y + z * z);
@@ -187,7 +142,7 @@ public final class Vec3 {
 	}
 
 	/**
-	 * Compute the inverse magnitude of this Vector3D.
+	 * Compute the inverse magnitude of this Vec3.
 	 */
 	public double invmag() {
 		if (im < 0) im = 1d / mag();
@@ -195,42 +150,44 @@ public final class Vec3 {
 	}
 
 	/**
-	 * Generate a copy of this Vector3D scaled to a magnitude of 1.
+	 * Get a copy of this Vec3 scaled to a magnitude of 1.
 	 */
 	public Vec3 unit() {
 		if (unitvec == null) unitvec = scale(invmag());
 		return unitvec;
 	}
 
+	/** Get a copy of this Vec3, except set x == 0. */
 	public Vec3 flattenX() {
 		if (flatx == null) flatx = create(0, y, z);
 		return flatx;
 	}
 
+	/** Get a copy of this Vec3, except set y == 0. */
 	public Vec3 flattenY() {
 		if (flaty == null) flaty = create(x, 0, z);
 		return flaty;
 	}
 
+	/** Get a copy of this Vec3, except set z == 0. */
 	public Vec3 flattenZ() {
 		if (flatz == null) flatz = create(x, y, 0);
 		return flatz;
 	}
 
+	/** Generate a copy of this Vec3 with x set to the specified value. */
 	public Vec3 setX(double x) {
 		return create(x, y, z);
 	}
 
+	/** Generate a copy of this Vec3 with y set to the specified value. */
 	public Vec3 setY(double y) {
 		return create(x, y, z);
 	}
 
+	/** Generate a copy of this Vec3 with z set to the specified value. */
 	public Vec3 setZ(double z) {
 		return create(x, y, z);
-	}
-
-	public Vec3 delta(double dx, double dy, double dz) {
-		return create(x + dx, y + dy, z + dz);
 	}
 
 	public double[][] to3Array() {
@@ -262,6 +219,11 @@ public final class Vec3 {
 		to3Array(v);
 		v[3][0] = 0d;
 		return v;
+	}
+
+	public double[][] toTranslationMatrix(double[][] m) {
+		TransformationMatrix4D.translate(m, x, y, z);
+		return m;
 	}
 
 	@Override

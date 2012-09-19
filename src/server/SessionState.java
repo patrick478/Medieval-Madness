@@ -1,5 +1,5 @@
 package server;
 
-public abstract class SessionState {
-	
+public enum SessionState {
+	Welcome
 }

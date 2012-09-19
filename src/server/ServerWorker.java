@@ -48,6 +48,12 @@ public class ServerWorker implements Runnable {
 			
 			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
 			DataPacket p = new DataPacket(dataEvent.data);
+			Session s = SessionMngr.getInstance().getSession(dataEvent.session);
+			if(s == null) return; // TODO: This is bad.
+			
+			process(p, s);
+			
+			/*
 			int a = p.getShort();
 			int b = p.getShort();
 			int result = a * b;
@@ -56,8 +62,14 @@ public class ServerWorker implements Runnable {
 			reply.addShort(result);
 			
 			dataEvent.server.send(dataEvent.socket, reply.getData());
+			*/
 		}
 		
 		this.parentServer.log.printf("ServerWorker :: detected shutdown - stopping\n");
-	}	
+	}
+	
+	public void process(DataPacket p, Session s)
+	{
+		
+	}
 }

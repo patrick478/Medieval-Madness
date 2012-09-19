@@ -1,4 +1,4 @@
-package common.Packets;
+package common.packets;
 
 import common.DataPacket;
 import common.Packet;

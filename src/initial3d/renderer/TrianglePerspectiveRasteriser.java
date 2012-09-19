@@ -253,7 +253,7 @@ final class TrianglePerspectiveRasteriser {
 		final int height = unsafe.getInt(pBase + 0x00000004);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final long flags = unsafe.getLong(pBase + 0x00000008);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 		final boolean frontface = unsafe.getInt(pTri) < 0;
 
 		double vscale = -(height >> 1);
@@ -498,7 +498,7 @@ final class TrianglePerspectiveRasteriser {
 		final int height = unsafe.getInt(pBase + 0x00000004);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final long flags = unsafe.getLong(pBase + 0x00000008);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 		final boolean frontface = unsafe.getInt(pTri) < 0;
 
 		double vscale = -(height >> 1);
@@ -845,7 +845,7 @@ final class TrianglePerspectiveRasteriser {
 		final int height = unsafe.getInt(pBase + 0x00000004);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final long flags = unsafe.getLong(pBase + 0x00000008);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 		final boolean frontface = unsafe.getInt(pTri) < 0;
 
 		double vscale = -(height >> 1);
@@ -1171,7 +1171,7 @@ final class TrianglePerspectiveRasteriser {
 		final int height = unsafe.getInt(pBase + 0x00000004);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final long flags = unsafe.getLong(pBase + 0x00000008);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 		final boolean frontface = unsafe.getInt(pTri) < 0;
 
 		double vscale = -(height >> 1);
@@ -1586,7 +1586,7 @@ final class TrianglePerspectiveRasteriser {
 		final int height = unsafe.getInt(pBase + 0x00000004);
 		final int width = unsafe.getInt(pBase + 0x00000000);
 		final long flags = unsafe.getLong(pBase + 0x00000008);
-		final float zsign = unsafe.getInt(pBase + 0x00000068);
+		final int zsign = unsafe.getInt(pBase + 0x00000068);
 		final boolean frontface = unsafe.getInt(pTri) < 0;
 		final long pColor = pBase + 0x01DC0900;
 		final long pZ = pBase + 0x05DC0900;

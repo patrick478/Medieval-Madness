@@ -9,4 +9,14 @@ public class Session {
 	public Session() {
 		state = SessionState.Welcome;
 	}
+	
+	public SocketChannel getSocket()
+	{
+		return this.socket;
+	}
+	
+	public SessionState getState()
+	{
+		return this.state;
+	}
 }
