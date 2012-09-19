@@ -7,4 +7,7 @@ public abstract class Entity {
 	
 	protected long Chunk;
 	protected float X, Y, Z;
+	
+	public abstract BoundingBox getBound();
+	
 }
