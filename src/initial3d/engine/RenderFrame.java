@@ -33,6 +33,9 @@ import javax.swing.SwingUtilities;
 public class RenderFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Point point_zero = new Point(0, 0);
+	private final GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
 	private Canvas canvas;
 	private BufferStrategy bs;
@@ -165,7 +168,7 @@ public class RenderFrame extends JFrame {
 					ct = System.currentTimeMillis();
 					ftimes.add(ct);
 					if (ct - lt > 33) {
-						//System.out.println("Detected frametime = " + (ct - lt) + "ms.");
+						// System.out.println("Detected frametime = " + (ct - lt) + "ms.");
 						t_lastbad = ct;
 					}
 				} else {
@@ -227,21 +230,20 @@ public class RenderFrame extends JFrame {
 
 	/** Determine if this frame is currently fullscreen. */
 	public boolean isFullscreen() {
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		return gd.getFullScreenWindow() == this;
 	}
 
 	/** Set whether this frame should be fullscreen or not. */
 	public void setFullscreen(boolean b) {
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		if (b && gd.isFullScreenSupported()) {
 			Rectangle bounds = gd.getDefaultConfiguration().getBounds();
-			canvas.createBufferStrategy(2);
-			bs = canvas.getBufferStrategy();
 			gd.setFullScreenWindow(this);
 			setBounds(bounds);
 			canvas.setBounds(bounds);
-			System.out.println("RenderFrame : Going fullscreen, using page flipping: " + bs.getCapabilities().isPageFlipping());
+			canvas.createBufferStrategy(2);
+			bs = canvas.getBufferStrategy();
+			System.out.println("RenderFrame : Going fullscreen, using page flipping: "
+					+ bs.getCapabilities().isPageFlipping());
 		} else {
 			gd.setFullScreenWindow(null);
 			canvas.createBufferStrategy(2);
@@ -264,7 +266,13 @@ public class RenderFrame extends JFrame {
 			if (b) {
 				int centrex = canvas.getWidth() / 2;
 				int centrey = canvas.getHeight() / 2;
-				Point cloc = canvas.getLocationOnScreen();
+				Point cloc;
+				if (isFullscreen()) {
+					// HACK for getLocationOnScreen() not giving 0,0 in fullscreen 
+					cloc = point_zero;
+				} else {
+					cloc = canvas.getLocationOnScreen();
+				}
 				// put the mouse in the centre of the canvas
 				robot.mouseMove(cloc.x + centrex, cloc.y + centrey);
 			}
@@ -418,7 +426,13 @@ public class RenderFrame extends JFrame {
 			MouseEvent me = (MouseEvent) event;
 			if (event.getID() == MouseEvent.MOUSE_MOVED || event.getID() == MouseEvent.MOUSE_DRAGGED) {
 				synchronized (lock_mousedata) {
-					Point cloc = canvas.getLocationOnScreen();
+					Point cloc;
+					if (isFullscreen()) {
+						// HACK for getLocationOnScreen() not giving 0,0 in fullscreen
+						cloc = point_zero;
+					} else {
+						cloc = canvas.getLocationOnScreen();
+					}
 					mousex = me.getXOnScreen() - cloc.x;
 					mousey = me.getYOnScreen() - cloc.y;
 					if (mousecaptured) {
