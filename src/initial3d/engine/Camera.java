@@ -70,7 +70,7 @@ public class Camera {
 	}
 
 	public synchronized void move(double dx, double dy, double dz) {
-		pos = pos.delta(dx, dy, dz);
+		pos = pos.add(dx, dy, dz);
 	}
 	
 	public synchronized void move(Vec3 delta) {
