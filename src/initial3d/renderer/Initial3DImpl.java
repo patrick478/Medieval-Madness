@@ -14,6 +14,7 @@ import sun.misc.Unsafe;
 class Initial3DImpl extends Initial3D {
 
 	static final int MEM_SIZE = 268435456;
+	static final int MAX_VECTORS = 49152;
 
 	protected final Unsafe unsafe;
 	protected final long pBase;

@@ -12,10 +12,14 @@ class VectorBufferImpl extends VectorBuffer {
 	private int capacity;
 
 	public VectorBufferImpl(int capacity_) {
+		if (capacity_ < 0) throw new IllegalArgumentException();
+		if (capacity_ > Initial3DImpl.MAX_VECTORS)
+			throw new IllegalArgumentException("Cannot create vector buffer of capacity greater than "
+					+ Initial3DImpl.MAX_VECTORS + ". Argument was " + capacity_ + ".");
 		capacity = capacity_;
 		pBase = unsafe.allocateMemory(capacity_ * 32);
 	}
-	
+
 	@Override
 	public final int capacity() {
 		return capacity;
@@ -60,7 +64,7 @@ class VectorBufferImpl extends VectorBuffer {
 			v[i][0] = unsafe.getDouble(pBase + (index * 4 + i) * 8);
 		}
 	}
-	
+
 	// package-private
 	long getBasePointer() {
 		return pBase;

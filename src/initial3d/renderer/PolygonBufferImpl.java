@@ -13,6 +13,8 @@ final class PolygonBufferImpl extends PolygonBuffer {
 	// poly format: [vcount, -, -, -, v0, vt0, vn0, vc0, v..., vt..., vn..., vc...] - indices into VectorBuffer objects
 
 	public PolygonBufferImpl(int capacity_, int maxv_) {
+		if (capacity_ < 1) throw new IllegalArgumentException("Minimum allowed capacity is 1.");
+		if (maxv_ < 3) throw new IllegalArgumentException("Minimum allowed max vertices per polygon is 3.");
 		capacity = capacity_;
 		maxv = maxv_;
 		stride = maxv * 4 + 4;
@@ -38,8 +40,10 @@ final class PolygonBufferImpl extends PolygonBuffer {
 	public final void addPolygon(int[] v, int[] vt, int[] vn, int[] vc) {
 		if (count == capacity) throw new IndexOutOfBoundsException();
 		if (v == null) throw new IllegalArgumentException();
+		if (v.length < 3) throw new IllegalArgumentException("Less than 3 vertices does not define a valid polygon.");
 		if ((vn != null && v.length != vn.length) || (vt != null && v.length != vt.length)
-				|| (vc != null && v.length != vc.length)) throw new IllegalArgumentException("Incorrect size for vt/vn/vc.");
+				|| (vc != null && v.length != vc.length))
+			throw new IllegalArgumentException("Incorrect size for vt/vn/vc.");
 		int vcount = v.length;
 		if (vcount > maxv) throw new IllegalArgumentException("Too many vertices.");
 
