@@ -11,6 +11,7 @@ class TextureImpl extends Texture {
 	private final int size;
 	private final long pTex;
 	private final long pLevel;
+	private final long alloc;
 
 	TextureImpl(int size_) {
 		int level_ = 0;
@@ -42,7 +43,10 @@ class TextureImpl extends Texture {
 		}
 		level = level_;
 		size = size_;
-		pTex = unsafe.allocateMemory((long) (8 + size * size * 16 * 1.4d));
+		alloc = (long) (8 + size * size * 16 * 1.4d);
+		pTex = unsafe.allocateMemory(alloc);
+		// clear the texture (to transparent black)
+		unsafe.setMemory(pTex, alloc, (byte) 0);
 		pLevel = pTex + levelOffset(level);
 		unsafe.putInt(pTex, level);
 	}
@@ -79,6 +83,12 @@ class TextureImpl extends Texture {
 			// could possibly put generic formula here
 			return 8;
 		}
+	}
+	
+	private long pixelPointer(int level, int u, int v) {
+		long pLevel = pTex + levelOffset(level);
+		int size = 1 << level;
+		return pLevel + (v * size + u) * 16;
 	}
 
 	/* package-private */
@@ -151,14 +161,69 @@ class TextureImpl extends Texture {
 
 	@Override
 	public void useMipMaps(boolean b) {
-		// TODO Auto-generated method stub
-
+		unsafe.putInt(pTex + 4, b ? 1 : 0);
 	}
 
 	@Override
 	public void composeMipMaps() {
-		// TODO Auto-generated method stub
-
+		if (level > 0) composeMipMaps(level - 1);
+	}
+	
+	private void composeMipMaps(int mmlevel) {
+		// generate the mip-map at mmlevel then recurse
+		int mmsize = 1 << mmlevel;
+		int slevel = mmlevel + 1;
+		for (int u = 0; u < mmsize; u++) {
+			for (int v = 0; v < mmsize; v++) {
+				float a = 0, r = 0, g = 0, b = 0;
+				
+				a += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2));
+				r += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 4);
+				g += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 8);
+				b += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 12);
+				
+				a += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2));
+				r += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 4);
+				g += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 8);
+				b += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 12);
+				
+				a += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1));
+				r += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 4);
+				g += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 8);
+				b += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 12);
+				
+				a += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1));
+				r += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 4);
+				g += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 8);
+				b += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 12);
+				
+				a *= 0.25f;
+				r *= 0.25f;
+				g *= 0.25f;
+				b *= 0.25f;
+				
+				unsafe.putFloat(pixelPointer(mmlevel, u, v), a);
+				unsafe.putFloat(pixelPointer(mmlevel, u, v) + 4, r);
+				unsafe.putFloat(pixelPointer(mmlevel, u, v) + 8, g);
+				unsafe.putFloat(pixelPointer(mmlevel, u, v) + 12, b);
+			}
+		}
+		if (mmlevel > 0) composeMipMaps(mmlevel - 1);
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

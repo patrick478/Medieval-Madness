@@ -3,6 +3,7 @@ package initial3d.renderer;
 import sun.misc.Unsafe;
 import static java.lang.Math.min;
 import static java.lang.Math.max;
+import static java.lang.Math.abs;
 import static initial3d.renderer.Util.*;
 
 @SuppressWarnings("restriction")
@@ -893,11 +894,16 @@ final class TrianglePerspectiveRasteriser {
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
 		long pMap_kd = unsafe.getLong(pMtl + 64);
-		int map_kd_level = unsafe.getInt(pMap_kd);
+		int map_kd_maxlevel = unsafe.getInt(pMap_kd);
 		long pMap_ks = unsafe.getLong(pMtl + 72);
-		int map_ks_level = unsafe.getInt(pMap_ks);
+		int map_ks_maxlevel = unsafe.getInt(pMap_ks);
 		long pMap_ke = unsafe.getLong(pMtl + 80);
-		int map_ke_level = unsafe.getInt(pMap_ke);
+		int map_ke_maxlevel = unsafe.getInt(pMap_ke);
+
+		// mip-maps
+		boolean mipmap_kd = unsafe.getInt(pMap_kd + 4) == 1 && ((flags & 0x4000L) != 0);
+		boolean mipmap_ks = unsafe.getInt(pMap_ks + 4) == 1 && ((flags & 0x4000L) != 0);
+		boolean mipmap_ke = unsafe.getInt(pMap_ke + 4) == 1 && ((flags & 0x4000L) != 0);
 
 		// 1/z, remembering vertex order...
 		double iZ1 = 1d / unsafe.getDouble(unsafe.getLong(pTri + (frontface ? 88 : 216)) + 16);
@@ -1050,6 +1056,14 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dx = ((ViZoffset + dViZ_dqx) * iiZq0 - Voffset) * iq;
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
+				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
+				float dUV_dxy_min = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				// float exponent -1 => level 0, exponent -2 => level 1
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_min) + 0x00140000) & 0x7F800000) >>> 23);
+
+				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
+				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
+
 				// FIXME proper ztest, stencil test, alpha test...
 
 				// accept whole block when totally covered
@@ -1114,15 +1128,21 @@ final class TrianglePerspectiveRasteriser {
 								float kd_g = unsafe.getFloat(pMap_kd + qTx_kd + 8);
 								float kd_b = unsafe.getFloat(pMap_kd + qTx_kd + 12);
 
+								int qTx_ke = TextureImpl.getTextureOffset(U, V, map_ke_level);
+								float ke_r = unsafe.getFloat(pMap_ke + qTx_ke + 4);
+								float ke_g = unsafe.getFloat(pMap_ke + qTx_ke + 8);
+								float ke_b = unsafe.getFloat(pMap_ke + qTx_ke + 12);
+
 								// zwrite, if enabled and TODO depth test enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-									unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r);
-									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g);
-									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b);
+									unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
+									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
+									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
 								}
+
 							}
 
 							CX1 -= FDY12;
@@ -1219,11 +1239,16 @@ final class TrianglePerspectiveRasteriser {
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
 		long pMap_kd = unsafe.getLong(pMtl + 64);
-		int map_kd_level = unsafe.getInt(pMap_kd);
+		int map_kd_maxlevel = unsafe.getInt(pMap_kd);
 		long pMap_ks = unsafe.getLong(pMtl + 72);
-		int map_ks_level = unsafe.getInt(pMap_ks);
+		int map_ks_maxlevel = unsafe.getInt(pMap_ks);
 		long pMap_ke = unsafe.getLong(pMtl + 80);
-		int map_ke_level = unsafe.getInt(pMap_ke);
+		int map_ke_maxlevel = unsafe.getInt(pMap_ke);
+
+		// mip-maps
+		boolean mipmap_kd = unsafe.getInt(pMap_kd + 4) == 1 && ((flags & 0x4000L) != 0);
+		boolean mipmap_ks = unsafe.getInt(pMap_ks + 4) == 1 && ((flags & 0x4000L) != 0);
+		boolean mipmap_ke = unsafe.getInt(pMap_ke + 4) == 1 && ((flags & 0x4000L) != 0);
 
 		// 1/z, remembering vertex order...
 		double iZ1 = 1d / unsafe.getDouble(unsafe.getLong(pTri + (frontface ? 88 : 216)) + 16);
@@ -1301,7 +1326,7 @@ final class TrianglePerspectiveRasteriser {
 		final float cBiZ00 = (float) (L00_1 * cBiZ1 + L00_2 * cBiZ2 + L00_3 * cBiZ3);
 		final float cBiZ10 = (float) (L10_1 * cBiZ1 + L10_2 * cBiZ2 + L10_3 * cBiZ3);
 		final float cBiZ01 = (float) (L01_1 * cBiZ1 + L01_2 * cBiZ2 + L01_3 * cBiZ3);
-		
+
 		final float UiZ00 = (float) (L00_1 * UiZ1 + L00_2 * UiZ2 + L00_3 * UiZ3);
 		final float UiZ10 = (float) (L10_1 * UiZ1 + L10_2 * UiZ2 + L10_3 * UiZ3);
 		final float UiZ01 = (float) (L01_1 * UiZ1 + L01_2 * UiZ2 + L01_3 * UiZ3);
@@ -1442,6 +1467,14 @@ final class TrianglePerspectiveRasteriser {
 				float dU_dy = ((UiZoffset + dUiZ_dqy) * iiZ0q - Uoffset) * iq;
 				float dV_dx = ((ViZoffset + dViZ_dqx) * iiZq0 - Voffset) * iq;
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
+
+				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
+				float dUV_dxy_min = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				// float exponent -1 => level 0, exponent -2 => level 1
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_min) + 0x00140000) & 0x7F800000) >>> 23);
+
+				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
+				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
 
 				// TODO proper ztest, stencil test, alpha test...
 

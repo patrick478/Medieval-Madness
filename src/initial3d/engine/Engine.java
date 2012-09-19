@@ -272,6 +272,13 @@ public class Engine extends Thread {
 				i3d.enable(FOG);
 			}
 		}
+		if (frame.pollKey(KeyEvent.VK_5)) {
+			if (i3d.isEnabled(MIPMAPS)) {
+				i3d.disable(MIPMAPS);
+			} else {
+				i3d.enable(MIPMAPS);
+			}
+		}
 
 		if (frame.pollKey(KeyEvent.VK_F5)) {
 			frame.setCursorVisible(!frame.isCursorVisible());

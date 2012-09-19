@@ -52,7 +52,7 @@ public abstract class Initial3D {
 	public static final long LIGHT5 = 0x800L;
 	public static final long LIGHT6 = 0x1000L;
 	public static final long LIGHT7 = 0x2000L;
-	public static final long USE_MIPMAPS = 0x4000L;
+	public static final long MIPMAPS = 0x4000L;
 	public static final long STENCIL_TEST = 0x8000L;
 	public static final long TEXTURE_2D = 0x10000L;
 	public static final long AUTO_ZFLIP = 0x20000L;

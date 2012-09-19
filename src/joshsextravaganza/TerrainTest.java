@@ -31,7 +31,7 @@ public class TerrainTest {
 
 		Perlin p = new Perlin(32);
 
-		MeshLOD mlod0 = new MeshLOD(SIZE * SIZE * 2, 3, SIZE * SIZE * 2, 10, SIZE * SIZE * 2, 1);
+		MeshLOD mlod0 = new MeshLOD(SIZE * SIZE * 2, 3, SIZE * SIZE * 2, 20, SIZE * SIZE * 2, 1);
 
 		int[][] ind = new int[(SIZE + 1)][(SIZE + 1)];
 
@@ -54,7 +54,10 @@ public class TerrainTest {
 
 		Random r = new Random(32);
 
-		int[] tri_vt = new int[] { mlod0.addTexCoord(0, 0), mlod0.addTexCoord(1, 0), mlod0.addTexCoord(0, 1) };
+		int[] tri_vt_1a = new int[] { mlod0.addTexCoord(0, 1), mlod0.addTexCoord(1, 1), mlod0.addTexCoord(0, 0) };
+		int[] tri_vt_1b = new int[] { mlod0.addTexCoord(1, 1), mlod0.addTexCoord(1, 0), mlod0.addTexCoord(0, 0) };
+		int[] tri_vt_2a = new int[] { mlod0.addTexCoord(0, 1), mlod0.addTexCoord(1, 1), mlod0.addTexCoord(1, 0) };
+		int[] tri_vt_2b = new int[] { mlod0.addTexCoord(0, 1), mlod0.addTexCoord(1, 0), mlod0.addTexCoord(0, 0) };
 
 		// add polygons by theorized indexed values ^^;
 		for (int z = 0; z < SIZE; z++) {
@@ -64,13 +67,13 @@ public class TerrainTest {
 				if (r.nextBoolean()) {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x + 1][z + 1] };
 					tri1 = new int[] { ind[x][z], ind[x][z + 1], ind[x + 1][z + 1] };
-					mlod0.addPolygon(tri0, tri_vt, tri0, null);
-					mlod0.addPolygon(tri1, tri_vt, tri1, null);
+					mlod0.addPolygon(tri0, tri_vt_1a, tri0, null);
+					mlod0.addPolygon(tri1, tri_vt_1b, tri1, null);
 				} else {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x][z + 1] };
 					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1], ind[x + 1][z + 1] };
-					mlod0.addPolygon(tri0, tri_vt, tri0, null);
-					mlod0.addPolygon(tri1, tri_vt, tri1, null);
+					mlod0.addPolygon(tri0, tri_vt_2a, tri0, null);
+					mlod0.addPolygon(tri1, tri_vt_2b, tri1, null);
 				}
 
 			}
@@ -114,13 +117,17 @@ public class TerrainTest {
 		Mesh terr_mesh = TerrainTest.getMesh();
 		Material terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
 		
-		Texture terr_tx = Initial3D.createTexture(32);
+		final int terr_tex_size = 256;
 		
-		for (int u = 0; u < 32; u++) {
-			for (int v = 0; v < 32; v++) {
+		Texture terr_tx = Initial3D.createTexture(terr_tex_size);
+		
+		for (int u = 0; u < terr_tex_size; u++) {
+			for (int v = 0; v < terr_tex_size; v++) {
 				terr_tx.setPixel(u, v, 1f, 0.3f, (float) (Math.random() * 0.4 + 0.3), 0.3f);
 			}
 		}
+		terr_tx.composeMipMaps();
+		terr_tx.useMipMaps(true);
 		
 		terr_mtl = new Material(terr_mtl, terr_tx, null, null);
 		
