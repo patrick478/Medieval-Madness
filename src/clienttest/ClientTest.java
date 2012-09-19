@@ -61,6 +61,7 @@ public class ClientTest {
 					{
 						try {
 							channel.finishConnect();
+							key.interestOps(SelectionKey.OP_WRITE);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

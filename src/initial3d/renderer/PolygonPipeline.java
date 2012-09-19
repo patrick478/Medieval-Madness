@@ -56,41 +56,52 @@ final class PolygonPipeline {
 		profiler.startSection("I3D_polypipe_cull-clip-light-triangulate");
 
 		for (int i = poffset; i < (pcount * pstride); i += pstride) {
-			// fewer than 3 vertices => not really a polygon (this shouldn't
-			// happen)
+			// fewer than 3 vertices => not really a polygon (this shouldn't happen)
 			if (pdata[i] < 3) {
 				continue;
 			}
-			// do near plane clipping. can't guarantee proj vertices make sense
-			// until near plane cull
-			// profiler.startSection("I3D_polypipe-nearclip");
-			unpackPolygon(unsafe, pBase, pPoly0, pdata, i);
-			long pPoly = clipPolygon(unsafe, pBase, pPoly0, 0, 0, 1, 0.2);
-			// profiler.endSection("I3D_polypipe-nearclip");
-			// note that even if no vertices are emitted from the clipper,
-			// vcount can still be read and will be zero
-			int vcount = unsafe.getInt(pPoly + 32);
-			if (vcount < 3) {
-				// drop degenerate poly
-				continue;
-			}
+			// extract the poly data
+			// TODO use the polyvert struct in PolygonBuffer so this is not needed
+			long pPoly = pPoly0;
+			unpackPolygon(unsafe, pBase, pPoly, pdata, i);
+			final int vcount = unsafe.getInt(pPoly + 32);
 
 			// far cull (experimental)
-			// profiler.startSection("I3D_polypipe-farcull");
 			long pEnd = pPoly + vcount * 64;
 			int far_cull_count = 0;
 			for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
 				if (unsafe.getDouble(unsafe.getLong(pPolyVert) + 16) > 1d) far_cull_count++;
 			}
-			// profiler.endSection("I3D_polypipe-farcull");
 			if (far_cull_count >= vcount) {
 				// all vertices over projection far plane
 				continue;
 			}
 
+			// plane culling (clip optimisation)
+			int vclip_near = testClipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
+			if (vclip_near == 0) continue;
+			int vclip_left = testClipPolygon(unsafe, pBase, pPoly, pClipLeft);
+			if (vclip_left == 0) continue;
+			int vclip_right = testClipPolygon(unsafe, pBase, pPoly, pClipRight);
+			if (vclip_right == 0) continue;
+			int vclip_top = testClipPolygon(unsafe, pBase, pPoly, pClipTop);
+			if (vclip_top == 0) continue;
+			int vclip_bottom = testClipPolygon(unsafe, pBase, pPoly, pClipBottom);
+			if (vclip_bottom == 0) continue;
+
+			// near clip, but only if necessary
+			if (vclip_near < vcount) {
+				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
+				// note that even if no vertices are emitted from the clipper,
+				// vcount can still be read and will be zero
+				if (unsafe.getInt(pPoly + 32) < 3) {
+					// drop degenerate poly
+					continue;
+				}
+			}
+
 			// face culling, eval z component of proj space normal
-			// TODO eval proj space normal at multiple vertices so colinear
-			// edges work, esp after clipping
+			// TODO eval proj space normal at multiple vertices so colinear edges work, esp after clipping
 			double v1x = unsafe.getDouble(unsafe.getLong(pPoly + 64)) - unsafe.getDouble(unsafe.getLong(pPoly));
 			double v1y = unsafe.getDouble(unsafe.getLong(pPoly + 64) + 8) - unsafe.getDouble(unsafe.getLong(pPoly) + 8);
 			double v2x = unsafe.getDouble(unsafe.getLong(pPoly + 128)) - unsafe.getDouble(unsafe.getLong(pPoly + 64));
@@ -107,15 +118,14 @@ final class PolygonPipeline {
 			}
 
 			// clip other planes
-			// profiler.startSection("I3D_polypipe-clip");
-			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
-			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
-			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
-			pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
-			// profiler.endSection("I3D_polypipe-clip");
+			if (vclip_left < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
+			if (vclip_right < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
+			if (vclip_top < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
+			if (vclip_bottom < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
 
-			vcount = unsafe.getInt(pPoly + 32);
-			if (vcount < 3) {
+			final int vcount_f = unsafe.getInt(pPoly + 32);
+
+			if (vcount_f < 3) {
 				// drop degenerate poly
 				continue;
 			}
@@ -130,13 +140,13 @@ final class PolygonPipeline {
 					unsafe.putFloat(pPoly + 48, opacity);
 					calculatePolygonLight(unsafe, pBase, pMtl, pPoly, pPoly + 48 + 4);
 					// copy poly lighting for each vertex
-					pEnd = pPoly + vcount * 64;
+					pEnd = pPoly + vcount_f * 64;
 					for (long pPolyVert = pPoly + 64; pPolyVert < pEnd; pPolyVert += 64) {
 						unsafe.copyMemory(pPoly + 48, pPolyVert + 48, 16);
 					}
 				} else if (shademodel == 2) {
 					// do lighting for each vertex
-					pEnd = pPoly + vcount * 64;
+					pEnd = pPoly + vcount_f * 64;
 					for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
 						unsafe.putFloat(pPolyVert + 48, opacity);
 						calculateVertexLight(unsafe, pBase, pMtl, pPolyVert, pPolyVert + 52);
@@ -149,7 +159,7 @@ final class PolygonPipeline {
 			// profiler.startSection("I3D_polypipe-triangulate");
 			long pPolyVert1 = pPoly + 64;
 			long pPolyVert2 = pPoly + 128;
-			pEnd = pPoly + vcount * 64;
+			pEnd = pPoly + vcount_f * 64;
 
 			for (; pPolyVert2 < pEnd; pPolyVert1 += 64, pPolyVert2 += 64, pTri += 256) {
 				unsafe.putInt(pTri, cross_z < 0 ? -1 : cross_z > 0 ? 1 : 0);
@@ -211,6 +221,31 @@ final class PolygonPipeline {
 			unsafe.putFloat(pPolyOut + 60, (float) unsafe.getDouble(pvc + 16));
 			pPolyOut += 64;
 		}
+	}
+
+	private static int testClipPolygon(Unsafe unsafe, long pBase, long pPoly, long pClip) {
+		// helper
+		return testClipPolygon(unsafe, pBase, pPoly, unsafe.getDouble(pClip), unsafe.getDouble(pClip + 8),
+				unsafe.getDouble(pClip + 16), unsafe.getDouble(pClip + 24));
+	}
+
+	private static int testClipPolygon(Unsafe unsafe, long pBase, long pPoly, double cx, double cy, double cz,
+			double cutoff) {
+		// read vertex count
+		final long pPolyEnd = pPoly + unsafe.getInt(pPoly + 32) * 64;
+
+		// number of vertices that pass clip func
+		int vpasscount = 0;
+
+		// loop through vertices
+		for (; pPoly < pPolyEnd; pPoly += 64) {
+			if (vectorDot(unsafe, unsafe.getLong(pPoly + 24), cx, cy, cz) > cutoff) {
+				// vertex passes clip func
+				vpasscount++;
+			}
+		}
+
+		return vpasscount;
 	}
 
 	private static final long clipPolygon(Unsafe unsafe, long pBase, long pPolyIn, long pClip) {

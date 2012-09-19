@@ -34,7 +34,7 @@ public class SessionMngr {
 		String id = getUnusedIdentifier();
 		Session ses = new Session();
 		sessionList.put(id, ses);
-		totalSessions++;
+		this.totalSessions++;
 		
 		this.log.printf("Created new session: %s\n", id);
 		return id;
@@ -50,6 +50,17 @@ public class SessionMngr {
 	
 	public int numSessions() {
 		return this.sessionList.size();
+	}
+	
+	public long totalSessions() {
+		return this.totalSessions;
+	}
+	
+	public Session getSession(String id)
+	{
+		if(sessionList.containsKey(id))
+			return sessionList.get(id);
+		return null;
 	}
 	
 	private String getUnusedIdentifier() {

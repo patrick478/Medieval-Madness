@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Random;
 
-import common.Packet;
+import common.DataPacket;
 
 public class loadtest {
 	public static void main(String[] args) throws IOException {
@@ -35,8 +35,8 @@ public class loadtest {
 		int success = 0;
 		int failure = 0;
 		
-		Packet p = new Packet();
-		Packet reply = new Packet();
+		DataPacket p = new DataPacket();
+		DataPacket reply = new DataPacket();
 		for(int i = 0; i < numEqs; i++) {
 			Random r = new Random();
 			int a = r.nextInt(20) + 1;
@@ -48,7 +48,7 @@ public class loadtest {
 			p.clear();
 			byte[] data = new byte[2];
 			is.read(data, 0, 2);
-			reply = new Packet(data);
+			reply = new DataPacket(data);
 			int result = (int)reply.getShort();
 			if(result == (a * b))
 			{
