@@ -17,7 +17,7 @@ public class SessionMngr {
 	private Log log = new Log("sessions.log", true);
 	private long totalSessions = 0;
 	
-	public SessionMngr()
+	private SessionMngr()
 	{
 		this.log.setPrefix("(SessionMngr) ");
 		this.log.printf("Session manager started\n");
@@ -60,6 +60,23 @@ public class SessionMngr {
 	{
 		if(sessionList.containsKey(id))
 			return sessionList.get(id);
+		return null;
+	}
+	
+	public String getKey(Session ses)
+	{
+		if(!sessionList.containsValue(ses))
+			return null;
+		
+		Set<String> keySet = sessionList.keySet();
+		
+		for(Iterator<String> itr = keySet.iterator(); itr.hasNext();)
+		{
+			String key = itr.next();
+			if(sessionList.get(key).equals(ses))
+				return key;
+		}
+		
 		return null;
 	}
 	

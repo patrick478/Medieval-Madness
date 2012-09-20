@@ -4,9 +4,9 @@ import common.DataPacket;
 import common.Packet;
 
 public class WelcomePacket extends Packet {
+	public final static short ID = 1;
 	public WelcomePacket()
 	{
-		this.ID = 1;
 	}
 	
 	@Override
@@ -30,6 +30,6 @@ public class WelcomePacket extends Packet {
 
 	@Override
 	public boolean replyValid() {
-		return this.isReply;
+		return true;
 	}
 }

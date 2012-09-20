@@ -1,6 +1,6 @@
 package client;
 
-public class StartupState extends GameState {
+public class StartupState extends AbstractState {
 
 	public StartupState() {
 		super();
@@ -12,8 +12,9 @@ public class StartupState extends GameState {
 	}
 
 	@Override
-	public void draw() {
+	public void fetchScene() {
 		// TODO Auto-generated method stub
+		
 	}
 
 }

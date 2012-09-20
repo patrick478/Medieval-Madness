@@ -1,12 +1,7 @@
 package common;
 
 public abstract class Packet {
-	protected short ID = 0;
-	
-	public short getID()
-	{
-		return this.ID;
-	}
+	public final static short ID = 0;
 	
 	public boolean isReply = false; 
 	

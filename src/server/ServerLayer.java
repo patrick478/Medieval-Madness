@@ -9,6 +9,8 @@ import java.util.*;
 
 import common.Log;
 import common.NetworkLayer;
+import common.Packet;
+import common.packets.WelcomePacket;
 
 public class ServerLayer extends NetworkLayer implements Runnable {
 	
@@ -210,6 +212,9 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		
 		String sesID = SessionMngr.getInstance().createSession();
 		sc.register(this.selector,  SelectionKey.OP_READ, sesID);
+		Packet p = new WelcomePacket();
+		this.send(sc, p.toData().getData());
+		SessionMngr.getInstance().getSession(sesID).setSubstate(1);
 		this.log.printf("Accepted new client [SessionID=%s]\n", sesID);
 	}
 	

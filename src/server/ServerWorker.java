@@ -4,6 +4,9 @@ import java.nio.channels.*;
 import java.util.*;
 
 import common.DataPacket;
+import common.Packet;
+import common.PacketFactory;
+import common.packets.WelcomePacket;
 
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
@@ -70,6 +73,17 @@ public class ServerWorker implements Runnable {
 	
 	public void process(DataPacket p, Session s)
 	{
-		
+		Packet from = PacketFactory.identify(p);
+		switch(s.getState())
+		{
+			case Welcome:
+				if(from.ID == WelcomePacket.ID && s.getSubstate() == 1 && from.replyValid() && from.isReply)
+				{
+					s.setState(SessionState.Login);
+					s.setSubstate(0);
+					System.out.printf("Session %s is now ready for communication", SessionMngr.getInstance().getKey(s));
+				}				
+				break;
+		}
 	}
 }

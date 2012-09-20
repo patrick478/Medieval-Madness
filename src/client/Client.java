@@ -1,15 +1,18 @@
 package client;
 
+import initial3d.engine.Engine;
 import client.networking.*;
 import common.Log;
 
 public class Client {
-	private GameState gameState;
+	private AbstractState gameState;
 	private Log log;
 	private NetworkClient net;
+	private Engine eng;
+	private Game gameWorld;
 	
 	protected boolean running = false;
-	
+
 	private final int updatesPerSecond = 60;
 	
 	public Client()
@@ -18,28 +21,28 @@ public class Client {
 		this.net = new NetworkClient(this);
 	}
 	
-	public void setState(GameState newState)
+	public void setState(AbstractState newState)
 	{
 		this.log.printf("{GAMESTATE} Changing gamestate to <%s>\n", newState.toString());
 		this.gameState = newState;
-		this.gameState.setup(this);
+		this.gameState.setup(this, this.gameWorld);
 	}
-
-	public void Start() {
+	
+	public void run() {
 		this.setState(new StartupState());
 		this.running = true;
-		
+
 		long maxTimePerUpdate = (1000 / updatesPerSecond);
 		long lastStartTime = System.currentTimeMillis();
 		long elapsedTimeSinceLastUpdate = System.currentTimeMillis();
-		
+
 		while(this.running)
 		{
 			elapsedTimeSinceLastUpdate = System.currentTimeMillis() - lastStartTime;
 			lastStartTime = System.currentTimeMillis();
-			
+
 			this.gameState.update(elapsedTimeSinceLastUpdate);
-			
+
 			long currentTimeForTick = System.currentTimeMillis() - lastStartTime;
 			if(currentTimeForTick < maxTimePerUpdate)
 			{

@@ -5,6 +5,7 @@ import java.nio.channels.*;
 public class Session {
 	private SocketChannel socket;
 	private SessionState state;
+	private int substate = 0;
 	
 	public Session() {
 		state = SessionState.Welcome;
@@ -18,5 +19,19 @@ public class Session {
 	public SessionState getState()
 	{
 		return this.state;
+	}
+
+	public int getSubstate()
+	{
+		return this.substate;
+	}
+	
+	public void setState(SessionState s)
+	{
+		this.state = s;
+	}
+
+	public void setSubstate(int substate) {
+		this.substate = substate;
 	}
 }
