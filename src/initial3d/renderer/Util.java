@@ -56,13 +56,13 @@ public final class Util {
 	 * operand is squared.
 	 */
 	public static final float fastInverse(float number) {
-		float x = number * number;
-		float x2 = x * 0.5f;
+		number *= number;
+		float x2 = number * 0.5f;
 		// evil floating point bit level hacking
-		x = Float.intBitsToFloat(0x5f3759df - (Float.floatToRawIntBits(x) >>> 1));
+		number = Float.intBitsToFloat(0x5f3759df - (Float.floatToRawIntBits(number) >>> 1));
 		// 1st iteration of newton's method
-		x = x * (1.5f - (x2 * x * x));
-		return x;
+		number = number * (1.5f - (x2 * number * number));
+		return number;
 	}
 
 	public static final double clamp(double value, double lower, double upper) {
@@ -163,7 +163,7 @@ public final class Util {
 		unsafe.putDouble(pTarget + 24, 1);
 	}
 
-	protected static final void computeProjectionClipFunc(Unsafe unsafe, long pBase, long pOut, double x0, double y0,
+	public static final void computeProjectionClipFunc(Unsafe unsafe, long pBase, long pOut, double x0, double y0,
 			double z0, double x1, double y1, double z1, double x2, double y2, double z2) {
 		final long pX_V0_in = 0x000B6910 + pBase;
 		final long pX_V1_in = pX_V0_in + 32;
@@ -312,7 +312,7 @@ public final class Util {
 			unsafe.putDouble(pdTarget += 8, s2 * im);
 			unsafe.putDouble(pdTarget += 8, 0d);
 
-			pdSource += 8;
+			pdSource += 16;
 			pdTarget += 8;
 		}
 	}

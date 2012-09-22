@@ -89,12 +89,15 @@ final class PolygonPipeline {
 			int vclip_bottom = testClipPolygon(unsafe, pBase, pPoly, pClipBottom);
 			if (vclip_bottom == 0) continue;
 
+			int vcount_clipped = vcount;
+			
 			// near clip, but only if necessary
 			if (vclip_near < vcount) {
 				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
 				// note that even if no vertices are emitted from the clipper,
 				// vcount can still be read and will be zero
-				if (unsafe.getInt(pPoly + 32) < 3) {
+				vcount_clipped = unsafe.getInt(pPoly + 32);
+				if (vcount_clipped < 3) {
 					// drop degenerate poly
 					continue;
 				}
@@ -117,19 +120,6 @@ final class PolygonPipeline {
 				continue;
 			}
 
-			// clip other planes
-			if (vclip_left < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
-			if (vclip_right < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
-			if (vclip_top < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
-			if (vclip_bottom < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
-
-			final int vcount_f = unsafe.getInt(pPoly + 32);
-
-			if (vcount_f < 3) {
-				// drop degenerate poly
-				continue;
-			}
-
 			// lighting
 			// profiler.startSection("I3D_polypipe-light");
 			final long pMtl = pBase + ((cross_z < 0) ? 0x00000900 : 0x00040900);
@@ -140,13 +130,13 @@ final class PolygonPipeline {
 					unsafe.putFloat(pPoly + 48, opacity);
 					calculatePolygonLight(unsafe, pBase, pMtl, pPoly, pPoly + 48 + 4);
 					// copy poly lighting for each vertex
-					pEnd = pPoly + vcount_f * 64;
+					pEnd = pPoly + vcount_clipped * 64;
 					for (long pPolyVert = pPoly + 64; pPolyVert < pEnd; pPolyVert += 64) {
 						unsafe.copyMemory(pPoly + 48, pPolyVert + 48, 16);
 					}
 				} else if (shademodel == 2) {
 					// do lighting for each vertex
-					pEnd = pPoly + vcount_f * 64;
+					pEnd = pPoly + vcount_clipped * 64;
 					for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
 						unsafe.putFloat(pPolyVert + 48, opacity);
 						calculateVertexLight(unsafe, pBase, pMtl, pPolyVert, pPolyVert + 52);
@@ -155,11 +145,24 @@ final class PolygonPipeline {
 			}
 			// profiler.endSection("I3D_polypipe-light");
 
+			// clip other planes
+			if (vclip_left < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
+			if (vclip_right < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
+			if (vclip_top < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipTop);
+			if (vclip_bottom < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipBottom);
+
+			vcount_clipped = unsafe.getInt(pPoly + 32);
+
+			if (vcount_clipped < 3) {
+				// drop degenerate poly
+				continue;
+			}
+
 			// triangulation
 			// profiler.startSection("I3D_polypipe-triangulate");
 			long pPolyVert1 = pPoly + 64;
 			long pPolyVert2 = pPoly + 128;
-			pEnd = pPoly + vcount_f * 64;
+			pEnd = pPoly + vcount_clipped * 64;
 
 			for (; pPolyVert2 < pEnd; pPolyVert1 += 64, pPolyVert2 += 64, pTri += 256) {
 				unsafe.putInt(pTri, cross_z < 0 ? -1 : cross_z > 0 ? 1 : 0);
@@ -424,6 +427,7 @@ final class PolygonPipeline {
 		final boolean depth_test = (flags & 0x8L) != 0;
 		final boolean colorwrite = (flags & 0x80000L) != 0;
 
+		// TODO for inside ifs
 		for (; pTri < pTriEnd; pTri += 256) {
 			if (projtype == 1) {
 				// persepective projection

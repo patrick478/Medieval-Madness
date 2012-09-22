@@ -8,6 +8,8 @@ public abstract class Texture {
 	}
 
 	public abstract int size();
+	
+	public abstract void clear();
 
 	public abstract float getPixel(int u, int v, Channel ch);
 

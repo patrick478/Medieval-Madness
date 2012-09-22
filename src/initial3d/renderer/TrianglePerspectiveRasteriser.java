@@ -523,8 +523,7 @@ final class TrianglePerspectiveRasteriser {
 
 		// block size
 		final int q = 8;
-		final float iq = 1f / q;
-
+		
 		// bounding rectangle, clamped to screen bounds
 		// also skip if no visible area (this implements (limited) x,y view frustum culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
@@ -560,17 +559,6 @@ final class TrianglePerspectiveRasteriser {
 		final float cG3 = unsafe.getFloat(pTri + (frontface ? 248 : 120));
 		final float cB3 = unsafe.getFloat(pTri + (frontface ? 252 : 124));
 
-		// 1 / color
-		final double cRiZ1 = cR1 * iZ1;
-		final double cGiZ1 = cG1 * iZ1;
-		final double cBiZ1 = cB1 * iZ1;
-		final double cRiZ2 = cR2 * iZ2;
-		final double cGiZ2 = cG2 * iZ2;
-		final double cBiZ2 = cB2 * iZ2;
-		final double cRiZ3 = cR3 * iZ3;
-		final double cGiZ3 = cG3 * iZ3;
-		final double cBiZ3 = cB3 * iZ3;
-
 		// max / min color for clamping
 		final float cRmax = min(max(cR1, max(cR2, cR3)), 1f);
 		final float cGmax = min(max(cG1, max(cG2, cG3)), 1f);
@@ -598,39 +586,35 @@ final class TrianglePerspectiveRasteriser {
 		final double L01_2 = (DY31d * (-X3d) + DX13d * (1 - Y3d)) * idet;
 		final double L01_3 = 1 - L01_1 - L01_2;
 
-		// 1/z, color/z for delta calculation
+		// 1/z, color for delta calculation
 		final float iZ00 = (float) (L00_1 * iZ1 + L00_2 * iZ2 + L00_3 * iZ3);
 		final float iZ10 = (float) (L10_1 * iZ1 + L10_2 * iZ2 + L10_3 * iZ3);
 		final float iZ01 = (float) (L01_1 * iZ1 + L01_2 * iZ2 + L01_3 * iZ3);
 
-		final float cRiZ00 = (float) (L00_1 * cRiZ1 + L00_2 * cRiZ2 + L00_3 * cRiZ3);
-		final float cRiZ10 = (float) (L10_1 * cRiZ1 + L10_2 * cRiZ2 + L10_3 * cRiZ3);
-		final float cRiZ01 = (float) (L01_1 * cRiZ1 + L01_2 * cRiZ2 + L01_3 * cRiZ3);
-		final float cGiZ00 = (float) (L00_1 * cGiZ1 + L00_2 * cGiZ2 + L00_3 * cGiZ3);
-		final float cGiZ10 = (float) (L10_1 * cGiZ1 + L10_2 * cGiZ2 + L10_3 * cGiZ3);
-		final float cGiZ01 = (float) (L01_1 * cGiZ1 + L01_2 * cGiZ2 + L01_3 * cGiZ3);
-		final float cBiZ00 = (float) (L00_1 * cBiZ1 + L00_2 * cBiZ2 + L00_3 * cBiZ3);
-		final float cBiZ10 = (float) (L10_1 * cBiZ1 + L10_2 * cBiZ2 + L10_3 * cBiZ3);
-		final float cBiZ01 = (float) (L01_1 * cBiZ1 + L01_2 * cBiZ2 + L01_3 * cBiZ3);
+		final float cR00 = (float) (L00_1 * cR1 + L00_2 * cR2 + L00_3 * cR3);
+		final float cR10 = (float) (L10_1 * cR1 + L10_2 * cR2 + L10_3 * cR3);
+		final float cR01 = (float) (L01_1 * cR1 + L01_2 * cR2 + L01_3 * cR3);
+		final float cG00 = (float) (L00_1 * cG1 + L00_2 * cG2 + L00_3 * cG3);
+		final float cG10 = (float) (L10_1 * cG1 + L10_2 * cG2 + L10_3 * cG3);
+		final float cG01 = (float) (L01_1 * cG1 + L01_2 * cG2 + L01_3 * cG3);
+		final float cB00 = (float) (L00_1 * cB1 + L00_2 * cB2 + L00_3 * cB3);
+		final float cB10 = (float) (L10_1 * cB1 + L10_2 * cB2 + L10_3 * cB3);
+		final float cB01 = (float) (L01_1 * cB1 + L01_2 * cB2 + L01_3 * cB3);
 
 		// interpolation deltas
 		final float diZ_dx = (iZ10 - iZ00);
 		final float diZ_dy = (iZ01 - iZ00);
 		final float diZ_dqy = diZ_dy * q;
-		final float diZ_dqx = diZ_dx * q;
-		final float dcRiZ_dx = cRiZ10 - cRiZ00;
-		final float dcRiZ_dy = cRiZ01 - cRiZ00;
-		final float dcRiZ_dqy = dcRiZ_dy * q;
-		final float dcRiZ_dqx = dcRiZ_dx * q;
-		final float dcGiZ_dx = cGiZ10 - cGiZ00;
-		final float dcGiZ_dy = cGiZ01 - cGiZ00;
-		final float dcGiZ_dqy = dcGiZ_dy * q;
-		final float dcGiZ_dqx = dcGiZ_dx * q;
-		final float dcBiZ_dx = cBiZ10 - cBiZ00;
-		final float dcBiZ_dy = cBiZ01 - cBiZ00;
-		final float dcBiZ_dqy = dcBiZ_dy * q;
-		final float dcBiZ_dqx = dcBiZ_dx * q;
-
+		final float dcR_dx = cR10 - cR00;
+		final float dcR_dy = cR01 - cR00;
+		final float dcR_dqy = dcR_dy * q;
+		final float dcG_dx = cG10 - cG00;
+		final float dcG_dy = cG01 - cG00;
+		final float dcG_dqy = dcG_dy * q;
+		final float dcB_dx = cB10 - cB00;
+		final float dcB_dy = cB01 - cB00;
+		final float dcB_dqy = dcB_dy * q;
+		
 		// deltas 28.4
 		final int DX12 = X1 - X2;
 		final int DX23 = X2 - X3;
@@ -652,9 +636,9 @@ final class TrianglePerspectiveRasteriser {
 		miny &= ~(q - 1);
 		int blockoffset = miny * width;
 		float iZblockoffset = iZ00 + miny * diZ_dy;
-		float cRiZblockoffset = cRiZ00 + miny * dcRiZ_dy;
-		float cGiZblockoffset = cGiZ00 + miny * dcGiZ_dy;
-		float cBiZblockoffset = cBiZ00 + miny * dcBiZ_dy;
+		float cRblockoffset = cR00 + miny * dcR_dy;
+		float cGblockoffset = cG00 + miny * dcG_dy;
+		float cBblockoffset = cB00 + miny * dcB_dy;
 
 		// half-edge constants 24:8
 		int C1 = DY12 * X1 - DX12 * Y1;
@@ -705,37 +689,21 @@ final class TrianglePerspectiveRasteriser {
 
 				// setup for affine interpolation over this block
 				// have to clamp calculated colors to avoid 'sparkly edges'
-				float iiZ00 = 1 / iZ;
-				float iiZq0 = 1 / (iZ + diZ_dqx);
-				float iiZ0q = 1 / (iZ + diZ_dqy);
-				float cRiZoffset = cRiZblockoffset + dcRiZ_dx * x;
-				float cGiZoffset = cGiZblockoffset + dcGiZ_dx * x;
-				float cBiZoffset = cBiZblockoffset + dcBiZ_dx * x;
-
-				float cRoffset = cRiZoffset * iiZ00;
-				float cGoffset = cGiZoffset * iiZ00;
-				float cBoffset = cBiZoffset * iiZ00;
-
-				float cR = cRoffset;
-				float cG = cGoffset;
-				float cB = cBoffset;
-
-				float dcR_dx = ((cRiZoffset + dcRiZ_dqx) * iiZq0 - cRoffset) * iq;
-				float dcR_dy = ((cRiZoffset + dcRiZ_dqy) * iiZ0q - cRoffset) * iq;
-				float dcG_dx = ((cGiZoffset + dcGiZ_dqx) * iiZq0 - cGoffset) * iq;
-				float dcG_dy = ((cGiZoffset + dcGiZ_dqy) * iiZ0q - cGoffset) * iq;
-				float dcB_dx = ((cBiZoffset + dcBiZ_dqx) * iiZq0 - cBoffset) * iq;
-				float dcB_dy = ((cBiZoffset + dcBiZ_dqy) * iiZ0q - cBoffset) * iq;
+				float cRoffset = cRblockoffset + dcR_dx * x;
+				float cGoffset = cGblockoffset + dcG_dx * x;
+				float cBoffset = cBblockoffset + dcB_dx * x;
 
 				// TODO proper ztest, stencil test, alpha test...
 
 				// accept whole block when totally covered
 				if (a == 0xF && b == 0xF && c == 0xF) {
 					for (int iy = 0; iy < q; ++iy) {
+						float cR = cRoffset;
+						float cG = cGoffset;
+						float cB = cBoffset;
 						int j = x + offset + q;
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
-
 								// hold on...
 								// if flat or gourard, write predetermined color ( * texture color) to color buffer
 								// if phong, run phong equation
@@ -745,6 +713,10 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
+//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+									
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
@@ -763,9 +735,6 @@ final class TrianglePerspectiveRasteriser {
 						cRoffset += dcR_dy;
 						cGoffset += dcG_dy;
 						cBoffset += dcB_dy;
-						cR = cRoffset;
-						cG = cGoffset;
-						cB = cBoffset;
 					}
 				} else {
 					// partially covered block
@@ -774,18 +743,25 @@ final class TrianglePerspectiveRasteriser {
 					int CY3 = C3 + DX31 * y0 - DY31 * x0;
 
 					for (int iy = 0; iy < q; ++iy) {
+						float cR = cRoffset;
+						float cG = cGoffset;
+						float cB = cBoffset;
 						int CX1 = CY1;
 						int CX2 = CY2;
 						int CX3 = CY3;
 						int j = x + offset + q;
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (CX1 > 0 && CX2 > 0 && CX3 > 0 && iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
-
+								
 								// zwrite, if enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
+//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+									
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
@@ -805,16 +781,12 @@ final class TrianglePerspectiveRasteriser {
 						CY1 += FDX12;
 						CY2 += FDX23;
 						CY3 += FDX31;
-
 						offset += width;
 						iZoffset += diZ_dy;
 						iZ = iZoffset;
 						cRoffset += dcR_dy;
 						cGoffset += dcG_dy;
 						cBoffset += dcB_dy;
-						cR = cRoffset;
-						cG = cGoffset;
-						cB = cBoffset;
 					}
 
 				}
@@ -823,9 +795,9 @@ final class TrianglePerspectiveRasteriser {
 
 			blockoffset += q * width;
 			iZblockoffset += diZ_dqy;
-			cRiZblockoffset += dcRiZ_dqy;
-			cGiZblockoffset += dcGiZ_dqy;
-			cBiZblockoffset += dcBiZ_dqy;
+			cRblockoffset += dcR_dqy;
+			cGblockoffset += dcG_dqy;
+			cBblockoffset += dcB_dqy;
 		}
 	}
 
@@ -1057,7 +1029,7 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_max = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				float dUV_dxy_max = max(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
 				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
 
@@ -1274,21 +1246,10 @@ final class TrianglePerspectiveRasteriser {
 		final float cG3 = unsafe.getFloat(pTri + (frontface ? 248 : 120));
 		final float cB3 = unsafe.getFloat(pTri + (frontface ? 252 : 124));
 
-		// 1 / color
-		final double cRiZ1 = cR1 * iZ1;
-		final double cGiZ1 = cG1 * iZ1;
-		final double cBiZ1 = cB1 * iZ1;
-		final double cRiZ2 = cR2 * iZ2;
-		final double cGiZ2 = cG2 * iZ2;
-		final double cBiZ2 = cB2 * iZ2;
-		final double cRiZ3 = cR3 * iZ3;
-		final double cGiZ3 = cG3 * iZ3;
-		final double cBiZ3 = cB3 * iZ3;
-
 		// max / min color for clamping
-		final float cRmax = min(max(cR1, max(cR2, cR3)), 1f);
-		final float cGmax = min(max(cG1, max(cG2, cG3)), 1f);
-		final float cBmax = min(max(cB1, max(cB2, cB3)), 1f);
+		final float cRmax = max(cR1, max(cR2, cR3));
+		final float cGmax = max(cG1, max(cG2, cG3));
+		final float cBmax = max(cB1, max(cB2, cB3));
 		final float cRmin = max(min(cR1, min(cR2, cR3)), 0f);
 		final float cGmin = max(min(cG1, min(cG2, cG3)), 0f);
 		final float cBmin = max(min(cB1, min(cB2, cB3)), 0f);
@@ -1317,15 +1278,15 @@ final class TrianglePerspectiveRasteriser {
 		final float iZ10 = (float) (L10_1 * iZ1 + L10_2 * iZ2 + L10_3 * iZ3);
 		final float iZ01 = (float) (L01_1 * iZ1 + L01_2 * iZ2 + L01_3 * iZ3);
 
-		final float cRiZ00 = (float) (L00_1 * cRiZ1 + L00_2 * cRiZ2 + L00_3 * cRiZ3);
-		final float cRiZ10 = (float) (L10_1 * cRiZ1 + L10_2 * cRiZ2 + L10_3 * cRiZ3);
-		final float cRiZ01 = (float) (L01_1 * cRiZ1 + L01_2 * cRiZ2 + L01_3 * cRiZ3);
-		final float cGiZ00 = (float) (L00_1 * cGiZ1 + L00_2 * cGiZ2 + L00_3 * cGiZ3);
-		final float cGiZ10 = (float) (L10_1 * cGiZ1 + L10_2 * cGiZ2 + L10_3 * cGiZ3);
-		final float cGiZ01 = (float) (L01_1 * cGiZ1 + L01_2 * cGiZ2 + L01_3 * cGiZ3);
-		final float cBiZ00 = (float) (L00_1 * cBiZ1 + L00_2 * cBiZ2 + L00_3 * cBiZ3);
-		final float cBiZ10 = (float) (L10_1 * cBiZ1 + L10_2 * cBiZ2 + L10_3 * cBiZ3);
-		final float cBiZ01 = (float) (L01_1 * cBiZ1 + L01_2 * cBiZ2 + L01_3 * cBiZ3);
+		final float cR00 = (float) (L00_1 * cR1 + L00_2 * cR2 + L00_3 * cR3);
+		final float cR10 = (float) (L10_1 * cR1 + L10_2 * cR2 + L10_3 * cR3);
+		final float cR01 = (float) (L01_1 * cR1 + L01_2 * cR2 + L01_3 * cR3);
+		final float cG00 = (float) (L00_1 * cG1 + L00_2 * cG2 + L00_3 * cG3);
+		final float cG10 = (float) (L10_1 * cG1 + L10_2 * cG2 + L10_3 * cG3);
+		final float cG01 = (float) (L01_1 * cG1 + L01_2 * cG2 + L01_3 * cG3);
+		final float cB00 = (float) (L00_1 * cB1 + L00_2 * cB2 + L00_3 * cB3);
+		final float cB10 = (float) (L10_1 * cB1 + L10_2 * cB2 + L10_3 * cB3);
+		final float cB01 = (float) (L01_1 * cB1 + L01_2 * cB2 + L01_3 * cB3);
 
 		final float UiZ00 = (float) (L00_1 * UiZ1 + L00_2 * UiZ2 + L00_3 * UiZ3);
 		final float UiZ10 = (float) (L10_1 * UiZ1 + L10_2 * UiZ2 + L10_3 * UiZ3);
@@ -1339,18 +1300,18 @@ final class TrianglePerspectiveRasteriser {
 		final float diZ_dy = (iZ01 - iZ00);
 		final float diZ_dqy = diZ_dy * q;
 		final float diZ_dqx = diZ_dx * q;
-		final float dcRiZ_dx = cRiZ10 - cRiZ00;
-		final float dcRiZ_dy = cRiZ01 - cRiZ00;
-		final float dcRiZ_dqy = dcRiZ_dy * q;
-		final float dcRiZ_dqx = dcRiZ_dx * q;
-		final float dcGiZ_dx = cGiZ10 - cGiZ00;
-		final float dcGiZ_dy = cGiZ01 - cGiZ00;
-		final float dcGiZ_dqy = dcGiZ_dy * q;
-		final float dcGiZ_dqx = dcGiZ_dx * q;
-		final float dcBiZ_dx = cBiZ10 - cBiZ00;
-		final float dcBiZ_dy = cBiZ01 - cBiZ00;
-		final float dcBiZ_dqy = dcBiZ_dy * q;
-		final float dcBiZ_dqx = dcBiZ_dx * q;
+		final float dcR_dx = cR10 - cR00;
+		final float dcR_dy = cR01 - cR00;
+		final float dcR_dqy = dcR_dy * q;
+		final float dcR_dqx = dcR_dx * q;
+		final float dcG_dx = cG10 - cG00;
+		final float dcG_dy = cG01 - cG00;
+		final float dcG_dqy = dcG_dy * q;
+		final float dcG_dqx = dcG_dx * q;
+		final float dcB_dx = cB10 - cB00;
+		final float dcB_dy = cB01 - cB00;
+		final float dcB_dqy = dcB_dy * q;
+		final float dcB_dqx = dcB_dx * q;
 		final float dUiZ_dx = (UiZ10 - UiZ00);
 		final float dUiZ_dy = (UiZ01 - UiZ00);
 		final float dUiZ_dqy = dUiZ_dy * q;
@@ -1381,9 +1342,9 @@ final class TrianglePerspectiveRasteriser {
 		miny &= ~(q - 1);
 		int blockoffset = miny * width;
 		float iZblockoffset = iZ00 + miny * diZ_dy;
-		float cRiZblockoffset = cRiZ00 + miny * dcRiZ_dy;
-		float cGiZblockoffset = cGiZ00 + miny * dcGiZ_dy;
-		float cBiZblockoffset = cBiZ00 + miny * dcBiZ_dy;
+		float cRblockoffset = cR00 + miny * dcR_dy;
+		float cGblockoffset = cG00 + miny * dcG_dy;
+		float cBblockoffset = cB00 + miny * dcB_dy;
 		float UiZblockoffset = UiZ00 + miny * dUiZ_dy;
 		float ViZblockoffset = ViZ00 + miny * dViZ_dy;
 
@@ -1439,37 +1400,25 @@ final class TrianglePerspectiveRasteriser {
 				float iiZ00 = 1 / iZ;
 				float iiZq0 = 1 / (iZ + diZ_dqx);
 				float iiZ0q = 1 / (iZ + diZ_dqy);
-				float cRiZoffset = cRiZblockoffset + dcRiZ_dx * x;
-				float cGiZoffset = cGiZblockoffset + dcGiZ_dx * x;
-				float cBiZoffset = cBiZblockoffset + dcBiZ_dx * x;
+				float cRoffset = cRblockoffset + dcR_dx * x;
+				float cGoffset = cGblockoffset + dcG_dx * x;
+				float cBoffset = cBblockoffset + dcB_dx * x;
 				float UiZoffset = UiZblockoffset + dUiZ_dx * x;
 				float ViZoffset = ViZblockoffset + dViZ_dx * x;
 
-				float cRoffset = cRiZoffset * iiZ00;
-				float cGoffset = cGiZoffset * iiZ00;
-				float cBoffset = cBiZoffset * iiZ00;
 				float Uoffset = UiZoffset * iiZ00;
 				float Voffset = ViZoffset * iiZ00;
 
-				float cR = cRoffset;
-				float cG = cGoffset;
-				float cB = cBoffset;
 				float U = Uoffset;
 				float V = Voffset;
 
-				float dcR_dx = ((cRiZoffset + dcRiZ_dqx) * iiZq0 - cRoffset) * iq;
-				float dcR_dy = ((cRiZoffset + dcRiZ_dqy) * iiZ0q - cRoffset) * iq;
-				float dcG_dx = ((cGiZoffset + dcGiZ_dqx) * iiZq0 - cGoffset) * iq;
-				float dcG_dy = ((cGiZoffset + dcGiZ_dqy) * iiZ0q - cGoffset) * iq;
-				float dcB_dx = ((cBiZoffset + dcBiZ_dqx) * iiZq0 - cBoffset) * iq;
-				float dcB_dy = ((cBiZoffset + dcBiZ_dqy) * iiZ0q - cBoffset) * iq;
 				float dU_dx = ((UiZoffset + dUiZ_dqx) * iiZq0 - Uoffset) * iq;
 				float dU_dy = ((UiZoffset + dUiZ_dqy) * iiZ0q - Uoffset) * iq;
 				float dV_dx = ((ViZoffset + dViZ_dqx) * iiZq0 - Voffset) * iq;
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_max = max(max(abs(dU_dx), abs(dU_dy)), max(abs(dV_dx), abs(dV_dy)));
+				float dUV_dxy_max = max(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
 				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
 
@@ -1481,6 +1430,9 @@ final class TrianglePerspectiveRasteriser {
 				// accept whole block when totally covered
 				if (a == 0xF && b == 0xF && c == 0xF) {
 					for (int iy = 0; iy < q; ++iy) {
+						float cR = cRoffset;
+						float cG = cGoffset;
+						float cB = cBoffset;
 						int j = x + offset + q;
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
@@ -1521,9 +1473,6 @@ final class TrianglePerspectiveRasteriser {
 						cRoffset += dcR_dy;
 						cGoffset += dcG_dy;
 						cBoffset += dcB_dy;
-						cR = cRoffset;
-						cG = cGoffset;
-						cB = cBoffset;
 						Uoffset += dU_dy;
 						Voffset += dV_dy;
 						U = Uoffset;
@@ -1536,6 +1485,9 @@ final class TrianglePerspectiveRasteriser {
 					int CY3 = C3 + DX31 * y0 - DY31 * x0;
 
 					for (int iy = 0; iy < q; ++iy) {
+						float cR = cRoffset;
+						float cG = cGoffset;
+						float cB = cBoffset;
 						int CX1 = CY1;
 						int CX2 = CY2;
 						int CX3 = CY3;
@@ -1587,9 +1539,6 @@ final class TrianglePerspectiveRasteriser {
 						cRoffset += dcR_dy;
 						cGoffset += dcG_dy;
 						cBoffset += dcB_dy;
-						cR = cRoffset;
-						cG = cGoffset;
-						cB = cBoffset;
 						Uoffset += dU_dy;
 						Voffset += dV_dy;
 						U = Uoffset;
@@ -1602,9 +1551,9 @@ final class TrianglePerspectiveRasteriser {
 
 			blockoffset += q * width;
 			iZblockoffset += diZ_dqy;
-			cRiZblockoffset += dcRiZ_dqy;
-			cGiZblockoffset += dcGiZ_dqy;
-			cBiZblockoffset += dcBiZ_dqy;
+			cRblockoffset += dcR_dqy;
+			cGblockoffset += dcG_dqy;
+			cBblockoffset += dcB_dqy;
 			UiZblockoffset += dUiZ_dqy;
 			ViZblockoffset += dViZ_dqy;
 		}

@@ -117,7 +117,7 @@ public class TerrainTest {
 		Mesh terr_mesh = TerrainTest.getMesh();
 		Material terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
 		
-		final int terr_tex_size = 256;
+		final int terr_tex_size = 16;
 		
 		Texture terr_tx = Initial3D.createTexture(terr_tex_size);
 		

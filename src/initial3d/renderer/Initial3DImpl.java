@@ -45,6 +45,7 @@ class Initial3DImpl extends Initial3D {
 	Initial3DImpl() {
 		unsafe = Util.getUnsafe();
 		pBase = unsafe.allocateMemory(MEM_SIZE);
+		unsafe.setMemory(pBase, MEM_SIZE, (byte) 0);
 
 		// init zsign
 		putInt(0x00000068, 1);

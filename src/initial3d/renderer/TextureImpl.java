@@ -45,10 +45,8 @@ class TextureImpl extends Texture {
 		size = size_;
 		alloc = (long) (8 + size * size * 16 * 1.4d);
 		pTex = unsafe.allocateMemory(alloc);
-		// clear the texture (to transparent black)
-		unsafe.setMemory(pTex, alloc, (byte) 0);
 		pLevel = pTex + levelOffset(level);
-		unsafe.putInt(pTex, level);
+		clear();
 	}
 
 	protected void finalize() {
@@ -84,7 +82,7 @@ class TextureImpl extends Texture {
 			return 8;
 		}
 	}
-	
+
 	private long pixelPointer(int level, int u, int v) {
 		long pLevel = pTex + levelOffset(level);
 		int size = 1 << level;
@@ -136,6 +134,15 @@ class TextureImpl extends Texture {
 	}
 
 	@Override
+	public void clear() {
+		// clear the texture (to transparent black)
+		// also clear the usemipmaps flag
+		unsafe.setMemory(pTex, alloc, (byte) 0);
+		// have to put levels back
+		unsafe.putInt(pTex, level);
+	}
+
+	@Override
 	public float getPixel(int u, int v, Channel ch) {
 		u &= (size - 1);
 		v &= (size - 1);
@@ -168,7 +175,7 @@ class TextureImpl extends Texture {
 	public void composeMipMaps() {
 		if (level > 0) composeMipMaps(level - 1);
 	}
-	
+
 	private void composeMipMaps(int mmlevel) {
 		// generate the mip-map at mmlevel then recurse
 		int mmsize = 1 << mmlevel;
@@ -176,32 +183,32 @@ class TextureImpl extends Texture {
 		for (int u = 0; u < mmsize; u++) {
 			for (int v = 0; v < mmsize; v++) {
 				float a = 0, r = 0, g = 0, b = 0;
-				
+
 				a += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2));
 				r += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 4);
 				g += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 8);
 				b += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2) + 12);
-				
+
 				a += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2));
 				r += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 4);
 				g += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 8);
 				b += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2) + 12);
-				
+
 				a += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1));
 				r += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 4);
 				g += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 8);
 				b += unsafe.getFloat(pixelPointer(slevel, u * 2, v * 2 + 1) + 12);
-				
+
 				a += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1));
 				r += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 4);
 				g += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 8);
 				b += unsafe.getFloat(pixelPointer(slevel, u * 2 + 1, v * 2 + 1) + 12);
-				
+
 				a *= 0.25f;
 				r *= 0.25f;
 				g *= 0.25f;
 				b *= 0.25f;
-				
+
 				unsafe.putFloat(pixelPointer(mmlevel, u, v), a);
 				unsafe.putFloat(pixelPointer(mmlevel, u, v) + 4, r);
 				unsafe.putFloat(pixelPointer(mmlevel, u, v) + 8, g);
@@ -212,18 +219,3 @@ class TextureImpl extends Texture {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,6 +12,7 @@ public class MeshLOD {
 	final VectorBuffer vcolors;
 
 	private static final double[][] zerovector = new double[4][1];
+	private static final double[][] onevector = Vector4D.create(1, 1, 1, 1);
 
 	public MeshLOD(int maxpolys, int maxpolyvertices, int maxvertices, int maxtexcoords, int maxnormals, int maxvcolors) {
 		if (maxvertices < 1 || maxtexcoords < 1 || maxnormals < 1 || maxvcolors < 1)
@@ -25,7 +26,7 @@ public class MeshLOD {
 		vertices.put(zerovector);
 		texcoords.put(zerovector);
 		normals.put(zerovector);
-		vcolors.put(zerovector);
+		vcolors.put(onevector);
 	}
 
 	public int addVertex(double x, double y, double z) {

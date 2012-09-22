@@ -26,6 +26,8 @@ public class Engine extends Thread {
 
 	private Initial3D i3d;
 	private int shademodel = 1;
+	private boolean light_meshes = true;
+	private boolean tex = true;
 
 	private volatile boolean handlecamera;
 
@@ -131,8 +133,12 @@ public class Engine extends Thread {
 
 			cam.loadTransformTo(i3d);
 
-			// draw meshes, with lighting
-			i3d.enable(LIGHTING);
+			// draw meshes
+			if (light_meshes) {
+				i3d.enable(LIGHTING);
+			} else {
+				i3d.disable(LIGHTING);
+			}
 
 			i3d.matrixMode(MODEL);
 			i3d.pushMatrix();
@@ -157,7 +163,7 @@ public class Engine extends Thread {
 				i3d.materialf(FRONT, OPACITY, mtl.opacity);
 				i3d.materialf(FRONT, SHININESS, mtl.shininess);
 				
-				if (mtl.map_kd != null) {
+				if (mtl.map_kd != null && tex) {
 					i3d.enable(TEXTURE_2D);
 					i3d.texImage2D(FRONT, mtl.map_kd, null, null);
 				}
@@ -278,6 +284,12 @@ public class Engine extends Thread {
 			} else {
 				i3d.enable(MIPMAPS);
 			}
+		}
+		if (frame.pollKey(KeyEvent.VK_6)) {
+			light_meshes = !light_meshes;
+		}
+		if (frame.pollKey(KeyEvent.VK_7)) {
+			tex = !tex;
 		}
 
 		if (frame.pollKey(KeyEvent.VK_F5)) {
