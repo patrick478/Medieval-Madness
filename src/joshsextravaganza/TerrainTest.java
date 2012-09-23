@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import soundEngine.SimpleAudioPlayer;
+import soundengine.SimpleAudioPlayer;
 
 import comp261.modelview.MeshLoader;
 

@@ -1,5 +1,7 @@
 package client;
 
+import initial3d.engine.Scene;
+
 public abstract class AbstractState {
 	protected Client client;
 	protected Game gameWorld;
