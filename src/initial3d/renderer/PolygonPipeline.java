@@ -90,39 +90,43 @@ final class PolygonPipeline {
 			if (vclip_bottom == 0) continue;
 
 			int vcount_clipped = vcount;
-			
-			// near clip, but only if necessary
-			if (vclip_near < vcount) {
-				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
-				// note that even if no vertices are emitted from the clipper,
-				// vcount can still be read and will be zero
-				vcount_clipped = unsafe.getInt(pPoly + 32);
-				if (vcount_clipped < 3) {
-					// drop degenerate poly
-					continue;
-				}
-			}
 
-			// face culling, eval z component of proj space normal
-			// TODO eval proj space normal at multiple vertices so colinear edges work, esp after clipping
-			double v1x = unsafe.getDouble(unsafe.getLong(pPoly + 64)) - unsafe.getDouble(unsafe.getLong(pPoly));
-			double v1y = unsafe.getDouble(unsafe.getLong(pPoly + 64) + 8) - unsafe.getDouble(unsafe.getLong(pPoly) + 8);
-			double v2x = unsafe.getDouble(unsafe.getLong(pPoly + 128)) - unsafe.getDouble(unsafe.getLong(pPoly + 64));
-			double v2y = unsafe.getDouble(unsafe.getLong(pPoly + 128) + 8)
-					- unsafe.getDouble(unsafe.getLong(pPoly + 64) + 8);
-			double cross_z = v1x * v2y - v1y * v2x;
-			if (cross_z >= 0 && (unsafe.getInt(pBase + 0x0000002C) & 2) != 0 && (flags & 0x4L) != 0) {
+			// face culling in view space - take dot prod of normal and position vector
+			// if dot prod < 0 front face
+			// this is experimental as a means of doing lighting before any clipping
+			// TODO eval normal at multiple vertices so colinear edges work
+			double vv1x = unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24))
+					- unsafe.getDouble(unsafe.getLong(pPoly + 24));
+			double vv1y = unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24) + 8)
+					- unsafe.getDouble(unsafe.getLong(pPoly + 24) + 8);
+			double vv1z = unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24) + 16)
+					- unsafe.getDouble(unsafe.getLong(pPoly + 24) + 16);
+			double vv2x = unsafe.getDouble(unsafe.getLong(pPoly + 128 + 24))
+					- unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24));
+			double vv2y = unsafe.getDouble(unsafe.getLong(pPoly + 128 + 24) + 8)
+					- unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24) + 8);
+			double vv2z = unsafe.getDouble(unsafe.getLong(pPoly + 128 + 24) + 16)
+					- unsafe.getDouble(unsafe.getLong(pPoly + 64 + 24) + 16);
+			double Nx = vv1y * vv2z - vv1z * vv2y;
+			double Ny = vv1z * vv2x - vv1x * vv2z;
+			double Nz = vv1x * vv2y - vv1y * vv2x;
+
+			double normdot = Nx * unsafe.getDouble(unsafe.getLong(pPoly + 24)) + Ny
+					* unsafe.getDouble(unsafe.getLong(pPoly + 24) + 8) + Nz
+					* unsafe.getDouble(unsafe.getLong(pPoly + 24) + 16);
+
+			if (normdot >= 0 && (unsafe.getInt(pBase + 0x0000002C) & 2) != 0 && (flags & 0x4L) != 0) {
 				// cull backface
 				continue;
 			}
-			if (cross_z <= 0 && (unsafe.getInt(pBase + 0x0000002C) & 1) != 0 && (flags & 0x4L) != 0) {
+			if (normdot <= 0 && (unsafe.getInt(pBase + 0x0000002C) & 1) != 0 && (flags & 0x4L) != 0) {
 				// cull frontface
 				continue;
 			}
 
 			// lighting
 			// profiler.startSection("I3D_polypipe-light");
-			final long pMtl = pBase + ((cross_z < 0) ? 0x00000900 : 0x00040900);
+			final long pMtl = pBase + ((normdot < 0) ? 0x00000900 : 0x00040900);
 
 			if (lighting) {
 				float opacity = unsafe.getFloat(pMtl + 16);
@@ -145,6 +149,37 @@ final class PolygonPipeline {
 			}
 			// profiler.endSection("I3D_polypipe-light");
 
+			// near clip, but only if necessary
+			if (vclip_near < vcount) {
+				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
+				// note that even if no vertices are emitted from the clipper,
+				// vcount can still be read and will be zero
+				vcount_clipped = unsafe.getInt(pPoly + 32);
+				if (vcount_clipped < 3) {
+					// drop degenerate poly
+					continue;
+				}
+			}
+
+			// old proj space face culling
+			// face culling, eval z component of proj space normal
+			// double v1x = unsafe.getDouble(unsafe.getLong(pPoly + 64)) - unsafe.getDouble(unsafe.getLong(pPoly));
+			// double v1y = unsafe.getDouble(unsafe.getLong(pPoly + 64) + 8) - unsafe.getDouble(unsafe.getLong(pPoly) +
+			// 8);
+			// double v2x = unsafe.getDouble(unsafe.getLong(pPoly + 128)) - unsafe.getDouble(unsafe.getLong(pPoly +
+			// 64));
+			// double v2y = unsafe.getDouble(unsafe.getLong(pPoly + 128) + 8)
+			// - unsafe.getDouble(unsafe.getLong(pPoly + 64) + 8);
+			// double cross_z = v1x * v2y - v1y * v2x;
+			// if (cross_z >= 0 && (unsafe.getInt(pBase + 0x0000002C) & 2) != 0 && (flags & 0x4L) != 0) {
+			// // cull backface
+			// continue;
+			// }
+			// if (cross_z <= 0 && (unsafe.getInt(pBase + 0x0000002C) & 1) != 0 && (flags & 0x4L) != 0) {
+			// // cull frontface
+			// continue;
+			// }
+
 			// clip other planes
 			if (vclip_left < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipLeft);
 			if (vclip_right < vcount) pPoly = clipPolygon(unsafe, pBase, pPoly, pClipRight);
@@ -165,7 +200,7 @@ final class PolygonPipeline {
 			pEnd = pPoly + vcount_clipped * 64;
 
 			for (; pPolyVert2 < pEnd; pPolyVert1 += 64, pPolyVert2 += 64, pTri += 256) {
-				unsafe.putInt(pTri, cross_z < 0 ? -1 : cross_z > 0 ? 1 : 0);
+				unsafe.putInt(pTri, normdot < 0 ? -1 : normdot > 0 ? 1 : 0);
 				unsafe.putInt(pTri + 4, 0);
 				unsafe.copyMemory(pPoly, pTri + 64, 64);
 				unsafe.copyMemory(pPolyVert1, pTri + 128, 64);
@@ -397,8 +432,7 @@ final class PolygonPipeline {
 		float Nx = (float) unsafe.getDouble(unsafe.getLong(pPolyVert + 16));
 		float Ny = (float) unsafe.getDouble(unsafe.getLong(pPolyVert + 16) + 8);
 		float Nz = (float) unsafe.getDouble(unsafe.getLong(pPolyVert + 16) + 16);
-		// shouldn't need to normalise N, because normal transformation and clip
-		// interpolation both do
+		// shouldn't need to normalise N, because normal transformation and clip interpolation both do
 		// float imN = Util.fastInverseSqrt(Nx * Nx + Ny * Ny + Nz * Nz);
 		// Nx *= imN;
 		// Ny *= imN;

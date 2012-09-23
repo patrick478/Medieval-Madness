@@ -1,4 +1,4 @@
-package soundEngine;
+package soundengine;
 
 import java.net.URL;
 import javax.sound.sampled.*;
