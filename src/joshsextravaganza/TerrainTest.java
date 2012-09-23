@@ -156,7 +156,7 @@ public class TerrainTest {
 
 		Engine eng = new Engine(WIDTH, HEIGHT, true);
 		eng.start();
-		SimpleAudioPlayer.play("Daybreak.wav");
+		//SimpleAudioPlayer.play("Daybreak.wav");
 		eng.addMeshContext(terr_mc);
 		for (MeshContext mc : mclist) {
 			eng.addMeshContext(mc);

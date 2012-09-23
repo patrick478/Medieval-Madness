@@ -48,7 +48,7 @@ public class SimpleAudioPlayer extends Thread
 			public void run(){
 		//set filename to File
 		File soundFile = new File(filename);
-
+		while(true){
 		/*
 		  We have to read in the sound file.
 		 */
@@ -132,6 +132,7 @@ public class SimpleAudioPlayer extends Thread
 
 		//System.exit(0);
 		}
+			}
 		}).start();
 	}
 
