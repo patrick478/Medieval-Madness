@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import soundEngine.SimpleAudioPlayer;
+
 import comp261.modelview.MeshLoader;
 
 import initial3d.Initial3D;
@@ -112,7 +114,7 @@ public class TerrainTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-
+		
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();
 		Material terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
@@ -154,7 +156,7 @@ public class TerrainTest {
 
 		Engine eng = new Engine(WIDTH, HEIGHT, true);
 		eng.start();
-
+		SimpleAudioPlayer.play("Daybreak.wav");
 		eng.addMeshContext(terr_mc);
 		for (MeshContext mc : mclist) {
 			eng.addMeshContext(mc);
