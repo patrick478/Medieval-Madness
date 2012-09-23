@@ -16,6 +16,10 @@ public class Camera {
 	Camera() {
 
 	}
+	
+	public void trackReferenceFrame(ReferenceFrame rf) {
+		// TODO
+	}
 
 	public synchronized Vec3 getPosition() {
 		return pos;

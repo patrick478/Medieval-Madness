@@ -1303,15 +1303,12 @@ final class TrianglePerspectiveRasteriser {
 		final float dcR_dx = cR10 - cR00;
 		final float dcR_dy = cR01 - cR00;
 		final float dcR_dqy = dcR_dy * q;
-		final float dcR_dqx = dcR_dx * q;
 		final float dcG_dx = cG10 - cG00;
 		final float dcG_dy = cG01 - cG00;
 		final float dcG_dqy = dcG_dy * q;
-		final float dcG_dqx = dcG_dx * q;
 		final float dcB_dx = cB10 - cB00;
 		final float dcB_dy = cB01 - cB00;
 		final float dcB_dqy = dcB_dy * q;
-		final float dcB_dqx = dcB_dx * q;
 		final float dUiZ_dx = (UiZ10 - UiZ00);
 		final float dUiZ_dy = (UiZ01 - UiZ00);
 		final float dUiZ_dqy = dUiZ_dy * q;

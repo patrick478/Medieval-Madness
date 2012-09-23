@@ -5,7 +5,7 @@ import initial3d.renderer.Util;
 import initial3d.Initial3D;
 import initial3d.PolygonBuffer;
 import initial3d.VectorBuffer;
-import initial3d.engine.RenderFrame;
+import initial3d.engine.RenderWindow;
 import initial3d.engine.Vec3;
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
@@ -120,7 +120,7 @@ public class Main {
 		final int WIDTH = 848;
 		final int HEIGHT = 480;
 
-		RenderFrame rwin = RenderFrame.create(WIDTH, HEIGHT);
+		RenderWindow rwin = RenderWindow.create(WIDTH, HEIGHT);
 		rwin.setLocationRelativeTo(null);
 		rwin.setVisible(true);
 		BufferedImage bi = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);

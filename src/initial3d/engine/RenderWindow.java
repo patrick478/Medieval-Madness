@@ -30,7 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /** JFrame specialised for game-oriented active rendering. */
-public class RenderFrame extends JFrame {
+public class RenderWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -68,7 +68,7 @@ public class RenderFrame extends JFrame {
 		System.setProperty("sun.awt.noerasebackground", "true");
 	}
 
-	protected RenderFrame(int w, int h) {
+	protected RenderWindow(int w, int h) {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		canvas = new Canvas();
 		setLayout(new BorderLayout());
@@ -101,13 +101,13 @@ public class RenderFrame extends JFrame {
 	}
 
 	/** Create a RenderWindow on the AWT Event Thread, and wait for completion. */
-	public static final RenderFrame create(final int width, final int height) {
+	public static final RenderWindow create(final int width, final int height) {
 		// hackity hack hack hack...
-		final RenderFrame[] win = new RenderFrame[1];
+		final RenderWindow[] win = new RenderWindow[1];
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				synchronized (win) {
-					win[0] = new RenderFrame(width, height);
+					win[0] = new RenderWindow(width, height);
 					win.notify();
 				}
 			}

@@ -19,7 +19,7 @@ public class Engine extends Thread {
 	private final BlockingQueue<MeshContext> toadd = new LinkedBlockingQueue<MeshContext>();
 	private final BlockingQueue<MeshContext> toremove = new LinkedBlockingQueue<MeshContext>();
 	private final Set<MeshContext> meshcontexts = new HashSet<MeshContext>();
-	private final RenderFrame frame;
+	private final RenderWindow frame;
 	private final int width, height;
 	private final Camera cam = new Camera();
 	private final double sky_z = 47;
@@ -34,7 +34,7 @@ public class Engine extends Thread {
 	public Engine(int width_, int height_, boolean handlecamera_) {
 		width = width_;
 		height = height_;
-		frame = RenderFrame.create(width_, height_);
+		frame = RenderWindow.create(width_, height_);
 		handlecamera = handlecamera_;
 	}
 
