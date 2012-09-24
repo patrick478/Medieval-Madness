@@ -8,21 +8,23 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Scene {
 
+	private static final int CHANGE_LIMIT = 10;
+
 	private final BlockingQueue<Drawable> add_drawable = new LinkedBlockingQueue<Drawable>();
 	private final BlockingQueue<Drawable> remove_drawable = new LinkedBlockingQueue<Drawable>();
 	private final BlockingQueue<Light> add_light = new LinkedBlockingQueue<Light>();
 	private final BlockingQueue<Light> remove_light = new LinkedBlockingQueue<Light>();
-	
+
 	private volatile boolean clear_drawables = false;
 	private volatile boolean clear_lights = false;
-	
+
 	private final Set<Drawable> drawables = new HashSet<Drawable>();
 	private final Set<Light> lights = new HashSet<Light>();
-	
+
 	public Scene() {
-		
+
 	}
-	
+
 	public void addDrawable(Drawable d) {
 		add_drawable.add(d);
 	}
@@ -32,8 +34,8 @@ public class Scene {
 	}
 
 	public <T extends Collection<Drawable>> T extractDrawables(T c) {
-
-		return null;
+		c.addAll(drawables);
+		return c;
 	}
 
 	public void clearDrawables() {
@@ -49,19 +51,19 @@ public class Scene {
 	}
 
 	public <T extends Collection<Light>> T extractLights(T c) {
-
-		return null;
+		c.addAll(lights);
+		return c;
 	}
 
 	public void clearLights() {
 		clear_lights = true;
 	}
 
-	public Camera getCamera() {
+	public OldCamera getCamera() {
 
 		return null;
 	}
-	
+
 	/* package-private */
 	void processChanges() {
 		if (clear_drawables) {
@@ -72,30 +74,31 @@ public class Scene {
 			remove_light.clear();
 			lights.clear();
 		}
-		while(!remove_drawable.isEmpty()) {
+		// add / remove up to a limit
+		for (int i = CHANGE_LIMIT; i-- > 0;) {
 			drawables.remove(remove_drawable.poll());
 		}
-		while(!add_drawable.isEmpty()) {
+		for (int i = CHANGE_LIMIT; i-- > 0;) {
 			drawables.add(add_drawable.poll());
 		}
-		while(!remove_light.isEmpty()) {
+		for (int i = CHANGE_LIMIT; i-- > 0;) {
 			lights.remove(remove_light.poll());
 		}
-		while(!add_light.isEmpty()) {
+		for (int i = CHANGE_LIMIT; i-- > 0;) {
 			lights.add(add_light.poll());
 		}
 	}
-	
+
 	/* package-private */
 	Iterable<Drawable> getDrawables() {
-		
-		return null;
+
+		return drawables;
 	}
-	
+
 	/* package-private */
 	Iterable<Light> getLights() {
-		
-		return null;
+
+		return lights;
 	}
 
 }
