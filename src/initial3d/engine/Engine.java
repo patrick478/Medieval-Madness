@@ -21,7 +21,7 @@ public class Engine extends Thread {
 	private final Set<MeshContext> meshcontexts = new HashSet<MeshContext>();
 	private final RenderWindow frame;
 	private final int width, height;
-	private final Camera cam = new Camera();
+	private final OldCamera cam = new OldCamera();
 	private final double sky_z = 47;
 
 	private Initial3D i3d;
@@ -38,7 +38,7 @@ public class Engine extends Thread {
 		handlecamera = handlecamera_;
 	}
 
-	public Camera getCamera() {
+	public OldCamera getCamera() {
 		return cam;
 	}
 
