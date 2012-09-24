@@ -21,13 +21,13 @@ public class PrintCommand extends Command {
 					options += " | ";
 				options += str;
 			}
-			System.out.printf("You must specify one variable to print\nAvaible variables:\n\t%s\n", options);
+			this.parentServer.face.getOut().printf("You must specify one variable to print\nAvaible variables:\n\t%s\n", options);
 		}
 	}
 	
 	public void PrintVariable(String variable)
 	{
 		if(this.parentServer.serverData.containsKey(variable))
-			System.out.printf("%s=%s\n", variable, this.parentServer.serverData.get(variable));
+			this.parentServer.face.getOut().printf("%s=%s\n", variable, this.parentServer.serverData.get(variable));
 	}
 }

@@ -1,7 +1,12 @@
 package server;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.util.*;
+
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 import server.commands.PrintCommand;
 import server.commands.SessionCommand;
@@ -20,6 +25,10 @@ public class Server implements Runnable {
 
 	private ServerLayer networking;
 	
+	public ServerFace face;
+	
+	private JFrame frame;
+	
 	public Server()
 	{
 		this.serverData.put("status",  ServerStatus.Stopped);
@@ -32,8 +41,14 @@ public class Server implements Runnable {
 	}
 
 	public boolean RunServer()
-	{
-		this.log = new Log("server.log", true);
+	{		
+		face = new WindowFace();
+		face.setup(this);
+		Thread faceThread = new Thread(face);
+		faceThread.setDaemon(true);
+
+		
+		this.log = new Log("server.log", true, this.face.getOut());
 		this.log.println("Medieval Madness Server v0.1 - \"Proofie Penguin\"");
 		
 		// check if the server is already running
@@ -48,6 +63,7 @@ public class Server implements Runnable {
 		serverData.put("start_time_millis", System.currentTimeMillis());
 		serverData.put("listen_port", 14121);
 		
+		serverData.put("running", true);
 		serverData.put("status", ServerStatus.Starting);
 		
 		// prepare stuff here
@@ -65,19 +81,18 @@ public class Server implements Runnable {
 		this.serverCommands.put("session",  new SessionCommand(this));
 		
 		// warm the session manager
-		SessionMngr.getInstance();
+		SessionMngr.warm(this.face.getOut());
 		
-		// read console commands
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = "";
-		do
-		{
+		// start the face
+		faceThread.start();
+		
+		while((Boolean)this.serverData.get("running"))
 			try {
-				input = console.readLine();
-			} catch (IOException e) {
-				this.log.printf("Server :: Console Error() :: %s\n", e.toString());
+				Thread.sleep(10);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		} while(this.HandleCommandLine(input));
 		
 		this.log.printf("Server is shutting down\n");
 		
@@ -97,10 +112,17 @@ public class Server implements Runnable {
 		this.setStatus(ServerStatus.Stopped);
 		this.log.close();
 		
+		this.face.close();
+		
 		return true;
 		
 	}
 	
+	private void Sleep(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void Tick(long elapsedTimeMillis)
 	{
 	}
@@ -183,10 +205,6 @@ public class Server implements Runnable {
 		String args[] = msg.split(" ");
 		if(this.serverCommands.containsKey(args[0]))
 			this.serverCommands.get(args[0]).execute(args);
-		else if(args[0].equals("exit") || args[0].equals("quit"))
-		{
-			return false;
-		}
 		else if(args[0].equals("help"))
 		{
 			String options = "";
@@ -198,8 +216,13 @@ public class Server implements Runnable {
 			}
 			System.out.printf("Availble commands:\n\t%s\n", options);
 		}
+		else if(args[0].equals("quit") || args[0].equals("exit"))
+		{
+			serverData.put("status", ServerStatus.Stopping);
+			serverData.put("running", false);
+		}
 		else
-			System.out.printf("Unrecognised command. Enter 'help' for a list of available commands");
+			this.face.getOut().printf("Unrecognised command. Enter 'help' for a list of available commands\n");
 		
 		return true;
 	}

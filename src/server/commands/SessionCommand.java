@@ -12,17 +12,20 @@ public class SessionCommand extends Command {
 
 	@Override
 	public void execute(String[] args) {
-		if(args.length < 2) System.out.printf("No session command inputted\n");
+		if(args.length < 2) {
+			this.parentServer.face.getOut().printf("No session command inputted\n");
+			return;
+		}
 		if(args[1].equals("count"))
 		{
-			System.out.printf("There are currently %d active sessions\n", SessionMngr.getInstance().numSessions());
+			this.parentServer.face.getOut().printf("There are currently %d active sessions\n", SessionMngr.getInstance().numSessions());
 		}
 		else if(args[1].equals("total"))
 		{
-			System.out.printf("There have been a total of %d sessions\n",  SessionMngr.getInstance().totalSessions());
+			this.parentServer.face.getOut().printf("There have been a total of %d sessions\n",  SessionMngr.getInstance().totalSessions());
 		}
 		else
-			System.out.printf("Unrecognised session command\n");
+			this.parentServer.face.getOut().printf("Unrecognised session command\n");
 	}
 
 }

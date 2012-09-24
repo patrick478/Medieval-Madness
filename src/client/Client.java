@@ -17,7 +17,7 @@ public class Client {
 	
 	public Client()
 	{
-		this.log = new Log("client.log", true);
+		this.log = new Log("client.log", true, System.out);
 		this.net = new NetworkClient(this);
 	}
 	

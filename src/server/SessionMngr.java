@@ -1,5 +1,6 @@
 package server;
 
+import java.io.PrintStream;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
@@ -15,13 +16,21 @@ public class SessionMngr {
 	}
 	
 	private Map<String, Session> sessionList = new HashMap<String, Session>();
-	private Log log = new Log("sessions.log", true);
+	private Log log;
 	private long totalSessions = 0;
+	
+	private static PrintStream outStream = System.out;
 	
 	private SessionMngr()
 	{
+		this.log = new Log("sessions.log", true, this.outStream);
 		this.log.setPrefix("(SessionMngr) ");
 		this.log.printf("Session manager started\n");
+	}
+	
+	public static void warm(PrintStream outx)
+	{
+		outStream = outx;
 	}
 	
 	public void shutdown()
