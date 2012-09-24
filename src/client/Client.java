@@ -5,9 +5,9 @@ import client.networking.*;
 import common.Log;
 
 public class Client {
-	private AbstractState gameState;
-	private Log log;
-	private NetworkClient net;
+	private AbstractState gameState = null;
+	public Log log;
+	public NetworkClient net;
 	private Engine eng;
 	private Game gameWorld;
 	
@@ -24,8 +24,8 @@ public class Client {
 	public void setState(AbstractState newState)
 	{
 		this.log.printf("{GAMESTATE} Changing gamestate to <%s>\n", newState.toString());
+		newState.setup(this, this.gameWorld);
 		this.gameState = newState;
-		this.gameState.setup(this, this.gameWorld);
 	}
 	
 	public void run() {

@@ -210,7 +210,7 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		SocketChannel sc = ssc.accept();
 		sc.configureBlocking(false);
 		
-		String sesID = SessionMngr.getInstance().createSession();
+		String sesID = SessionMngr.getInstance().createSession(sc);
 		sc.register(this.selector,  SelectionKey.OP_READ, sesID);
 		Packet p = new WelcomePacket();
 		this.send(sc, p.toData().getData());

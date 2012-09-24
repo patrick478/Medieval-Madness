@@ -14,6 +14,9 @@ public class WelcomePacket extends Packet {
 	
 	@Override
 	public void fromData(DataPacket packet) {
+		if(packet.getShort() != WelcomePacket.ID)
+			return; // TODO: Throw exception;
+		
 		if(packet.getShort() == 1)
 			this.isReply = true;
 		else

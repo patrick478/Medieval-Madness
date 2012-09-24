@@ -9,7 +9,6 @@ public abstract class AbstractState {
 	
 	public AbstractState()
 	{
-		
 	}
 	
 	public void changeState(AbstractState newState)

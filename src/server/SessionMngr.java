@@ -1,5 +1,6 @@
 package server;
 
+import java.nio.channels.SocketChannel;
 import java.util.*;
 
 import common.Log;
@@ -29,10 +30,10 @@ public class SessionMngr {
 		this.log.close();
 	}
 	
-	public String createSession()
+	public String createSession(SocketChannel sc)
 	{
 		String id = getUnusedIdentifier();
-		Session ses = new Session();
+		Session ses = new Session(sc);
 		sessionList.put(id, ses);
 		this.totalSessions++;
 		

@@ -6,11 +6,12 @@ import java.util.*;
 import common.DataPacket;
 import common.Packet;
 import common.PacketFactory;
-import common.packets.WelcomePacket;
+import common.packets.*;
 
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
 	private Server parentServer;
+	private ServerLayer parentLayer;
 	
 	public ServerWorker(Server s) {
 		this.parentServer = s;
@@ -49,12 +50,12 @@ public class ServerWorker implements Runnable {
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
-			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
+//			System.out.printf("Recieved %d byte%s [SessionID=%s]\n", dataEvent.data.length, (dataEvent.data.length == 1 ? "" : "s"), dataEvent.session);
 			DataPacket p = new DataPacket(dataEvent.data);
 			Session s = SessionMngr.getInstance().getSession(dataEvent.session);
 			if(s == null) return; // TODO: This is bad.
 			
-			process(p, s);
+			process(p, s, dataEvent.server);
 			
 			/*
 			int a = p.getShort();
@@ -71,16 +72,15 @@ public class ServerWorker implements Runnable {
 		this.parentServer.log.printf("ServerWorker :: detected shutdown - stopping\n");
 	}
 	
-	public void process(DataPacket p, Session s)
-	{
-		//System.out.println("Got data!");
-		//for(int i = 0; i < p.getData().length; i++)
-		//{
-		//	System.out.printf("%20X ", p.getData()[i]);
-		//}
-		//System.out.println();
-		
+	public void process(DataPacket p, Session s, ServerLayer sl)
+	{		
 		Packet from = PacketFactory.identify(p);
+		if(from == null)
+		{
+			System.out.println("[WARNING] Unidentifable packet recieved, ignoring..");
+			return;
+		}
+		
 		switch(s.getState())
 		{
 			case Welcome:
@@ -88,8 +88,23 @@ public class ServerWorker implements Runnable {
 				{
 					s.setState(SessionState.Login);
 					s.setSubstate(0);
-					System.out.printf("Session %s is now ready for communication", SessionMngr.getInstance().getKey(s));
 				}				
+				break;
+				
+			case Login:
+				if(from.ID() == LoginPacket.ID && s.getSubstate() == 0 && !from.isReply)
+				{
+					LoginPacket px = (LoginPacket)from;
+					String username = px.username;
+					String password = px.password;
+					
+					boolean loginSuccess = true; // this should use the data layer to yeah.. TODO;
+					this.parentServer.log.printf("Login attempt (%s). Password correct=%s\n", username, loginSuccess ? "yes" : "no");
+					
+					px.isReply = true;
+					px.loginOkay = loginSuccess;
+					sl.send(s.getSocket(), px.toData().getData());
+				}
 				break;
 		}
 	}

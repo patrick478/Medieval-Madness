@@ -5,30 +5,30 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import common.DataPacket;
+import common.packets.LoginPacket;
 
 public class PacketTests {
+	// TODO: More tests!!
 	
 	@Test
-	public void TestByte() {
-		DataPacket p = new DataPacket();
+	public void TestLoginPacket() {
+		LoginPacket p = new LoginPacket();
+		p.username = "benanderson1";
+		p.password = "letmein123";
 		
-		p.addByte((byte)'j');
-		assertEquals(p.getByte(), (byte)'j');
+		LoginPacket test = new LoginPacket();
+		test.fromData(p.toData());
+		assertTrue(test.username.equals("benanderson1"));
+		assertTrue(test.password.equals("letmein123"));
+		assertFalse(test.loginOkay);
 		
-		p.addByte((byte)'\u0048');
-		p.addByte((byte)'\u0012');
+		p = new LoginPacket();
+		p.isReply = true;
+		p.loginOkay = true;
 		
-		assertFalse(p.getByte() == (byte)'\u0012');
-		assertTrue(p.getByte() == (byte)'\u0012');
-	}
-	
-	@Test
-	public void TestShort() {
-		DataPacket p = new DataPacket();
-		
-		short test = 2;
-		p.addShort(test);
-		assertEquals(p.getShort(), test);
-		
+		test = new LoginPacket();
+		test.fromData(p.toData());
+		assertTrue(test.isReply);
+		assertTrue(test.loginOkay);
 	}
 }

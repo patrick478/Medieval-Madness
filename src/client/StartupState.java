@@ -8,6 +8,8 @@ public class StartupState extends AbstractState {
 
 	@Override
 	public void update(long sinceLast) {
+		this.client.net.Connect("127.0.0.1", 14121);
+		
 		this.changeState(new LoginState());
 	}
 

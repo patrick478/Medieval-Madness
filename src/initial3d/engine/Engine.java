@@ -79,7 +79,7 @@ public class Engine extends Thread {
 		i3d.lightfv(LIGHT0, DIFFUSE, new float[] { 1f, 1f, 1f });
 		i3d.lightfv(LIGHT0, SPECULAR, new float[] { 1f, 1f, 1f });
 		i3d.lightfv(LIGHT0, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
-		i3d.lightf(LIGHT0, INTENSITY, 0.6f);
+		i3d.lightf(LIGHT0, INTENSITY, 0.9f);
 		i3d.enable(LIGHT0);
 
 		i3d.lightfv(LIGHT1, DIFFUSE, new float[] { 1f, 1f, 0.7f });
@@ -99,7 +99,7 @@ public class Engine extends Thread {
 		i3d.loadIdentity();
 		i3d.matrixMode(VIEW);
 		i3d.loadIdentity();
-		i3d.lightdv(LIGHT1, POSITION, light1p);
+		//i3d.lightdv(LIGHT1, POSITION, light1p);
 
 		double dt = 0;
 		long t = time();

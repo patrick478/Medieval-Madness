@@ -7,8 +7,9 @@ public class Session {
 	private SessionState state;
 	private int substate = 0;
 	
-	public Session() {
+	public Session(SocketChannel sc) {
 		state = SessionState.Welcome;
+		socket = sc;
 	}
 	
 	public SocketChannel getSocket()
