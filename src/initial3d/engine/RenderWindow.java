@@ -425,6 +425,7 @@ public class RenderWindow extends JFrame {
 		public void eventDispatched(AWTEvent event) {
 			MouseEvent me = (MouseEvent) event;
 			if (event.getID() == MouseEvent.MOUSE_MOVED || event.getID() == MouseEvent.MOUSE_DRAGGED) {
+				System.out.println("Doing stuff: " + Long.toString(System.currentTimeMillis()));
 				synchronized (lock_mousedata) {
 					Point cloc;
 					if (isFullscreen()) {

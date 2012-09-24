@@ -73,11 +73,18 @@ public class ServerWorker implements Runnable {
 	
 	public void process(DataPacket p, Session s)
 	{
+		//System.out.println("Got data!");
+		//for(int i = 0; i < p.getData().length; i++)
+		//{
+		//	System.out.printf("%20X ", p.getData()[i]);
+		//}
+		//System.out.println();
+		
 		Packet from = PacketFactory.identify(p);
 		switch(s.getState())
 		{
 			case Welcome:
-				if(from.ID == WelcomePacket.ID && s.getSubstate() == 1 && from.replyValid() && from.isReply)
+				if(from.ID() == WelcomePacket.ID && s.getSubstate() == 1 && from.replyValid() && from.isReply)
 				{
 					s.setState(SessionState.Login);
 					s.setSubstate(0);

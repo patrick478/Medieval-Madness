@@ -1,7 +1,17 @@
 package common;
 
 public abstract class Packet {
-	public final static short ID = 0;
+	
+	private final short id;
+	
+	public Packet(short id_) {
+		id = id_;
+	}
+	
+	public final short ID()
+	{
+		return this.id;
+	}
 	
 	public boolean isReply = false; 
 	

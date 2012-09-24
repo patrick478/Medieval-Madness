@@ -131,13 +131,13 @@ public class Perlin {
 //		double fq = 4.0f;
 //		
 //		
-//		final BufferedImage bi = new BufferedImage(WIDTH, HIEGHT, BufferedImage.TYPE_INT_RGB);
-//		PerlinNoise noise = new PerlinNoise(1);
+//		final BufferedImage bi = new BufferedImage(WIDTH+3, HIEGHT+3, BufferedImage.TYPE_INT_RGB);
+//		Perlin noise = new Perlin(1);
 //		
 //		
-//		for(int y = 0; y<HIEGHT; y++){
-//			for(int x = 0; x<WIDTH; x++){
-//				bi.setRGB(x, y, (int)((noise.getNoise(x/(double)WIDTH, y/(double)HIEGHT, 0, 2)+1)*127));
+//		for(int y = 0; y<=HIEGHT; y++){
+//			for(int x = 0; x<=WIDTH; x++){
+//				bi.setRGB(x, y, (int)((noise.getNoise(x/(double)WIDTH, y/(double)HIEGHT + HIEGHT, 0, 2)+1)*127));
 ////				System.out.printf("%5f  ", noise.Noise((fq*x)/(double)WIDTH,(fq* y)/(double)HIEGHT, 0));
 //			}
 ////			System.out.println();

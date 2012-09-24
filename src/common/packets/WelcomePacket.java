@@ -4,9 +4,12 @@ import common.DataPacket;
 import common.Packet;
 
 public class WelcomePacket extends Packet {
-	public final static short ID = 1;
+	
+	public static final short ID = 1;
+	
 	public WelcomePacket()
 	{
+		super(ID);
 	}
 	
 	@Override
