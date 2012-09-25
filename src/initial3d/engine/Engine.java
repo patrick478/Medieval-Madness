@@ -22,7 +22,9 @@ public class Engine extends Thread {
 	private final RenderWindow frame;
 	private final int width, height;
 	private final OldCamera cam = new OldCamera();
-	private final double sky_z = 47;
+	private final double sky_z = 9001;
+	
+	private final double speed = 330;
 
 	private Initial3D i3d;
 	private int shademodel = 1;
@@ -56,8 +58,12 @@ public class Engine extends Thread {
 
 	private void processMeshContextChanges() {
 		meshcontexts.remove(toremove.poll());
-		MeshContext mc = toadd.poll();
-		if (mc != null) meshcontexts.add(mc);
+//		MeshContext mc = toadd.poll();
+//		if (mc != null) meshcontexts.add(mc);
+		MeshContext mc = null;
+		while ((mc = toadd.poll()) != null) {
+			meshcontexts.add(mc);
+		}
 	}
 
 	public void run() {
@@ -314,22 +320,22 @@ public class Engine extends Thread {
 		Vec3 cside = Vec3.j.cross(cnorm);
 
 		if (frame.getKey(KeyEvent.VK_W)) {
-			cam.move(cnorm.scale(dt * 3));
+			cam.move(cnorm.scale(dt * speed));
 		}
 		if (frame.getKey(KeyEvent.VK_S)) {
-			cam.move(cnorm.neg().scale(dt * 3));
+			cam.move(cnorm.neg().scale(dt * speed));
 		}
 		if (frame.getKey(KeyEvent.VK_A)) {
-			cam.move(cside.scale(dt * 3));
+			cam.move(cside.scale(dt * speed));
 		}
 		if (frame.getKey(KeyEvent.VK_D)) {
-			cam.move(cside.neg().scale(dt * 3));
+			cam.move(cside.neg().scale(dt * speed));
 		}
 		if (frame.getKey(KeyEvent.VK_SHIFT)) {
-			cam.move(cup.neg().scale(dt * 3));
+			cam.move(cup.neg().scale(dt * speed));
 		}
 		if (frame.getKey(KeyEvent.VK_SPACE)) {
-			cam.move(cup.scale(dt * 3));
+			cam.move(cup.scale(dt * speed));
 		}
 
 		int mx = frame.pollMouseTravelX();

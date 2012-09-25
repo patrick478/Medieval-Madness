@@ -103,6 +103,20 @@ public class MapGenerator {
 
 		// call go here TODO? or static constructor and so on etc
 	}
+	
+	public List<Triangle> getTriangles(){
+		List<Triangle> tri = new ArrayList<Triangle>();
+		for(Center c : centers){
+			for(Edge e : c.borders){
+				tri.add(new Triangle(
+						new Point[]{c.point, e.v0.point, e.v1.point}, 
+						new double[]{c.elevation, e.v0.elevation, e.v1.elevation}
+				));
+//				System.out.println(tri.get(tri.size()-1).toString());
+			}
+		}
+		return tri;
+	}
 
 	public void run() {
 		List<Point> points = generateRandomPoints();
@@ -173,8 +187,6 @@ public class MapGenerator {
 		assignPolygonMoisture();
 
 		assignBiomes();
-
-		look();
 	}
 
 	// Takes a list of points on the map and uses the voronoi
@@ -1149,6 +1161,8 @@ public class MapGenerator {
 	}
 
 	public static void main(String[] args) {
-		new MapGenerator(32, 800).run();
+		MapGenerator mp = new MapGenerator(32, 800);
+		mp.run();
+		mp.look();
 	}
 }
