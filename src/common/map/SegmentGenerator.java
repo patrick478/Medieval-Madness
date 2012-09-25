@@ -1,9 +1,9 @@
 package common.map;
 
 import initial3d.engine.Mesh;
-import initial3d.engine.MeshContext;
 import initial3d.engine.MeshLOD;
 import initial3d.engine.Vec3;
+import initial3d.engine.old.MeshContext;
 
 import java.util.ArrayList;
 import java.util.List;

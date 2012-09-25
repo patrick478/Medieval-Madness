@@ -30,10 +30,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /** JFrame specialised for game-oriented active rendering. */
-public class RenderWindow extends JFrame {
+public class RenderWindow extends JFrame implements DisplayTarget {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final Point point_zero = new Point(0, 0);
 	private final GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -124,6 +124,17 @@ public class RenderWindow extends JFrame {
 		return win[0];
 	}
 
+	@Override
+	public int getDisplayWidth() {
+		return canvas.getWidth();
+	}
+
+	@Override
+	public int getDisplayHeight() {
+		return canvas.getHeight();
+	}
+
+	@Override
 	public void display(BufferedImage bi) {
 		Graphics g = null;
 		try {
@@ -268,7 +279,7 @@ public class RenderWindow extends JFrame {
 				int centrey = canvas.getHeight() / 2;
 				Point cloc;
 				if (isFullscreen()) {
-					// HACK for getLocationOnScreen() not giving 0,0 in fullscreen 
+					// HACK for getLocationOnScreen() not giving 0,0 in fullscreen
 					cloc = point_zero;
 				} else {
 					cloc = canvas.getLocationOnScreen();

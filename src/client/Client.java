@@ -1,6 +1,6 @@
 package client;
 
-import initial3d.engine.Engine;
+import initial3d.engine.old.Engine;
 import client.networking.*;
 import common.Log;
 

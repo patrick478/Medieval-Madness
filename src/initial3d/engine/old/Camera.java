@@ -1,8 +1,9 @@
-package initial3d.engine;
+package initial3d.engine.old;
 
 import initial3d.Initial3D;
+import initial3d.engine.Vec3;
 
-public class OldCamera {
+public class Camera {
 
 	private Vec3 pos = Vec3.zero;
 	private double yaw, pitch, roll;
@@ -13,7 +14,7 @@ public class OldCamera {
 	private final double[][] worldnormal = new double[4][1];
 	private final double[][] worldup = new double[4][1];
 
-	OldCamera() {
+	Camera() {
 
 	}
 	

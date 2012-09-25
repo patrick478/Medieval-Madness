@@ -5,9 +5,9 @@ import initial3d.Texture;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
-import initial3d.engine.MeshContext;
 import initial3d.engine.MeshLOD;
 import initial3d.engine.Vec3;
+import initial3d.engine.old.MeshContext;
 
 import java.util.Random;
 

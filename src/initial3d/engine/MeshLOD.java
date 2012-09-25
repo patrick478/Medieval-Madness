@@ -5,6 +5,7 @@ import initial3d.linearmath.Vector4D;
 
 public class MeshLOD {
 
+	/* package-private */
 	final PolygonBuffer polys;
 	final VectorBuffer vertices;
 	final VectorBuffer normals;
@@ -47,6 +48,26 @@ public class MeshLOD {
 
 	public void addPolygon(int[] v, int[] vt, int[] vn, int[] vc) {
 		polys.addPolygon(v, vt, vn, vc);
+	}
+
+	@Deprecated
+	public PolygonBuffer getPolys() {
+		return polys;
+	}
+
+	@Deprecated
+	public VectorBuffer getVertices() {
+		return vertices;
+	}
+
+	@Deprecated
+	public VectorBuffer getNormals() {
+		return normals;
+	}
+
+	@Deprecated
+	public VectorBuffer getTexcoords() {
+		return texcoords;
 	}
 
 }

@@ -7,9 +7,9 @@ import soundengine.SimpleAudioPlayer;
 
 import common.map.SegmentGenerator;
 
-import initial3d.engine.Engine;
-import initial3d.engine.MeshContext;
 import initial3d.engine.Vec3;
+import initial3d.engine.old.Engine;
+import initial3d.engine.old.MeshContext;
 
 public class NewTerrainTest {
 

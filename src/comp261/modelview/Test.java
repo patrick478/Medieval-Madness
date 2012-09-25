@@ -1,10 +1,10 @@
 package comp261.modelview;
 
 import initial3d.engine.Color;
-import initial3d.engine.Engine;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
-import initial3d.engine.MeshContext;
+import initial3d.engine.old.Engine;
+import initial3d.engine.old.MeshContext;
 
 import java.io.FileInputStream;
 

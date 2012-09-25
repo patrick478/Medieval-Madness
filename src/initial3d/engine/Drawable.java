@@ -6,17 +6,17 @@ public abstract class Drawable {
 
 	private volatile boolean focus_requested = false;
 	private volatile boolean removal_requested = false;
-
-	public void requestFocus() {
+	
+	public final void requestFocus() {
 		focus_requested = true;
 	}
 
-	public void requestRemoval() {
+	public final void requestRemoval() {
 		removal_requested = true;
 	}
 
 	/* package-private */
-	boolean pollFocusRequested() {
+	final boolean pollFocusRequested() {
 		try {
 			return focus_requested;
 		} finally {
@@ -25,7 +25,7 @@ public abstract class Drawable {
 	}
 
 	/* package-private */
-	boolean pollRemovalRequested() {
+	final boolean pollRemovalRequested() {
 		try {
 			return removal_requested;
 		} finally {

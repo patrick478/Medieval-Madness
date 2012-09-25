@@ -12,12 +12,12 @@ import comp261.modelview.MeshLoader;
 import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Color;
-import initial3d.engine.Engine;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
-import initial3d.engine.MeshContext;
 import initial3d.engine.MeshLOD;
 import initial3d.engine.Vec3;
+import initial3d.engine.old.Engine;
+import initial3d.engine.old.MeshContext;
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
 

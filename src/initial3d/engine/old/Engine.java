@@ -1,4 +1,4 @@
-package initial3d.engine;
+package initial3d.engine.old;
 
 import static initial3d.Initial3D.*;
 import static initial3d.renderer.Util.*;
@@ -12,9 +12,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import initial3d.*;
+import initial3d.engine.Material;
+import initial3d.engine.MeshLOD;
+import initial3d.engine.Quat;
+import initial3d.engine.RenderWindow;
+import initial3d.engine.Vec3;
 import initial3d.linearmath.Matrix;
 import initial3d.renderer.Util;
 
+@Deprecated
 public class Engine extends Thread {
 
 	private final BlockingQueue<MeshContext> toadd = new LinkedBlockingQueue<MeshContext>();
@@ -22,7 +28,7 @@ public class Engine extends Thread {
 	private final Set<MeshContext> meshcontexts = new HashSet<MeshContext>();
 	private final RenderWindow frame;
 	private final int width, height;
-	private final OldCamera cam = new OldCamera();
+	private final Camera cam = new Camera();
 	private final double sky_z = 9001;
 
 	private double speed = 330;
@@ -41,7 +47,7 @@ public class Engine extends Thread {
 		handlecamera = handlecamera_;
 	}
 
-	public OldCamera getCamera() {
+	public Camera getCamera() {
 		return cam;
 	}
 
@@ -190,11 +196,11 @@ public class Engine extends Thread {
 					i3d.texImage2D(FRONT, mtl.map_kd, null, null);
 				}
 
-				i3d.vertexData(mlod.vertices);
-				i3d.texCoordData(mlod.texcoords);
-				i3d.normalData(mlod.normals);
+				i3d.vertexData(mlod.getVertices());
+				i3d.texCoordData(mlod.getTexcoords());
+				i3d.normalData(mlod.getNormals());
 
-				i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
+				i3d.drawPolygons(mlod.getPolys(), 0, mlod.getPolys().count());
 
 				i3d.disable(TEXTURE_2D);
 

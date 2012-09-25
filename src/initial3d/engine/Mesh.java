@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Mesh extends AbstractList<MeshLOD> {
 
-	// please don't mutate objects after giving them to the engine
+	// please don't mutate objects after giving them to the scenemanager
 
 	private List<MeshLOD> meshlods = new ArrayList<MeshLOD>();
 

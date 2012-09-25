@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Scene {
 
-	private static final int CHANGE_LIMIT = 10;
+	private static final int CHANGE_LIMIT = 100;
 
 	private final BlockingQueue<Drawable> add_drawable = new LinkedBlockingQueue<Drawable>();
 	private final BlockingQueue<Drawable> remove_drawable = new LinkedBlockingQueue<Drawable>();
@@ -20,6 +20,8 @@ public class Scene {
 
 	private final Set<Drawable> drawables = new HashSet<Drawable>();
 	private final Set<Light> lights = new HashSet<Light>();
+	
+	private Camera cam = new Camera();
 
 	public Scene() {
 
@@ -59,13 +61,13 @@ public class Scene {
 		clear_lights = true;
 	}
 
-	public OldCamera getCamera() {
+	public Camera getCamera() {
 
-		return null;
+		return cam;
 	}
 
 	/* package-private */
-	void processChanges() {
+	void renderTick() {
 		if (clear_drawables) {
 			remove_drawable.clear();
 			drawables.clear();
@@ -76,7 +78,8 @@ public class Scene {
 		}
 		// add / remove up to a limit
 		for (int i = CHANGE_LIMIT; i-- > 0;) {
-			drawables.remove(remove_drawable.poll());
+			Drawable d = remove_drawable.poll();
+			drawables.remove(d);
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0;) {
 			drawables.add(add_drawable.poll());
