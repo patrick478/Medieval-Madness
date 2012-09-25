@@ -2,7 +2,11 @@ package initial3d.engine;
 
 import initial3d.linearmath.Matrix;
 
-/** Represents a Quaternion (for orientation / rotation). */
+/**
+ * Represents a Quaternion (for orientation / rotation).
+ * 
+ * @author Ben Allen
+ */
 public class Quat {
 
 	public static final Quat zero = create(0, 0, 0, 0);
@@ -22,19 +26,22 @@ public class Quat {
 	}
 
 	/** Create a Quat from angle + axis. */
-	public static final Quat create(double w_, Vec3 axis) {
-		w_ = w_ * 0.5d;
-		axis = axis.unit().scale(Math.sin(w_));
-		return new Quat(Math.cos(w_), axis.x, axis.y, axis.z);
+	public static final Quat create(double angle, Vec3 axis) {
+		// scale so that +-PI <=> -1 and 0 <=> 0
+		angle = angle * 0.5d;
+		axis = axis.unit().scale(Math.sin(angle));
+		return new Quat(Math.cos(angle), axis.x, axis.y, axis.z);
 	}
 
 	/**
-	 * Create a Quat from a vector in the direction of the rotation axis whose magnitude corresponds to the angle to
-	 * rotate by.
+	 * Create a Quat from a vector in the direction of the rotation axis whose magnitude is equal to the angle to rotate
+	 * by.
 	 */
 	public static final Quat create(Vec3 rot) {
-
-		return null;
+		double angle = rot.mag();
+		if (Double.isInfinite(rot.invmag())) return one;
+		Vec3 axis = rot.unit();
+		return create(angle, axis);
 	}
 
 	private Quat(double w_, double x_, double y_, double z_) {
@@ -76,17 +83,30 @@ public class Quat {
 				* y, left.w * y - left.x * z + left.y * w + left.z * x, left.w * z + left.x * y - left.y * x + left.z
 				* w);
 	}
-	
+
+	/** <b><i>Left-multiply</i></b> this Quat by the Quat described by <code>(w,x,y,z)</code>. */
+	public Quat mul(double leftw, double leftx, double lefty, double leftz) {
+		return create(leftw * w - leftx * x - lefty * y - leftz * z, leftw * x + leftx * w + lefty * z - leftz * y,
+				leftw * y - leftx * z + lefty * w + leftz * x, leftw * z + leftx * y - lefty * x + leftz * w);
+	}
+
+	/** Rotate a Vec3 by the rotation described by this Quat. Assumes this Quat has norm == 1. */
+	public Vec3 rot(Vec3 v) {
+		// this * v * this^(-1)
+		Quat q = conj().mul(0, v.x, v.y, v.z).mul(this);
+		return Vec3.create(q.x, q.y, q.z);
+	}
+
 	/** Calculate the power of this Quat raised to an arbitrary real exponent. */
 	public Quat pow(double alpha) {
-		
+
 		// TODO Quat.pow()
 		return null;
 	}
-	
+
 	/** Calculate exp(this). */
 	public Quat exp() {
-		
+
 		// TODO Quat.exp()
 		return null;
 	}
@@ -109,29 +129,17 @@ public class Quat {
 		m[2][2] = w * w - x * x - y * y + z * z;
 		return m;
 	}
-	
+
 	public static final Quat slerp(Quat q0, Quat q1, double t) {
-		
+
 		// TODO quaternion slerp
 		return null;
 	}
-	
+
 	public static final Quat nlerp(Quat q0, Quat q1, double t) {
-		
+
 		// TODO quaternion nlerp
 		return null;
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,13 +12,25 @@ import java.util.Scanner;
 
 public final class Vec3 {
 
-	public static final Vec3 zero = new Vec3(0, 0, 0);
-	public static final Vec3 i = new Vec3(1, 0, 0);
-	public static final Vec3 j = new Vec3(0, 1, 0);
-	public static final Vec3 k = new Vec3(0, 0, 1);
+	/** The zero vector, equal to (0,0,0). */
+	public static final Vec3 zero;
 
+	/** The (first) basis vector i, equal to (1,0,0). */
+	public static final Vec3 i;
+
+	/** The (second) basis vector j, equal to (0,1,0). */
+	public static final Vec3 j;
+
+	/** The (third) basis vector k, equal to (0,0,1). */
+	public static final Vec3 k;
+
+	/** The first component of this vector. */
 	public final double x;
+
+	/** The second component of this vector. */
 	public final double y;
+
+	/** The third component of this vector. */
 	public final double z;
 
 	// private cache
@@ -27,6 +39,25 @@ public final class Vec3 {
 	private double m = -1;
 	private double im = -1;
 	private Vec3 unitvec, negvec, flatx, flaty, flatz;
+
+	static {
+		// i suppose this could be done with another private constructor?
+		zero = new Vec3(0, 0, 0);
+		zero.m = 0;
+		zero.im = 0;
+		i = new Vec3(1, 0, 0);
+		i.m = 1;
+		i.im = 1;
+		i.unitvec = i;
+		j = new Vec3(0, 1, 0);
+		j.m = 1;
+		j.im = 1;
+		j.unitvec = j;
+		k = new Vec3(0, 0, 1);
+		k.m = 1;
+		k.im = 1;
+		k.unitvec = k;
+	}
 
 	/**
 	 * Private constructor. Do not call this, use <code>create()</code> instead.
@@ -93,7 +124,12 @@ public final class Vec3 {
 	 * Generate a copy of this Vec3, but pointing in the opposite direction.
 	 */
 	public Vec3 neg() {
-		if (negvec == null) negvec = create(-x, -y, -z);
+		if (negvec == null) {
+			negvec = create(-x, -y, -z);
+			// if mag and/or invmag are known, set
+			if (m > 0) negvec.m = -m;
+			if (im > 0) negvec.im = -im;
+		}
 		return negvec;
 	}
 
@@ -130,7 +166,10 @@ public final class Vec3 {
 	 * Generate a copy of this Vec3 scaled by r.
 	 */
 	public Vec3 scale(double r) {
-		return create(x * r, y * r, z * r);
+		Vec3 scalevec = create(x * r, y * r, z * r);
+		// if mag was already calculated, scale that as well
+		if (m > 0) scalevec.m = m * r;
+		return scalevec;
 	}
 
 	/**
@@ -153,7 +192,10 @@ public final class Vec3 {
 	 * Get a copy of this Vec3 scaled to a magnitude of 1.
 	 */
 	public Vec3 unit() {
-		if (unitvec == null) unitvec = scale(invmag());
+		if (unitvec == null) {
+			unitvec = scale(invmag());
+			// if we know the mag, already set by scale
+		}
 		return unitvec;
 	}
 
