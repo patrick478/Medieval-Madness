@@ -1136,32 +1136,32 @@ public class MapGenerator {
 		// testing for consistency of final graph
 //		g.setColor(Color.RED);
 		
-		for (Corner c : corners) {
-//			g.setColor(Color.RED);
-			if (c.adjacent.size() <= 1) {
-//				for(Center k : c.touches){
-//					g.drawLine((int)c.point.x, (int)c.point.y, (int)k.point.x, (int)k.point.y);
-//				}
-				g.setColor(Color.BLACK);
-				
-			} else if (c.adjacent.size() == 2) {
-				g.setColor(Color.BLUE);
-			} else if (c.adjacent.size() == 3) {
-				g.setColor(Color.GREEN);
-			} else if (c.adjacent.size() == 4) {
-				g.setColor(Color.ORANGE);
-			} else if (c.adjacent.size() == 5){
-				g.setColor(Color.RED);
-			} else {
-				g.setColor(Color.WHITE);
-			}
-			g.fillOval((int) c.point.x - 1, (int) c.point.y - 1, 3, 3);
-		}
+//		for (Corner c : corners) {
+////			g.setColor(Color.RED);
+//			if (c.adjacent.size() <= 1) {
+////				for(Center k : c.touches){
+////					g.drawLine((int)c.point.x, (int)c.point.y, (int)k.point.x, (int)k.point.y);
+////				}
+//				g.setColor(Color.BLACK);
+//				
+//			} else if (c.adjacent.size() == 2) {
+//				g.setColor(Color.BLUE);
+//			} else if (c.adjacent.size() == 3) {
+//				g.setColor(Color.GREEN);
+//			} else if (c.adjacent.size() == 4) {
+//				g.setColor(Color.ORANGE);
+//			} else if (c.adjacent.size() == 5){
+//				g.setColor(Color.RED);
+//			} else {
+//				g.setColor(Color.WHITE);
+//			}
+//			g.fillOval((int) c.point.x - 1, (int) c.point.y - 1, 3, 3);
+//		}
 
 	}
 
 	public static void main(String[] args) {
-		MapGenerator mp = new MapGenerator(32, 800);
+		MapGenerator mp = new MapGenerator(9001, 800);
 		mp.run();
 		mp.look();
 	}

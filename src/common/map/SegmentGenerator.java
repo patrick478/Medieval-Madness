@@ -1,6 +1,13 @@
 package common.map;
 
+import initial3d.engine.Mesh;
+import initial3d.engine.MeshContext;
+import initial3d.engine.MeshLOD;
+import initial3d.engine.Vec3;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import common.map.worldgenerator.MapGenerator;
 import common.map.worldgenerator.Point;
@@ -25,8 +32,9 @@ public class SegmentGenerator {
 	}
 
 	private void createRegion() {
-		MapGenerator map = new MapGenerator(999999937, regionSize);
+		MapGenerator map = new MapGenerator(seed, regionSize);
 		map.run();
+		map.look();
 		List<Triangle> tList = map.getTriangles();
 
 		System.out.println("running tri list");
@@ -94,4 +102,103 @@ public class SegmentGenerator {
 
 		return s;
 	}
+	
+	public List<MeshContext> getAllSegmentsAsSomeReallyBigFuckingMeshes(){
+		
+		List<MeshContext> meshes = new ArrayList<MeshContext>();
+		
+		meshes.add(new MeshContext(getMeshPart(0, 0, 129, 129), Segment.terr_mtl));
+		meshes.add(new MeshContext(getMeshPart(0, 127, 129, 129), Segment.terr_mtl));
+		meshes.add(new MeshContext(getMeshPart(127, 0, 129, 129), Segment.terr_mtl));
+		meshes.add(new MeshContext(getMeshPart(127, 127, 129, 129), Segment.terr_mtl));
+
+		return meshes;
+		
+		
+	}
+	
+	private Mesh getMeshPart(int _x, int _z, int xSize, int zSize){
+		
+		Mesh m = new Mesh();
+		
+		MeshLOD mLOD = new MeshLOD(xSize * zSize * 2, 3, xSize * zSize * 2,
+				20, 1, 1);
+
+		int[][] ind = new int[xSize][zSize];
+
+		// first create vectors and normals
+		for (int z = 0; z < zSize; z++) {
+			for (int x = 0; x < xSize; x++) {
+				double h = (regionHeight[_x+x][_z+z] * Segment.vertScale);
+				
+				System.out.println(h);
+
+				ind[x][z] = mLOD.addVertex(
+						(_x+x) * Segment.horzScale * Segment.size, 
+						h*100, 
+						(_z+z) * Segment.horzScale * Segment.size);
+			}
+		}
+
+		Random r = new Random(32);
+
+		int[] tri_vt_1a = new int[] { mLOD.addTexCoord(0, 1),
+				mLOD.addTexCoord(1, 1), mLOD.addTexCoord(0, 0) };
+		int[] tri_vt_1b = new int[] { mLOD.addTexCoord(1, 1),
+				mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
+		int[] tri_vt_2a = new int[] { mLOD.addTexCoord(0, 1),
+				mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0) };
+		int[] tri_vt_2b = new int[] { mLOD.addTexCoord(0, 1),
+				mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
+
+		// add polygons by theorized indexed values ^^;
+		for (int z = 0; z < xSize-1; z++) {
+			for (int x = 0; x < zSize-1; x++) {
+				int[] tri0, tri1;
+
+				if (r.nextBoolean()) {
+					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x + 1][z + 1] };
+					tri1 = new int[] { ind[x][z], ind[x][z + 1], ind[x + 1][z + 1] };
+					
+					mLOD.addPolygon(tri0, tri_vt_1a, null, null);
+					mLOD.addPolygon(tri1, tri_vt_1b, null, null);
+					
+					
+				} else {
+					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x][z + 1] };
+					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1], ind[x + 1][z + 1] };
+					
+					mLOD.addPolygon(tri0, tri_vt_2a, null, null);
+					mLOD.addPolygon(tri1, tri_vt_2b, null, null);
+				}
+
+			}
+		}
+
+		m.add(mLOD);
+		
+		return m;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

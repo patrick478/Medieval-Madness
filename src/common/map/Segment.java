@@ -24,7 +24,7 @@ public class Segment {
 
 	
 	//TODO need to work out how to handel textures better than this... ^^;
-	private static Material terr_mtl;
+	public static Material terr_mtl;
 
 	static {
 		terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f,
