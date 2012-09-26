@@ -20,7 +20,7 @@ public class Scene {
 
 	private final Set<Drawable> drawables = new HashSet<Drawable>();
 	private final Set<Light> lights = new HashSet<Light>();
-	
+
 	private Camera cam = new Camera();
 
 	public Scene() {
@@ -28,10 +28,12 @@ public class Scene {
 	}
 
 	public void addDrawable(Drawable d) {
+		if (d == null) throw new IllegalArgumentException();
 		add_drawable.add(d);
 	}
 
 	public void removeDrawable(Drawable d) {
+		if (d == null) throw new IllegalArgumentException();
 		remove_drawable.add(d);
 	}
 
@@ -45,10 +47,12 @@ public class Scene {
 	}
 
 	public void addLight(Light l) {
+		if (l == null) throw new IllegalArgumentException();
 		add_light.add(l);
 	}
 
 	public void removeLight(Light l) {
+		if (l == null) throw new IllegalArgumentException();
 		remove_light.add(l);
 	}
 
@@ -77,17 +81,17 @@ public class Scene {
 			lights.clear();
 		}
 		// add / remove up to a limit
-		for (int i = CHANGE_LIMIT; i-- > 0;) {
+		for (int i = CHANGE_LIMIT; i-- > 0 && !remove_drawable.isEmpty();) {
 			Drawable d = remove_drawable.poll();
 			drawables.remove(d);
 		}
-		for (int i = CHANGE_LIMIT; i-- > 0;) {
+		for (int i = CHANGE_LIMIT; i-- > 0 && !add_drawable.isEmpty();) {
 			drawables.add(add_drawable.poll());
 		}
-		for (int i = CHANGE_LIMIT; i-- > 0;) {
+		for (int i = CHANGE_LIMIT; i-- > 0 && !remove_light.isEmpty();) {
 			lights.remove(remove_light.poll());
 		}
-		for (int i = CHANGE_LIMIT; i-- > 0;) {
+		for (int i = CHANGE_LIMIT; i-- > 0 && !add_light.isEmpty();) {
 			lights.add(add_light.poll());
 		}
 	}
