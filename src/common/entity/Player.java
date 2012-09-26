@@ -1,10 +1,12 @@
 package common.entity;
 
-public class Player extends MovableEntity {
+import initial3d.engine.Vec3;
 
-	@Override
-	public BoundingBox getBound() {
-		// TODO Auto-generated method stub
-		return null;
+public class Player extends MovableEntity {
+	
+	public Player(Vec3 _radius){
+		super(_radius);
+		type = EntityType.Player;
 	}
+
 }
