@@ -31,6 +31,7 @@ public class SessionMngr {
 	public static void warm(PrintStream outx)
 	{
 		outStream = outx;
+		SessionMngr.instance = new SessionMngr();
 	}
 	
 	public void shutdown()

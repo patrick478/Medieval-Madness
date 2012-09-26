@@ -6,7 +6,9 @@ import initial3d.engine.Vec3;
 import initial3d.engine.old.MeshContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import common.map.worldgenerator.MapGenerator;
@@ -17,12 +19,12 @@ public class SegmentGenerator {
 	private final long seed;
 	private final Perlin perlin;
 	private final double[][] regionHeight;
-	private final int regionSize = 256;// segments per region???
+	private static final int regionSize = 256; // segments per region
+	private static final double frequency = 3; //noise frequency for segments
+	private static final double heightScale = 100; //
 
-	public static final double frequency = 3;
-
-	public static final double heightScale = 100;
-
+	private Map<Long, Segment> segmentCache = new HashMap<Long, Segment>();
+	
 	public SegmentGenerator(long seed) {
 		this.seed = seed;
 		this.perlin = new Perlin(seed);
@@ -33,8 +35,7 @@ public class SegmentGenerator {
 
 	private void createRegion() {
 		MapGenerator map = new MapGenerator(seed, regionSize);
-		map.run();
-		map.look();
+		map.look(false);
 		List<Triangle> tList = map.getTriangles();
 
 		System.out.println("running tri list");
@@ -58,7 +59,15 @@ public class SegmentGenerator {
 
 	}
 
-	public Segment getSegment(long posx, long posz) {
+	public Segment getSegment(int posx, int posz) {
+		
+		//location id by long
+		Long id = new Long((long)(posx<<32) + (long)(posz));
+		//return if in the cache
+		if(segmentCache.containsKey(id)){
+			return segmentCache.get(id);
+		}
+		
 		float[][] hm = new float[Segment.size + 3][Segment.size + 3];
 
 		//if the region is made up from the values of the mapgenerator, use those values
@@ -98,8 +107,9 @@ public class SegmentGenerator {
 
 		}
 
+		//finally create the segment and place in the cache and return
 		Segment s = new Segment(posx, posz, hm);
-
+		segmentCache.put(id, s);
 		return s;
 	}
 	
@@ -180,25 +190,3 @@ public class SegmentGenerator {
 		return m;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

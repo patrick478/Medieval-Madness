@@ -4,9 +4,15 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+
+import com.almworks.sqlite4java.SQLiteConnection;
+import com.almworks.sqlite4java.SQLiteException;
+import com.almworks.sqlite4java.SQLiteStatement;
 
 import server.commands.PrintCommand;
 import server.commands.SessionCommand;
@@ -14,7 +20,7 @@ import server.commands.SessionCommand;
 import common.*;
 
 public class Server implements Runnable {
-	public static final int TICKS_PER_SECOND = 100;
+	public static final int TICKS_PER_SECOND = 30;
 	
 	public Log log;
 	private Thread runThread;
@@ -24,6 +30,7 @@ public class Server implements Runnable {
 	public Map<String, Object> serverData = new HashMap<String, Object>();
 
 	private ServerLayer networking;
+	private DataProvider db;
 	
 	public ServerFace face;
 	
@@ -41,8 +48,8 @@ public class Server implements Runnable {
 	}
 
 	public boolean RunServer()
-	{		
-		face = new WindowFace();
+	{			    
+		face = new ConsoleFace();
 		face.setup(this);
 		Thread faceThread = new Thread(face);
 		faceThread.setDaemon(true);
@@ -74,6 +81,10 @@ public class Server implements Runnable {
 			return ErrorEnd();
 		}
 		
+		// setup the db
+		this.db = new SQLite("save/unknown.db");
+		this.db.startup(this.face.getOut());
+		
 		this.runThread = new Thread(this);
 		this.runThread.start();
 		
@@ -102,6 +113,7 @@ public class Server implements Runnable {
 		try {
 			this.runThread.join();
 			this.networking.stopAndWait();
+			this.db.stopAndWait();
 		} catch (InterruptedException e) {
 			System.out.printf("Server :: Run() :: %s\n", e.toString());
 		}
@@ -150,8 +162,10 @@ public class Server implements Runnable {
 			this.Tick(elapsedTimeSinceLastTick);
 			numTicks++;
 			
-			if(System.currentTimeMillis() - lastResetTime >= 1000)
+			if(System.currentTimeMillis() - lastResetTime >= (1000 - TICKS_PER_SECOND + (TICKS_PER_SECOND / 10)))
 			{
+				lastResetTime = System.currentTimeMillis();
+				
 				this.lastTickRates.add(numTicks);
 				if(this.lastTickRates.size() > 10)
 					this.lastTickRates.poll();
@@ -165,7 +179,6 @@ public class Server implements Runnable {
 				this.serverData.put("atps", (Integer)this.serverData.get("atps") / (float)(this.lastTickRates.size()));
 				//this.log.printf("aTPS=%f\n",  this.AverageTicksPerSecond);
 				
-				lastResetTime = System.currentTimeMillis();
 				numTicks = 0;
 			}
 			
