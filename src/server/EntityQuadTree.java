@@ -73,6 +73,7 @@ public class EntityQuadTree {
 			zSize = _zSize;
 		}
 
+		@SuppressWarnings("unused")
 		public boolean isEmpty() {
 			return content.isEmpty();
 		}
@@ -137,6 +138,7 @@ public class EntityQuadTree {
 					&& zBound <= zSize + itemBound.getSize().z;
 		}
 
+		@SuppressWarnings("unused")
 		public boolean remove(Entity obj) {
 			return false;
 			// boolean returnVal = content.remove(obj);
@@ -161,6 +163,7 @@ public class EntityQuadTree {
 		}
 
 		// helper method
+		@SuppressWarnings("unused")
 		private void reduceLowerCount() {
 			this.lowerCount = (this.lowerCount <= 0) ? 0 : this.lowerCount--;
 			if (this.parent != null) {

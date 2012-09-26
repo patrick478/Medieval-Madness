@@ -1,18 +1,6 @@
 package server;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-
-import com.almworks.sqlite4java.SQLiteConnection;
-import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteStatement;
 
 import server.commands.PrintCommand;
 import server.commands.SessionCommand;
@@ -30,11 +18,10 @@ public class Server implements Runnable {
 	public Map<String, Object> serverData = new HashMap<String, Object>();
 
 	private ServerLayer networking;
-	private DataProvider db;
+	
+	public DataProvider db;
 	
 	public ServerFace face;
-	
-	private JFrame frame;
 	
 	public Server()
 	{
@@ -127,11 +114,6 @@ public class Server implements Runnable {
 		this.face.close();
 		
 		return true;
-		
-	}
-	
-	private void Sleep(int i) {
-		// TODO Auto-generated method stub
 		
 	}
 

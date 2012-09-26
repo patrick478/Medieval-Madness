@@ -23,7 +23,7 @@ public class SessionMngr {
 	
 	private SessionMngr()
 	{
-		this.log = new Log("sessions.log", true, this.outStream);
+		this.log = new Log("sessions.log", true, outStream);
 		this.log.setPrefix("(SessionMngr) ");
 		this.log.printf("Session manager started\n");
 	}

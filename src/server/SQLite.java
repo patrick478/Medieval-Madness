@@ -64,7 +64,14 @@ public class SQLite extends DataProvider implements Runnable {
 			
 			synchronized(current) 
 			{
-				current.notify();
+				try
+				{
+					current.notify();
+				}
+				catch(Exception e)
+				{
+					
+				}
 			}
 		}
 	}

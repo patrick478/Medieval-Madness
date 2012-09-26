@@ -11,7 +11,6 @@ import common.packets.*;
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
 	private Server parentServer;
-	private ServerLayer parentLayer;
 	
 	public ServerWorker(Server s) {
 		this.parentServer = s;
@@ -98,8 +97,9 @@ public class ServerWorker implements Runnable {
 					String username = px.username;
 					String password = px.password;
 					
-					boolean loginSuccess = true; // this should use the data layer to yeah.. TODO;
-					this.parentServer.log.printf("Login attempt (%s). Password correct=%s\n", username, loginSuccess ? "yes" : "no");
+					boolean loginSuccess = this.parentServer.db.passwordCorrect(username, password);
+					this.parentServer.log.printf("Login attempt (%s). Password correct=%s\n", username, loginSuccess ? "yes" : "no", password);
+					
 					
 					px.isReply = true;
 					px.loginOkay = loginSuccess;
