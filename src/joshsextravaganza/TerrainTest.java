@@ -11,13 +11,8 @@ import comp261.modelview.MeshLoader;
 
 import initial3d.Initial3D;
 import initial3d.Texture;
-import initial3d.engine.Color;
-import initial3d.engine.Material;
-import initial3d.engine.Mesh;
-import initial3d.engine.MeshLOD;
-import initial3d.engine.Vec3;
-import initial3d.engine.old.Engine;
-import initial3d.engine.old.MeshContext;
+import initial3d.engine.*;
+
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
 
@@ -115,14 +110,15 @@ public class TerrainTest {
 
 	public static void main(String[] args) throws Exception {
 		
+		
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();
 		Material terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
-		
+
 		final int terr_tex_size = 16;
-		
+
 		Texture terr_tx = Initial3D.createTexture(terr_tex_size);
-		
+
 		for (int u = 0; u < terr_tex_size; u++) {
 			for (int v = 0; v < terr_tex_size; v++) {
 				terr_tx.setPixel(u, v, 1f, 0.3f, (float) (Math.random() * 0.4 + 0.3), 0.3f);
@@ -130,10 +126,10 @@ public class TerrainTest {
 		}
 		terr_tx.composeMipMaps();
 		terr_tx.useMipMaps(true);
-		
+
 		terr_mtl = new Material(terr_mtl, terr_tx, null, null);
-		
-		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl);
+
+		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl, ReferenceFrame.SCENE_ROOT);
 
 		// BOX / BALL / MONKEY !!!
 		List<Mesh> entity_meshlist = new ArrayList<Mesh>();
@@ -146,53 +142,63 @@ public class TerrainTest {
 		Material entity_mtl = new Material(Color.BLACK, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f),
 				new Color(0f, 0f, 0f), 1f, 1f);
 
+		
+		MovableReferenceFrame entity_rf0 = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
+		MovableReferenceFrame entity_rf = new MovableReferenceFrame(entity_rf0);
+		entity_rf.setPosition(Vec3.create(0, 0, 5));
+
 		List<MeshContext> mclist = new ArrayList<MeshContext>();
 		for (Mesh m : entity_meshlist) {
-			mclist.add(new MeshContext(m, entity_mtl));
+			mclist.add(new MeshContext(m, entity_mtl, entity_rf));
 		}
+
+		//
 
 		final int WIDTH = 848;
 		final int HEIGHT = 480;
 
-		Engine eng = new Engine(WIDTH, HEIGHT, true);
-		eng.start();
-		SimpleAudioPlayer.play("Daybreak.wav");
-		eng.addMeshContext(terr_mc);
-		for (MeshContext mc : mclist) {
-			eng.addMeshContext(mc);
-		}
-		eng.getCamera().setPosition(Vec3.create(TerrainTest.SIZE / 2, 10, TerrainTest.SIZE / 2));
+		RenderWindow rwin = RenderWindow.create(WIDTH, HEIGHT);
 
-		double[][] temp = Matrix.create(4, 4);
-		double[][] xform = Matrix.createIdentity(4);
-		double[][] selfcentre = Matrix.createIdentity(4);
-		double[][] rotateX = Matrix.createIdentity(4);
-		double[][] rotateY = Matrix.createIdentity(4);
-		double[][] translate = Matrix.create(4, 4);
-		// TransformationMatrix4D.translate(selfcentre, -0.5, -0.5, -0.5);
-		TransformationMatrix4D.rotateY(rotateY, Math.PI / 4);
+		SceneManager sman = new SceneManager(WIDTH, HEIGHT);
+		sman.setDisplayTarget(rwin);
+		rwin.setLocationRelativeTo(null);
+		rwin.setVisible(true);
+
+		Scene scene = new Scene();
+
+		scene.addDrawable(terr_mc);
 		for (MeshContext mc : mclist) {
-			mc.setTransform(translate);
+			scene.addDrawable(mc);
 		}
+
+		sman.attachToScene(scene);
+
+		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
+		scene.getCamera().trackReferenceFrame(camera_rf);
+		camera_rf.setPosition(Vec3.create(-20, 20, -20));
+		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
+		
+		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
 
 		double x = 0, z = 0;
 		Perlin p = new Perlin(32);
+		
+		Vec3 ball_axis = Vec3.i.sub(Vec3.k).unit();
+		
+		Quat rot = Quat.create(Math.PI / 60, ball_axis);
+		
+		Quat rot0 = Quat.create(Math.PI / 60, Vec3.j);
+		
+		scene.getCamera().setFOV(Math.PI / 12);
 
 		while (true) {
 			double last = mapHeight(p, (int) x, (int) z);
 			double next = mapHeight(p, (int) x + 1, (int) z + 1);
 
-			TransformationMatrix4D.translate(translate, x * 2, ((x - (int) x) * (next - last) + last) + 0.9, z * 2);
-
-			// TransformationMatrix4D.translate(translate, x * 2,
-			// 8 * p.getNoise(x / (double) SIZE, z / (double) SIZE, 0, 8) + 0.5, z * 2);
-			TransformationMatrix4D.rotateX(rotateX, x * 4);
-
-			Matrix.multiplyChain(temp, xform, selfcentre, rotateX, rotateY, translate);
-			for (MeshContext mc : mclist) {
-				mc.setTransform(xform);
-			}
-
+			entity_rf0.setOrientation(entity_rf0.getOrientation().mul(rot0));
+			entity_rf0.setPosition(Vec3.create(x * 2, ((x - (int) x) * (next - last) + last) + 0.9, z * 2));
+			entity_rf.setOrientation(entity_rf.getOrientation().mul(rot));
+			
 			x += 0.01;
 			z += 0.01;
 

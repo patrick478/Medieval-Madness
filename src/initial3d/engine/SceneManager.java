@@ -8,7 +8,8 @@ import java.awt.image.DataBufferInt;
 
 public class SceneManager {
 
-	// note: near clip must be further than near plane, far cull is independent of far plane setting
+	// note: near clip must be further than near plane, far cull is independent
+	// of far plane setting
 	private static final double NEAR_PLANE = 0.1;
 	private static final double FAR_PLANE = 9001;
 
@@ -47,8 +48,8 @@ public class SceneManager {
 
 	private class SceneManagerWorker extends Thread {
 
-		private double display_ar = 1;
-		private double camera_fov = Math.PI / 3;
+		private double display_ar = 0;
+		private double camera_fov = 0;
 		private Initial3D i3d;
 
 		public SceneManagerWorker() {
@@ -68,6 +69,7 @@ public class SceneManager {
 			i3d.cullFace(BACK);
 			i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
 			i3d.shadeModel(SHADEMODEL_FLAT);
+			i3d.enable(MIPMAPS);
 
 			// TODO add option to control profiler output
 			Profiler profiler = i3d.getProfiler();
@@ -93,7 +95,8 @@ public class SceneManager {
 
 							Camera cam = scene.getCamera();
 
-							// check ar of output and camera fov, reset projection / fog / whatever if needed
+							// check ar of output and camera fov, reset
+							// projection / fog / whatever if needed
 							if (Math.abs(cam.getFOV() - camera_fov) > 0.001
 									|| Math.abs(dtarget.getDisplayWidth() / (double) dtarget.getDisplayHeight()
 											- display_ar) > 0.001) {
@@ -106,6 +109,7 @@ public class SceneManager {
 							cam.loadViewTransform(i3d);
 
 							// load lights as appropriate
+							i3d.enable(LIGHTING);
 							i3d.lightdv(LIGHT0, POSITION, light0p);
 							// TODO proper lighting
 
@@ -115,11 +119,33 @@ public class SceneManager {
 									scene.removeDrawable(d);
 								} else {
 
-									// TODO intelligent selection of what to draw
+									// TODO intelligent selection of what to
+									// draw
 									d.draw(i3d);
 
 								}
 							}
+
+							// draw sky
+							// i3d.disable(LIGHTING);
+							// i3d.matrixMode(MODEL);
+							// i3d.pushMatrix();
+							// i3d.loadIdentity();
+							// i3d.matrixMode(VIEW);
+							// i3d.pushMatrix();
+							// i3d.loadIdentity();
+							// i3d.begin(POLYGON);
+							// i3d.normal3d(0, 0, -1);
+							// i3d.color3d(0.1, 0.1, 0.9);
+							// i3d.vertex3d(9000, -100, 48);
+							// i3d.vertex3d(-9000, -100, 48);
+							// i3d.vertex3d(-9000, 100, 48);
+							// i3d.vertex3d(9000, 100, 48);
+							// i3d.end();
+							// i3d.popMatrix();
+							// i3d.matrixMode(MODEL);
+							// i3d.popMatrix();
+							// end sky
 
 							// finish
 							i3d.finish();
@@ -127,7 +153,8 @@ public class SceneManager {
 							// push frame to output
 							dtarget.display(bi);
 
-							// process input events (sending mouse / keyboard events to drawables)
+							// process input events (sending mouse / keyboard
+							// events to drawables)
 							// TODO input events to drawables
 
 						} else {
@@ -141,6 +168,7 @@ public class SceneManager {
 				} catch (Exception e) {
 					// something broke. print error, keep going
 					e.printStackTrace();
+					System.exit(1);
 				}
 
 			}

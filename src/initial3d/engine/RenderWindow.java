@@ -64,7 +64,8 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	private final Cursor blankcursor;
 
 	static {
-		// hack to fix awful flicker on resize (well, make it slightly less awful)
+		// hack to fix awful flicker on resize (well, make it slightly less
+		// awful)
 		System.setProperty("sun.awt.noerasebackground", "true");
 	}
 
@@ -179,7 +180,8 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 					ct = System.currentTimeMillis();
 					ftimes.add(ct);
 					if (ct - lt > 33) {
-						// System.out.println("Detected frametime = " + (ct - lt) + "ms.");
+						// System.out.println("Detected frametime = " + (ct -
+						// lt) + "ms.");
 						t_lastbad = ct;
 					}
 				} else {
@@ -219,8 +221,9 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	 * Get the current state of a mouse button.
 	 * 
 	 * @param button
-	 *            The code of the mouse button to check, per <code>java.awt.MouseEvent</code> (although the
-	 *            corresponding values are 1, 2 and 3)
+	 *            The code of the mouse button to check, per
+	 *            <code>java.awt.MouseEvent</code> (although the corresponding
+	 *            values are 1, 2 and 3)
 	 * @return True iff the key is down
 	 */
 	public boolean getMouseButton(int button) {
@@ -228,11 +231,13 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	}
 
 	/**
-	 * Get the current state of a mousebutton, and if it is down clear its state.
+	 * Get the current state of a mousebutton, and if it is down clear its
+	 * state.
 	 * 
 	 * @param button
-	 *            The code of the mouse button to check, per <code>java.awt.MouseEvent</code> (although the
-	 *            corresponding values are 1, 2 and 3)
+	 *            The code of the mouse button to check, per
+	 *            <code>java.awt.MouseEvent</code> (although the corresponding
+	 *            values are 1, 2 and 3)
 	 * @return True iff the key is down
 	 */
 	public boolean pollMouseButton(int button) {
@@ -263,14 +268,20 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 
 	}
 
-	/** Determine if the mouse is currently 'captured', i.e. locked to the centre of the frame. */
+	/**
+	 * Determine if the mouse is currently 'captured', i.e. locked to the centre
+	 * of the frame.
+	 */
 	public boolean isMouseCaptured() {
 		synchronized (lock_mousedata) {
 			return mousecaptured;
 		}
 	}
 
-	/** Set whether the mouse should be 'captured', i.e. locked to the centre of the frame. */
+	/**
+	 * Set whether the mouse should be 'captured', i.e. locked to the centre of
+	 * the frame.
+	 */
 	public void setMouseCapture(boolean b) {
 		synchronized (lock_mousedata) {
 			mousecaptured = b;
@@ -279,7 +290,8 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 				int centrey = canvas.getHeight() / 2;
 				Point cloc;
 				if (isFullscreen()) {
-					// HACK for getLocationOnScreen() not giving 0,0 in fullscreen
+					// HACK for getLocationOnScreen() not giving 0,0 in
+					// fullscreen
 					cloc = point_zero;
 				} else {
 					cloc = canvas.getLocationOnScreen();
@@ -291,17 +303,19 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	}
 
 	/**
-	 * Determine if the cursor has been made invisible by a call to <code>setCursorVisible()</code>.
+	 * Determine if the cursor has been made invisible by a call to
+	 * <code>setCursorVisible()</code>.
 	 * 
-	 * @return false iff <code>setCursorVisible(false)</code> has been called, and setting a custom cursor is allowed.
+	 * @return false iff <code>setCursorVisible(false)</code> has been called,
+	 *         and setting a custom cursor is allowed.
 	 */
 	public boolean isCursorVisible() {
 		return getCursor() != blankcursor;
 	}
 
 	/**
-	 * Set the visibility of the cursor over this frame. The cursor can only be hidden if setting a custom cursor is
-	 * allowed.
+	 * Set the visibility of the cursor over this frame. The cursor can only be
+	 * hidden if setting a custom cursor is allowed.
 	 */
 	public void setCursorVisible(boolean b) {
 		if (b) {
@@ -332,8 +346,9 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	}
 
 	/**
-	 * Get how much x-travel has been made by the mouse. While the mouse is captured, its travel is accumulated
-	 * internally and then depleted up to a specified limit by calling this method.
+	 * Get how much x-travel has been made by the mouse. While the mouse is
+	 * captured, its travel is accumulated internally and then depleted up to a
+	 * specified limit by calling this method.
 	 */
 	public int pollMouseTravelX(int limit) {
 		synchronized (lock_mousedata) {
@@ -349,7 +364,10 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 		}
 	}
 
-	/** Like <code>pollMouseTravelX(int)</code> except all the accumulated travel is read and returned. */
+	/**
+	 * Like <code>pollMouseTravelX(int)</code> except all the accumulated travel
+	 * is read and returned.
+	 */
 	public int pollMouseTravelX() {
 		synchronized (lock_mousedata) {
 			int t = mousetravelx;
@@ -359,8 +377,9 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	}
 
 	/**
-	 * Get how much y-travel has been made by the mouse. While the mouse is captured, its travel is accumulated
-	 * internally and then depleted up to a specified limit by calling this method.
+	 * Get how much y-travel has been made by the mouse. While the mouse is
+	 * captured, its travel is accumulated internally and then depleted up to a
+	 * specified limit by calling this method.
 	 */
 	public int pollMouseTravelY(int limit) {
 		synchronized (lock_mousedata) {
@@ -376,7 +395,10 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 		}
 	}
 
-	/** Like <code>pollMouseTravelY(int)</code> except all the accumulated travel is read and returned. */
+	/**
+	 * Like <code>pollMouseTravelY(int)</code> except all the accumulated travel
+	 * is read and returned.
+	 */
 	public int pollMouseTravelY() {
 		synchronized (lock_mousedata) {
 			int t = mousetravely;
@@ -386,8 +408,9 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	}
 
 	/**
-	 * Get how much travel has been made by the mouse wheel. The mouse wheel travel is accumulated internally and then
-	 * depleted up to a specified limit by calling this method.
+	 * Get how much travel has been made by the mouse wheel. The mouse wheel
+	 * travel is accumulated internally and then depleted up to a specified
+	 * limit by calling this method.
 	 */
 	public int pollMouseWheelClicks(int limit) {
 		synchronized (lock_mousedata) {
@@ -403,7 +426,10 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 		}
 	}
 
-	/** Like <code>pollMouseWheelClicks(int)</code> except all the accumulated travel is read and returned. */
+	/**
+	 * Like <code>pollMouseWheelClicks(int)</code> except all the accumulated
+	 * travel is read and returned.
+	 */
 	public int pollMouseWheelClicks() {
 		synchronized (lock_mousedata) {
 			int t = mousescrollclicks;
@@ -439,7 +465,8 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 				synchronized (lock_mousedata) {
 					Point cloc;
 					if (isFullscreen()) {
-						// HACK for getLocationOnScreen() not giving 0,0 in fullscreen
+						// HACK for getLocationOnScreen() not giving 0,0 in
+						// fullscreen
 						cloc = point_zero;
 					} else {
 						cloc = canvas.getLocationOnScreen();
@@ -452,7 +479,10 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 						mousetravelx += (mousex - centrex);
 						mousetravely += (mousey - centrey);
 						// put the mouse in the centre of the canvas again
-						robot.mouseMove(cloc.x + centrex, cloc.y + centrey);
+						// check if non zero travel to avoid mouse event spam
+						if (mousetravelx != 0 || mousetravely != 0) {
+							robot.mouseMove(cloc.x + centrex, cloc.y + centrey);
+						}
 					}
 				}
 			}
