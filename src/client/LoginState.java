@@ -1,5 +1,7 @@
 package client;
 
+import initial3d.engine.Scene;
+
 import java.util.Scanner;
 
 public class LoginState extends AbstractState {
@@ -28,13 +30,4 @@ public class LoginState extends AbstractState {
 			this.begunLogin = true;
 		}
 	}
-
-	@Override
-	public void fetchScene() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-
 }

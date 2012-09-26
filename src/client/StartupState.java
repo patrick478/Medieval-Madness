@@ -1,5 +1,7 @@
 package client;
 
+import initial3d.engine.Scene;
+
 public class StartupState extends AbstractState {
 
 	public StartupState() {
@@ -12,11 +14,4 @@ public class StartupState extends AbstractState {
 		
 		this.changeState(new LoginState());
 	}
-
-	@Override
-	public void fetchScene() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

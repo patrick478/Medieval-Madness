@@ -12,6 +12,8 @@ import initial3d.engine.ReferenceFrame;
 import initial3d.engine.Vec3;
 
 public abstract class Entity implements ReferenceFrame{
+	public final long id;
+	
 	//position of the very center of the entity much like
 	//the center of mass if mass was evenly distributed
 	protected Vec3 position = Vec3.zero;
@@ -24,6 +26,9 @@ public abstract class Entity implements ReferenceFrame{
 	
 	public Entity(Vec3 _radius) {
 		radius = _radius;
+		//TODO seriously need some change...
+		id = Double.doubleToLongBits(Math.random());//TODO really need some change...
+		//TODO otherwise everything will break...
 	}
 	
 	@Override

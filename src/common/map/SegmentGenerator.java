@@ -35,6 +35,7 @@ public class SegmentGenerator {
 
 	private void createRegion() {
 		MapGenerator map = new MapGenerator(seed, regionSize);
+		map.run();
 		map.look();
 		List<Triangle> tList = map.getTriangles();
 
@@ -92,6 +93,45 @@ public class SegmentGenerator {
 				for (int x = 0; x < hm.length; x++) {
 					hm[x][z] = (float) (start + ((x - 1) * step))
 							* (float) heightScale;
+				}
+			}
+			//ERODE
+			for (int x = 1; x < regionHeight.length - 1; x++) {
+				for (int z = 1; z < regionHeight.length - 1; z++) {
+					double d_max = 0.0f;
+					int[] match = { 0, 0 };
+					for (int u = -1; u <= 1; u++) {
+						for (int v = -1; v <= 1; v++) {
+							if (Math.abs(u) + Math.abs(v) > 0) {
+								double d_i = regionHeight[x][z]
+										- regionHeight[x + u][z + v];
+								if (d_i > d_max) {
+									d_max = d_i;
+									match[0] = u;
+									match[1] = v;
+								}
+							}
+						}
+					}
+					if (0 < d_max && d_max <= (1 / (double) regionHeight.length-1)) {
+						double d_h = 0.5f * d_max;
+						regionHeight[x][z] -= d_h;
+						regionHeight[x + match[0]][z + match[1]] += d_h;
+					}
+				}
+			}
+			for(int i = 0 ; i<400; i++){
+				//SMOOTHEN
+				for (int x = 1; x < regionHeight.length - 1; x++) {
+					for (int z = 1; z < regionHeight.length - 1; z++) {
+						float total = 0.0f;
+						for (int u = -1; u <= 1; u++) {
+							for (int v = -1; v <= 1; v++) {
+								total += regionHeight[x + u][z + v];
+							}
+						}
+						regionHeight[x][z] = total / 9.0f;
+					}
 				}
 			}
 

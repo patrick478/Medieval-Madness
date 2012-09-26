@@ -19,8 +19,9 @@ public class Segment {
 
 	private float[][] heightmap = null;
 
-	private final long xPos;
-	private final long zPos;
+	private final int xPos;
+	private final int zPos;
+	public final long id;
 
 	
 	//TODO need to work out how to handel textures better than this... ^^;
@@ -43,9 +44,10 @@ public class Segment {
 		terr_mtl = new Material(terr_mtl, terr_tx, null, null);
 	}
 
-	public Segment(long _xPos, long _zPos, float[][] heightmap) {
+	public Segment(int _xPos, int _zPos, float[][] heightmap) {
 		xPos = _xPos;
 		zPos = _zPos;
+		id = ((long)xPos) << 32 | (long)zPos;
 
 		this.heightmap = heightmap;
 	}

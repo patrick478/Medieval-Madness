@@ -15,7 +15,7 @@ public class NewTerrainTest {
 
 	public static void main(String[] args) throws Exception {
 		
-		SegmentGenerator sg = new SegmentGenerator(1337);
+		SegmentGenerator sg = new SegmentGenerator(23417);
 		
 //		List<MeshContext> mc_list = new ArrayList<MeshContext>();
 		
