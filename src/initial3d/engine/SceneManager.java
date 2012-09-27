@@ -91,7 +91,9 @@ public class SceneManager {
 						if (scene != null) {
 
 							// allow scene to add / remove stuff etc
+							profiler.startSection("I3D-sceneman_scene-tick");
 							scene.renderTick();
+							profiler.endSection("I3D-sceneman_scene-tick");
 
 							Camera cam = scene.getCamera();
 
@@ -114,6 +116,7 @@ public class SceneManager {
 							// TODO proper lighting
 
 							// draw stuff as appropriate
+							profiler.startSection("I3D-sceneman_draw");
 							for (Drawable d : scene.getDrawables()) {
 								if (d.pollRemovalRequested()) {
 									scene.removeDrawable(d);
@@ -125,6 +128,7 @@ public class SceneManager {
 
 								}
 							}
+							profiler.endSection("I3D-sceneman_draw");
 
 							// draw sky
 							// i3d.disable(LIGHTING);
@@ -148,10 +152,14 @@ public class SceneManager {
 							// end sky
 
 							// finish
+							profiler.startSection("I3D-sceneman_finish");
 							i3d.finish();
+							profiler.endSection("I3D-sceneman_finish");
 
 							// push frame to output
+							profiler.startSection("I3D-sceneman_display");
 							dtarget.display(bi);
+							profiler.endSection("I3D-sceneman_display");
 
 							// process input events (sending mouse / keyboard
 							// events to drawables)
@@ -163,12 +171,15 @@ public class SceneManager {
 					}
 
 					// don't want to sleep inside the syncro block now do we
-					if (idle) Thread.sleep(10);
+					if (idle) {
+						profiler.startSection("I3D-sceneman_idle");
+						Thread.sleep(10);
+						profiler.endSection("I3D-sceneman_idle");
+					}
 
 				} catch (Exception e) {
 					// something broke. print error, keep going
 					e.printStackTrace();
-					System.exit(1);
 				}
 
 			}
