@@ -2,8 +2,11 @@ package client;
 
 import initial3d.engine.RenderWindow;
 import initial3d.engine.SceneManager;
+import initial3d.engine.Vec3;
+import client.factories.EntityFactory;
 import client.networking.*;
 import common.Log;
+import common.entity.Player;
 
 public class Client {
 	private AbstractState gameState = null;
@@ -33,6 +36,14 @@ public class Client {
 		scenemgr = new SceneManager(width, height);
 		scenemgr.setDisplayTarget(window);
 		gameWorld = new Game();
+		
+		
+		//temp
+		//Adding player into the game
+		Player p = EntityFactory.createPlayer(Vec3.zero);
+		gameWorld.addMoveableEntity(p);
+		gameWorld.setPlayer(p.id);
+		
 	}
 
 	public void setState(AbstractState newState) {
