@@ -1,7 +1,6 @@
 package common;
 
-import common.packets.LoginPacket;
-import common.packets.WelcomePacket;
+import common.packets.*;
 
 public class PacketFactory
 {
@@ -12,16 +11,25 @@ public class PacketFactory
 		{
 			case WelcomePacket.ID:
 				ret = new WelcomePacket();
-				ret.fromData(p);
-			break;
+				break;
+				
 			case LoginPacket.ID:
 				ret = new LoginPacket();
-				ret.fromData(p);
 				break;
+				
+			case SegmentPacket.ID:
+				ret = new SegmentPacket();
+				break;
+				
+			case EnterWorldPacket.ID:
+				ret = new EnterWorldPacket();
+				break;
+				
 			default:
-				ret = null;				
-				break;
+				System.out.printf("Recv_idef = %d\n", p.peekShort());
+				return null;
 		}
+		ret.fromData(p);
 		return ret;
 	}
 }

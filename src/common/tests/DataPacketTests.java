@@ -68,4 +68,17 @@ public class DataPacketTests {
 		p.addLong(val);
 		assertEquals(val, p.getLong());
 	}
+	
+	@Test
+	public void TestGetData()
+	{
+		DataPacket p = new DataPacket();
+		p.addShort(1);
+
+		for(int i = 0; i < p.getData().length; i++)
+			System.out.printf("0x%02X ", p.getData()[i]);
+		System.out.println();
+		
+		byte[] test = new byte[] { (byte)1, (byte)0 };
+	}
 }

@@ -26,7 +26,7 @@ public class WelcomePacket extends Packet {
 	@Override
 	public DataPacket toData() {
 		DataPacket p = new DataPacket();
-		p.addShort(this.ID);
+		p.addShort(WelcomePacket.ID);
 		if(this.isReply)
 			p.addShort(1);
 		else

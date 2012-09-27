@@ -49,7 +49,7 @@ public class LoginPacket extends Packet {
 	@Override
 	public DataPacket toData() {
 		DataPacket p = new DataPacket();
-		p.addShort(this.ID);
+		p.addShort(LoginPacket.ID);
 		if(this.isReply)
 		{
 			p.addByte((byte)1);

@@ -97,7 +97,7 @@ public class NetworkThread implements Runnable {
 
 	private void read(SelectionKey key)
 	{
-		ByteBuffer buffer = ByteBuffer.allocate(8192);
+		ByteBuffer buffer = ByteBuffer.allocate(81920);
 		int rx = 0;
 		try {
 			rx = this.clientChannel.read(buffer);
@@ -109,11 +109,37 @@ public class NetworkThread implements Runnable {
 				return;
 			}
 		}
-
-		DataPacket p = new DataPacket(buffer.array());
-		Packet from = PacketFactory.identify(p);
 		
-		handler.passoff(from);
+		System.out.printf("Recieved %d bytes\n", rx);
+		int index = 0;
+		byte[] data = buffer.array();
+		while(index < rx)
+		{
+			int size = peekShort(data, index);
+			index += 2;
+			System.out.printf("Recieved packet - header says length = %d\n", size);
+			
+			byte[] thisP = Arrays.copyOfRange(data, index, index+size);
+			for(int i = 0; i < thisP.length; i++)
+				System.out.printf("%02X ", thisP[i]);
+			System.out.println();
+
+			DataPacket p = new DataPacket(thisP);
+			Packet from = PacketFactory.identify(p);
+			handler.passoff(from);
+			
+			index += size;
+			
+			System.out.printf("Finished reading that packet. index=%d, rx=%d\n", index, rx);
+		}
+	}
+	
+	private short peekShort(byte[] d, int i)
+	{
+		if(d.length < 2) return 0;
+		
+		short s = (short)((d[i] << 8) |(d[1 + i] & 0xFF));
+		return s;
 	}
 
 	private void write(ByteBuffer data)

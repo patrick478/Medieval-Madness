@@ -6,8 +6,8 @@ import common.map.Segment;
 
 public class SegmentPacket extends Packet
 {
+	public static final short ID = 4;
 	public Segment segment;
-	public static final short ID = 2;
 	
 	public SegmentPacket() {
 		super(ID);
@@ -15,7 +15,7 @@ public class SegmentPacket extends Packet
 
 	@Override
 	public void fromData(DataPacket packet) {
-		if(packet.getShort() != this.ID())
+		if(packet.getShort() != SegmentPacket.ID)
 			return;
 				
 		int xPos = packet.getInt();
@@ -40,7 +40,7 @@ public class SegmentPacket extends Packet
 	@Override
 	public DataPacket toData() {
 		DataPacket dp = new DataPacket();
-		dp.addShort(this.ID());
+		dp.addShort(SegmentPacket.ID);
 		dp.addInt(segment.xPos);
 		dp.addInt(segment.zPos);
 		

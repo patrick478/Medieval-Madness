@@ -34,7 +34,19 @@ public class DataPacket {
 	
 	public byte[] getData()
 	{
-		return buf.array();
+		byte[] data = new byte[writePos+2];
+		for(int i = 0; i < writePos; i++)
+			data[i+2] = buf.get(i);
+		
+		byte b1 = (byte)(writePos >>> 8);
+		byte b2 = (byte)(writePos & 0xFF);
+		
+		data[0] = b1;
+		data[1] = b2;
+		
+		System.out.printf("getData(): rwrote a header with %d bytes.. %02X %02X\n", writePos, b1, b2);
+		
+		return data;
 	}
 	
 	public void addByte(Byte b)

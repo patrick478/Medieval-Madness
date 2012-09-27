@@ -4,10 +4,11 @@ import java.io.PrintStream;
 
 import common.Timer;
 import common.Log;
+import common.map.Segment;
 import common.map.SegmentGenerator;
 
 public class GameEngine {
-	public static final int cacheSize = 32;
+	public static final int cacheSize = 3;
 	
 	private SegmentGenerator sg;
 	private Log log;
@@ -19,7 +20,7 @@ public class GameEngine {
 		
 		this.log.printf("Game engine started. Worldseed=%d\n", seed);
 		
-		this.log.printf("Starting segment generator..");
+		this.log.printf("Starting segment generator..\n");
 		
 		Timer t = new Timer(true);
 		sg = new SegmentGenerator(seed);
@@ -38,5 +39,10 @@ public class GameEngine {
 		
 		t.stop();
 		this.log.printf("Finished segment cache warmup in %.2fs\n", t.elapsed_sDouble());
+	}
+	
+	public Segment getSegment(int x, int z)
+	{
+		return sg.getSegment(x, z);
 	}
 }

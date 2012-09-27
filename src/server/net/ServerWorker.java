@@ -24,11 +24,23 @@ public class ServerWorker implements Runnable {
 	public void processData(ServerLayer server, SocketChannel sc, byte[] data, int dsize, String id)
 	{
 		byte[] dataCopy = new byte[dsize];
-		System.arraycopy(data, 0, dataCopy, 0, dsize);
+		
+		int s = peekShort(data, 0);
+		System.out.printf("Recieved packet. header.size=%d\n", s);
+		System.arraycopy(data, 2, dataCopy, 0, s);
+		
 		synchronized(queue) {
 			queue.add(new ServerDataEvent(server, sc, dataCopy, id));
 			queue.notify();
 		}
+	}
+	
+	private short peekShort(byte[] d, int i)
+	{
+		if(d.length < 2) return 0;
+		
+		short s = (short)((d[i] << 8) |(d[1 + i] & 0xFF));
+		return s;
 	}
 
 	@Override
@@ -85,6 +97,8 @@ public class ServerWorker implements Runnable {
 			return;
 		}
 		
+		System.out.println(s.getState().toString());
+		
 		switch(s.getState())
 		{
 			case Welcome:
@@ -96,19 +110,51 @@ public class ServerWorker implements Runnable {
 				break;
 				
 			case Login:
-				if(from.ID() == LoginPacket.ID && s.getSubstate() == 0 && !from.isReply)
+				if(s.getSubstate() == 0 && !from.isReply)
 				{
+					System.out.println("Got here");
 					LoginPacket px = (LoginPacket)from;
 					String username = px.username;
 					String password = px.password;
 					
-					boolean loginSuccess = this.parentServer.db.passwordCorrect(username, password);
+					boolean loginSuccess = true;//this.parentServer.db.passwordCorrect(username, password);
 					this.parentServer.log.printf("Login attempt (%s). Password correct=%s\n", username, loginSuccess ? "yes" : "no", password);
 					
 					
 					px.isReply = true;
 					px.loginOkay = loginSuccess;
 					sl.send(s.getSocket(), px.toData().getData());
+					
+					if(loginSuccess)
+					{
+						// skip character selection
+					
+					
+						// send into game world
+						EnterWorldPacket ewp = new EnterWorldPacket();
+						ewp.newWorld = 0;
+						sl.send(s.getSocket(), ewp.toData().getData());
+						
+						for(int i = -5; i < 6; i++)
+						{
+							for(int j = -5; j < 6; j++)
+							{
+								SegmentPacket sp = new SegmentPacket();
+								sp.segment = this.parentServer.game.getSegment(i, j);
+								sl.send(s.getSocket(), sp.toData().getData());
+								
+//								try {
+//									//Thread.sleep(500);
+//								} catch (InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+							}
+						}
+						
+						System.out.println("Test packets sent");
+					}
+					
 				}
 				break;
 		}

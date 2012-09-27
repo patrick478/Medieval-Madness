@@ -6,8 +6,9 @@ import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshLOD;
+import initial3d.engine.ReferenceFrame;
 import initial3d.engine.Vec3;
-import initial3d.engine.old.MeshContext;
+import initial3d.engine.MeshContext;
 
 import java.util.Random;
 
@@ -61,7 +62,7 @@ public class Segment {
 
 		terr_mesh.add(lowLOD());
 
-		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl);
+		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl, ReferenceFrame.SCENE_ROOT);
 
 		return terr_mc;
 	}
