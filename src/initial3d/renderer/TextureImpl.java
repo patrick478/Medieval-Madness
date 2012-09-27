@@ -3,7 +3,12 @@ package initial3d.renderer;
 import sun.misc.Unsafe;
 import initial3d.Texture;
 
+@SuppressWarnings("restriction")
 class TextureImpl extends Texture {
+
+	// don't allow allocation of > 1GiB of texture mem
+	private static final long MAX_ALLOC = 1024 * 1024 * 1024;
+	private static volatile long total_alloc = 0;
 
 	private final Unsafe unsafe = Util.getUnsafe();
 
@@ -12,6 +17,15 @@ class TextureImpl extends Texture {
 	private final long pTex;
 	private final long pLevel;
 	private final long alloc;
+
+	private static synchronized void checkAllocate(long bytes) {
+		if (total_alloc + bytes > MAX_ALLOC) throw new OutOfMemoryError("Texture allocation limit exceeded.");
+		total_alloc += bytes;
+	}
+
+	private static synchronized void onFree(long bytes) {
+		total_alloc -= bytes;
+	}
 
 	TextureImpl(int size_) {
 		int level_ = 0;
@@ -44,6 +58,7 @@ class TextureImpl extends Texture {
 		level = level_;
 		size = size_;
 		alloc = (long) (8 + size * size * 16 * 1.4d);
+		checkAllocate(alloc);
 		pTex = unsafe.allocateMemory(alloc);
 		pLevel = pTex + levelOffset(level);
 		clear();
@@ -51,6 +66,7 @@ class TextureImpl extends Texture {
 
 	protected void finalize() {
 		unsafe.freeMemory(pTex);
+		onFree(alloc);
 	}
 
 	private static int levelOffset(int level) {
