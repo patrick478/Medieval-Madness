@@ -33,6 +33,16 @@ public class Triangle {
 	            (ver[1].x - ver[2].x) * (p.y - ver[1].z) - (ver[1].z - ver[2].z) * (p.x - ver[1].x) >= 0 &&
 	            (ver[2].x - ver[0].x) * (p.y - ver[2].z) - (ver[2].z - ver[0].z) * (p.x - ver[2].x) >= 0);
 	}
+	
+	/**
+	 * A method that returns true if the given positions are in inside or on the 
+	 * triangle using some halfspace function gibberish.
+	 */
+	public boolean contains(double x, double z){
+		return ((ver[0].x - ver[1].x) * (z - ver[0].z) - (ver[0].z - ver[1].z) * (x - ver[0].x) >= 0 &&
+	            (ver[1].x - ver[2].x) * (z - ver[1].z) - (ver[1].z - ver[2].z) * (x - ver[1].x) >= 0 &&
+	            (ver[2].x - ver[0].x) * (z - ver[2].z) - (ver[2].z - ver[0].z) * (x - ver[2].x) >= 0);
+	}
 
 	/**
 	 * Returns the interpolated value for the given point (assuming it's
@@ -46,6 +56,36 @@ public class Triangle {
 		double a3 = 1-a1-a2;
 		
 		return a1 * ver[0].y + a2 * ver[1].y + a3 * ver[2].y ;
+	}
+	
+	/**
+	 * Returns the interpolated value for the given positions (assuming it's
+	 * inside the triangle) using barycentric gibberish.
+	 */
+	public double height(double x, double z){
+		double dT = (ver[1].z - ver[2].z) * (ver[0].x - ver[2].x) + (ver[2].x - ver[1].x) * (ver[0].z - ver[2].z);
+		
+		double a1 = ((ver[1].z - ver[2].z) * (x - ver[2].x) + (ver[2].x - ver[1].x) * (z - ver[2].z)) / dT;
+		double a2 = ((ver[2].z - ver[0].z) * (x - ver[2].x) + (ver[0].x - ver[2].x) * (z - ver[2].z)) / dT;
+		double a3 = 1-a1-a2;
+		
+		return a1 * ver[0].y + a2 * ver[1].y + a3 * ver[2].y ;
+	}
+	
+	public double getMinX(){
+		return Math.min(Math.min(ver[0].x, ver[1].x), ver[2].x);
+	}
+	
+	public double getMinZ(){
+		return Math.min(Math.min(ver[0].z, ver[1].z), ver[2].z);
+	}
+	
+	public double getMaxX(){
+		return Math.max(Math.max(ver[0].x, ver[1].x), ver[2].x);
+	}
+
+	public double getMaxZ(){
+		return Math.max(Math.max(ver[0].z, ver[1].z), ver[2].z);
 	}
 	
 	public String toString(){

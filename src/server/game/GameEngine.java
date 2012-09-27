@@ -25,7 +25,7 @@ public class GameEngine {
 		sg = new SegmentGenerator(seed);
 		t.stop();
 		
-		this.log.printf("Done! Took %.2fs\n", t.elapsed_sDouble());
+		this.log.printf("Segment generator started. Took %.2fs\n", t.elapsed_sDouble());
 	}
 	
 	public void warm()
