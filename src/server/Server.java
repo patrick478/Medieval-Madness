@@ -1,7 +1,9 @@
 package server;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
+import server.commands.GameEngineCommands;
 import server.commands.PrintCommand;
 import server.commands.SessionCommand;
 import server.datalayer.DataProvider;
@@ -11,13 +13,12 @@ import server.face.ServerFace;
 import server.game.GameEngine;
 import server.net.ServerLayer;
 import server.session.SessionMngr;
+import common.settings.Settings;
 
 import common.*;
 import common.Timer;
 
-public class Server implements Runnable {
-	public static final int TICKS_PER_SECOND = 30;
-	
+public class Server implements Runnable {	
 	public Log log;
 	private Thread runThread;
 	
@@ -25,11 +26,11 @@ public class Server implements Runnable {
 	private Map<String, Command> serverCommands = new HashMap<String, Command>();
 	public Map<String, Object> serverData = new HashMap<String, Object>();
 
-	private ServerLayer networking;
-	
+	public ServerLayer networking;
 	public DataProvider db;
 	public GameEngine game;
 	public ServerFace face;
+	public Settings serverSettings;
 	
 	public Server()
 	{
@@ -45,6 +46,13 @@ public class Server implements Runnable {
 	public boolean RunServer()
 	{			    
 		Timer startTimer = new Timer(true);
+		
+		try {
+			serverSettings = new Settings("server.mms");
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		
 		face = new ConsoleFace();
 		face.setup(this);
@@ -62,10 +70,10 @@ public class Server implements Runnable {
 		}
 		
 		// initalise serverData
-		serverData.put("game_seed", System.currentTimeMillis());
+		serverData.put("game_seed", serverSettings.getLongValue("game_seed", System.currentTimeMillis()));
 		serverData.put("atps",  0);
 		serverData.put("start_time_millis", System.currentTimeMillis());
-		serverData.put("listen_port", 14121);
+		serverData.put("listen_port", serverSettings.getIntValue("listen_port", 14121));
 		
 		serverData.put("running", true);
 		serverData.put("status", ServerStatus.Starting);
@@ -87,6 +95,7 @@ public class Server implements Runnable {
 		
 		this.serverCommands.put("print",  new PrintCommand(this));
 		this.serverCommands.put("session",  new SessionCommand(this));
+		this.serverCommands.put("ge", new GameEngineCommands(this));	
 		
 		// warm the session manager
 		SessionMngr.warm(this.face.getOut());
@@ -94,7 +103,7 @@ public class Server implements Runnable {
 		// start the face
 		faceThread.start();
 		
-		game = new GameEngine((Long)this.serverData.get("game_seed"), this.face.getOut(), this.networking);
+		game = new GameEngine((Long)this.serverData.get("game_seed"), this.face.getOut(), this);
 		game.warm();
 		
 		startTimer.stop();		
@@ -130,6 +139,8 @@ public class Server implements Runnable {
 		
 		this.face.close();
 		
+		this.serverSettings.saveChanges();
+		
 		return true;
 		
 	}
@@ -141,7 +152,7 @@ public class Server implements Runnable {
 	@Override
 	public void run() {
 		// variables needed to keep the ticks in sync
-		long maxTimePerTick = (1000 / TICKS_PER_SECOND);
+		long maxTimePerTick = (1000 / this.serverSettings.getIntValue("ticks_per_second",  30));
 		long lastStartTime = System.currentTimeMillis();
 		long lastResetTime = System.currentTimeMillis();
 		long elapsedTimeSinceLastTick = System.currentTimeMillis();
@@ -158,7 +169,7 @@ public class Server implements Runnable {
 			this.Tick(elapsedTimeSinceLastTick);
 			numTicks++;
 			
-			if(System.currentTimeMillis() - lastResetTime >= (1000 - TICKS_PER_SECOND + (TICKS_PER_SECOND / 10)))
+			if(System.currentTimeMillis() - lastResetTime >= (1000 - this.serverSettings.getIntValue("ticks_per_second",  30) + (this.serverSettings.getIntValue("ticks_per_second",  30) / 10)))
 			{
 				lastResetTime = System.currentTimeMillis();
 				

@@ -1,0 +1,10 @@
+version 1
+default_spawn_cache_size=12
+default_spawn_segment_x=0
+default_spawn_segment_z=0
+game_seed=1348825157938
+listen_port=14121
+sfq_tp_default_threads=2
+sfq_tp_job_limit=8
+sfq_tp_max_threads=8
+ticks_per_second=30
