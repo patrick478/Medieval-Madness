@@ -58,8 +58,6 @@ import common.map.Perlin;
 import common.map.voronoi.*;
 
 
-
-
 public class MapGenerator {
 
 	public static final int NUM_POINTS = 2000;
@@ -89,7 +87,8 @@ public class MapGenerator {
 		this.SIZE = size;
 		this.SEED = seed;
 
-		this.islandShape = new PerlinIsland(seed);
+//		this.islandShape = new PerlinIsland(seed);
+		this.islandShape = new PerlinSanctuary(seed);
 	}
 	
 	public List<Triangle> getTriangles(){
@@ -435,6 +434,11 @@ public class MapGenerator {
 	 * corner to its desired elevation. 
 	 */
 	public void redistributeElevations(List<Corner> locations) {
+		//TODO scale
+//		for(Corner c : corners){
+//			c.elevation = 10-c.elevation;
+//		}
+		
 		// SCALE_FACTOR increases the mountain area. At 1.0 the maximum
 		// elevation barely shows up on the map, so we set it to 1.1.
 		double SCALE_FACTOR = 1.1;
@@ -443,7 +447,7 @@ public class MapGenerator {
 		Collections.sort(locations, new Comparator<Corner>() {
 			@Override
 			public int compare(Corner o1, Corner o2) {
-				return (int) ((o1.elevation - o2.elevation) * 1000);
+				return Double.compare(o1.elevation, o2.elevation);
 				// TODO right comparable variable?
 			}
 		});
@@ -467,14 +471,12 @@ public class MapGenerator {
 			locations.get(i).elevation = x;
 		}
 
-		// finally we make the lakes flat and record them TODO record lakes for
-		// what?
+		// finally we make the lakes flat and record them
 		List<HashSet<Center>> lakes = new ArrayList<HashSet<Center>>();
 
 		// TODO???
 		for (Center c : centers) {
-			// if c is a lake of sorts
-			if (!c.ocean && c.water) {
+			if (!c.ocean && c.water) { //c is a lake
 				boolean isLake = false;// flag that center is already in a lake
 
 				for (HashSet<Center> lake : lakes) {
@@ -483,10 +485,10 @@ public class MapGenerator {
 					}
 				}
 
-				if (isLake) {
+				//if it isn't already a lake
+				if (!isLake) {
 					lakes.add(createLake(c));
 				}
-
 			}
 		}
 	}
@@ -495,26 +497,32 @@ public class MapGenerator {
 	private HashSet<Center> createLake(Center c) {
 		// else create a new lake with it, and all its neighbors
 		HashSet<Center> newLake = new HashSet<Center>();
-		double lowest = Double.MAX_VALUE;
+		double lowest = Double.POSITIVE_INFINITY;
 
-		// set up the list of neighbours to be traversed
+		// set up the list of neighbors to be traversed
 		List<Center> neighbours = new ArrayList<Center>();
 		neighbours.add(c);
 
-		// traverse all neighours that are also connected lakes
+		// traverse all neighbors that are also part of the lake
 		while (!neighbours.isEmpty()) {
 			Center next = neighbours.remove(0);
+			newLake.add(next);
+			
+			for(Corner k : next.corners){
+				lowest = (k.elevation < lowest) ? k.elevation : lowest;
+			}
 
 			for (Center neigh : next.neighbors) {
-				// if its a lake and it's not already in the new lake
-				// add it and record it's neighbors and corners
-				if (!c.ocean && c.water && !newLake.contains(neigh)) {
+				// if it's neighbour is a lake but is not recorded
+				if (!neigh.ocean && neigh.water && 
+						!newLake.contains(neigh) && !neighbours.contains(neigh)) {
 					neighbours.add(neigh);
-					newLake.add(neigh);
-					for(Corner k : neigh.corners){
-						lowest = (k.elevation<lowest) ? k.elevation : lowest;
-					}
 				}
+			}
+		}
+		for(Center l : newLake){
+			for(Corner r : l.corners){
+				r.elevation = lowest;
 			}
 		}
 		return newLake;
@@ -681,7 +689,7 @@ public class MapGenerator {
 				continue;
 
 			// Bias rivers to go west: if (q.downslope.x > q.x) continue;
-			while (!q.coast) {
+			while (!q.coast && !q.water) {
 				if (q == q.downslope) {
 					break;
 				}
@@ -892,54 +900,6 @@ public class MapGenerator {
 					* Math.pow(Math.E, -(sd * sd) / 2);
 		}
 
-		// @Override
-		// public void assignCornerElevations(List<Corner> points) {
-		// Queue<Corner> queue = new ArrayDeque<Corner>();
-		//
-		// for (Corner q : points) {
-		// q.water = !inside(q.point);
-		// }
-		//
-		// for (Corner q : points) {
-		// // The edges of the map are elevation 0
-		// if (q.border) {
-		// q.elevation = 0.0;
-		// queue.add(q);
-		// } else {
-		// q.elevation = Double.POSITIVE_INFINITY;
-		// }
-		// }
-		//
-		// Perlin noise = new Perlin(SEED);
-		//
-		// // Traverse the graph and assign elevations to each point. As we
-		// // move away from the map border, increase the elevations. This
-		// // guarantees that rivers always have a way down to the coast by
-		// // going downhill (no local minima).
-		// while (!queue.isEmpty()) {
-		// Corner q = queue.poll();
-		//
-		// for (Corner s : q.adjacent) {
-		// // Every step up is epsilon over water or 1 over land. The
-		// // number doesn't matter because we'll rescale the
-		// // elevations later.
-		// double newElevation = 0.01 + q.elevation;
-		// if (!q.water && !s.water) {
-		// double perlin = noise.getNoise(s.point.x / SIZE, s.point.y / SIZE, 0,
-		// 1);
-		// newElevation += 1;//((perlin>0) ? perlin*2 : 0.5);//TODO originally
-		// +=1
-		// }
-		// // If this point changed, we'll add it to the queue so
-		// // that we can process its neighbors too.
-		// if (newElevation < s.elevation) {
-		// s.elevation = newElevation;
-		// queue.add(s);
-		// }
-		// }
-		// }
-		// }
-
 		@Override
 		public void assignCornerElevations(List<Corner> points) {
 
@@ -997,6 +957,105 @@ public class MapGenerator {
 		}
 
 	}
+	
+	/**
+	 * An implementation of Island Shape that uses normal distribution to create
+	 * a round island in the middle of the map altered by Perlin noise to create
+	 * inlets, bays and lakes.
+	 */
+	public class PerlinSanctuary extends IslandStrategy {
+		private Perlin perlin;
+
+		private static final double SD_ISLAND = 3.5;
+		private static final double SD_MAP_EDGE = 2.7;
+		
+		public PerlinSanctuary(long seed) {
+			perlin = new Perlin(seed);
+		}
+
+		@Override
+		protected boolean inside(Point p) {
+
+			double x = SD_ISLAND * ((2d * p.x / SIZE) - 1);
+			double y = SD_ISLAND * ((2d * p.y / SIZE) - 1);
+
+			double fg = normalDistribution(SD_ISLAND);
+
+			// z = (1/sqrt(2PI)) e^(-(x^2 + y^2) / 2)
+			double noiseBarrier = normalDistribution(Math.hypot(x, y))
+					- (normalDistribution(Math.hypot(x, y) * 1.4) - fg) * 2
+					+ fg;
+
+			double z = normalDistribution(Math.hypot(x, y));
+
+			double noise = perlin.getNoise(p.x / SIZE, p.y / SIZE, 0, 8);
+
+			return z - noise * noiseBarrier * 10 > normalDistribution(SD_MAP_EDGE);
+
+			// n*(1-z)
+		}
+
+		/* Helper function to determine z value at given point */
+		private double normalDistribution(double sd) {
+			return (1 / Math.sqrt(2 * Math.PI))
+					* Math.pow(Math.E, -(sd * sd) / 2);
+		}
+
+		@Override
+		public void assignCornerElevations(List<Corner> points) {
+
+			//assign land and water
+			for (Corner q : points) {
+				q.water = !inside(q.point);
+			}
+
+			Perlin noise = new Perlin(SEED);
+
+
+			for (Corner s : corners) {
+					
+				double x = SD_ISLAND * ((2d * s.point.x / SIZE) - 1);
+				double y = SD_ISLAND * ((2d * s.point.y / SIZE) - 1);
+
+				double fg = normalDistribution(SD_ISLAND);
+
+//				double noiseBarrier = normalDistribution(Math.hypot(x, y))
+//						- (normalDistribution(Math.hypot(x, y) * 1.4) - fg) * 2;
+				
+				double noiseBarrier = normalDistribution(Math.hypot(x, y)/3)*2
+						- (normalDistribution(Math.hypot(x, y)));
+				
+				double perlin = noise.getNoise(s.point.x / SIZE,
+						s.point.y / SIZE, 0, 8);
+				double val = noiseBarrier + perlin*noiseBarrier;
+				
+				s.elevation = ((val > 0) ? val: 0.001);
+			}
+			
+			// build list of border polygons so we can set
+			// the elevation of the area outside the island 
+			List<Corner> ocean = new ArrayList<Corner>();
+			
+			for (Corner q : points) {
+				// Set the edges of the map are elevation 0 and add to queue
+				if (q.border) {
+					q.elevation = -1d;
+					ocean.add(q);
+				}
+			}
+			
+			while(!ocean.isEmpty()){
+				Corner c = ocean.remove(0);
+				for(Corner k : c.adjacent){
+					if(k.water && k.elevation<0){
+						ocean.add(k);
+						k.elevation = c.elevation + 0.00001;
+					}
+				}
+			}
+		}
+
+	}
 
 	public void look() {
 
@@ -1045,15 +1104,15 @@ public class MapGenerator {
 
 					if (r.adjacent.contains(o)) {
 
-//						 if (c.water) {
-//						 g.setColor(Color.BLUE);
-//						 } else {
-//						 g.setColor(new Color((int) (255 * c.elevation),
-//						 (int) (255 * c.elevation),
-//						 (int) (255 * c.elevation)));
-//						 }
+						 if (c.water) {
+						 g.setColor(Color.BLUE);
+						 } else {
+						 g.setColor(new Color((int) (255 * c.elevation),
+						 (int) (255 * c.elevation),
+						 (int) (255 * c.elevation)));
+						 }
 
-						g.setColor(c.biome.color);
+//						g.setColor(c.biome.color);
 
 						// System.out.println(c.biome);
 

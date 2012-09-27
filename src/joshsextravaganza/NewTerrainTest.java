@@ -15,7 +15,7 @@ public class NewTerrainTest {
 
 	public static void main(String[] args) throws Exception {
 		
-		SegmentGenerator sg = new SegmentGenerator(1234);
+		SegmentGenerator sg = new SegmentGenerator(32);
 		
 //		List<MeshContext> mc_list = new ArrayList<MeshContext>();
 		
@@ -34,7 +34,6 @@ public class NewTerrainTest {
 
 		Engine eng = new Engine(WIDTH, HEIGHT, true);
 		eng.start();
-		SimpleAudioPlayer.play("Daybreak.wav");
 		for(MeshContext mc : sg.getAllSegmentsAsSomeReallyBigFuckingMeshes()){
 			eng.addMeshContext(mc);
 		}
