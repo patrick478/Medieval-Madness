@@ -38,6 +38,8 @@ public class Client {
 		gameWorld = new Game();
 		
 		
+		this.setState(new StartupState());
+		
 		//temp
 		//Adding player into the game
 		Player p = EntityFactory.createPlayer(Vec3.zero);
@@ -47,7 +49,7 @@ public class Client {
 	}
 
 	public void setState(AbstractState newState) {
-		log.printf("{GAMESTATE} Changing gamestate to <%s>\n",newState.toString());
+		log.printf("{GAMESTATE} Changing gamestate to <%s>\n", newState.toString());
 		
 		//set up and attach the new scene from gamestate
 		newState.setup(this, this.gameWorld);
@@ -61,7 +63,6 @@ public class Client {
 	
 	//(OTHER)BEN's RUNNING CoDe
 	public void run() {
-		this.setState(new StartupState());
 		this.running = true;
 
 		long maxTimePerUpdate = (1000 / updatesPerSecond);

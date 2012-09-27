@@ -87,6 +87,7 @@ public class Game {
 
 	public boolean setPlayer(long eid){
 		player = movableEntities.get(eid);
+		System.out.println(world);
 		world.getCamera().trackReferenceFrame(player);
 		return player!=null;
 	}
