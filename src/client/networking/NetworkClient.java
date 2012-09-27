@@ -11,7 +11,6 @@ import common.Log;
 import common.packets.LoginPacket;
 
 import client.Client;
-import clienttest.ClientState;
 
 public class NetworkClient {
 	private Log log = null;

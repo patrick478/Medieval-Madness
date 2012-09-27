@@ -1,6 +1,8 @@
-package server;
+package server.face;
 
 import java.io.*;
+
+import server.Server;
 
 public abstract class ServerFace implements Runnable
 {

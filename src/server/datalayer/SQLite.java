@@ -1,4 +1,4 @@
-package server;
+package server.datalayer;
 
 import java.io.*;
 import java.security.*;
@@ -113,7 +113,7 @@ public class SQLite extends DataProvider implements Runnable {
 			return null;
 		}
 		
-		if(dj.data.size() != 1 && dj.data.get(0).size() != 1)
+		if(dj.data.size() == 1 && dj.data.get(0).size() == 1)
 			return (String)dj.data.get(0).get(0);
 		
 		return null;
@@ -140,7 +140,6 @@ public class SQLite extends DataProvider implements Runnable {
 		return true;
 	}
 	
-	// THIS ONE
 	@Override
 	public boolean accountExists(String username) {
 		String query = String.format("SELECT COUNT(*) FROM users WHERE username='%s'", username);

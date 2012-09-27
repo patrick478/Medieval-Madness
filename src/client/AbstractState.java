@@ -18,6 +18,8 @@ public abstract class AbstractState {
 	public void setup(Client pClient, Game gameWorld){
 		this.client = pClient;
 		this.gameWorld = gameWorld;
+		
+		gameWorld.loadScene(myScene);
 	}
 	
 	public Scene getScene(){

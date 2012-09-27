@@ -1,4 +1,4 @@
-package server;
+package server.session;
 
 import java.nio.channels.*;
 

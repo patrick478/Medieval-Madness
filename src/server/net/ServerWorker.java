@@ -1,7 +1,12 @@
-package server;
+package server.net;
 
 import java.nio.channels.*;
 import java.util.*;
+
+import server.Server;
+import server.session.Session;
+import server.session.SessionMngr;
+import server.session.SessionState;
 
 import common.DataPacket;
 import common.Packet;

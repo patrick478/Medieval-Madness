@@ -1,4 +1,4 @@
-package server;
+package server.session;
 
 import java.io.PrintStream;
 import java.nio.channels.SocketChannel;
