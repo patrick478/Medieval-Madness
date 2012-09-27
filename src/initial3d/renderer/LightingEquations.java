@@ -177,6 +177,12 @@ final class LightingEquations {
 				Lx *= imL;
 				Ly *= imL;
 				Lz *= imL;
+				
+				// if distance > effect radius, skip
+				if (imL < unsafe.getFloat(pLight + 108)) {
+					pLight += 0x100;
+					continue;
+				}
 
 				// light falloff as per the canonical light equation for point light attenuation
 				// imL == 1 / d == e

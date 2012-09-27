@@ -454,6 +454,7 @@ class Initial3DImpl extends Initial3D {
 			putFloat(qLight + 104, v);
 			break;
 		case EFFECT_RADIUS:
+			// this is backwards compatible because default == 0 => effect radius infinity
 			putFloat(qLight + 108, 1 / v);
 			break;
 		default:

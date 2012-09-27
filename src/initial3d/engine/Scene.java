@@ -31,10 +31,20 @@ public class Scene {
 		if (d == null) throw new IllegalArgumentException();
 		add_drawable.add(d);
 	}
+	
+	public void addDrawables(Collection<? extends Drawable> d) {
+		if (d == null) throw new IllegalArgumentException();
+		add_drawable.addAll(d);
+	}
 
 	public void removeDrawable(Drawable d) {
 		if (d == null) throw new IllegalArgumentException();
 		remove_drawable.add(d);
+	}
+	
+	public void removeDrawables(Collection<? extends Drawable> d) {
+		if (d == null) throw new IllegalArgumentException();
+		remove_drawable.addAll(d);
 	}
 
 	public <T extends Collection<Drawable>> T extractDrawables(T c) {

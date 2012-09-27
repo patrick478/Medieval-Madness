@@ -32,7 +32,7 @@ public abstract class Initial3D {
 		return Initial3DFactory.createTexture(size);
 	}
 
-	public static final int MAX_LIGHTS = 16;
+	public static final int MAX_LIGHTS = 8;
 	
 	// shared
 	public static final int ZERO = 0;
