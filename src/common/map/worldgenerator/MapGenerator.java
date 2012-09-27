@@ -1045,13 +1045,13 @@ public class MapGenerator {
 
 					if (r.adjacent.contains(o)) {
 
-						// if (c.water) {
-						// g.setColor(Color.BLUE);
-						// } else {
-						// g.setColor(new Color((int) (255 * c.elevation),
-						// (int) (255 * c.elevation),
-						// (int) (255 * c.elevation)));
-						// }
+//						 if (c.water) {
+//						 g.setColor(Color.BLUE);
+//						 } else {
+//						 g.setColor(new Color((int) (255 * c.elevation),
+//						 (int) (255 * c.elevation),
+//						 (int) (255 * c.elevation)));
+//						 }
 
 						g.setColor(c.biome.color);
 
@@ -1120,7 +1120,7 @@ public class MapGenerator {
 	}
 
 	public static void main(String[] args) {
-		MapGenerator mp = new MapGenerator(9001, 800);
+		MapGenerator mp = new MapGenerator(42, 800);
 		mp.run();
 		mp.look();
 	}

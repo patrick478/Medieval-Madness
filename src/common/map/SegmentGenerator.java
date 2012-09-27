@@ -36,28 +36,36 @@ public class SegmentGenerator {
 	private void createRegion() {
 		MapGenerator map = new MapGenerator(seed, regionSize);
 		map.run();
-		map.look();
+//		map.look();
 		List<Triangle> tList = map.getTriangles();
 
-		System.out.println("running tri list");
 
-		for (int z = 0; z < regionSize; z++) {
-			for (int x = 0; x < regionSize; x++) {
-				Point p = new Point(x, z);
-				for (Triangle t : tList) {
-					if (t.contains(p)) {
-						// System.out.println(p.toString());
-						// System.out.println(t.toString());
-						// System.out.println(t.height(p));
-						regionHeight[x][z] = t.height(p);
-						break;
+//		for (int z = 0; z < regionSize; z++) {
+//			for (int x = 0; x < regionSize; x++) {
+//				Point p = new Point(x, z);
+//				for (Triangle t : tList) {
+//					if (t.contains(p)) {
+//						// System.out.println(p.toString());
+//						// System.out.println(t.toString());
+//						// System.out.println(t.height(p));
+//						regionHeight[x][z] = t.height(p);
+//						break;
+//					}
+//				}
+//			}
+//		}
+		
+		for (Triangle t : tList) {
+			for(int z = (int)t.getMinZ(); z<=(int)(t.getMaxZ()+0.5); z++ ){
+				for(int x = (int)t.getMinX(); x<=(int)(t.getMaxX()+0.5); x++ ){
+					if(	x < regionSize && x>=0 &&
+						z < regionSize && z>=0 &&
+						t.contains(x, z)){
+						regionHeight[x][z] = t.height((double)x, (double)z);
 					}
 				}
 			}
 		}
-
-		System.out.println("tri list finished");
-
 	}
 
 	public Segment getSegment(int posx, int posz) {
@@ -180,9 +188,6 @@ public class SegmentGenerator {
 		for (int z = 0; z < zSize; z++) {
 			for (int x = 0; x < xSize; x++) {
 				double h = (regionHeight[_x+x][_z+z] * Segment.vertScale);
-				
-				System.out.println(h);
-
 				ind[x][z] = mLOD.addVertex(
 						(_x+x) * Segment.horzScale * Segment.size, 
 						h*100, 
