@@ -94,6 +94,7 @@ public class Scene {
 		for (int i = CHANGE_LIMIT; i-- > 0 && !add_light.isEmpty();) {
 			lights.add(add_light.poll());
 		}
+		poke();
 	}
 
 	/* package-private */
@@ -106,6 +107,10 @@ public class Scene {
 	Iterable<Light> getLights() {
 
 		return lights;
+	}
+	
+	protected void poke() {
+		
 	}
 
 }

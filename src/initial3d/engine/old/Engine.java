@@ -95,11 +95,11 @@ public class Engine extends Thread {
 		i3d.lightf(LIGHT0, INTENSITY, 0.9f);
 		i3d.enable(LIGHT0);
 
-		i3d.lightfv(LIGHT1, DIFFUSE, new float[] { 0.3f, 0.3f, 1f });
-		i3d.lightfv(LIGHT1, SPECULAR, new float[] { 0.3f, 0.3f, 1f });
-		i3d.lightfv(LIGHT1, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
-		i3d.lightf(LIGHT1, INTENSITY, 0.9f);
-		i3d.enable(LIGHT1);
+		i3d.lightfv(LIGHT0 + 1, DIFFUSE, new float[] { 0.3f, 0.3f, 1f });
+		i3d.lightfv(LIGHT0 + 1, SPECULAR, new float[] { 0.3f, 0.3f, 1f });
+		i3d.lightfv(LIGHT0 + 1, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
+		i3d.lightf(LIGHT0 + 1, INTENSITY, 0.9f);
+		i3d.enable(LIGHT0 + 1);
 
 		i3d.cullFace(BACK);
 		i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
@@ -168,7 +168,7 @@ public class Engine extends Thread {
 			light1p[0] = -light0v.x;
 			light1p[1] = -light0v.y;
 			light1p[2] = -light0v.z;
-			i3d.lightdv(LIGHT1, POSITION, light1p);
+			i3d.lightdv(LIGHT0 + 1, POSITION, light1p);
 			i3d.popMatrix();
 
 			light0v = light0delta.rot(light0v);

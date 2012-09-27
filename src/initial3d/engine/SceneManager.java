@@ -77,11 +77,12 @@ public class SceneManager {
 			profiler.setResetOutput(System.out);
 
 			// temp light
-			i3d.lightfv(LIGHT0, DIFFUSE, new float[] { 1f, 1f, 0.7f });
-			i3d.lightfv(LIGHT0, SPECULAR, new float[] { 1f, 1f, 0.7f });
-			i3d.lightfv(LIGHT0, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
-			i3d.lightf(LIGHT0, INTENSITY, 0.9f);
-			i3d.enable(LIGHT0);
+			long light = LIGHT0;
+			i3d.lightfv(light, DIFFUSE, new float[] { 1f, 1f, 0.7f });
+			i3d.lightfv(light, SPECULAR, new float[] { 1f, 1f, 0.7f });
+			i3d.lightfv(light, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
+			i3d.lightf(light, INTENSITY, 0.9f);
+			i3d.enable(light);
 			double[] light0p = new double[] { 0, 1, 0, 0 };
 
 			while (true) {
@@ -112,7 +113,7 @@ public class SceneManager {
 
 							// load lights as appropriate
 							i3d.enable(LIGHTING);
-							i3d.lightdv(LIGHT0, POSITION, light0p);
+							i3d.lightdv(light, POSITION, light0p);
 							// TODO proper lighting
 
 							// draw stuff as appropriate

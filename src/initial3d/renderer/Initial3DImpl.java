@@ -103,6 +103,9 @@ class Initial3DImpl extends Initial3D {
 		materialf(FRONT_AND_BACK, SHININESS, 1f);
 		texImage2D(FRONT_AND_BACK, tex_black, tex_black, tex_black);
 		sceneAmbientfv(new float[] { 0.1f, 0.1f, 0.1f });
+
+		// mark last light as last
+		putInt(getLightQPointer(LIGHT_MAX) + 80, 0x2);
 	}
 
 	@Override
@@ -422,27 +425,36 @@ class Initial3DImpl extends Initial3D {
 	}
 
 	protected final long getLightQPointer(long light) {
-		if (light < LIGHT0 || light > LIGHT7) throw new IllegalArgumentException();
-		long qLight = 0x00000100;
-		if (light >= LIGHT7) qLight += 256;
-		if (light >= LIGHT6) qLight += 256;
-		if (light >= LIGHT5) qLight += 256;
-		if (light >= LIGHT4) qLight += 256;
-		if (light >= LIGHT3) qLight += 256;
-		if (light >= LIGHT2) qLight += 256;
-		if (light >= LIGHT1) qLight += 256;
-		return qLight;
+		if (light < LIGHT0 || light > LIGHT_MAX) throw new IllegalArgumentException();
+		return 0x0CE00900 + (light - LIGHT0) * 256;
 	}
 
 	@Override
 	public void lightf(long light, int pname, float v) {
 		long qLight = getLightQPointer(light);
 		switch (pname) {
-		case SPOT_CUTOFF:
-			putFloat(qLight + 80, v);
-			break;
 		case INTENSITY:
+			// backwards compatibility...
+			lightf(light, QUADRATIC_ATTENUATION, 1 / v);
 			putFloat(qLight + 84, v);
+			break;
+		case CONSTANT_ATTENUATION:
+			putFloat(qLight + 88, v);
+			break;
+		case LINEAR_ATTENUATION:
+			putFloat(qLight + 92, v);
+			break;
+		case QUADRATIC_ATTENUATION:
+			putFloat(qLight + 96, v);
+			break;
+		case SPOT_CUTOFF:
+			putFloat(qLight + 100, v);
+			break;
+		case SPOT_EXPONENT:
+			putFloat(qLight + 104, v);
+			break;
+		case EFFECT_RADIUS:
+			putFloat(qLight + 108, 1 / v);
 			break;
 		default:
 			throw new IllegalArgumentException();
@@ -528,12 +540,24 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public void enable(long state) {
+		if ((state & LIGHT0) != 0) {
+			// enable a specific light (they all have the LIGHT0 bit set)
+			long qLight = getLightQPointer(state);
+			putInt(qLight + 80, getInt(qLight + 80) | 0x1);
+			return;
+		}
 		state = getLong(0x00000008) | state;
 		putLong(0x00000008, state);
 	}
 
 	@Override
 	public void disable(long state) {
+		if ((state & LIGHT0) != 0) {
+			// enable a specific light (they all have the LIGHT0 bit set)
+			long qLight = getLightQPointer(state);
+			putInt(qLight + 80, getInt(qLight + 80) & ~0x1);
+			return;
+		}
 		state = getLong(0x00000008) & ~state;
 		putLong(0x00000008, state);
 	}

@@ -21,16 +21,14 @@ public abstract class Light {
 	private final double[][] xformtemp = Matrix.create(4, 4);
 
 	public Light(ReferenceFrame rf_) {
-		if (rf_ == null) throw new IllegalArgumentException("Null not permitted.");
-		rf = rf_;
+		trackReferenceFrame(rf_);
 	}
 
 	public void trackReferenceFrame(ReferenceFrame rf_) {
-		if (rf_ == null) rf_ = ReferenceFrame.SCENE_ROOT;
-		rf = rf_;
+		rf = rf_ == null ? ReferenceFrame.SCENE_ROOT : rf_;
 	}
 
-	void loadTo(Initial3D i3d, long lightid) {
+	void loadTo(Initial3D i3d, int light) {
 		poke();
 		i3d.matrixMode(VIEW);
 		i3d.pushMatrix();
@@ -43,18 +41,18 @@ public abstract class Light {
 			i3d.multMatrix(xformtemp);
 		}
 
-		i3d.lightdv(lightid, POSITION, lightpos);
-		i3d.lightdv(lightid, SPOT_DIRECTION, spotdir);
+		i3d.lightdv(light, POSITION, lightpos);
+		i3d.lightdv(light, SPOT_DIRECTION, spotdir);
 
 		i3d.popMatrix();
 
-		i3d.lightf(lightid, SPOT_CUTOFF, spot_cutoff);
-		i3d.lightfv(lightid, DIFFUSE, color_d.toArray(coltemp));
-		i3d.lightfv(lightid, SPECULAR, color_s.toArray(coltemp));
-		i3d.lightfv(lightid, AMBIENT, color_a.toArray(coltemp));
+		i3d.lightf(light, SPOT_CUTOFF, spot_cutoff);
+		i3d.lightfv(light, DIFFUSE, color_d.toArray(coltemp));
+		i3d.lightfv(light, SPECULAR, color_s.toArray(coltemp));
+		i3d.lightfv(light, AMBIENT, color_a.toArray(coltemp));
 
 		// TODO proper attenuation
-		i3d.lightf(lightid, INTENSITY, atten_const);
+		i3d.lightf(light, INTENSITY, atten_const);
 
 	}
 
@@ -76,6 +74,8 @@ public abstract class Light {
 		}
 
 		protected void poke() {
+			// no synchro, just ensure consistency
+			Vec3 n = this.n;
 			lightpos[0] = n.x;
 			lightpos[1] = n.y;
 			lightpos[2] = n.z;
