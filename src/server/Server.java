@@ -8,10 +8,12 @@ import server.datalayer.DataProvider;
 import server.datalayer.SQLite;
 import server.face.ConsoleFace;
 import server.face.ServerFace;
+import server.game.GameEngine;
 import server.net.ServerLayer;
 import server.session.SessionMngr;
 
 import common.*;
+import common.Timer;
 
 public class Server implements Runnable {
 	public static final int TICKS_PER_SECOND = 30;
@@ -26,7 +28,7 @@ public class Server implements Runnable {
 	private ServerLayer networking;
 	
 	public DataProvider db;
-	
+	public GameEngine game;
 	public ServerFace face;
 	
 	public Server()
@@ -42,11 +44,12 @@ public class Server implements Runnable {
 
 	public boolean RunServer()
 	{			    
+		Timer startTimer = new Timer(true);
+		
 		face = new ConsoleFace();
 		face.setup(this);
 		Thread faceThread = new Thread(face);
 		faceThread.setDaemon(true);
-
 		
 		this.log = new Log("server.log", true, this.face.getOut());
 		this.log.println("Medieval Madness Server v0.1 - \"Proofie Penguin\"");
@@ -59,6 +62,7 @@ public class Server implements Runnable {
 		}
 		
 		// initalise serverData
+		serverData.put("game_seed", System.currentTimeMillis());
 		serverData.put("atps",  0);
 		serverData.put("start_time_millis", System.currentTimeMillis());
 		serverData.put("listen_port", 14121);
@@ -89,6 +93,13 @@ public class Server implements Runnable {
 		
 		// start the face
 		faceThread.start();
+		
+		game = new GameEngine((Long)this.serverData.get("game_seed"), this.face.getOut());
+		game.warm();
+		
+		startTimer.stop();		
+		this.setStatus(ServerStatus.Running);
+		this.log.printf("Server started in %.2fs\n", startTimer.elapsed_sDouble());
 		
 		while((Boolean)this.serverData.get("running"))
 			try {
@@ -135,9 +146,6 @@ public class Server implements Runnable {
 		long lastResetTime = System.currentTimeMillis();
 		long elapsedTimeSinceLastTick = System.currentTimeMillis();
 		int numTicks = 0;
-		
-		this.setStatus(ServerStatus.Running);
-		this.log.printf("Server started in %.2fs\n", (System.currentTimeMillis() - ((Long)this.serverData.get("start_time_millis"))) / 1000.0f);
 		
 		while(true)
 		{

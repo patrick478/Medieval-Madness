@@ -36,10 +36,10 @@ public class SegmentGenerator {
 	private void createRegion() {
 		MapGenerator map = new MapGenerator(seed, regionSize);
 		map.run();
-		map.look();
+//		map.look();
 		List<Triangle> tList = map.getTriangles();
 
-		System.out.println("running tri list");
+//		System.out.println("running tri list");
 
 		for (int z = 0; z < regionSize; z++) {
 			for (int x = 0; x < regionSize; x++) {
@@ -56,7 +56,7 @@ public class SegmentGenerator {
 			}
 		}
 
-		System.out.println("tri list finished");
+//		System.out.println("tri list finished");
 
 	}
 
