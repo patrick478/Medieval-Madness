@@ -44,12 +44,15 @@ public class Segment {
 
 		terr_mtl = new Material(terr_mtl, terr_tx, null, null);
 	}
+	
+	public static long getID(int posx, int posz){
+		return (long)(posx<<32) | (((long)(posz)) & 0xFFFFFFFF);
+	}
 
 	public Segment(int _xPos, int _zPos, float[][] heightmap) {
 		xPos = _xPos;
 		zPos = _zPos;
-		id = ((long)xPos) << 32 | (long)zPos;
-
+		id = getID(_xPos, _zPos);
 		this.heightmap = heightmap;
 	}
 
