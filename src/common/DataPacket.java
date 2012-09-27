@@ -1,113 +1,138 @@
 package common;
 
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.nio.ByteBuffer;
 
 public class DataPacket {
-	private LinkedList<Byte> data = new LinkedList<Byte>();
-	private static final String stringEncoding = "US-ASCII"; // happy, Josh/Ben!? :P
+	ByteBuffer buf = null;
+	int readPos = 0;
+	int writePos = 0;
+	
+	public static final String stringEncoding = "US-ASCII";
+	private static final int defaultAllocation = 8096;
 	
 	public DataPacket()
 	{
-		
+		buf = ByteBuffer.allocate(defaultAllocation);
+	}
+	public DataPacket(int s)
+	{
+		buf = ByteBuffer.allocate(s);
 	}
 	
-	public DataPacket(byte[] b) {
-		for(int i = 0; i < b.length; i++)
-			data.add(b[i]);
+	public DataPacket(byte[] oldData)
+	{
+		buf = ByteBuffer.wrap(oldData);
+		writePos = 0;
+		readPos = 0;
 	}
 	
-	// TODO: rewrite this function to use .toArray()
-	public byte[] getData() {
-		byte[] ret = new byte[this.data.size()];
-		for(int i = 0; i < this.data.size(); i++)
-			ret[i] = this.data.get(i);
-		
-		return ret;
+	public void clear()
+	{
+		buf = ByteBuffer.allocate(defaultAllocation);
 	}
 	
-	public void clear() {
-		this.data.clear();
+	public byte[] getData()
+	{
+		return buf.array();
 	}
 	
 	public void addByte(Byte b)
 	{
-		data.add(b);
+		buf.put(writePos++, b);
 	}
 	
-	public byte getByte() {
-		return (data.remove());
-	}
-	
-	private void addShortInternal(short s)
+	public byte getByte()
 	{
-		byte[] bytes = new byte[2];
-		bytes[1] = (byte)(s >>> 0);
-		bytes[0] = (byte)(s >>> 8);
-		data.add(bytes[0]);
-		data.add(bytes[1]);
+		return buf.get(readPos++);
+	}
+	
+	public void addShort(int s)
+	{
+		this.addShort((short)s);
 	}
 	
 	public void addShort(short s)
 	{
-		this.addShortInternal(s);
-	}
-	
-	public void addShort(int s) {
-		this.addShortInternal((short)s);
-	}
-	
-	public short getShort()
-	{
-		byte b1 = data.remove();
-		byte b2 = data.remove();
-		
-		short result = (short)(((b2 & 0xFF) << 0) + (b1 << 8));
-		return result;
+		buf.putShort(writePos, s);
+		writePos += 2;
 	}
 	
 	public short peekShort()
 	{
-		byte b1 = data.get(0);
-		byte b2 = data.get(1);
-		short result = (short)(((b2 & 0xFF) << 0) + (b1 << 8));
-		return result;
+		return buf.getShort(readPos);
+	}
+	
+	public short getShort()
+	{
+		readPos += 2;
+		return buf.getShort(readPos-2);
+	}
+	
+	public void addInt(int i)
+	{
+		buf.putInt(writePos, i);
+		writePos += 4;
+	}
+	
+	public int getInt()
+	{
+		readPos += 4;
+		return buf.getInt(readPos - 4);
+	}
+	
+	public void addFloat(float f)
+	{
+		buf.putFloat(writePos, f);
+		writePos += 4;
+	}
+	
+	public float getFloat()
+	{
+		readPos += 4;
+		return buf.getFloat(readPos - 4);
+	}
+	
+	public void addLong(Long l)
+	{
+		buf.putLong(writePos, l);
+		writePos += 8;
+	}
+	
+	public long getLong()
+	{
+		readPos += 8;
+		return buf.getLong(readPos - 8);
 	}
 	
 	public void addString(String s)
 	{
-		int stringLength = s.length();
-		this.addShort(stringLength);
-		byte[] strBytes = null;
+		short strLen = (short)s.length();
 		
+		byte[] bytes = null;
 		try {
-			strBytes = s.getBytes(DataPacket.stringEncoding);
+			 bytes = s.getBytes(stringEncoding);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return;
 		}
 		
-		for(int i = 0; i < strBytes.length; i++)
-			this.data.add(strBytes[i]);
+		this.addShort(strLen);
+		buf.position(writePos);
+		buf.put(bytes);
+		this.writePos += strLen;
 	}
 	
 	public String getString()
 	{
-		int stringLength = this.getShort();
-		if(this.data.size() < stringLength)
-			return null;
+		short strlen = this.getShort();
 		
-		byte[] stringBytes = new byte[stringLength];
-		for(int i = 0; i < stringLength; i++)
-			stringBytes[i] = this.data.remove();
-		
+		byte[] bytes = new byte[strlen];
+		buf.position(readPos);
+		buf.get(bytes, 0,  strlen);
+		this.readPos += strlen;
 		try {
-			return new String(stringBytes, DataPacket.stringEncoding);
+			return new String(bytes, stringEncoding);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -2,7 +2,7 @@ package server.commands;
 
 import server.Command;
 import server.Server;
-import server.SessionMngr;
+import server.session.SessionMngr;
 
 public class SessionCommand extends Command {
 

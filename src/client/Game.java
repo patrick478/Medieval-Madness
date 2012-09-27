@@ -16,9 +16,33 @@ public class Game {
 	private Map<Long, Segment> terrain = new HashMap<Long, Segment>();	
 	
 	private Scene world;
+	private MovableEntity player = null;
 	
-	public Game(){
-		world = new Scene();
+	public Game(){}
+	
+	
+	public void loadScene(Scene _world){
+		world = _world;
+		world.getCamera().trackReferenceFrame(player);
+		for(MovableEntity me : movableEntities.values()){
+			//add mesh
+		}
+		for(Entity m : staticEntities.values()){
+			//add mesh
+		}
+		for(Segment s : terrain.values()){
+			//add mesh
+		}
+	}
+	
+	public Scene getScene(){
+		return world;
+	}
+	
+	public boolean setPlayer(long eid){
+		player = movableEntities.get(eid);
+		world.getCamera().trackReferenceFrame(player);
+		return player!=null;
 	}
 	
 	public void entityMoved(Long eid, Vec3 pos, Vec3 linVel, Quat ori, Vec3 angVel, Long time){
@@ -29,29 +53,26 @@ public class Game {
 	}
 	
 	//TODO wtf is this method going to do?
-	public void entityStartTracking(long eid){
-		System.out.println("(OTHER)BEN GET THE FUCK HERE");
+	public void entityStartTracking(long eid){ 
+		//System.out.println("(OTHER)BEN GET THE FUCK HERE");
 	}
 	
 	public void entityStopTracking(long eid){
-		movableEntities.remove(eid);
-		staticEntities.remove(eid);
+		//System.out.println("(OTHER)BEN GET THE FUCK HERE");
 	}
 	
 	public void addMoveableEntity(MovableEntity jim){
+		//add mesh
 		movableEntities.put(jim.id, jim);
 	}
 	
 	public void addStaticEntity(Entity jim){
+		//add mesh
 		staticEntities.put(jim.id, jim);
 	}
 	
 	public void addTerrain(Segment tim){
+		//add mesh
 		terrain.put(tim.id, tim);
 	}
-	
-	public Scene getScene(){
-		return world;
-	}
-	
 }

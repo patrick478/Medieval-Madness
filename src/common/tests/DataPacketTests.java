@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import common.DataPacket;
+import common.DataPacket;
 
 public class DataPacketTests {
 	
@@ -49,5 +50,22 @@ public class DataPacketTests {
 		p.addString(s);
 		String r = p.getString();
 		assertTrue(r.equals(s));
+	}
+	
+	@Test
+	public void TestInt()
+	{
+		DataPacket p = new DataPacket();
+		p.addInt(18);
+		assertEquals(18, p.getInt());
+	}
+	
+	@Test
+	public void TestLong()
+	{
+		DataPacket p = new DataPacket();
+		long val = 190123123287398l;
+		p.addLong(val);
+		assertEquals(val, p.getLong());
 	}
 }

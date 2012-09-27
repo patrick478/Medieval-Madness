@@ -1,4 +1,4 @@
-package server;
+package server.net;
 
 import java.io.*;
 import java.net.*;
@@ -6,6 +6,10 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.nio.channels.spi.*;
 import java.util.*;
+
+import server.Server;
+import server.ServerStatus;
+import server.session.SessionMngr;
 
 import common.Log;
 import common.NetworkLayer;

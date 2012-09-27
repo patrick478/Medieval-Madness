@@ -1,4 +1,4 @@
-package server;
+package server.face;
 
 import java.io.*;
 

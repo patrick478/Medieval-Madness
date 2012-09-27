@@ -19,8 +19,8 @@ public class Segment {
 
 	private float[][] heightmap = null;
 
-	private final int xPos;
-	private final int zPos;
+	public final int xPos;
+	public final int zPos;
 	public final long id;
 
 	

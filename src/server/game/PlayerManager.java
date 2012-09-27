@@ -1,4 +1,4 @@
-package server;
+package server.game;
 
 import common.entity.*;
 import java.util.*;

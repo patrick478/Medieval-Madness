@@ -63,45 +63,33 @@ import common.map.voronoi.*;
 public class MapGenerator {
 
 	public static final int NUM_POINTS = 2000;
-	public static final double LAKE_THRESHOLD = 0.3; // 0 to 1, fraction of
-														// water
-														// corners for water
-														// polygon
+	// 0 to 1, fraction of water corners for water polygon
+	public static final double LAKE_THRESHOLD = 0.3; 
 	public static final int NUM_LLOYD_ITERATIONS = 2;
 
 	// Passed in by the caller:
-	public int SIZE;
-
-	public long SEED;
+	public final int SIZE;
+	public final long SEED;
 
 	// Island shape is controlled by the islandRandom seed and the
 	// type of island, passed in when we set the island shape. The
 	// islandShape function uses both of them to determine whether any
 	// point should be water or land. TODO change description
-	public IslandStrategy islandShape;
-
-	// Island details are controlled by this random generator. The
-	// initial map upon loading is always deterministic, but
-	// subsequent maps reset this random number generator with a
-	// random seed.
-	public Random mapRandom;
+	public final IslandStrategy islandShape;
+	public final Random mapRandom;
 
 	// These store the graph data
-	// public List<Point> points = new ArrayList<Point>(); // Only useful during
-	// TODO
-	// map construction
 	public List<Center> centers = new ArrayList<Center>();
 	public List<Corner> corners = new ArrayList<Corner>();
 	public List<Edge> edges = new ArrayList<Edge>();
+	
 
 	public MapGenerator(long seed, int size) {
 		mapRandom = new Random(seed);
-		this.SIZE = size; // FIXME ???
+		this.SIZE = size;
 		this.SEED = seed;
 
 		this.islandShape = new PerlinIsland(seed);
-
-		// call go here TODO? or static constructor and so on etc
 	}
 	
 	public List<Triangle> getTriangles(){
@@ -119,79 +107,47 @@ public class MapGenerator {
 	}
 
 	public void run() {
+		/* Random points */
 		List<Point> points = generateRandomPoints();
-		System.out.println("improve");
-
 		improveRandomPoints(points);
-		System.out.println("done");
 
-		// Create a graph structure from the Voronoi edge list. The
-		// methods in the Voronoi object are somewhat inconvenient for
-		// my needs, so I transform that data into the data I actually
-		// need: edges connected to the Delaunay triangles and the
-		// Voronoi polygons, a reverse map from those four points back
-		// to the edge, a map from these four points to the points
-		// they connect to (both along the edge and crosswise).
-
-		// Voronoi voronoi = createVoronoi(points); TODO
-
+		/*Building Graph*/
 		buildGraph(points);
-
 		improveCorners();
 		points = null;
 
-		// FIXME BELOW I CAN CHANGE TO FIT MY DESIRE...
-
-		// Determine the elevations and water at Voronoi corners.
+		/*GetHeights*/
 		islandShape.assignCornerElevations(corners);
-
-		// Determine polygon and corner type: ocean, coast, land.
 		assignOceanCoastAndLand();
-
-		// Rescale elevations so that the highest is 1.0, and they're
-		// distributed well. We want lower elevations to be more common
-		// than higher elevations, in proportions approximately matching
-		// concentric rings. That is, the lowest elevation is the
-		// largest ring around the island, and therefore should more
-		// land area than the highest elevation, which is the very
-		// center of a perfectly circular island.
-		redistributeElevations(landCorners(corners));
-
 		// Assign elevations to non-land corners
+		redistributeElevations(landCorners(corners));
+		//change coast and ocean to zero
 		for (Corner q : corners) {
 			if (q.ocean || q.coast) {
 				q.elevation = 0.0;
 			}
 		}
-
-		// Polygon elevations are the average of their corners
 		assignPolygonElevations();
 
-		// Determine downslope paths.
+		/*Work out rivers*/
 		calculateDownslopes();
-
-		// Determine watersheds: for every corner, where does it flow
-		// out into the ocean?
 		calculateWatersheds();
-
-		// Create rivers.
 		createRivers();
 
-		// Determine moisture at corners, starting at rivers
-		// and lakes, but not oceans. Then redistribute
-		// moisture to cover the entire range evenly from 0.0
-		// to 1.0. Then assign polygon moisture as the average
-		// of the corner moisture.
+		/*Assign Moisture and Biome*/
 		assignCornerMoisture();
 		redistributeMoisture(landCorners(corners));
 		assignPolygonMoisture();
-
-		assignBiomes();
+		for (Center p : centers) {
+			p.biome = getBiome(p);
+		}
 	}
 
-	// Takes a list of points on the map and uses the voronoi
-	// class to return a list of graph edges representing
-	// the voronoi diagram for those points
+	/** 
+	 * Takes a list of points on the map and uses the voronoi
+	 * class to return a list of graph edges representing
+	 * the voronoi diagram for those points 
+	 */
 	private List<GraphEdge> createVoronoi(List<Point> points) {
 		double[] xValues = new double[points.size()];
 		double[] yValues = new double[points.size()];
@@ -205,10 +161,12 @@ public class MapGenerator {
 		return v.generateVoronoi(xValues, yValues, 0, SIZE, 0, SIZE);
 	}
 
-	// Generate random points and assign them to be on the island or
-	// in the water. Some water points are inland lakes; others are
-	// ocean. We'll determine ocean later by looking at what's
-	// connected to ocean.
+	/** 
+	 * Generate random points and assign them to be on the island or
+	 * in the water. Some water points are inland lakes; others are
+	 * ocean. We'll determine ocean later by looking at what's
+	 * connected to ocean. 
+	 */
 	public List<Point> generateRandomPoints() {
 		List<Point> points = new ArrayList<Point>();
 
@@ -219,28 +177,21 @@ public class MapGenerator {
 		return points;
 	}
 
-	// Provides a psuedo random number including the lower bound
-	// up to but not including the upper bound
+	/** 
+	 * Provides a psuedo random number including the lower bound
+	 * up to but not including the upper bound 
+	 */
 	private double nextInRange(int low, int high) {
 		return (mapRandom.nextDouble() * (high - low)) + low;
 	}
 
-	// Improve the random set of points with Lloyd Relaxation.
+	/** 
+	 * Improve the random set of points with Lloyd Relaxation.
+	 * which moves each point to the centroid of the
+	 * generated Voronoi polygon, then generates Voronoi again. 
+	 */
 	public void improveRandomPoints(List<Point> points) {
-		// We'd really like to generate "blue noise". Algorithms:
-		// 1. Poisson dart throwing: check each new point against all
-		// existing points, and reject it if it's too close.
-		// 2. Start with a hexagonal grid and randomly perturb points.
-		// 3. Lloyd Relaxation: move each point to the centroid of the
-		// generated Voronoi polygon, then generate Voronoi again.
-		// 4. Use force-based layout algorithms to push points away.
-		// 5. More at http://www.cs.virginia.edu/~gfx/pubs/antimony/
-		// Option 3 is implemented here. If it's run for too many iterations,
-		// it will turn into a grid, but convergence is very slow, and we only
-		// run it a few times.
-
-		// TODO make functionality for my program
-
+		
 		for (int i = 0; i < NUM_LLOYD_ITERATIONS; i++) {
 			List<GraphEdge> gEdges = createVoronoi(points);
 			for (int r = 0; r < points.size(); r++) {
@@ -267,14 +218,16 @@ public class MapGenerator {
 		}
 	}
 
-	// Build graph data structure in 'edges', 'centers', 'corners',
-	// based on information in the Voronoi results: point.neighbors
-	// will be a list of neighboring points of the same type (corner
-	// or center); point.edges will be a list of edges that include
-	// that point. Each edge connects to four points: the Voronoi edge
-	// edge.{v0,v1} and its dual Delaunay triangle edge edge.{d0,d1}.
-	// For boundary polygons, the Delaunay edge will have one null
-	// point, and the Voronoi edge may be null.
+	/** 
+	 * Build graph data structure in 'edges', 'centers', 'corners',
+	 * based on information in the Voronoi results: point.neighbors
+	 * will be a list of neighboring points of the same type (corner
+	 * or center); point.edges will be a list of edges that include
+	 * that point. Each edge connects to four points: the Voronoi edge
+	 * edge.{v0,v1} and its dual Delaunay triangle edge edge.{d0,d1}.
+	 * For boundary polygons, the Delaunay edge will have one null
+	 * point, and the Voronoi edge may be null. 
+	 */
 	public void buildGraph(List<Point> points) {
 
 		// Build Center objects for each of the points
@@ -458,10 +411,12 @@ public class MapGenerator {
 		}
 	}
 
-	// Create an array of corners that are on land only, for use by
-	// algorithms that work only on land. We return an array instead
-	// of a vector because the redistribution algorithms want to sort
-	// this array using Array.sortOn.
+	/** 
+	 * Create an array of corners that are on land only, for use by
+	 * algorithms that work only on land. We return an array instead
+	 * of a vector because the redistribution algorithms want to sort
+	 * this array using Array.sortOn.
+	 */
 	public List<Corner> landCorners(List<Corner> corners) {
 		List<Corner> locations = new ArrayList<Corner>();
 		for (Corner q : corners) {
@@ -472,11 +427,13 @@ public class MapGenerator {
 		return locations;
 	}
 
-	// Change the overall distribution of elevations so that lower
-	// elevations are more common than higher
-	// elevations. Specifically, we want elevation X to have frequency
-	// (1-X). To do this we will sort the corners, then set each
-	// corner to its desired elevation.
+	/** 
+	 * Change the overall distribution of elevations so that lower
+	 * elevations are more common than higher
+	 * elevations. Specifically, we want elevation X to have frequency
+	 * (1-X). To do this we will sort the corners, then set each
+	 * corner to its desired elevation. 
+	 */
 	public void redistributeElevations(List<Corner> locations) {
 		// SCALE_FACTOR increases the mountain area. At 1.0 the maximum
 		// elevation barely shows up on the map, so we set it to 1.1.
@@ -534,7 +491,7 @@ public class MapGenerator {
 		}
 	}
 
-	/* Helper method to return the lake set of a given polygon */
+	/** Helper method to return the lake set of a given polygon */
 	private HashSet<Center> createLake(Center c) {
 		// else create a new lake with it, and all its neighbors
 		HashSet<Center> newLake = new HashSet<Center>();
@@ -672,11 +629,13 @@ public class MapGenerator {
 		}
 	}
 
-	// Calculate the watershed of every land point. The watershed is
-	// the last downstream land point in the downslope graph. TODO:
-	// watersheds are currently calculated on corners, but it'd be
-	// more useful to compute them on polygon centers so that every
-	// polygon can be marked as being in one watershed.
+	/** 
+	 * Calculate the watershed of every land point. The watershed is
+	 * the last downstream land point in the downslope graph.
+	 * watersheds are currently calculated on corners, but it'd be
+	 * more useful to compute them on polygon centers so that every
+	 * polygon can be marked as being in one watershed. 
+	 */
 	public void calculateWatersheds() {
 
 		// Initially the watershed pointer points downslope one step.
@@ -711,8 +670,10 @@ public class MapGenerator {
 		}
 	}
 
-	// Create rivers along edges. Pick a random corner point, then
-	// move downslope. Mark the edges and corners as rivers.
+	/** 
+	 * Create rivers along edges. Pick a random corner point, then
+	 * move downslope. Mark the edges and corners as rivers. 
+	 */
 	public void createRivers() {
 		for (int i = 0; i < SIZE / 2; i++) {
 			Corner q = corners.get((int) nextInRange(0, corners.size() - 1));
@@ -734,9 +695,11 @@ public class MapGenerator {
 		}
 	}
 
-	// Calculate moisture. Freshwater sources spread moisture: rivers
-	// and lakes (not oceans). Saltwater sources have moisture but do
-	// not spread it (we set it at the end, after propagation).
+	/** 
+	 * Calculate moisture. Freshwater sources spread moisture: rivers
+	 * and lakes (not oceans). Saltwater sources have moisture but do
+	 * not spread it (we set it at the end, after propagation). 
+	 */
 	public void assignCornerMoisture() {
 		Queue<Corner> queue = new ArrayDeque<Corner>();
 		// Fresh water
@@ -782,11 +745,13 @@ public class MapGenerator {
 		}
 	}
 
-	// Assign a biome type to each polygon. If it has
-	// ocean/coast/water, then that's the biome; otherwise it depends
-	// on low/high elevation and low/medium/high moisture. This is
-	// roughly based on the Whittaker diagram but adapted to fit the
-	// needs of the island map generator.
+	/** 
+	 * Assign a biome type to each polygon. If it has
+	 * ocean/coast/water, then that's the biome; otherwise it depends
+	 * on low/high elevation and low/medium/high moisture. This is
+	 * roughly based on the Whittaker diagram but adapted to fit the
+	 * needs of the island map generator.
+	 */
 	static public Biome getBiome(Center p) {
 		if (p.ocean) {
 			return OCEAN;
@@ -840,12 +805,6 @@ public class MapGenerator {
 				return GRASSLAND;
 			else
 				return SUBTROPICAL_DESERT;
-		}
-	}
-
-	public void assignBiomes() {
-		for (Center p : centers) {
-			p.biome = getBiome(p);
 		}
 	}
 
@@ -1086,13 +1045,13 @@ public class MapGenerator {
 
 					if (r.adjacent.contains(o)) {
 
-						// if (c.water) {
-						// g.setColor(Color.BLUE);
-						// } else {
-						// g.setColor(new Color((int) (255 * c.elevation),
-						// (int) (255 * c.elevation),
-						// (int) (255 * c.elevation)));
-						// }
+//						 if (c.water) {
+//						 g.setColor(Color.BLUE);
+//						 } else {
+//						 g.setColor(new Color((int) (255 * c.elevation),
+//						 (int) (255 * c.elevation),
+//						 (int) (255 * c.elevation)));
+//						 }
 
 						g.setColor(c.biome.color);
 
@@ -1161,7 +1120,7 @@ public class MapGenerator {
 	}
 
 	public static void main(String[] args) {
-		MapGenerator mp = new MapGenerator(9001, 800);
+		MapGenerator mp = new MapGenerator(42, 800);
 		mp.run();
 		mp.look();
 	}

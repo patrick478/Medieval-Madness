@@ -1,4 +1,4 @@
-package server;
+package server.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +13,11 @@ public class EntityQuadTree {
 
 	private HashMap<Entity, QuadTreeNode> nodeParent = new HashMap<Entity, QuadTreeNode>();
 	private QuadTreeNode root;
+	
+	public EntityQuadTree(double r)
+	{
+		this(0, 0, r, r);
+	}
 
 	public EntityQuadTree(double xPos, double zPos, double xSize, double zSize) {
 		if (xSize <= 0 || zSize <= 0) {

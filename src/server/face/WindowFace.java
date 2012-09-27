@@ -1,10 +1,12 @@
-package server;
+package server.face;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.*;
 import javax.swing.*;
+
+import server.Server;
 
 public class WindowFace extends ServerFace implements Runnable, WindowListener {
 	Server parentServer;

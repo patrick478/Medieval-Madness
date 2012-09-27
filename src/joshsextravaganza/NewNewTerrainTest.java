@@ -135,15 +135,11 @@ public class NewNewTerrainTest {
 
 		MeshContext terr_mc = new MeshContext(terr_mesh, terr_mtl, ReferenceFrame.SCENE_ROOT);
 
-		// BOX / BALL / MONKEY !!!
-		List<Mesh> entity_meshlist = new ArrayList<Mesh>();
-		entity_meshlist.add(TerrainTest.getBox());
-
+		
 		FileInputStream fis = new FileInputStream("ball.txt");
-		entity_meshlist = MeshLoader.loadComp261(fis);
+		ball.setMeshContexts(MeshLoader.loadComp261(fis));
 		fis.close();
 
-		ball.setMeshContexts(entity_meshlist);
 
 
 		final int WIDTH = 848;

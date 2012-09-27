@@ -1,7 +1,7 @@
 // full credit to rox-xmlrpc.sourceforge.net
 // this class is a pretty much line-for-line his.
 
-package server;
+package server.net;
 
 import java.nio.channels.SocketChannel;
 
