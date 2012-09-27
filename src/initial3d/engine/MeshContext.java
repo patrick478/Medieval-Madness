@@ -14,6 +14,7 @@ public class MeshContext extends Drawable {
 	private final float[] coltemp = new float[3];
 
 	public MeshContext(Mesh mesh_, Material mtl_, ReferenceFrame rf_) {
+		if (mesh_ == null || mtl_ == null || rf_ == null) throw new IllegalArgumentException("Nulls not permitted.");
 		mesh = mesh_;
 		mtl = mtl_;
 		rf = rf_;
