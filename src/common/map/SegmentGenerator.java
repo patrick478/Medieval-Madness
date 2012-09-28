@@ -68,10 +68,10 @@ public class SegmentGenerator {
 		}
 	}
 
-	public Segment getSegment(int posx, int posz) {
+	public Segment getSegment(final int posx, final int posz) {
 		
 		//location id by long
-		Long id = new Long((long)(posx<<32) + (long)(posz));
+		long id = Segment.getID(posx, posz);
 		//return if in the cache
 		if(segmentCache.containsKey(id)){
 			return segmentCache.get(id);
@@ -233,5 +233,13 @@ public class SegmentGenerator {
 		m.add(mLOD);
 		
 		return m;
+	}
+	
+	public static void main(String[] args){
+		SegmentGenerator sg = new SegmentGenerator(32);
+		for(int i = 0; i < 10; i++){
+			Segment s = sg.getSegment(0, i);
+			System.out.println(s.xPos + " :: " + s.zPos);
+		}
 	}
 }
