@@ -115,10 +115,14 @@ public class ServerWorker implements Runnable {
 				{
 					System.out.println("Got here");
 					LoginPacket px = (LoginPacket)from;
-					String username = px.username;
+					String username = px.username.toLowerCase();
 					String password = px.password;
 					
-					boolean loginSuccess = true;//this.parentServer.db.passwordCorrect(username, password);
+					// temporary
+					if(!this.parentServer.db.accountExists(username))
+						this.parentServer.db.createAccount(username,  password);
+					
+					boolean loginSuccess = this.parentServer.db.passwordCorrect(username, password);
 					this.parentServer.log.printf("Login attempt (%s). Password correct=%s\n", username, loginSuccess ? "yes" : "no", password);
 					
 					
@@ -136,9 +140,10 @@ public class ServerWorker implements Runnable {
 						ewp.newWorld = 0;
 						sl.send(s.getSocket(), ewp.toData().getData());
 						
-						for(int i = -5; i < 6; i++)
+						int range = 50;
+						for(int i = -(range / 2); i <= (range / 2); i++)
 						{
-							for(int j = -5; j < 6; j++)
+							for(int j = -(range / 2); j < (range / 2); j++)
 							{
 //								SegmentPacket sp = new SegmentPacket();
 //								sp.segment = this.parentServer.game.getSegment(i, j);

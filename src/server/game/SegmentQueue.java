@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import server.session.Session;
 
+import common.Timer;
 import common.map.Segment;
 import common.map.SegmentGenerator;
 import common.packets.SegmentPacket;
@@ -35,9 +36,13 @@ public class SegmentQueue implements Runnable {
 		this.parentEngine = pEngine;
 	}
 	
+	private int added = 0;
+	
 	public void enqueueSegmentRequest(Session target, int tx, int tz)
 	{
+//		System.out.printf("Added #%d\n", ++added);
 		boolean useInStats = false;
+		
 		if(target != null)
 			useInStats = true;
 		
@@ -46,7 +51,6 @@ public class SegmentQueue implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO: Handle this - how? Need to discuss with Ben Allen. ~B.Anderson.
 		}
-			
 	}
 	
 	public void setThreadPoolMax(int nMax)
@@ -77,6 +81,7 @@ public class SegmentQueue implements Runnable {
 	
 	private void ensureThreadCount()
 	{
+//		System.out.println("Ensuring..");
 //		this.parentEngine.log.printf("SegmentQueue maxThreadsInPool=%d\n",  this.maxThreadsInPool);
 		synchronized(threadPool)
 		{
@@ -107,7 +112,7 @@ public class SegmentQueue implements Runnable {
 		{
 			sgi = null;
 			try {
-				sgi = this.fetchQueue.poll(500, TimeUnit.MILLISECONDS);
+				sgi = this.fetchQueue.poll(10,  TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// Again, how to handle this properly. Killing the thread will do for now - but its bad.
 				// TODO: Discuss with Ben Allen. ~B.Anderson
@@ -115,7 +120,10 @@ public class SegmentQueue implements Runnable {
 			}
 			if(sgi != null)
 			{
+				Timer t = new Timer(true);
 				Segment newSeg = this.gen.getSegment(sgi.getX(), sgi.getZ());
+				t.stop();
+				System.out.printf("Seggen took %.2f\n", t.elapsed_sDouble());
 				SegmentPacket sp = new SegmentPacket();
 				sp.segment = newSeg;
 				if(sgi.getSession() != null)
@@ -131,7 +139,7 @@ public class SegmentQueue implements Runnable {
 					this.parentEngine.recordSegmentRequest(Segment.getID(sgi.getX(),  sgi.getZ()));
 				}
 			}
-
+			
 			if(this.fetchQueue.size() > this.extraJobTolerance && this.targetThreadsInPool < this.maxThreadsInPool)
 			{
 				this.targetThreadsInPool++;
@@ -139,34 +147,36 @@ public class SegmentQueue implements Runnable {
 				this.ensureThreadCount();
 				free = 0;
 			}
-			else if(this.fetchQueue.size() <= this.extraJobTolerance && this.targetThreadsInPool > this.defaultThreadsInPool)
+			else if(this.fetchQueue.size() <= this.extraJobTolerance && this.targetThreadsInPool > this.defaultThreadsInPool && free > 5)
 			{
 //				this.parentEngine.log.printf("SegmentFetch thread pool destroying extra thread\n");
 				this.targetThreadsInPool--;
 				break;
 			}
 			else if(this.fetchQueue.size() <= this.extraJobTolerance)
-			{
-				//this.targetThreadsInPool--;
 				free++;
-			}
-			else
-				free = 0;
 		}
 //		System.out.println("Thread dead");
 		this.ensureThreadCount();
 	}
 
 	public void waitTillIdle() {
+		long sTime = System.currentTimeMillis();
+		int last = 0;
+		double freq = 2;
 		while(!this.fetchQueue.isEmpty())
-			synchronized(this.fetchQueue)
-			{
-				try {
-					this.fetchQueue.wait(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		{
+			try {
+				Thread.sleep((long) (freq * 1000));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			double rate = (last - this.fetchQueue.size()) / freq;
+			double eta = this.fetchQueue.size() / rate;
+			System.out.printf("There are %d requests left in the queue. workerThreads: %d. rate: %.2f\\second. eta: %.2fs\n", this.fetchQueue.size(), this.threadPool.size(), rate, eta);
+			last = this.fetchQueue.size();
+			sTime = System.currentTimeMillis();
+		}
 	}
 }
