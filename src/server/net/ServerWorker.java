@@ -25,8 +25,9 @@ public class ServerWorker implements Runnable {
 	{
 		byte[] dataCopy = new byte[dsize];
 		
+		// TODO: this only deals with the first packet if multiple packets are merged
 		int s = peekShort(data, 0);
-		System.out.printf("Recieved packet. header.size=%d\n", s);
+//		System.out.printf("Recieved packet. header.size=%d\n", s);
 		System.arraycopy(data, 2, dataCopy, 0, s);
 		
 		synchronized(queue) {
@@ -97,7 +98,7 @@ public class ServerWorker implements Runnable {
 			return;
 		}
 		
-		System.out.println(s.getState().toString());
+//		System.out.println(s.getState().toString());
 		
 		switch(s.getState())
 		{

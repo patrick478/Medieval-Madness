@@ -44,7 +44,7 @@ public class DataPacket {
 		data[0] = b1;
 		data[1] = b2;
 		
-		System.out.printf("getData(): rwrote a header with %d bytes.. %02X %02X\n", writePos, b1, b2);
+//		System.out.printf("getData(): rwrote a header with %d bytes.. %02X %02X\n", writePos, b1, b2);
 		
 		return data;
 	}

@@ -184,7 +184,7 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		}
 		
 		String id = (String) key.attachment();
-		System.out.printf("Recieved %d bytes\n", rx);
+//		System.out.printf("Recieved %d bytes\n", rx);
 		this.worker.processData(this, sc, this.readBuffer.array(), rx, id);
 	}
 	
@@ -196,7 +196,7 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 			while(!queue.isEmpty()) {
 				ByteBuffer buf = queue.get(0);
 				tx = sc.write(buf);
-				System.out.printf("Wrote %d bytes\n", tx);
+//				System.out.printf("Wrote %d bytes\n", tx);
 				if(buf.remaining() > 0)
 					break;
 				queue.remove(0);
