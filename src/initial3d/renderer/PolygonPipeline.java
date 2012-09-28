@@ -221,9 +221,9 @@ final class PolygonPipeline {
 		int lines = (totallines / workers.length) & ~7;
 		int Yi = 0;
 		for (int i = 0; i < workers.length - 1; i++, Yi += lines) {
-			workers[i].beginRasteriseTriangleBuffer(unsafe, pBase, pTri0, pTri, Yi, Yi + lines);
+			workers[i].beginRasteriseTriangleBuffer(pBase, pTri0, pTri, Yi, Yi + lines);
 		}
-		workers[workers.length - 1].beginRasteriseTriangleBuffer(unsafe, pBase, pTri0, pTri, Yi, totallines);
+		workers[workers.length - 1].beginRasteriseTriangleBuffer(pBase, pTri0, pTri, Yi, totallines);
 
 		// wait for completion
 		for (RasteriserWorker rw : workers) {
@@ -515,9 +515,10 @@ final class PolygonPipeline {
 
 		private final Object wait_begin = new Object();
 		private final Object wait_done = new Object();
+		
+		private final Unsafe unsafe = Util.getUnsafe();
 
 		// rasterisation params
-		private volatile Unsafe unsafe;
 		private volatile long pBase;
 		private volatile long pTri;
 		private volatile long pTriEnd;
@@ -529,8 +530,7 @@ final class PolygonPipeline {
 			setDaemon(true);
 		}
 
-		public void beginRasteriseTriangleBuffer(Unsafe unsafe, long pBase, long pTri, long pTriEnd, int Yi, int Yf) {
-			this.unsafe = unsafe;
+		public void beginRasteriseTriangleBuffer(long pBase, long pTri, long pTriEnd, int Yi, int Yf) {
 			this.pBase = pBase;
 			this.pTri = pTri;
 			this.pTriEnd = pTriEnd;

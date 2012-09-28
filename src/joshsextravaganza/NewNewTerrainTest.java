@@ -155,9 +155,7 @@ public class NewNewTerrainTest {
 		Scene scene = new Scene();
 
 		scene.addDrawable(terr_mc);
-		for (MeshContext mc : ball.getMeshContexts()) {
-			scene.addDrawable(mc);
-		}
+		scene.addDrawables(ball.getMeshContexts());
 
 		sman.attachToScene(scene);
 

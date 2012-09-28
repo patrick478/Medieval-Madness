@@ -158,23 +158,23 @@ public class Main {
 		i3d.lightf(LIGHT0, INTENSITY, 30f);
 		i3d.enable(LIGHT0);
 
-		i3d.lightfv(LIGHT1, DIFFUSE, new float[] { 1f, 0f, 0f });
-		i3d.lightfv(LIGHT1, SPECULAR, new float[] { 1f, 0f, 0f });
-		i3d.lightfv(LIGHT1, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
-		i3d.lightf(LIGHT1, INTENSITY, 30f);
-		i3d.enable(LIGHT1);
+		i3d.lightfv(LIGHT0 + 1, DIFFUSE, new float[] { 1f, 0f, 0f });
+		i3d.lightfv(LIGHT0 + 1, SPECULAR, new float[] { 1f, 0f, 0f });
+		i3d.lightfv(LIGHT0 + 1, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
+		i3d.lightf(LIGHT0 + 1, INTENSITY, 30f);
+		i3d.enable(LIGHT0 + 1);
 
-		i3d.lightfv(LIGHT2, DIFFUSE, new float[] { 0f, 1f, 0f });
-		i3d.lightfv(LIGHT2, SPECULAR, new float[] { 0f, 1f, 0f });
-		i3d.lightfv(LIGHT2, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
-		i3d.lightf(LIGHT2, INTENSITY, 500f);
-		i3d.enable(LIGHT2);
+		i3d.lightfv(LIGHT0 + 2, DIFFUSE, new float[] { 0f, 1f, 0f });
+		i3d.lightfv(LIGHT0 + 2, SPECULAR, new float[] { 0f, 1f, 0f });
+		i3d.lightfv(LIGHT0 + 2, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
+		i3d.lightf(LIGHT0 + 2, INTENSITY, 500f);
+		i3d.enable(LIGHT0 + 2);
 
-		i3d.lightfv(LIGHT3, DIFFUSE, new float[] { 0f, 0f, 1f });
-		i3d.lightfv(LIGHT3, SPECULAR, new float[] { 0f, 0f, 1f });
-		i3d.lightfv(LIGHT3, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
-		i3d.lightf(LIGHT3, INTENSITY, 30f);
-		i3d.enable(LIGHT3);
+		i3d.lightfv(LIGHT0 + 3, DIFFUSE, new float[] { 0f, 0f, 1f });
+		i3d.lightfv(LIGHT0 + 3, SPECULAR, new float[] { 0f, 0f, 1f });
+		i3d.lightfv(LIGHT0 + 3, AMBIENT, new float[] { 0.1f, 0.1f, 0.1f });
+		i3d.lightf(LIGHT0 + 3, INTENSITY, 30f);
+		i3d.enable(LIGHT0 + 3);
 
 		i3d.cullFace(BACK);
 		i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
@@ -221,9 +221,9 @@ public class Main {
 			i3d.transformOne(movevector, kvector);
 
 			i3d.lightdv(LIGHT0, POSITION, light0p);
-			i3d.lightdv(LIGHT1, POSITION, light1p);
-			i3d.lightdv(LIGHT2, POSITION, light2p);
-			i3d.lightdv(LIGHT3, POSITION, light3p);
+			i3d.lightdv(LIGHT0 + 1, POSITION, light1p);
+			i3d.lightdv(LIGHT0 + 2, POSITION, light2p);
+			i3d.lightdv(LIGHT0 + 3, POSITION, light3p);
 
 			// draw ground plane
 			i3d.disable(LIGHTING);

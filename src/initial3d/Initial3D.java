@@ -32,6 +32,8 @@ public abstract class Initial3D {
 		return Initial3DFactory.createTexture(size);
 	}
 
+	public static final int MAX_LIGHTS = 8;
+	
 	// shared
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
@@ -44,14 +46,14 @@ public abstract class Initial3D {
 	public static final long DEPTH_TEST = 0x8L;
 	public static final long FOG = 0x10L;
 	public static final long LIGHTING = 0x20L;
-	public static final long LIGHT0 = 0x40L;
-	public static final long LIGHT1 = 0x80L;
-	public static final long LIGHT2 = 0x100L;
-	public static final long LIGHT3 = 0x200L;
-	public static final long LIGHT4 = 0x400L;
-	public static final long LIGHT5 = 0x800L;
-	public static final long LIGHT6 = 0x1000L;
-	public static final long LIGHT7 = 0x2000L;
+	// 0x40L;
+	// 0x80L;
+	// 0x100L;
+	// 0x200L;
+	// 0x400L;
+	// 0x800L;
+	// 0x1000L;
+	// 0x2000L;
 	public static final long MIPMAPS = 0x4000L;
 	public static final long STENCIL_TEST = 0x8000L;
 	public static final long TEXTURE_2D = 0x10000L;
@@ -61,11 +63,14 @@ public abstract class Initial3D {
 	public static final long WRITE_Z = 0x100000L;
 	public static final long WRITE_STENCIL = 0x200000L;
 	public static final long WRITE_ID = 0x400000L;
-	// 0x800000L;
+	public static final long LIGHT0 = 0x800000L;
+	// LIGHT_MAX must be >= LIGHT0 && < 0x1000000L so lights don't interfere with other flags
+	public static final long LIGHT_MAX = LIGHT0 + MAX_LIGHTS;
 	// 0x1000000L;
+	
 	// gen_alpha_random (might be interesting combined with changing alpha test)
 	// - otherwise load from diffuse material
-	public static final long GEN_ALPHA_RANDOM = 0x2000000L;
+	public static final long ALPHAREF_RANDOM = 0x2000000L;
 	// 0x4000000L;
 	// 0x8000000L;
 	// sort (polygons, in drawPolys()) front to back
@@ -131,8 +136,13 @@ public abstract class Initial3D {
 	public static final int OPACITY = 5;
 	public static final int POSITION = 6;
 	public static final int SPOT_DIRECTION = 7;
-	public static final int SPOT_CUTOFF = 8;
-	public static final int INTENSITY = 9;
+	public static final int INTENSITY = 8;
+	public static final int CONSTANT_ATTENUATION = 9;
+	public static final int LINEAR_ATTENUATION = 10;
+	public static final int QUADRATIC_ATTENUATION = 11;
+	public static final int SPOT_CUTOFF = 12;
+	public static final int SPOT_EXPONENT = 13;
+	public static final int EFFECT_RADIUS = 14;
 
 	// matrices accessible via matrixmode
 	public static final int MODEL = 0;

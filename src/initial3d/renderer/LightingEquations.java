@@ -19,6 +19,9 @@ final class LightingEquations {
 			float kd_g, float kd_b, float ks_r, float ks_g, float ks_b, float shininess, float Nx, float Ny, float Nz,
 			float Vx, float Vy, float Vz, float Vx_raw, float Vy_raw, float Vz_raw) {
 
+		int zzzz = 1;
+		if (zzzz > 0) throw new AssertionError("This method is out of date. Fix it. Now.");
+
 		// TODO viewer 'at infinity' ?
 
 		float out_r = unsafe.getFloat(pBase + 0x0000006C + 4) * ka_r;
@@ -148,14 +151,11 @@ final class LightingEquations {
 		float out_b = unsafe.getFloat(pBase + 0x0000006C + 12) * ka_b + unsafe.getFloat(pMtl + 60);
 
 		// all lights, accounting for light enabling
-		long pLight = pBase + 0x00000100;
-		long pLightEnd = pBase + 0x00000900;
-		long lightflag = 0x40L;
-		long flags = unsafe.getLong(pBase + 0x00000008);
+		long pLight = pBase + 0x0CE00900;
 
-		while (pLight < pLightEnd) {
+		while ((unsafe.getInt(pLight + 80) & 0x2) == 0) {
 			// light not enabled => skip
-			if ((lightflag & flags) == 0) {
+			if ((unsafe.getInt(pLight + 80) & 0x1) == 0) {
 				pLight += 0x100;
 				continue;
 			}
@@ -167,6 +167,7 @@ final class LightingEquations {
 			float Ly = unsafe.getFloat(pLight + 52);
 			float Lz = unsafe.getFloat(pLight + 56);
 			float imL = 1f;
+			float falloff = 1f;
 			if (!directional) {
 				Lx += Vx_raw;
 				Ly += Vy_raw;
@@ -176,6 +177,20 @@ final class LightingEquations {
 				Lx *= imL;
 				Ly *= imL;
 				Lz *= imL;
+				
+				// if distance > effect radius, skip
+				if (imL < unsafe.getFloat(pLight + 108)) {
+					pLight += 0x100;
+					continue;
+				}
+
+				// light falloff as per the canonical light equation for point light attenuation
+				// imL == 1 / d == e
+				float e2 = imL * imL;
+				falloff = e2
+						* fastInverse(unsafe.getFloat(pLight + 88) * e2 + unsafe.getFloat(pLight + 92) * imL
+								+ unsafe.getFloat(pLight + 96));
+
 			}
 
 			// add ambient
@@ -184,9 +199,6 @@ final class LightingEquations {
 			out_b += ka_b * unsafe.getFloat(pLight + 12);
 
 			// do complicated part of equation
-
-			// light falloff with distance and initial intensity
-			float falloff = imL * imL * unsafe.getFloat(pLight + 84);
 
 			// lambert term
 			float LdotN = Lx * Nx + Ly * Ny + Lz * Nz;
@@ -234,12 +246,12 @@ final class LightingEquations {
 			}
 
 			pLight += 0x100;
-			lightflag <<= 1;
 		}
 
 		unsafe.putFloat(pOutput, out_r);
 		unsafe.putFloat(pOutput + 4, out_g);
 		unsafe.putFloat(pOutput + 8, out_b);
+
 	}
 
 }
