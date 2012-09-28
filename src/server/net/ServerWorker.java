@@ -140,10 +140,10 @@ public class ServerWorker implements Runnable {
 						ewp.newWorld = 0;
 						sl.send(s.getSocket(), ewp.toData().getData());
 						
-						int range = 50;
-						for(int i = -(range / 2); i <= (range / 2); i++)
+						int range = 12;
+						for(int i = -(range / 2) + 1; i <= (range/2); i++)
 						{
-							for(int j = -(range / 2); j < (range / 2); j++)
+							for(int j = -(range / 2) + 1; j <= (range/2); j++)
 							{
 //								SegmentPacket sp = new SegmentPacket();
 //								sp.segment = this.parentServer.game.getSegment(i, j);
@@ -161,7 +161,7 @@ public class ServerWorker implements Runnable {
 							}
 						}
 						
-						System.out.println("Test packets sent");
+						System.out.println("Test packets queued");
 					}
 					
 				}

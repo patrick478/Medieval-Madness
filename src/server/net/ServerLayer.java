@@ -111,7 +111,8 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 						switch(change.type) {
 							case ChangeRequest.CHANGEOPS:
 								SelectionKey key = change.socket.keyFor(this.selector);
-								key.interestOps(change.ops);
+								if(key.isValid())
+									key.interestOps(change.ops);
 								break;
 						}
 					}
@@ -195,6 +196,12 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 			int tx = 0;
 			while(!queue.isEmpty()) {
 				ByteBuffer buf = queue.get(0);
+				if(!sc.isConnected())
+				{
+					System.out.println("Failed to write\n");
+					queue.remove(0);
+					continue;
+				}
 				tx = sc.write(buf);
 //				System.out.printf("Wrote %d bytes\n", tx);
 				if(buf.remaining() > 0)

@@ -17,6 +17,13 @@ public class NetworkThread implements Runnable {
 	
 	NetworkHandler handler;
 	
+	private BufferQueue bq = new BufferQueue(1000000);
+
+	byte[] peek = new byte[2];
+	byte[] packetBytes = null;
+	int packetLength = -1;
+	boolean hasReadPacket = true;
+	
 	String hostname = "localhost";
 	int port = 14121;
 	
@@ -88,6 +95,7 @@ public class NetworkThread implements Runnable {
 			try {
 				this.clientChannel.finishConnect();
 				key.interestOps(SelectionKey.OP_READ);
+				this.isConnected = true;
 			} catch (IOException e) {
 				key.cancel();
 				return;
@@ -110,28 +118,68 @@ public class NetworkThread implements Runnable {
 			}
 		}
 		
-		System.out.printf("Recieved %d bytes\n", rx);
-		int index = 0;
 		byte[] data = buffer.array();
-		while(index < rx)
+		if(rx < 0)
 		{
-			int size = peekShort(data, index);
-			index += 2;
-			System.out.printf("Recieved packet - header says length = %d\n", size);
-			
-			byte[] thisP = Arrays.copyOfRange(data, index, index+size);
-			for(int i = 0; i < thisP.length; i++)
-				System.out.printf("%02X ", thisP[i]);
-			System.out.println();
-
-			DataPacket p = new DataPacket(thisP);
-			Packet from = PacketFactory.identify(p);
-			handler.passoff(from);
-			
-			index += size;
-			
-			System.out.printf("Finished reading that packet. index=%d, rx=%d\n", index, rx);
+			this.isConnected = false;
+//			this.nClient.reconnect(); // TODO: Implement
 		}
+		
+		data = Arrays.copyOf(data, rx);
+		bq.append(data);
+		
+		do
+		{
+			if(bq.getCount() >= 2 && hasReadPacket)
+			{
+				bq.read(peek, 0, 2);
+				packetLength = this.peekShort(peek, 0);
+				packetBytes = new byte[packetLength];
+				System.out.printf("Reading packet with length=%d\n", packetLength);
+				hasReadPacket = false;
+			}
+			
+			if(!hasReadPacket && bq.getCount() >= packetLength)
+			{
+				
+				bq.read(packetBytes, 0, packetLength);
+				for(int i = 0; i < packetBytes.length; i++)
+					System.out.printf("%02X ", packetBytes[i]);
+				DataPacket dataPacket = new DataPacket(packetBytes);
+				Packet recvdPacket = PacketFactory.identify(dataPacket);
+				this.handler.passoff(recvdPacket);
+				packetLength = -1;
+				hasReadPacket = true;
+			}
+			else break;
+			
+		} while(true);
+//		
+//		System.out.printf("Recieved %d bytes\n", rx);
+//		int index = 0;
+//		while(index < rx)
+//		{
+//			int size = peekShort(data, index);
+//			index += 2;
+//			System.out.printf("Recieved packet - header says length = %d\n", size);
+//			if((index + size) > rx)
+//			{
+//				System.out.println("TCP Split has occured! Goddammit!");
+//			}
+//			
+//			byte[] thisP = Arrays.copyOfRange(data, index, index+size);
+//			for(int i = 0; i < thisP.length; i++)
+//				System.out.printf("%02X ", thisP[i]);
+//			System.out.println();
+//
+//			DataPacket p = new DataPacket(thisP);
+//			Packet from = PacketFactory.identify(p);
+//			handler.passoff(from);
+//			
+//			index += size;
+//			
+//			System.out.printf("Finished reading that packet. index=%d, rx=%d\n", index, rx);
+//		}
 	}
 	
 	private short peekShort(byte[] d, int i)

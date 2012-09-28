@@ -7,6 +7,7 @@ public class DataJob
 	String query = "";
 	List<ArrayList<Object>> data = new ArrayList< ArrayList < Object > >();
 	public boolean isNonQuery = false;
+	public boolean completed = false;
 			
 	public DataJob(String sql)
 	{

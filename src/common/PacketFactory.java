@@ -26,7 +26,7 @@ public class PacketFactory
 				break;
 				
 			default:
-				System.out.printf("Recv_idef = %d\n", p.peekShort());
+				System.out.printf("[CRITICAL - UN_ID_PACKET] undef_recv_id = %d\n", p.peekShort());
 				return null;
 		}
 		ret.fromData(p);

@@ -41,7 +41,7 @@ public class SQLite extends DataProvider implements Runnable {
 			try {
 				if(!current.isNonQuery)
 				{
-//					System.out.println("Running query: " + current.sql());
+					System.out.println("Running query: " + current.sql());
 					st = this.db.prepare(current.sql());
 					while(st.step())
 					{
@@ -52,25 +52,27 @@ public class SQLite extends DataProvider implements Runnable {
 						}
 						current.data.add(row);
 					}
+					System.out.println("Query complete.");
 				}
 				else
 				{
 //					System.out.println("Running non-query: " + current.sql());
 					this.db.exec(current.sql());
 				}
+				current.completed = true;
 			} catch(Exception e)
 			{
 			}
 			
-			synchronized(current) 
+			synchronized(this.jobQueue) 
 			{
 				try
 				{
-					current.notify();
+					this.jobQueue.notifyAll();
 				}
 				catch(Exception e)
 				{
-					
+					e.printStackTrace();
 				}
 			}
 		}
@@ -104,13 +106,17 @@ public class SQLite extends DataProvider implements Runnable {
 		
 		DataJob dj = new DataJob(query);
 		this.jobQueue.add(dj);
-		try {
-			synchronized(dj)
-			{
-				dj.wait();
+		while(!dj.completed)
+		{
+			try {
+				synchronized(this.jobQueue)
+				{
+					this.jobQueue.wait(100);
+				}
+			} catch (InterruptedException e) {
+				return null;
 			}
-		} catch (InterruptedException e) {
-			return null;
+			System.out.println("Waiting..");
 		}
 		
 		if(dj.data.size() == 1 && dj.data.get(0).size() == 1)
@@ -126,35 +132,48 @@ public class SQLite extends DataProvider implements Runnable {
     	
     	String password_hash = getPasswordHash(password, salt);
 		String query = String.format("SELECT COUNT(*) FROM users WHERE username='%s' AND password_hash='%s';", username, password_hash);
+		System.out.printf("Added (%s) to the dbQueue\n", query);
 		
 		DataJob dj = new DataJob(query);
 		this.jobQueue.add(dj);
-		try {
-			synchronized(dj)
-			{
-				dj.wait();
+		while(!dj.completed)
+		{
+			try {
+				synchronized(this.jobQueue)
+				{
+					this.jobQueue.wait(100);
+				}
+			} catch (InterruptedException e) {
+				return false;
 			}
-		} catch (InterruptedException e) {
-			return false;
+			System.out.println("Waiting..");
 		}
+		System.out.printf("This query is complete: %s\n", query);
+		
 		return true;
 	}
 	
 	@Override
 	public boolean accountExists(String username) {
 		String query = String.format("SELECT COUNT(*) FROM users WHERE username='%s'", username);
+		System.out.printf("Added (%s) to the dbQueue\n", query);
 		DataJob dj = new DataJob(query);
 		this.jobQueue.add(dj);
-		try {
-			synchronized(dj)
-			{
-				dj.wait();
+		while(!dj.completed)
+		{
+			try {
+				synchronized(this.jobQueue)
+				{
+					this.jobQueue.wait(100);
+				}
+			} catch (InterruptedException e) {
+				return false;
 			}
-		} catch (InterruptedException e) {
-			return false;
+			System.out.println("Waiting..");
 		}
+		System.out.printf("This query is complete: %s\n", query);
 		
-		if(dj.data.size() == 1 && dj.data.get(0).size() == 1 && (Integer)dj.data.get(0).get(0) > 0)
+		if(dj.data.size() == 1 && dj.data.get(0).size() == 1 && (Integer)dj.data.get(0).get(0) == 1)
 			return true;
 		
 		return false;

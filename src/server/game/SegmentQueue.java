@@ -20,11 +20,8 @@ import common.packets.SegmentPacket;
  */
 public class SegmentQueue implements Runnable {
 	private BlockingQueue<SegmentQueueItem> fetchQueue = new LinkedBlockingQueue<SegmentQueueItem>();
-	
+
 	private int maxThreadsInPool = 2;
-	private int targetThreadsInPool = 1;
-	private int defaultThreadsInPool = 1;
-	private int extraJobTolerance = 4;
 	
 	private List<Thread> threadPool = new ArrayList<Thread>();
 	private SegmentGenerator gen = null;
@@ -58,22 +55,11 @@ public class SegmentQueue implements Runnable {
 		this.maxThreadsInPool = nMax;
 	}
 	
-	public void setThreadPoolDefault(int nDef)
-	{
-		this.targetThreadsInPool = nDef;
-		this.defaultThreadsInPool = nDef;
-		this.ensureThreadCount();
-	}
-	
-	public void setJobTolerance(int nTol)
-	{
-		this.extraJobTolerance = nTol;
-	}
-	
 	public int getCurrentThreadCount()
 	{
 		return this.threadPool.size();
 	}	
+	
 	public void startThreadPool()
 	{
 		ensureThreadCount();
@@ -87,10 +73,14 @@ public class SegmentQueue implements Runnable {
 		{
 			for(int i = 0; i < threadPool.size(); i++)
 			{
-				if(threadPool.get(i) != null && !threadPool.get(i).isAlive()) threadPool.remove(i);
+				if(threadPool.get(i) != null && !threadPool.get(i).isAlive()) 
+				{
+					threadPool.remove(i);
+//					System.out.println("Removing a dead thread");
+				}
 			}
 			
-			while(threadPool.size() < (this.targetThreadsInPool))
+			while(threadPool.size() < (this.maxThreadsInPool))
 			{
 				Thread newThread = new Thread(this);
 				newThread.setDaemon(true);
@@ -126,6 +116,7 @@ public class SegmentQueue implements Runnable {
 				System.out.printf("Seggen took %.2f\n", t.elapsed_sDouble());
 				SegmentPacket sp = new SegmentPacket();
 				sp.segment = newSeg;
+				
 				if(sgi.getSession() != null)
 					this.parentEngine.enqueueSend(sgi.getSession(), sp.toData());
 				
@@ -139,44 +130,34 @@ public class SegmentQueue implements Runnable {
 					this.parentEngine.recordSegmentRequest(Segment.getID(sgi.getX(),  sgi.getZ()));
 				}
 			}
-			
-			if(this.fetchQueue.size() > this.extraJobTolerance && this.targetThreadsInPool < this.maxThreadsInPool)
-			{
-				this.targetThreadsInPool++;
-//				this.parentEngine.log.printf("SegmentFetch thread pool spawning extra thread\n");
-				this.ensureThreadCount();
-				free = 0;
-			}
-			else if(this.fetchQueue.size() <= this.extraJobTolerance && this.targetThreadsInPool > this.defaultThreadsInPool && free > 5)
-			{
-//				this.parentEngine.log.printf("SegmentFetch thread pool destroying extra thread\n");
-				this.targetThreadsInPool--;
-				break;
-			}
-			else if(this.fetchQueue.size() <= this.extraJobTolerance)
-				free++;
+			this.ensureThreadCount();
 		}
 //		System.out.println("Thread dead");
 		this.ensureThreadCount();
 	}
 
 	public void waitTillIdle() {
-		long sTime = System.currentTimeMillis();
-		int last = 0;
-		double freq = 2;
+		double freq = 5;
+		double max = -1;
 		while(!this.fetchQueue.isEmpty())
 		{
+			if(max < this.fetchQueue.size())
+				max = (double)this.fetchQueue.size();
+			this.logProgress(max);
+			
 			try {
 				Thread.sleep((long) (freq * 1000));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			double rate = (last - this.fetchQueue.size()) / freq;
-			double eta = this.fetchQueue.size() / rate;
-			System.out.printf("There are %d requests left in the queue. workerThreads: %d. rate: %.2f\\second. eta: %.2fs\n", this.fetchQueue.size(), this.threadPool.size(), rate, eta);
-			last = this.fetchQueue.size();
-			sTime = System.currentTimeMillis();
 		}
+		this.logProgress(max);
+	}
+	
+	public void logProgress(double max)
+	{
+		double progress = (1f - (this.fetchQueue.size() / max)) * 100f;		
+		this.parentEngine.log.printf("SegmentFetch waiting on %d requests. %d percent complete.\n", this.fetchQueue.size(), (int)progress);
 	}
 }
