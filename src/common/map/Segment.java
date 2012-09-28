@@ -46,7 +46,7 @@ public class Segment {
 	}
 	
 	public static long getID(int posx, int posz){
-		return (long)(posx<<32) | (((long)(posz)) & 0xFFFFFFFF);
+		return (long)((long)posx<<32) | (((long)(posz)) & 0xFFFFFFFFL);
 	}
 
 	public Segment(int _xPos, int _zPos, float[][] heightmap) {

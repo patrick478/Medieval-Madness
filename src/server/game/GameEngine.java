@@ -2,13 +2,15 @@ package server.game;
 
 import java.io.PrintStream;
 
+import server.session.Session;
+
 import common.Timer;
 import common.Log;
 import common.map.Segment;
 import common.map.SegmentGenerator;
 
 public class GameEngine {
-	public static final int cacheSize = 3;
+	public static final int cacheSize = 10;
 	
 	private SegmentGenerator sg;
 	private Log log;
@@ -44,5 +46,9 @@ public class GameEngine {
 	public Segment getSegment(int x, int z)
 	{
 		return sg.getSegment(x, z);
+	}
+	
+	public void addSegmentRequest(Session s, int posx, int posz)
+	{
 	}
 }

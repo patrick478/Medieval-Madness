@@ -142,6 +142,7 @@ public class ServerWorker implements Runnable {
 							{
 								SegmentPacket sp = new SegmentPacket();
 								sp.segment = this.parentServer.game.getSegment(i, j);
+								System.out.printf("Sent segment. Request(i:%d;j%d)-Sent(i:%d;j:%d)\n", i, j, sp.segment.xPos, sp.segment.zPos);
 								sl.send(s.getSocket(), sp.toData().getData());
 								
 //								try {
