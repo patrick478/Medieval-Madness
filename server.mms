@@ -1,10 +1,10 @@
 version 1
-job_limit_spawm_threshold=8
-max_threads_seg_fetch_pool=64
-game_seed=123
+default_spawn_cache_size=12
+default_spawn_segment_x=0
+default_spawn_segment_z=0
+game_seed=1348825157938
 listen_port=14121
-spawn_cache_size=12
+sfq_tp_default_threads=2
+sfq_tp_job_limit=8
+sfq_tp_max_threads=8
 ticks_per_second=30
-default_threads_seg_fetch_pool=16
-spawn_segment_x=0
-spawn_segment_z=0

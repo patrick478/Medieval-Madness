@@ -44,18 +44,18 @@ public class GameEngine {
 		
 		segQueue = new SegmentQueue(sg, this);
 		segQueue.startThreadPool();
-		segQueue.setThreadPoolMax(this.server.serverSettings.getIntValue("max_threads_seg_fetch_pool", 8));
-		segQueue.setThreadPoolDefault(this.server.serverSettings.getIntValue("default_threads_seg_fetch_pool", 2));
-		segQueue.setJobTolerance(this.server.serverSettings.getIntValue("job_limit_spawm_threshold", 8));
+		segQueue.setThreadPoolMax(this.server.serverSettings.getIntValue("sfq_tp_max_threads", 8));
+		segQueue.setThreadPoolDefault(this.server.serverSettings.getIntValue("sfq_tp_default_threads", 2));
+		segQueue.setJobTolerance(this.server.serverSettings.getIntValue("sfq_tp_job_limit", 8));
 	}
 	
 	public void warm()
 	{
 		this.log.printf("Beginning segment cache warmup\n");
 		Timer t = new Timer(true);
-		for(int i = -(this.server.serverSettings.getIntValue("spawn_cache_size",  12) / 2); i < this.server.serverSettings.getIntValue("spawn_cache_size",  12)/2; i++)
-			for(int j = -(this.server.serverSettings.getIntValue("spawn_cache_size",  12) /2); j < this.server.serverSettings.getIntValue("spawn_cache_size",  12)/2; j++)
-				this.segQueue.enqueueSegmentRequest(null, i+this.server.serverSettings.getIntValue("spawn_segment_x", 0), j + this.server.serverSettings.getIntValue("spawn_segment_z",  0));
+		for(int i = -(this.server.serverSettings.getIntValue("default_spawn_cache_size",  12) / 2); i < this.server.serverSettings.getIntValue("default_spawn_cache_size",  12)/2; i++)
+			for(int j = -(this.server.serverSettings.getIntValue("default_spawn_cache_size",  12) /2); j < this.server.serverSettings.getIntValue("default_spawn_cache_size",  12)/2; j++)
+				this.segQueue.enqueueSegmentRequest(null, i+this.server.serverSettings.getIntValue("default_spawn_segment_x", 0), j + this.server.serverSettings.getIntValue("default_spawn_segment_z",  0));
 		
 		this.segQueue.waitTillIdle();
 		

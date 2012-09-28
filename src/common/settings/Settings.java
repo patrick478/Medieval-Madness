@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * @author "Ben Anderson (BageDevimo)"
@@ -22,7 +23,7 @@ import java.util.Scanner;
  */
 public class Settings {
 	private String filename = "default.mms";
-	private Map<String, String> settings = new HashMap<String, String>();
+	private Map<String, String> settings = new TreeMap<String, String>();
 	private static Map<Integer, SettingsVersion> settingsVersions = new HashMap<Integer, SettingsVersion>();
 	private SettingsVersion sv = null;
 	static {

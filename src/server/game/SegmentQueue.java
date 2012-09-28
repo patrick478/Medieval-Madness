@@ -58,6 +58,7 @@ public class SegmentQueue implements Runnable {
 	{
 		this.targetThreadsInPool = nDef;
 		this.defaultThreadsInPool = nDef;
+		this.ensureThreadCount();
 	}
 	
 	public void setJobTolerance(int nTol)
@@ -81,7 +82,7 @@ public class SegmentQueue implements Runnable {
 		{
 			for(int i = 0; i < threadPool.size(); i++)
 			{
-				if(threadPool.get(i) != null && threadPool.get(i).isAlive()) threadPool.remove(i);
+				if(threadPool.get(i) != null && !threadPool.get(i).isAlive()) threadPool.remove(i);
 			}
 			
 			while(threadPool.size() < (this.targetThreadsInPool))
