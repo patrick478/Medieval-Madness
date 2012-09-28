@@ -133,7 +133,7 @@ public class Engine extends Thread {
 		Texture tx = Initial3D.createTexture(64);
 		for (int u = 0; u < 64; u++) {
 			for (int v = 0; v < 64; v++) {
-				tx.setPixel(u, v, 1f, 0.2f, (float) Math.random(), 0.2f);
+				tx.setTexel(u, v, 1f, 0.2f, (float) Math.random(), 0.2f);
 
 			}
 		}

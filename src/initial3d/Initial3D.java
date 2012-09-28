@@ -136,6 +136,7 @@ public abstract class Initial3D {
 	public static final int OPACITY = 5;
 	public static final int POSITION = 6;
 	public static final int SPOT_DIRECTION = 7;
+	@Deprecated
 	public static final int INTENSITY = 8;
 	public static final int CONSTANT_ATTENUATION = 9;
 	public static final int LINEAR_ATTENUATION = 10;

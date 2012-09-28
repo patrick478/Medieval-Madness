@@ -86,7 +86,7 @@ class Initial3DImpl extends Initial3D {
 		begin_vc_vbo.put(onevector);
 
 		tex_black = createTexture(1);
-		tex_black.setPixel(0, 0, 1f, 0f, 0f, 0f);
+		tex_black.setTexel(0, 0, 1f, 0f, 0f, 0f);
 
 		profiler = new Profiler();
 

@@ -33,7 +33,7 @@ public class Segment {
 		// populate the terrain texture
 		for (int u = 0; u < terr_tex_size; u++) {
 			for (int v = 0; v < terr_tex_size; v++) {
-				terr_tx.setPixel(u, v, 1f, 0.0f, (float) (Math.random() * 0.15 + 0.5), 0.0f);
+				terr_tx.setTexel(u, v, 1f, 0.0f, (float) (Math.random() * 0.15 + 0.5), 0.0f);
 			}
 		}
 		terr_tx.composeMipMaps();

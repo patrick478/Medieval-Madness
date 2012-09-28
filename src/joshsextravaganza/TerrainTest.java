@@ -121,7 +121,7 @@ public class TerrainTest {
 
 		for (int u = 0; u < terr_tex_size; u++) {
 			for (int v = 0; v < terr_tex_size; v++) {
-				terr_tx.setPixel(u, v, 1f, 0.3f, (float) (Math.random() * 0.4 + 0.3), 0.3f);
+				terr_tx.setTexel(u, v, 1f, 0.3f, (float) (Math.random() * 0.4 + 0.3), 0.3f);
 			}
 		}
 		terr_tx.composeMipMaps();

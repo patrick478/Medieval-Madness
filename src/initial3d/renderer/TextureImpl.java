@@ -10,7 +10,7 @@ class TextureImpl extends Texture {
 	private static final long MAX_ALLOC = 1024 * 1024 * 1024;
 	private static volatile long total_alloc = 0;
 
-	private final Unsafe unsafe = Util.getUnsafe();
+	private static final Unsafe unsafe = Util.getUnsafe();
 
 	private final int level;
 	private final int size;
@@ -159,14 +159,14 @@ class TextureImpl extends Texture {
 	}
 
 	@Override
-	public float getPixel(int u, int v, Channel ch) {
+	public float getTexel(int u, int v, Channel ch) {
 		u &= (size - 1);
 		v &= (size - 1);
 		return unsafe.getFloat(pLevel + (v * size + u) * 16 + ch.ordinal() * 4);
 	}
 
 	@Override
-	public void setPixel(int u, int v, float a, float r, float g, float b) {
+	public void setTexel(int u, int v, float a, float r, float g, float b) {
 		u &= (size - 1);
 		v &= (size - 1);
 		unsafe.putFloat(pLevel + (v * size + u) * 16, a);
@@ -176,7 +176,7 @@ class TextureImpl extends Texture {
 	}
 
 	@Override
-	public void setPixel(int u, int v, Channel ch, float val) {
+	public void setTexel(int u, int v, Channel ch, float val) {
 		u &= (size - 1);
 		v &= (size - 1);
 		unsafe.putFloat(pLevel + (v * size + u) * 16 + ch.ordinal() * 4, val);

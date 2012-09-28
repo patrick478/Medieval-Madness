@@ -3,10 +3,11 @@ package initial3d.engine;
 import static initial3d.Initial3D.*;
 import initial3d.*;
 
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-public class SceneManager {
+public class SceneManager implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
 	// note: near clip must be further than near plane, far cull is independent
 	// of far plane setting
@@ -119,17 +120,25 @@ public class SceneManager {
 							// draw stuff as appropriate
 							profiler.startSection("I3D-sceneman_draw");
 							for (Drawable d : scene.getDrawables()) {
+								d.updateInputEnabled();
 								if (d.pollRemovalRequested()) {
 									scene.removeDrawable(d);
 								} else {
 
-									// TODO intelligent selection of what to
-									// draw
+									// TODO intelligent selection of what to draw
+
+									if (d.isInputEnabled()) {
+										// set draw id range and increment for next
+
+										d.setDrawIDs(0, 0);
+										i3d.enable(WRITE_ID);
+									} else {
+										i3d.disable(WRITE_ID);
+									}
 									d.draw(i3d);
 
 								}
 							}
-							profiler.endSection("I3D-sceneman_draw");
 
 							// draw sky
 							// i3d.disable(LIGHTING);
@@ -153,21 +162,23 @@ public class SceneManager {
 							// end sky
 
 							// finish
-							profiler.startSection("I3D-sceneman_finish");
 							i3d.finish();
-							profiler.endSection("I3D-sceneman_finish");
+							profiler.endSection("I3D-sceneman_draw");
 
 							// push frame to output
 							profiler.startSection("I3D-sceneman_display");
 							dtarget.display(bi);
 							profiler.endSection("I3D-sceneman_display");
 
-							// process input events (sending mouse / keyboard
-							// events to drawables)
+							// process input events (sending mouse / keyboard events to drawables)
 							// TODO input events to drawables
 
 						} else {
 							idle = true;
+							i3d.finish();
+							profiler.startSection("I3D-sceneman_display");
+							dtarget.display(bi);
+							profiler.endSection("I3D-sceneman_display");
 						}
 					}
 
@@ -192,6 +203,72 @@ public class SceneManager {
 			i3d.loadPerspectiveFOV(near, far, fov, ratio);
 			i3d.initFog();
 		}
+
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(e.getKeyChar());
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 
