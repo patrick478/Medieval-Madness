@@ -1,5 +1,7 @@
 package server.game;
 
+import common.map.Segment;
+
 import server.session.Session;
 
 /**
@@ -11,14 +13,16 @@ public class SegmentQueueItem {
 	private Session targetSession;
 	private int xPos;
 	private int zPos;
+	private boolean useInStats;
 	
 	/***
 	 * Default constructor - initalises the SegmentQueueItem so that it is fetching the specified Segment, ready to be sent to the session specified
 	 * @param session The session the segment is for. If null, the it is assumed this request for a segment is a pre-fetch request (caching).
 	 * @param x The x-coordinate of the segment to fetch
 	 * @param z The z-coordinate of the segment to fetch
+	 * @param useInStats Wether or not to use this segment request in the worldstats
 	 */
-	public SegmentQueueItem(Session session, int x, int z)
+	public SegmentQueueItem(Session session, int x, int z, boolean useInStats)
 	{
 		this.targetSession = session;
 		this.xPos = x;
@@ -51,5 +55,15 @@ public class SegmentQueueItem {
 	public Session getSession()
 	{
 		return this.targetSession;
+	}
+
+	
+	/***
+	 * Returns a boolean deciding wether or not to use this request in the game engine stats for most popular segments
+	 * @return A boolean with its value set to wether not the segment should be used in stats.
+	 */
+	public boolean isStats()
+	{
+		return this.useInStats;
 	}
 }

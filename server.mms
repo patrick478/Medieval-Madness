@@ -1,0 +1,10 @@
+version 1
+job_limit_spawm_threshold=8
+max_threads_seg_fetch_pool=64
+game_seed=123
+listen_port=14121
+spawn_cache_size=12
+ticks_per_second=30
+default_threads_seg_fetch_pool=16
+spawn_segment_x=0
+spawn_segment_z=0
