@@ -94,7 +94,7 @@ public class Server implements Runnable {
 		// start the face
 		faceThread.start();
 		
-		game = new GameEngine((Long)this.serverData.get("game_seed"), this.face.getOut());
+		game = new GameEngine((Long)this.serverData.get("game_seed"), this.face.getOut(), this.networking);
 		game.warm();
 		
 		startTimer.stop();		
