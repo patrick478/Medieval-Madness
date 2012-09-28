@@ -24,19 +24,16 @@ public class Segment {
 	public final int zPos;
 	public final long id;
 
-	
-	//TODO need to work out how to handel textures better than this... ^^;
+	// TODO need to work out how to handel textures better than this... ^^;
 	public static Material terr_mtl;
 
 	static {
-		terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f,
-				0.1f, 0.1f), 1f);
+		terr_mtl = new Material(new Color(0.4f, 0.4f, 0.4f), new Color(0.1f, 0.1f, 0.1f), 1f);
 		Texture terr_tx = Initial3D.createTexture(terr_tex_size);
 		// populate the terrain texture
 		for (int u = 0; u < terr_tex_size; u++) {
 			for (int v = 0; v < terr_tex_size; v++) {
-				terr_tx.setPixel(u, v, 1f, 0.0f,
-						(float) (Math.random() * 0.15 + 0.5), 0.0f);
+				terr_tx.setPixel(u, v, 1f, 0.0f, (float) (Math.random() * 0.15 + 0.5), 0.0f);
 			}
 		}
 		terr_tx.composeMipMaps();
@@ -72,8 +69,8 @@ public class Segment {
 
 	private MeshLOD highLOD() {
 
-		MeshLOD mLOD = new MeshLOD(size * size * 2 * 2, 3, (size + 1)
-				* (size + 1) * 2, 20, (size + 1) * (size + 1) * 2, 1);
+		MeshLOD mLOD = new MeshLOD(size * size * 2 * 2, 3, (size + 1) * (size + 1) * 2, 20,
+				(size + 1) * (size + 1) * 2, 1);
 
 		int[][] ind = new int[(size + 2)][(size + 2)];
 
@@ -82,24 +79,16 @@ public class Segment {
 			for (int x = 1; x <= size + 1; x++) {
 				float h = heightmap[x][z] * vertScale;
 
-				ind[x - 1][z - 1] = mLOD.addVertex(x * horzScale
-						+ (xPos * size * horzScale), h, z * horzScale
+				ind[x - 1][z - 1] = mLOD.addVertex(x * horzScale + (xPos * size * horzScale), h, z * horzScale
 						+ (zPos * size * horzScale));
 
 				// try to construct normal from noise pseudo-derivative
-				Vec3 d0 = Vec3.create(-2, heightmap[x - 1][z] * vertScale - h,
-						0).unit();
-				Vec3 d1 = Vec3
-						.create(0, heightmap[x][z + 1] * vertScale - h, 2)
-						.unit();
-				Vec3 d2 = Vec3
-						.create(2, heightmap[x + 1][z] * vertScale - h, 0)
-						.unit();
-				Vec3 d3 = Vec3.create(0, heightmap[x][z - 1] * vertScale - h,
-						-2).unit();
+				Vec3 d0 = Vec3.create(-2, heightmap[x - 1][z] * vertScale - h, 0).unit();
+				Vec3 d1 = Vec3.create(0, heightmap[x][z + 1] * vertScale - h, 2).unit();
+				Vec3 d2 = Vec3.create(2, heightmap[x + 1][z] * vertScale - h, 0).unit();
+				Vec3 d3 = Vec3.create(0, heightmap[x][z - 1] * vertScale - h, -2).unit();
 
-				Vec3 normal = (d0.cross(d1).add(d1.cross(d2)).add(d2.cross(d3))
-						.add(d3.cross(d0))).unit();
+				Vec3 normal = (d0.cross(d1).add(d1.cross(d2)).add(d2.cross(d3)).add(d3.cross(d0))).unit();
 
 				mLOD.addNormal(normal.x, normal.y, normal.z);
 
@@ -109,14 +98,10 @@ public class Segment {
 
 		Random r = new Random(32);
 
-		int[] tri_vt_1a = new int[] { mLOD.addTexCoord(0, 1),
-				mLOD.addTexCoord(1, 1), mLOD.addTexCoord(0, 0) };
-		int[] tri_vt_1b = new int[] { mLOD.addTexCoord(1, 1),
-				mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
-		int[] tri_vt_2a = new int[] { mLOD.addTexCoord(0, 1),
-				mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0) };
-		int[] tri_vt_2b = new int[] { mLOD.addTexCoord(0, 1),
-				mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
+		int[] tri_vt_1a = new int[] { mLOD.addTexCoord(0, 1), mLOD.addTexCoord(1, 1), mLOD.addTexCoord(0, 0) };
+		int[] tri_vt_1b = new int[] { mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
+		int[] tri_vt_2a = new int[] { mLOD.addTexCoord(0, 1), mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0) };
+		int[] tri_vt_2b = new int[] { mLOD.addTexCoord(0, 1), mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
 
 		// add polygons by theorized indexed values ^^;
 		for (int z = 0; z < size; z++) {
@@ -124,16 +109,13 @@ public class Segment {
 				int[] tri0, tri1;
 
 				if (r.nextBoolean()) {
-					tri0 = new int[] { ind[x + 1][z], ind[x][z],
-							ind[x + 1][z + 1] };
-					tri1 = new int[] { ind[x][z], ind[x][z + 1],
-							ind[x + 1][z + 1] };
+					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x + 1][z + 1] };
+					tri1 = new int[] { ind[x][z], ind[x][z + 1], ind[x + 1][z + 1] };
 					mLOD.addPolygon(tri0, tri_vt_1a, tri0, null);
 					mLOD.addPolygon(tri1, tri_vt_1b, tri1, null);
 				} else {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x][z + 1] };
-					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1],
-							ind[x + 1][z + 1] };
+					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1], ind[x + 1][z + 1] };
 					mLOD.addPolygon(tri0, tri_vt_2a, tri0, null);
 					mLOD.addPolygon(tri1, tri_vt_2b, tri1, null);
 				}
@@ -144,34 +126,24 @@ public class Segment {
 		return mLOD;
 	}
 
-	//lowest LOD is 2 triangles for the whole context
+	// lowest LOD is 2 triangles for the whole context
 	private MeshLOD lowLOD() {
 		MeshLOD mLOD = new MeshLOD(3, 4, 5, 1, 5, 1);
 
-		
 		// first create vectors and normals
-		for (int z = 1; z <= size + 1; z+=size) {
-			for (int x = 1; x <= size + 1; x+=size) {
+		for (int z = 1; z <= size + 1; z += size) {
+			for (int x = 1; x <= size + 1; x += size) {
 				float h = heightmap[x][z] * vertScale;
 
-				mLOD.addVertex(x * horzScale
-						+ (xPos * size * horzScale), h, z * horzScale
-						+ (zPos * size * horzScale));
+				mLOD.addVertex(x * horzScale + (xPos * size * horzScale), h, z * horzScale + (zPos * size * horzScale));
 
 				// try to construct normal from noise pseudo-derivative
-				Vec3 d0 = Vec3.create(-2, heightmap[x - 1][z] * vertScale - h,
-						0).unit();
-				Vec3 d1 = Vec3
-						.create(0, heightmap[x][z + 1] * vertScale - h, 2)
-						.unit();
-				Vec3 d2 = Vec3
-						.create(2, heightmap[x + 1][z] * vertScale - h, 0)
-						.unit();
-				Vec3 d3 = Vec3.create(0, heightmap[x][z - 1] * vertScale - h,
-						-2).unit();
+				Vec3 d0 = Vec3.create(-2, heightmap[x - 1][z] * vertScale - h, 0).unit();
+				Vec3 d1 = Vec3.create(0, heightmap[x][z + 1] * vertScale - h, 2).unit();
+				Vec3 d2 = Vec3.create(2, heightmap[x + 1][z] * vertScale - h, 0).unit();
+				Vec3 d3 = Vec3.create(0, heightmap[x][z - 1] * vertScale - h, -2).unit();
 
-				Vec3 normal = (d0.cross(d1).add(d1.cross(d2)).add(d2.cross(d3))
-						.add(d3.cross(d0))).unit();
+				Vec3 normal = (d0.cross(d1).add(d1.cross(d2)).add(d2.cross(d3)).add(d3.cross(d0))).unit();
 
 				mLOD.addNormal(normal.x, normal.y, normal.z);
 			}
