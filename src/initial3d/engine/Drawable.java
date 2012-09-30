@@ -118,7 +118,7 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Override this to draw stuff.
+	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled by the SceneManager.
 	 */
 	protected abstract void draw(Initial3D i3d);
 

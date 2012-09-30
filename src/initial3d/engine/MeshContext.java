@@ -33,7 +33,7 @@ public class MeshContext extends Drawable {
 	}
 
 	@Override
-	public final void draw(Initial3D i3d) {
+	protected final void draw(Initial3D i3d) {
 
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
@@ -59,6 +59,8 @@ public class MeshContext extends Drawable {
 		i3d.vertexData(mlod.vertices);
 		i3d.texCoordData(mlod.texcoords);
 		i3d.normalData(mlod.normals);
+		
+		i3d.objectID(getDrawIDStart());
 
 		i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
 
