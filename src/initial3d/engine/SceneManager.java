@@ -3,9 +3,14 @@ package initial3d.engine;
 import static initial3d.Initial3D.*;
 import initial3d.*;
 
+import java.awt.AWTEvent;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SceneManager implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -20,6 +25,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 	private volatile DisplayTarget dtarget = null;
 	private final Object lock_scene = new Object();
 
+	private final BlockingQueue<AWTEvent> eventqueue = new LinkedBlockingQueue<AWTEvent>();
+	private volatile boolean eventsenabled = false;
+
+	private volatile Profiler profiler = null;
+
 	public SceneManager(int width_, int height_) {
 		width = width_;
 		height = height_;
@@ -33,6 +43,14 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 	public int getHeight() {
 		return height;
+	}
+
+	public void setEventsEnabled(boolean b) {
+		eventsenabled = b;
+	}
+
+	public Profiler getProfiler() {
+		return profiler;
 	}
 
 	public void attachToScene(Scene s) {
@@ -57,6 +75,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			setDaemon(true);
 			display_ar = width / (double) height;
 			i3d = Initial3D.createInstance();
+			profiler = i3d.getProfiler();
 		}
 
 		public void run() {
@@ -86,11 +105,18 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.enable(light);
 			double[] light0p = new double[] { 0, 1, 0, 0 };
 
+			List<Drawable> event_drawables = new ArrayList<Drawable>();
+			Drawable drawable_req_focus = null;
+
+			int drawid = Integer.MIN_VALUE;
+
 			while (true) {
 				try {
 					boolean idle = false;
 					synchronized (lock_scene) {
 						if (scene != null) {
+
+							drawable_req_focus = null;
 
 							// allow scene to add / remove stuff etc
 							profiler.startSection("I3D-sceneman_scene-tick");
@@ -120,15 +146,21 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							// draw stuff as appropriate
 							profiler.startSection("I3D-sceneman_draw");
 							for (Drawable d : scene.getDrawables()) {
-								d.updateInputEnabled();
+								d.update();
 								if (d.pollRemovalRequested()) {
 									scene.removeDrawable(d);
-								} else {
+								} else if (d.isVisible()) {
 
-									// TODO intelligent selection of what to draw
+									// TODO intelligent selection of what to
+									// draw
 
 									if (d.isInputEnabled()) {
-										// set draw id range and increment for next
+										event_drawables.add(d);
+
+										// TODO set draw id range and increment
+										// for next
+
+										int idcount = d.pollRequestedIDCount();
 
 										d.setDrawIDs(0, 0);
 										i3d.enable(WRITE_ID);
@@ -170,8 +202,13 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							dtarget.display(bi);
 							profiler.endSection("I3D-sceneman_display");
 
-							// process input events (sending mouse / keyboard events to drawables)
-							// TODO input events to drawables
+							// process input events (sending mouse / keyboard
+							// events to drawables)
+							if (eventsenabled) {
+
+							} else {
+								eventqueue.clear();
+							}
 
 						} else {
 							idle = true;
@@ -204,72 +241,65 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.initFog();
 		}
 
+		private int getFrameX(int screenx, int screenw) {
+			return 0;
+		}
+
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println(e.getKeyChar());
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		eventqueue.add(e);
 	}
 
 }

@@ -17,6 +17,8 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -125,6 +127,14 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 		return win[0];
 	}
 
+	public void addCanvasMouseListener(MouseListener ml) {
+		canvas.addMouseListener(ml);
+	}
+	
+	public void addCanvasMouseMotionListener(MouseMotionListener ml) {
+		canvas.addMouseMotionListener(ml);
+	}
+	
 	@Override
 	public int getDisplayWidth() {
 		return canvas.getWidth();

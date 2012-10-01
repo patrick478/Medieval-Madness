@@ -8,16 +8,16 @@ public class MeshContext extends Drawable {
 
 	private final Mesh mesh;
 	private final Material mtl;
-	private final ReferenceFrame rf;
+	private ReferenceFrame rf;
 
 	private final double[][] xformtemp = Matrix.create(4, 4);
 	private final float[] coltemp = new float[3];
 
 	public MeshContext(Mesh mesh_, Material mtl_, ReferenceFrame rf_) {
-		if (mesh_ == null || mtl_ == null || rf_ == null) throw new IllegalArgumentException("Nulls not permitted.");
+		if (mesh_ == null || mtl_ == null) throw new IllegalArgumentException("Nulls not permitted.");
 		mesh = mesh_;
 		mtl = mtl_;
-		rf = rf_;
+		trackReferenceFrame(rf_);
 	}
 
 	public final Mesh getMesh() {
@@ -26,6 +26,10 @@ public class MeshContext extends Drawable {
 
 	public final Material getMaterial() {
 		return mtl;
+	}
+
+	public final void trackReferenceFrame(ReferenceFrame rf_) {
+		rf = rf_ == null ? ReferenceFrame.SCENE_ROOT : rf_;
 	}
 
 	public final ReferenceFrame getReferenceFrame() {
@@ -59,7 +63,7 @@ public class MeshContext extends Drawable {
 		i3d.vertexData(mlod.vertices);
 		i3d.texCoordData(mlod.texcoords);
 		i3d.normalData(mlod.normals);
-		
+
 		i3d.objectID(getDrawIDStart());
 
 		i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
