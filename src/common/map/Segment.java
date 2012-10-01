@@ -56,6 +56,33 @@ public class Segment {
 	public float[][] getData() {
 		return this.heightmap;
 	}
+	
+	/**
+	 * Returns the height at the given value inside the Segment
+	 * returns 0 if point is not inside segment.
+	 */
+	public double height(double x, double z){
+		if(x >= xPos*size*horzScale && x < (xPos+1)*size*horzScale
+			&& z >= zPos*size*horzScale && z < (zPos+1)*size*horzScale){
+
+			x = (x/horzScale)-(xPos * size);
+			z = (z/horzScale)-(zPos * size);
+			
+			double topLeft = heightmap[(int)x][(int)z];
+			double topRight = heightmap[(int)x+1][(int)z];
+			
+			double botLeft = heightmap[(int)x][(int)z+1];
+			double botRight = heightmap[(int)x+1][(int)z+1];
+			
+			
+			double left = (botLeft-topLeft)*(x%1);
+			double right = (botRight-topRight)*(x%1);
+			
+			return (right-left) * (z%1);
+		}
+		return 0;
+	}
+	
 
 	public MeshContext getMeshContext() {
 		Mesh terr_mesh = new Mesh();
