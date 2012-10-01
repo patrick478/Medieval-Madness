@@ -21,17 +21,23 @@ public class Scene {
 	private final Set<Drawable> drawables = new HashSet<Drawable>();
 	private final Set<Light> lights = new HashSet<Light>();
 
+	private volatile Drawable focused = null;
+
 	private Camera cam = new Camera();
 
 	public Scene() {
 
 	}
 
+	public Drawable getFocusedDrawable() {
+		return focused;
+	}
+
 	public void addDrawable(Drawable d) {
 		if (d == null) throw new IllegalArgumentException();
 		add_drawable.add(d);
 	}
-	
+
 	public void addDrawables(Collection<? extends Drawable> d) {
 		if (d == null) throw new IllegalArgumentException();
 		add_drawable.addAll(d);
@@ -41,7 +47,7 @@ public class Scene {
 		if (d == null) throw new IllegalArgumentException();
 		remove_drawable.add(d);
 	}
-	
+
 	public void removeDrawables(Collection<? extends Drawable> d) {
 		if (d == null) throw new IllegalArgumentException();
 		remove_drawable.addAll(d);
@@ -76,15 +82,15 @@ public class Scene {
 	}
 
 	public Camera getCamera() {
-
 		return cam;
 	}
 
 	/* package-private */
-	void renderTick() {
+	final void renderTick() {
 		if (clear_drawables) {
 			remove_drawable.clear();
 			drawables.clear();
+			focused = null;
 		}
 		if (clear_lights) {
 			remove_light.clear();
@@ -94,6 +100,7 @@ public class Scene {
 		for (int i = CHANGE_LIMIT; i-- > 0 && !remove_drawable.isEmpty();) {
 			Drawable d = remove_drawable.poll();
 			drawables.remove(d);
+			if (d.equals(focused)) focused = null;
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0 && !add_drawable.isEmpty();) {
 			drawables.add(add_drawable.poll());
@@ -108,19 +115,25 @@ public class Scene {
 	}
 
 	/* package-private */
-	Iterable<Drawable> getDrawables() {
-
+	final Iterable<Drawable> getDrawables() {
 		return drawables;
 	}
 
 	/* package-private */
-	Iterable<Light> getLights() {
-
+	final Iterable<Light> getLights() {
 		return lights;
 	}
-	
+
+	/* package-private */
+	final void setFocusedDrawable(Drawable d) {
+		if (drawables.contains(d)) {
+			focused = d;
+		}
+	}
+
+	/** Override this to make a self-controlling Scene subclass. */
 	protected void poke() {
-		
+
 	}
 
 }

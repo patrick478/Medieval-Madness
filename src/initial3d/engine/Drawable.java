@@ -64,8 +64,7 @@ public abstract class Drawable {
 
 	/* package-private */
 	/**
-	 * Called once per frame (immediately-ish) prior to when a call to draw()
-	 * would happen, if it happens or not.
+	 * Called once per frame (immediately-ish) prior to when a call to draw() would happen, if it happens or not.
 	 */
 	final void update() {
 		input_enabled = request_input_enabled;
@@ -84,103 +83,67 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Returns whether this drawable is visible. This is only updated at the
-	 * same time as input enabled. Invisible drawables behave as if
-	 * isInputEnabled returned false.
+	 * Returns whether this drawable is visible. This is only updated at the same time as input enabled. Invisible
+	 * drawables behave as if isInputEnabled returned false.
 	 */
 	public final boolean isVisible() {
 		return visible;
 	}
 
 	/**
-	 * Returns whether this Drawable has input focus. This is only updated once
-	 * per frame, prior to the processing of input events.
+	 * Returns whether this Drawable has input focus. This is only updated once per frame, prior to the processing of
+	 * input events.
 	 */
 	public final boolean isFocused() {
 		return focused;
 	}
 
 	/**
-	 * Returns whether input is enabled for this frame. This is only updated
-	 * once per frame (immediately-ish) prior to when a call to draw() would
-	 * happen, if it happens or not.
+	 * Returns whether input is enabled for this frame. This is only updated once per frame (immediately-ish) prior to
+	 * when a call to draw() would happen, if it happens or not.
 	 */
 	public final boolean isInputEnabled() {
 		return input_enabled;
 	}
 
 	/**
-	 * Returns the start of the contiguous set of ids that this Drawable was
-	 * allocated to use when drawing itself the last time
-	 * <code>isInputEnabled()</code> returned true from a call by the
-	 * SceneManager.
+	 * Returns the start of the contiguous set of ids that this Drawable was allocated to use when drawing itself the
+	 * last time <code>isInputEnabled()</code> returned true from a call by the SceneManager.
 	 */
 	public final int getDrawIDStart() {
 		return draw_id_start;
 	}
 
 	/**
-	 * Returns the length of the contiguous set of ids that this Drawable was
-	 * allocated to use when drawing itself the last time
-	 * <code>isInputEnabled()</code> returned true from a call by the
-	 * SceneManager.
+	 * Returns the length of the contiguous set of ids that this Drawable was allocated to use when drawing itself the
+	 * last time <code>isInputEnabled()</code> returned true from a call by the SceneManager.
 	 */
 	public final int getDrawIDCount() {
 		return draw_id_count;
 	}
 
 	/**
-	 * Set the number of draw ids that will be allocated to this drawable iff
-	 * <code>isInputEnabled()</code> returns true from a call by the
-	 * SceneManager.
+	 * Set the number of draw ids that will be allocated to this drawable iff <code>isInputEnabled()</code> returns true
+	 * from a call by the SceneManager.
 	 */
 	protected final void setRequestedIDCount(int count) {
 		requested_id_count = count;
 	}
 
 	/**
-	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled
-	 * by the SceneManager.
+	 * Assuming that this Drawable currently has focus, determines if it will allow the focus to be released to another
+	 * Drawable, including <code>null</code>.
+	 */
+	public boolean releaseFocusTo(Drawable d) {
+		return true;
+	}
+
+	/**
+	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled by the SceneManager.
 	 */
 	protected abstract void draw(Initial3D i3d);
 
-	final void dispatchEvent(AWTEvent e) {
-
-	}
-
-	public void mouseWheelMoved(MouseWheelEvent e, int id) {
-
-	}
-
-	public void mouseClicked(MouseEvent e, int id) {
-
-	}
-
-	public void mouseEntered(MouseEvent e, int id) {
-
-	}
-
-	public void mouseExited(MouseEvent e, int id) {
-
-	}
-
-	public void mousePressed(MouseEvent e, int id) {
-
-	}
-
-	public void mouseReleased(MouseEvent e, int id) {
-
-	}
-
-	public void keyPressed(KeyEvent e, int id) {
-
-	}
-
-	public void keyReleased(KeyEvent e, int id) {
-
-	}
-
-	public void keyTyped(KeyEvent e, int id) {
+	protected void dispatchEvent(AWTEvent e, int drawid) {
 
 	}
 
