@@ -13,13 +13,13 @@ public abstract class Drawable {
 	private volatile boolean request_focus = false;
 	private volatile boolean request_removal = false;
 	private volatile boolean request_input_enabled = false;
-	private volatile boolean request_visible = false;
+	private volatile boolean request_visible = true;
 	private volatile int requested_id_count = 1;
 
 	// the actual state
 	private volatile boolean focused = false;
 	private volatile boolean input_enabled = false;
-	private volatile boolean visible = false;
+	private volatile boolean visible = true;
 	private volatile int draw_id_start = 0;
 	private volatile int draw_id_count = 0;
 

@@ -157,9 +157,10 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 								if (d.pollRemovalRequested()) {
 									scene.removeDrawable(d);
 								} else {
+									
 									boolean focus_requested = d.pollFocusRequested();
 									if (d.isVisible()) {
-
+										
 										// TODO intelligent selection of what to draw
 
 										if (d.isInputEnabled()) {
@@ -175,6 +176,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										} else {
 											i3d.disable(WRITE_ID);
 										}
+										
 										d.draw(i3d);
 
 									}
