@@ -27,7 +27,7 @@ public class TestUI {
 		
 		// stuff
 		
-		MovableEntity ball = new Player(Vec3.zero);
+		MovableEntity ball = new Player(Vec3.zero, 123123123);
 		
 		FileInputStream fis = new FileInputStream("ball.txt");
 		ball.setMeshContexts(MeshLoader.loadComp261(fis));
