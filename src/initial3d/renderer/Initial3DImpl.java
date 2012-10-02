@@ -454,7 +454,8 @@ class Initial3DImpl extends Initial3D {
 			putFloat(qLight + 104, v);
 			break;
 		case EFFECT_RADIUS:
-			// this is backwards compatible because default == 0 => effect radius infinity
+			// this is backwards compatible because default == 0 => effect
+			// radius infinity
 			putFloat(qLight + 108, 1 / v);
 			break;
 		default:
@@ -715,8 +716,14 @@ class Initial3DImpl extends Initial3D {
 
 	@Override
 	public int queryBuffer(int bufferbit, int x, int y) {
-		// TODO query buffer
-		return 0;
+		final int width = getInt(0x00000000);
+		// TODO query other buffers
+		switch (bufferbit) {
+		case ID_BUFFER_BIT:
+			return getInt(0x07E00900 + y * width * 4 + x * 4);
+		default:
+			return 0;
+		}
 	}
 
 	@Override
