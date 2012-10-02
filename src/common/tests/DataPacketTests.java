@@ -30,6 +30,12 @@ public class DataPacketTests {
 		short test = 2;
 		p.addShort(test);
 		assertEquals(p.getShort(), test);
+		
+		DataPacket pk = new DataPacket();
+		pk.addShort(5);
+		pk.addInt(50123);
+		assertEquals(5, pk.peekShort());
+		assertEquals(5, pk.getShort());
 	}
 	
 	@Test

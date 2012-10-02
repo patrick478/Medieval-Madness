@@ -27,7 +27,6 @@ public class EnterWorldPacket extends Packet {
 		
 		p.addShort(EnterWorldPacket.ID);
 		p.addInt(newWorld);
-		
 		return p;
 	}
 

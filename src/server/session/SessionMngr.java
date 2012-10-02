@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
+import server.net.ServerLayer;
+
 import common.Log;
 
 public class SessionMngr {
@@ -40,10 +42,10 @@ public class SessionMngr {
 		this.log.close();
 	}
 	
-	public String createSession(SocketChannel sc)
+	public String createSession(SocketChannel sc, ServerLayer pl)
 	{
 		String id = getUnusedIdentifier();
-		Session ses = new Session(sc);
+		Session ses = new Session(sc, pl);
 		sessionList.put(id, ses);
 		this.totalSessions++;
 		

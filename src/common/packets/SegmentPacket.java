@@ -15,14 +15,16 @@ public class SegmentPacket extends Packet
 
 	@Override
 	public void fromData(DataPacket packet) {
+//		System.out.println(packet.peekShort());
 		if(packet.getShort() != SegmentPacket.ID)
 			return;
 				
 		int xPos = packet.getInt();
 		int zPos = packet.getInt();
-		
+//		System.out.printf("xpos=%d\tzpos=%d\n", xPos, zPos);
 		int iDim = packet.getShort();
 		int jDim = packet.getShort();
+//		System.out.printf("Trying to read %dx%d floats=%d\n", iDim, jDim, iDim*jDim);
 		
 		float[][] data = new float[iDim][jDim];
 		
@@ -45,7 +47,7 @@ public class SegmentPacket extends Packet
 		dp.addInt(segment.zPos);
 		
 		float[][] data = segment.getData();
-		
+//		System.out.printf("Writing %dx%d=%d\n", data.length, data[0].length, data[0].length * data.length);
 		dp.addShort(data.length);
 		dp.addShort(data[0].length);
 		

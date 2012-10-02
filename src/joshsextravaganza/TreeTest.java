@@ -116,7 +116,7 @@ public class TreeTest {
 
 	public static void main(String[] args) throws Exception {
 		
-		MovableEntity ball = new Player(Vec3.zero);
+		MovableEntity ball = new Player(Vec3.zero, 123123123);
 		
 		// TERRAIN
 		Mesh terr_mesh = TerrainTest.getMesh();

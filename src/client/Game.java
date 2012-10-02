@@ -50,7 +50,7 @@ public class Game {
 		}
 		
 		// TODO remove
-		MovableEntity ball = new Player(Vec3.zero);
+		MovableEntity ball = new Player(Vec3.zero, 1231231);
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream("ball.txt");

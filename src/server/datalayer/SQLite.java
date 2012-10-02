@@ -116,7 +116,7 @@ public class SQLite extends DataProvider implements Runnable {
 			} catch (InterruptedException e) {
 				return null;
 			}
-			System.out.println("Waiting..");
+//			System.out.println("Waiting..");
 		}
 		
 		if(dj.data.size() == 1 && dj.data.get(0).size() == 1)
@@ -132,7 +132,7 @@ public class SQLite extends DataProvider implements Runnable {
     	
     	String password_hash = getPasswordHash(password, salt);
 		String query = String.format("SELECT COUNT(*) FROM users WHERE username='%s' AND password_hash='%s';", username, password_hash);
-		System.out.printf("Added (%s) to the dbQueue\n", query);
+//		System.out.printf("Added (%s) to the dbQueue\n", query);
 		
 		DataJob dj = new DataJob(query);
 		this.jobQueue.add(dj);
@@ -156,7 +156,7 @@ public class SQLite extends DataProvider implements Runnable {
 	@Override
 	public boolean accountExists(String username) {
 		String query = String.format("SELECT COUNT(*) FROM users WHERE username='%s'", username);
-		System.out.printf("Added (%s) to the dbQueue\n", query);
+//		System.out.printf("Added (%s) to the dbQueue\n", query);
 		DataJob dj = new DataJob(query);
 		this.jobQueue.add(dj);
 		while(!dj.completed)
@@ -171,7 +171,7 @@ public class SQLite extends DataProvider implements Runnable {
 			}
 			System.out.println("Waiting..");
 		}
-		System.out.printf("This query is complete: %s\n", query);
+//		System.out.printf("This query is complete: %s\n", query);
 		
 		if(dj.data.size() == 1 && dj.data.get(0).size() == 1 && (Integer)dj.data.get(0).get(0) == 1)
 			return true;

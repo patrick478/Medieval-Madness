@@ -18,15 +18,15 @@ public class EntityManager {
 	Map<Long, Entity> staticEntities = new HashMap<Long, Entity>();
 	Map<Long, MovableEntity> moveables = new HashMap<Long, MovableEntity>();
 	
-	public void addStaticEntity(Entity e)
+	public void addStaticEntity(Entity e, long id)
 	{
 		this.staticEntityTree.add(e);
-		this.staticEntities.put(System.nanoTime(), e);
+		this.staticEntities.put(id, e);
 	}
 	
-	public void addMoveableEntity(MovableEntity e)
+	public void addMoveableEntity(MovableEntity e, long id)
 	{
-		this.moveables.put(System.nanoTime(), e);
+		this.moveables.put(id, e);
 	}
 	
 	public void tick(long lastTick)

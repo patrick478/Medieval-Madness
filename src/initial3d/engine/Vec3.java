@@ -14,6 +14,9 @@ public final class Vec3 {
 
 	/** The zero vector, equal to (0,0,0). */
 	public static final Vec3 zero;
+	
+	/** The one vector, equal to (1, 1, 1). */
+	public static final Vec3 one;
 
 	/** The (first) basis vector i, equal to (1,0,0). */
 	public static final Vec3 i;
@@ -45,6 +48,7 @@ public final class Vec3 {
 		zero = new Vec3(0, 0, 0);
 		zero.m = 0;
 		zero.im = 0;
+		one = new Vec3(1, 1, 1);
 		i = new Vec3(1, 0, 0);
 		i.m = 1;
 		i.im = 1;

@@ -22,7 +22,7 @@ public class TreeFactory {
 		double xWidth = perlin.getNoise(pos.x, 0.3, pos.z, 8)+1;
 		double zWidth = perlin.getNoise(pos.x, 0.7, pos.z, 8)+1;
 		
-		Tree tree = new Tree(Vec3.create(xWidth, trunkLength, zWidth), pos);
+		Tree tree = new Tree(Vec3.create(xWidth, trunkLength, zWidth), pos, System.nanoTime());
 		
 		List<Mesh> meshes = new ArrayList<Mesh>();
 		meshes.add(trunkMesh(trunkLength, xWidth, zWidth));
@@ -78,8 +78,8 @@ public class TreeFactory {
 	}
 	
 	public class Tree extends GameObject{
-		public Tree(Vec3 _radius, Vec3 _position){
-			super(_radius, _position, Quat.one);
+		public Tree(Vec3 _radius, Vec3 _position, long id){
+			super(_radius, _position, Quat.one, id);
 		}
 	}
 }

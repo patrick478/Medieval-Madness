@@ -6,8 +6,8 @@ import initial3d.engine.Vec3;
 
 public class GameObject extends Entity {
 
-	public GameObject(Vec3 _radius, Vec3 _position, Quat _orientation){
-		super(_radius);
+	public GameObject(Vec3 _radius, Vec3 _position, Quat _orientation, long id){
+		super(_radius, id);
 		type = EntityType.GameObject;
 		position = _position;
 		orientation = _orientation;

@@ -185,7 +185,12 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		}
 		
 		String id = (String) key.attachment();
-//		System.out.printf("Recieved %d bytes\n", rx);
+		
+//		System.out.printf("Recieved %d bytes: ", rx);
+//		for(int i = 0; i < rx; i++)
+//			System.out.printf("0x%02X ", this.readBuffer.get(i));
+//		System.out.println();
+		
 		this.worker.processData(this, sc, this.readBuffer.array(), rx, id);
 	}
 	
@@ -223,7 +228,7 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 		SocketChannel sc = ssc.accept();
 		sc.configureBlocking(false);
 		
-		String sesID = SessionMngr.getInstance().createSession(sc);
+		String sesID = SessionMngr.getInstance().createSession(sc, this);
 		sc.register(this.selector,  SelectionKey.OP_READ, sesID);
 		Packet p = new WelcomePacket();
 		this.send(sc, p.toData().getData());

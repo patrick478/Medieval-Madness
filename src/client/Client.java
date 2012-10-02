@@ -42,7 +42,7 @@ public class Client {
 		
 		//temp
 		//Adding player into the game
-		Player p = EntityFactory.createPlayer(Vec3.zero);
+		Player p = EntityFactory.createPlayer(Vec3.zero, System.nanoTime());
 		gameWorld.addMoveableEntity(p);
 		gameWorld.setPlayer(p.id);
 		
@@ -55,6 +55,7 @@ public class Client {
 		newState.setup(this, this.gameWorld);
 		gameState = newState;
 		scenemgr.attachToScene(gameState.getScene());
+		scenemgr.getProfiler().setResetOutput(null);
 	}
 	
 	public Game getGameWorld(){

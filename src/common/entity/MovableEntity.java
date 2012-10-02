@@ -9,8 +9,8 @@ public abstract class MovableEntity extends Entity{
 	protected Vec3 linVelocity = Vec3.zero; //linear velocity
 	protected Vec3 angVelocity = Vec3.zero; //angular velocity
 	
-	public MovableEntity(Vec3 _radius) {
-		super(_radius);
+	public MovableEntity(Vec3 _radius, long id) {
+		super(_radius, id);
 	}
 	
 	public Vec3 getLinearVelocity(){

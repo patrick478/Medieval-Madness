@@ -24,11 +24,11 @@ public abstract class Entity implements ReferenceFrame{
 	protected Vec3 radius;
 	protected EntityType type;
 	
-	public Entity(Vec3 _radius) {
+	public Entity(Vec3 _radius, long newid) {
 		radius = _radius;
+		
 		//TODO seriously need some change...
-		id = Double.doubleToLongBits(Math.random());//TODO really need some change...
-		//TODO otherwise everything will break...
+		id = newid;
 	}
 	
 	@Override

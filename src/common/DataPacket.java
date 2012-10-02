@@ -20,11 +20,31 @@ public class DataPacket {
 		buf = ByteBuffer.allocate(s);
 	}
 	
-	public DataPacket(byte[] oldData)
+	public DataPacket(byte[] oldData, boolean hasLength)
 	{
 		buf = ByteBuffer.wrap(oldData);
-		writePos = 0;
+		int len = oldData.length;
+		if(hasLength)
+		{
+			buf = ByteBuffer.wrap(oldData);
+			buf.position(2);
+			buf = buf.slice();
+			len -= 2;
+		}
+		writePos = len;
 		readPos = 0;
+	}
+	
+	public DataPacket(byte[] oldData)
+	{
+		this(oldData, true);
+	}
+	
+	public void printPacket()
+	{
+		for(int i = 0; i < writePos; i++)
+			System.out.printf("0x%02X ", this.buf.get(i));
+		System.out.println();
 	}
 	
 	public void clear()
@@ -66,46 +86,59 @@ public class DataPacket {
 	
 	public void addShort(short s)
 	{
+//		System.out.println("Wrote an SHORT");
 		buf.putShort(writePos, s);
 		writePos += 2;
 	}
 	
 	public short peekShort()
 	{
+//		System.out.println("Read an SHORT");
+//		System.out.printf("this=%s\treadpos=%d\n", this, readPos);
 		return buf.getShort(readPos);
 	}
 	
 	public short getShort()
 	{
+		short s = this.peekShort();
 		readPos += 2;
-		return buf.getShort(readPos-2);
+		return s;
 	}
 	
 	public void addInt(int i)
 	{
+//		System.out.printf("this=%s\twritepos=%d\n", this, writePos);
 		buf.putInt(writePos, i);
 		writePos += 4;
+//		System.out.println("Wrote an INT");
 	}
 	
 	public int getInt()
 	{
+//		System.out.println("Read an INT");
 		readPos += 4;
 		return buf.getInt(readPos - 4);
 	}
 	
 	public void addFloat(float f)
 	{
+//		System.out.println("Wrote an FLOAT");
 		buf.putFloat(writePos, f);
 		writePos += 4;
 	}
 	
 	public float getFloat()
 	{
+//		System.out.println("Read an FLOAT");
+//		System.out.printf("buf.limit()=%d\treadPos=%d\n", buf.limit(), readPos);
+		if(buf.limit() - 3 < readPos)
+			return 0;
+		
 		readPos += 4;
 		return buf.getFloat(readPos - 4);
 	}
 	
-	public void addLong(Long l)
+	public void addLong(long l)
 	{
 		buf.putLong(writePos, l);
 		writePos += 8;

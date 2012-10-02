@@ -135,7 +135,7 @@ public class NetworkThread implements Runnable {
 				bq.read(peek, 0, 2);
 				packetLength = this.peekShort(peek, 0);
 				packetBytes = new byte[packetLength];
-				System.out.printf("Reading packet with length=%d\n", packetLength);
+//				System.out.printf("Reading packet with length=%d\n", packetLength);
 				hasReadPacket = false;
 			}
 			
@@ -143,9 +143,11 @@ public class NetworkThread implements Runnable {
 			{
 				
 				bq.read(packetBytes, 0, packetLength);
-				for(int i = 0; i < packetBytes.length; i++)
-					System.out.printf("%02X ", packetBytes[i]);
-				DataPacket dataPacket = new DataPacket(packetBytes);
+//				for(int i = 0; i < packetBytes.length; i++)
+//					System.out.printf("%02X ", packetBytes[i]);
+				DataPacket dataPacket = new DataPacket(packetBytes, false);
+//				System.out.println("Packet: ");
+//				dataPacket.printPacket();
 				Packet recvdPacket = PacketFactory.identify(dataPacket);
 				this.handler.passoff(recvdPacket);
 				packetLength = -1;
@@ -205,7 +207,12 @@ public class NetworkThread implements Runnable {
 
 	public void send(DataPacket p)
 	{		
-		this.toSend.add(ByteBuffer.wrap(p.getData()));
+		ByteBuffer data = ByteBuffer.wrap(p.getData());
+		this.toSend.add(data);
+//		System.out.println(data.toString());
+//		for(int i = 0; i < data.capacity(); i++)
+//			System.out.printf("0x%02X ", data.get(i));
+//		System.out.println();
 		this.clientChannel.keyFor(selector).interestOps(SelectionKey.OP_WRITE);
 		this.selector.wakeup();
 	}

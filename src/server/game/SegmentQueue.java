@@ -113,7 +113,7 @@ public class SegmentQueue implements Runnable {
 				Timer t = new Timer(true);
 				Segment newSeg = this.gen.getSegment(sgi.getX(), sgi.getZ());
 				t.stop();
-				System.out.printf("Seggen took %.2f\n", t.elapsed_sDouble());
+//				System.out.printf("Seggen took %.2f\n", t.elapsed_sDouble());
 				SegmentPacket sp = new SegmentPacket();
 				sp.segment = newSeg;
 				
@@ -137,13 +137,20 @@ public class SegmentQueue implements Runnable {
 	}
 
 	public void waitTillIdle() {
-		double freq = 5;
+		double freq = 0.5;
 		double max = -1;
+		double logFreq = 5000;
+		double lastLog = System.currentTimeMillis();
 		while(!this.fetchQueue.isEmpty())
 		{
 			if(max < this.fetchQueue.size())
 				max = (double)this.fetchQueue.size();
-			this.logProgress(max);
+			
+			if(System.currentTimeMillis() - lastLog > logFreq)
+			{
+				this.logProgress(max);
+				lastLog = System.currentTimeMillis();
+			}
 			
 			try {
 				Thread.sleep((long) (freq * 1000));
@@ -152,7 +159,9 @@ public class SegmentQueue implements Runnable {
 				e.printStackTrace();
 			}
 		}
+
 		this.logProgress(max);
+		lastLog = System.currentTimeMillis();
 	}
 	
 	public void logProgress(double max)
