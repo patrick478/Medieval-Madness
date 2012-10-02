@@ -8,6 +8,7 @@ public class MovableReferenceFrame implements ReferenceFrame {
 	private volatile Quat orientation = Quat.one;
 
 	public MovableReferenceFrame(ReferenceFrame parent_) {
+		if (parent_ == null) parent_ = ReferenceFrame.SCENE_ROOT;
 		parent = parent_;
 	}
 

@@ -99,6 +99,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		// triangle color
 		final float col_r = unsafe.getFloat(pTri + 116);
@@ -191,6 +192,10 @@ final class TrianglePerspectiveRasteriser {
 								unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 								unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 							}
+							
+							if ((flags & 0x400000L) != 0) {
+								unsafe.putInt(pID + ix * 4, objid);
+							}
 
 						}
 						offset += width;
@@ -214,6 +219,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
+								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
 								}
 							}
 
@@ -297,6 +306,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		// 1/z, remembering vertex order...
 		double iZ1 = 1d / unsafe.getDouble(unsafe.getLong(pTri + (frontface ? 88 : 216)) + 16);
@@ -430,6 +440,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
+								}
 
 							}
 
@@ -461,6 +475,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 4, col_r);
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
+								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
 								}
 							}
 
@@ -542,6 +560,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		// 1/z, remembering vertex order...
 		double iZ1 = 1d / unsafe.getDouble(unsafe.getLong(pTri + (frontface ? 88 : 216)) + 16);
@@ -721,6 +740,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
 								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
+								}
 
 							}
 
@@ -765,6 +788,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
 								}
 
 							}
@@ -862,6 +889,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
@@ -1065,6 +1093,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
 								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
+								}
 
 							}
 
@@ -1113,6 +1145,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
+								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
 								}
 
 							}
@@ -1207,6 +1243,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
@@ -1454,6 +1491,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax) * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax) * kd_b + ke_b);
 								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
+								}
 
 							}
 
@@ -1511,6 +1552,10 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax) * kd_r + ke_r);
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax) * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax) * kd_b + ke_b);
+								}
+								
+								if ((flags & 0x400000L) != 0) {
+									unsafe.putInt(pID + ix * 4, objid);
 								}
 
 							}
@@ -1571,6 +1616,7 @@ final class TrianglePerspectiveRasteriser {
 		final long pZ = pBase + 0x05DC0900;
 		final long pStencil = pBase + 0x06E00900;
 		final long pID = pBase + 0x07E00900;
+		final int objid = unsafe.getInt(pBase + 0x00000064);
 
 		double vscale = -(height >> 1);
 		double hscale = -(width >> 1);

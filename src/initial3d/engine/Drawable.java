@@ -121,6 +121,10 @@ public abstract class Drawable {
 	public final int getDrawIDCount() {
 		return draw_id_count;
 	}
+	
+	public boolean ownsDrawID(int id) {
+		return id >= draw_id_start && id < draw_id_start + draw_id_count;
+	}
 
 	/**
 	 * Set the number of draw ids that will be allocated to this drawable iff <code>isInputEnabled()</code> returns true
@@ -140,11 +144,13 @@ public abstract class Drawable {
 
 	/**
 	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled by the SceneManager.
+	 * @param framewidth Current render frame width
+	 * @param frameheight Current render frame height
 	 */
-	protected abstract void draw(Initial3D i3d);
+	protected abstract void draw(Initial3D i3d, int framewidth, int frameheight);
 
-	protected void dispatchEvent(AWTEvent e, int drawid) {
-
+	protected void dispatchEvent(AWTEvent e, int drawid, int framex, int framey) {
+		System.out.println(e);
 	}
 
 }

@@ -27,7 +27,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 	private final Object lock_scene = new Object();
 
 	private final BlockingQueue<AWTEvent> eventqueue = new LinkedBlockingQueue<AWTEvent>();
-	private volatile boolean eventsenabled = false;
+	private volatile boolean eventsenabled = true;
 
 	private volatile Profiler profiler = null;
 
@@ -77,6 +77,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			display_ar = width / (double) height;
 			i3d = Initial3D.createInstance();
 			profiler = i3d.getProfiler();
+			profiler.setAutoResetEnabled(true);
+			profiler.setResetOutput(System.out);
 		}
 
 		public void run() {
@@ -91,11 +93,6 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
 			i3d.shadeModel(SHADEMODEL_FLAT);
 			i3d.enable(MIPMAPS);
-
-			// TODO add option to control profiler output
-			Profiler profiler = i3d.getProfiler();
-			profiler.setAutoResetEnabled(true);
-			profiler.setResetOutput(System.out);
 
 			// temp light
 			long light = LIGHT0;
@@ -145,7 +142,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							// optimised id buffer clearing
 							if (drawid < 0) {
 								// drawid overflowed, reset and clear buffer
-								// buffer cleared to 0 so can't use that as an id
+								// buffer cleared to 0 so can't use that as an
+								// id
 								drawid = 1;
 								i3d.clear(ID_BUFFER_BIT);
 							}
@@ -157,17 +155,19 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 								if (d.pollRemovalRequested()) {
 									scene.removeDrawable(d);
 								} else {
-									
+
 									boolean focus_requested = d.pollFocusRequested();
 									if (d.isVisible()) {
-										
-										// TODO intelligent selection of what to draw
+
+										// TODO intelligent selection of what to
+										// draw
 
 										if (d.isInputEnabled()) {
 											event_drawables.add(d);
 											if (focus_requested) focus_drawables.add(d);
 
-											// set draw id range and increment for next
+											// set draw id range and increment
+											// for next
 											int idcount = d.pollRequestedIDCount();
 											d.setDrawIDs(drawid, idcount);
 											drawid += idcount;
@@ -176,8 +176,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										} else {
 											i3d.disable(WRITE_ID);
 										}
-										
-										d.draw(i3d);
+
+										d.draw(i3d, width, height);
 
 									}
 								}
@@ -213,34 +213,58 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							dtarget.display(bi);
 							profiler.endSection("I3D-sceneman_display");
 
-							// process input events (sending mouse / keyboard events to drawables)
+							// process input events (sending mouse / keyboard
+							// events to drawables)
 							if (eventsenabled) {
 								profiler.startSection("I3D-sceneman_events");
 
 								// deal with focus changes first
 								Drawable focused = scene.getFocusedDrawable();
-								for (Drawable d : focus_drawables) {
-									if (focused.releaseFocusTo(d)) {
-										focused = d;
-										break;
+								if (focused == null) {
+									if (!focus_drawables.isEmpty()) {
+										focused = focus_drawables.get(0);
+									}
+								} else {
+									for (Drawable d : focus_drawables) {
+										if (focused.releaseFocusTo(d)) {
+											focused = d;
+											break;
+										}
 									}
 								}
+								scene.setFocusedDrawable(focused);
 
 								// push events to the correct drawable
 								AWTEvent e;
 								while ((e = eventqueue.poll()) != null) {
-
-									switch (e.getID()) {
-									case KeyEvent.KEY_PRESSED:
-									case KeyEvent.KEY_RELEASED:
-									case KeyEvent.KEY_TYPED:
-										if (focused != null) {
-											focused.dispatchEvent(e, focused.getDrawIDStart());
+									try {
+										switch (e.getID()) {
+										case KeyEvent.KEY_PRESSED:
+										case KeyEvent.KEY_RELEASED:
+										case KeyEvent.KEY_TYPED:
+											// send all key events to focused
+											// drawable
+											if (focused != null) {
+												focused.dispatchEvent(e, focused.getDrawIDStart(), -1, -1);
+											}
+											continue;
+										default:
+											// determined by screen location
+											MouseEvent me = (MouseEvent) e;
+											int framex = getFrameX(me.getX());
+											int framey = getFrameY(me.getY());
+											// dispatch mouse events to drawable
+											int event_drawid = i3d.queryBuffer(ID_BUFFER_BIT, framex, framey);
+											for (Drawable d : event_drawables) {
+												if (d.ownsDrawID(event_drawid)) {
+													d.dispatchEvent(e, event_drawid, framex, framey);
+													break;
+												}
+											}
 										}
-										break;
-									default:
-										// TODO dispatch mouse events to drawable determined by screen location
 
+									} catch (ClassCastException e1) {
+										// event wasn't a mouse event... whoops
 									}
 
 								}
@@ -284,11 +308,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 		}
 
 		private int getFrameX(int screenx) {
-			return 0;
+			return screenx * width / dtarget.getDisplayWidth();
 		}
 
 		private int getFrameY(int screeny) {
-			return 0;
+			return screeny * height / dtarget.getDisplayHeight();
 		}
 
 	}

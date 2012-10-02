@@ -37,7 +37,7 @@ public class MeshContext extends Drawable {
 	}
 
 	@Override
-	protected final void draw(Initial3D i3d) {
+	protected final void draw(Initial3D i3d, int framewidth, int frameheight) {
 
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
