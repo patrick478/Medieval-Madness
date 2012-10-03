@@ -1,5 +1,7 @@
 package initial3d.test;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileInputStream;
 
 import common.entity.MovableEntity;
@@ -7,6 +9,7 @@ import common.entity.Player;
 import comp261.modelview.MeshLoader;
 
 import initial3d.engine.*;
+import initial3d.engine.xhaust.Pane;
 
 public class TestUI {
 
@@ -20,6 +23,7 @@ public class TestUI {
 		sman.setDisplayTarget(rwin);
 		rwin.addKeyListener(sman);
 		rwin.addCanvasMouseListener(sman);
+		rwin.addCanvasMouseMotionListener(sman);
 		rwin.addMouseWheelListener(sman);
 		
 		Scene scene = new Scene();
@@ -37,7 +41,30 @@ public class TestUI {
 		mc.requestInputEnabled(true);
 		mc.requestFocus();
 		
+		mc.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				System.out.println(e.getKeyChar());
+			}
+			
+		});
+		
 		scene.addDrawable(mc);
+		
+		Pane p = new Pane(128, 128);
+		
+		scene.addDrawable(p);
 		
 		MovableReferenceFrame camera_rf = new MovableReferenceFrame(null);
 		scene.getCamera().trackReferenceFrame(camera_rf);

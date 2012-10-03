@@ -135,7 +135,6 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							cam.loadViewTransform(i3d);
 
 							// load lights as appropriate
-							i3d.enable(LIGHTING);
 							i3d.lightdv(light, POSITION, light0p);
 							// TODO proper lighting
 
@@ -159,8 +158,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 									boolean focus_requested = d.pollFocusRequested();
 									if (d.isVisible()) {
 
-										// TODO intelligent selection of what to
-										// draw
+										// TODO intelligent selection of what to draw
 
 										if (d.isInputEnabled()) {
 											event_drawables.add(d);
@@ -168,7 +166,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 											// set draw id range and increment
 											// for next
-											int idcount = d.pollRequestedIDCount();
+											int idcount = d.getRequestedIDCount();
 											d.setDrawIDs(drawid, idcount);
 											drawid += idcount;
 
@@ -177,6 +175,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 											i3d.disable(WRITE_ID);
 										}
 
+										i3d.enable(LIGHTING);
+										i3d.enable(DEPTH_TEST);
 										d.draw(i3d, width, height);
 
 									}
@@ -218,7 +218,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							if (eventsenabled) {
 								profiler.startSection("I3D-sceneman_events");
 
-								// deal with focus changes first
+								// deal with requested focus changes first
 								Drawable focused = scene.getFocusedDrawable();
 								if (focused == null) {
 									if (!focus_drawables.isEmpty()) {
@@ -242,33 +242,72 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										case KeyEvent.KEY_PRESSED:
 										case KeyEvent.KEY_RELEASED:
 										case KeyEvent.KEY_TYPED:
-											// send all key events to focused
-											// drawable
+											// send all key events to focused drawable
 											if (focused != null) {
-												focused.dispatchEvent(e, focused.getDrawIDStart(), -1, -1);
+												focused.dispatchKeyEvent((KeyEvent) e);
 											}
-											continue;
-										default:
-											// determined by screen location
+											break;
+										case MouseEvent.MOUSE_PRESSED:
+										case MouseEvent.MOUSE_RELEASED:
+										case MouseEvent.MOUSE_CLICKED:
+										case MouseEvent.MOUSE_MOVED:
+										case MouseEvent.MOUSE_DRAGGED:
+										case MouseWheelEvent.MOUSE_WHEEL:
+											// mouse event behaviour determined by screen location
 											MouseEvent me = (MouseEvent) e;
 											int framex = getFrameX(me.getX());
 											int framey = getFrameY(me.getY());
-											// dispatch mouse events to drawable
+
+											// find target of mouse event
 											int event_drawid = i3d.queryBuffer(ID_BUFFER_BIT, framex, framey);
+											Drawable target = null;
 											for (Drawable d : event_drawables) {
 												if (d.ownsDrawID(event_drawid)) {
-													d.dispatchEvent(e, event_drawid, framex, framey);
+													target = d;
 													break;
 												}
 											}
+
+											// try to switch focus, if needed, on mouse pressed
+											if (me.getID() == MouseEvent.MOUSE_PRESSED
+													&& (focused == null || (!focused.equals(target) && focused
+															.releaseFocusTo(target)))) {
+												focused = target;
+												scene.setFocusedDrawable(focused);
+											}
+
+											switch (e.getID()) {
+											case MouseEvent.MOUSE_MOVED:
+											case MouseEvent.MOUSE_DRAGGED:
+												// send regardless of focus
+												if (target != null) {
+													target.dispatchMouseEvent(me, event_drawid, framex, framey);
+												}
+												// TODO fire mouse entered / exited as needed?
+												
+												break;
+											case MouseEvent.MOUSE_PRESSED:
+											case MouseEvent.MOUSE_RELEASED:
+											case MouseEvent.MOUSE_CLICKED:
+											case MouseWheelEvent.MOUSE_WHEEL:
+												// send to target if it has focus
+												if (focused != null && focused.equals(target)) {
+													target.dispatchMouseEvent(me, event_drawid, framex, framey);
+												}
+												break;
+											default:
+												// shouldn't happen
+											}
+											break;
+										default:
+											// ignore mouse entered, exited actual events
+											// (and anything else...)
 										}
 
 									} catch (ClassCastException e1) {
 										// event wasn't a mouse event... whoops
 									}
-
 								}
-
 								profiler.endSection("I3D-sceneman_events");
 							} else {
 								eventqueue.clear();
@@ -295,6 +334,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 				} catch (Exception e) {
 					// something broke. print error, keep going
 					e.printStackTrace();
+					// don't know if profiler still in consistent state or not
+					profiler.reset();
 				}
 
 			}

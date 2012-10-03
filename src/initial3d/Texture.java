@@ -14,6 +14,18 @@ public abstract class Texture {
 		ALPHA, RED, GREEN, BLUE;
 	}
 
+	/** Calculate the minimum size of texture required to contain a <code>maxdim</code> by <code>maxdim</code> image. */
+	public static int requiredSize(int maxdim) {
+		if (maxdim <= 1) return 1;
+		maxdim--;
+		int size = 1;
+		while (maxdim != 0) {
+			maxdim >>>= 1;
+			size <<= 1;
+		}
+		return size;
+	}
+
 	/** Get the size, in texels, of one dimension of the texture. */
 	public abstract int size();
 
@@ -87,6 +99,7 @@ public abstract class Texture {
 		int imgxmax = imgx + imgw;
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u++, imgx++) {
+			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v++, imgy++) {
 				int rgb = img.getRGB(imgx, imgy);
 				setTexel(u, v, Channel.BLUE, (rgb & 0xFF) * i255);
@@ -121,6 +134,7 @@ public abstract class Texture {
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u++, imgx++) {
 			if (u < 0 || u >= size()) continue;
+			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v++, imgy++) {
 				if (v < 0 || v >= size()) continue;
 				int rgb = img.getRGB(imgx, imgy);
@@ -165,6 +179,8 @@ public abstract class Texture {
 		int imgxmax = imgx + imgw;
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u += (usize > 0 ? 1 : -1)) {
+			imgy_cd = 0;
+			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v += (vsize > 0 ? 1 : -1)) {
 				int rgb = img.getRGB(imgx, imgy);
 				setTexel(u, v, Channel.BLUE, (rgb & 0xFF) * i255);
@@ -216,6 +232,8 @@ public abstract class Texture {
 		int imgxmax = imgx + imgw;
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u += (usize > 0 ? 1 : -1)) {
+			imgy_cd = 0;
+			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v += (vsize > 0 ? 1 : -1)) {
 				int rgb = img.getRGB(imgx, imgy);
 				setTexelNoWrap(u, v, Channel.BLUE, (rgb & 0xFF) * i255);

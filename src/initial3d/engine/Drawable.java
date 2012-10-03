@@ -1,10 +1,11 @@
 package initial3d.engine;
 
-import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import initial3d.Initial3D;
 
 public abstract class Drawable {
@@ -22,6 +23,11 @@ public abstract class Drawable {
 	private volatile boolean visible = true;
 	private volatile int draw_id_start = 0;
 	private volatile int draw_id_count = 0;
+
+	private volatile Scene scene = null;
+	private final Object wait_remove = new Object();
+
+	private final EventDispatcher dispatcher = new EventDispatcher();
 
 	public final void requestFocus() {
 		request_focus = true;
@@ -58,7 +64,7 @@ public abstract class Drawable {
 	}
 
 	/* package-private */
-	final int pollRequestedIDCount() {
+	final int getRequestedIDCount() {
 		return requested_id_count;
 	}
 
@@ -80,6 +86,48 @@ public abstract class Drawable {
 	final void setDrawIDs(int id, int count) {
 		draw_id_start = id;
 		draw_id_count = count;
+	}
+
+	/* package-private */
+	final void onSceneAdd(Scene s) {
+		if (scene != null && !scene.equals(s))
+			throw new IllegalStateException("Cannot add Drawable to more than one Scene.");
+		scene = s;
+	}
+
+	/* package-private */
+	final void onSceneRemove(Scene s) {
+		scene = null;
+		synchronized (wait_remove) {
+			wait_remove.notifyAll();
+		}
+	}
+
+	/**
+	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
+	 * desired mode of operation.
+	 */
+	@Override
+	public final boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	/**
+	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
+	 * desired mode of operation.
+	 */
+	@Override
+	public final int hashCode() {
+		return super.hashCode();
+	}
+
+	/** Wait for this Drawable to be removed from whatever Scene it is currently in. */
+	public final void waitForRemoval() throws InterruptedException {
+		while (scene != null) {
+			synchronized (wait_remove) {
+				wait_remove.wait();
+			}
+		}
 	}
 
 	/**
@@ -121,7 +169,7 @@ public abstract class Drawable {
 	public final int getDrawIDCount() {
 		return draw_id_count;
 	}
-	
+
 	public boolean ownsDrawID(int id) {
 		return id >= draw_id_start && id < draw_id_start + draw_id_count;
 	}
@@ -144,13 +192,64 @@ public abstract class Drawable {
 
 	/**
 	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled by the SceneManager.
-	 * @param framewidth Current render frame width
-	 * @param frameheight Current render frame height
+	 * 
+	 * @param framewidth
+	 *            Current render frame width
+	 * @param frameheight
+	 *            Current render frame height
 	 */
 	protected abstract void draw(Initial3D i3d, int framewidth, int frameheight);
 
-	protected void dispatchEvent(AWTEvent e, int drawid, int framex, int framey) {
-		System.out.println(e);
+	final void dispatchKeyEvent(KeyEvent e) {
+		processKeyEvent(e);
+		dispatcher.dispatchEvent(e);
+	}
+
+	final void dispatchMouseEvent(MouseEvent e, int drawid, int framex, int framey) {
+		processMouseEvent(e, drawid, framex, framey);
+		dispatcher.dispatchEvent(e);
+	}
+
+	/** Override for custom internal handling of key events. */
+	protected void processKeyEvent(KeyEvent e) {
+
+	}
+
+	/** Override for custom internal handling of mouse events. */
+	protected void processMouseEvent(MouseEvent e, int drawid, int framex, int framey) {
+
+	}
+
+	public void addKeyListener(KeyListener l) {
+		dispatcher.addKeyListener(l);
+	}
+
+	public void addMouseListener(MouseListener l) {
+		dispatcher.addMouseListener(l);
+	}
+
+	public void addMouseMotionListener(MouseMotionListener l) {
+		dispatcher.addMouseMotionListener(l);
+	}
+
+	public void addMouseWheelListener(MouseWheelListener l) {
+		dispatcher.addMouseWheelListener(l);
+	}
+
+	public void removeKeyListener(KeyListener l) {
+		dispatcher.removeKeyListener(l);
+	}
+
+	public void removeMouseListener(MouseListener l) {
+		dispatcher.removeMouseListener(l);
+	}
+
+	public void removeMouseMotionListener(MouseMotionListener l) {
+		dispatcher.removeMouseMotionListener(l);
+	}
+
+	public void removeMouseWheelListener(MouseWheelListener l) {
+		dispatcher.removeMouseWheelListener(l);
 	}
 
 }

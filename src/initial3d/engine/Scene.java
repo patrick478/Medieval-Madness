@@ -101,9 +101,12 @@ public class Scene {
 			Drawable d = remove_drawable.poll();
 			drawables.remove(d);
 			if (d.equals(focused)) focused = null;
+			d.onSceneRemove(this);
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0 && !add_drawable.isEmpty();) {
-			drawables.add(add_drawable.poll());
+			Drawable d = add_drawable.poll();
+			drawables.add(d);
+			d.onSceneAdd(this);
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0 && !remove_light.isEmpty();) {
 			lights.remove(remove_light.poll());
@@ -126,9 +129,27 @@ public class Scene {
 
 	/* package-private */
 	final void setFocusedDrawable(Drawable d) {
-		if (drawables.contains(d)) {
+		if (drawables.contains(d) || d == null) {
 			focused = d;
 		}
+	}
+
+	/**
+	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
+	 * desired mode of operation.
+	 */
+	@Override
+	public final boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	/**
+	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
+	 * desired mode of operation.
+	 */
+	@Override
+	public final int hashCode() {
+		return super.hashCode();
 	}
 
 	/** Override this to make a self-controlling Scene subclass. */
