@@ -30,6 +30,15 @@ public class Pane extends Drawable {
 		tex = Initial3D.createTexture(Texture.requiredSize(Math.max(width, height)));
 
 		requestInputEnabled(true);
+		requestVisible(false);
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 
 	@Override

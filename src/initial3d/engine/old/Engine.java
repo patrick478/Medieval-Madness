@@ -88,6 +88,9 @@ public class Engine extends Thread {
 		i3d.useFrameBuffer(bidata, width);
 
 		i3d.viewportSize(width, height);
+		
+		i3d.nearClip(0.2);
+		i3d.farCull(9001);
 
 		i3d.lightfv(LIGHT0, DIFFUSE, new float[] { 1f, 1f, 0.7f });
 		i3d.lightfv(LIGHT0, SPECULAR, new float[] { 1f, 1f, 0.7f });

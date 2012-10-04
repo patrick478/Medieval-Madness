@@ -63,6 +63,7 @@ public class TestUI {
 		scene.addDrawable(mc);
 		
 		Pane p = new Pane(128, 128);
+		p.requestVisible(true);
 		
 		scene.addDrawable(p);
 		
