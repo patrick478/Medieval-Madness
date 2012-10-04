@@ -87,8 +87,8 @@ public class MapGenerator {
 		this.SIZE = size;
 		this.SEED = seed;
 
-//		this.islandShape = new PerlinIsland(seed);
-		this.islandShape = new PerlinSanctuary(seed);
+		this.islandShape = new PerlinIsland(seed);
+		//this.islandShape = new PerlinSanctuary(seed);
 	}
 	
 	public List<Triangle> getTriangles(){
