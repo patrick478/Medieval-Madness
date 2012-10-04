@@ -52,6 +52,9 @@ final class PolygonPipeline {
 
 		// init pEx
 		unsafe.putLong(pBase + 0x00000084, pBase + 0x00840900);
+		
+		double z_nearclip = unsafe.getDouble(pBase + 0x00000044);
+		double z_farcull = unsafe.getDouble(pBase + 0x0000004C);
 
 		profiler.startSection("I3D_polypipe_cull-clip-light-triangulate");
 
@@ -70,7 +73,7 @@ final class PolygonPipeline {
 			long pEnd = pPoly + vcount * 64;
 			int far_cull_count = 0;
 			for (long pPolyVert = pPoly; pPolyVert < pEnd; pPolyVert += 64) {
-				if (unsafe.getDouble(unsafe.getLong(pPolyVert) + 16) > 1d) far_cull_count++;
+				if (unsafe.getDouble(unsafe.getLong(pPolyVert + 24) + 16) > z_farcull) far_cull_count++;
 			}
 			if (far_cull_count >= vcount) {
 				// all vertices over projection far plane
@@ -78,7 +81,7 @@ final class PolygonPipeline {
 			}
 
 			// plane culling (clip optimisation)
-			int vclip_near = testClipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
+			int vclip_near = testClipPolygon(unsafe, pBase, pPoly, 0, 0, 1, z_nearclip);
 			if (vclip_near == 0) continue;
 			int vclip_left = testClipPolygon(unsafe, pBase, pPoly, pClipLeft);
 			if (vclip_left == 0) continue;
@@ -151,7 +154,7 @@ final class PolygonPipeline {
 
 			// near clip, but only if necessary
 			if (vclip_near < vcount) {
-				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, 0.2);
+				pPoly = clipPolygon(unsafe, pBase, pPoly, 0, 0, 1, z_nearclip);
 				// note that even if no vertices are emitted from the clipper,
 				// vcount can still be read and will be zero
 				vcount_clipped = unsafe.getInt(pPoly + 32);

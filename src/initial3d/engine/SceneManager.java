@@ -146,6 +146,10 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 								drawid = 1;
 								i3d.clear(ID_BUFFER_BIT);
 							}
+							
+							// near clip + far cull
+							i3d.nearClip(0.2);
+							i3d.farCull(8800);
 
 							// draw stuff as appropriate
 							profiler.startSection("I3D-sceneman_draw");

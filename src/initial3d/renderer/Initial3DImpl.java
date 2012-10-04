@@ -219,6 +219,16 @@ class Initial3DImpl extends Initial3D {
 		// clear all the buffers
 		clear(TRUE);
 	}
+	
+	@Override
+	public void nearClip(double z) {
+		putDouble(0x00000044, z);
+	}
+	
+	@Override
+	public void farCull(double z) {
+		putDouble(0x0000004C, z);
+	}
 
 	@Override
 	public void materialf(int face, int pname, float v) {

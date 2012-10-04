@@ -18,6 +18,8 @@ public class Pane extends Drawable {
 	private final Texture tex;
 	
 	private final int width, height;
+	
+	private String str = "";
 
 	public Pane(int width_, int height_) {
 		
@@ -27,6 +29,7 @@ public class Pane extends Drawable {
 		bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		tex = Initial3D.createTexture(Texture.requiredSize(Math.max(width, height)));
 
+		requestInputEnabled(true);
 	}
 
 	@Override
@@ -40,6 +43,8 @@ public class Pane extends Drawable {
 		
 		i3d.enable(TEXTURE_2D);
 		i3d.texImage2D(FRONT, tex, null, null);
+		
+		i3d.objectID(getDrawIDStart());
 		
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
@@ -77,7 +82,7 @@ public class Pane extends Drawable {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.BLACK);
-		g.drawString("HELLO WORLD!", 20, 20);
+		g.drawString(str, 20, 20);
 
 		return true;
 
@@ -85,7 +90,10 @@ public class Pane extends Drawable {
 
 	@Override
 	protected void processKeyEvent(KeyEvent e) {
-
+		System.out.println(e.getKeyChar());
+		if (e.getID() == KeyEvent.KEY_TYPED) {
+			str += e.getKeyChar();
+		}
 	}
 
 	@Override

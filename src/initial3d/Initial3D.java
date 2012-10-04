@@ -178,6 +178,10 @@ public abstract class Initial3D {
 	public abstract void initFog();
 
 	public abstract void viewportSize(int w, int h);
+	
+	public abstract void nearClip(double z);
+	
+	public abstract void farCull(double z);
 
 	public abstract void begin(int mode);
 
