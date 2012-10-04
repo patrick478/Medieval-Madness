@@ -15,7 +15,6 @@ public abstract class Drawable {
 	private volatile boolean request_removal = false;
 	private volatile boolean request_input_enabled = false;
 	private volatile boolean request_visible = true;
-	private volatile int requested_id_count = 1;
 
 	// the actual state
 	private volatile boolean focused = false;
@@ -63,14 +62,19 @@ public abstract class Drawable {
 		}
 	}
 
-	/* package-private */
-	final int getRequestedIDCount() {
-		return requested_id_count;
+	/**
+	 * Determine the number of draw ids that will be allocated to this drawable
+	 * iff <code>isInputEnabled()</code> returns true from a call by the
+	 * SceneManager.
+	 */
+	protected int getRequestedIDCount() {
+		return 1;
 	}
 
 	/* package-private */
 	/**
-	 * Called once per frame (immediately-ish) prior to when a call to draw() would happen, if it happens or not.
+	 * Called once per frame (immediately-ish) prior to when a call to draw()
+	 * would happen, if it happens or not.
 	 */
 	final void update() {
 		input_enabled = request_input_enabled;
@@ -104,8 +108,8 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
-	 * desired mode of operation.
+	 * Equals and hashCode are overridden and modified final to prevent further
+	 * overriding, reference equality is the desired mode of operation.
 	 */
 	@Override
 	public final boolean equals(Object o) {
@@ -113,15 +117,18 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Equals and hashCode are overridden and modified final to prevent further overriding, reference equality is the
-	 * desired mode of operation.
+	 * Equals and hashCode are overridden and modified final to prevent further
+	 * overriding, reference equality is the desired mode of operation.
 	 */
 	@Override
 	public final int hashCode() {
 		return super.hashCode();
 	}
 
-	/** Wait for this Drawable to be removed from whatever Scene it is currently in. */
+	/**
+	 * Wait for this Drawable to be removed from whatever Scene it is currently
+	 * in.
+	 */
 	public final void waitForRemoval() throws InterruptedException {
 		while (scene != null) {
 			synchronized (wait_remove) {
@@ -131,40 +138,46 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Returns whether this drawable is visible. This is only updated at the same time as input enabled. Invisible
-	 * drawables behave as if isInputEnabled returned false.
+	 * Returns whether this drawable is visible. This is only updated at the
+	 * same time as input enabled. Invisible drawables behave as if
+	 * isInputEnabled returned false.
 	 */
 	public final boolean isVisible() {
 		return visible;
 	}
 
 	/**
-	 * Returns whether this Drawable has input focus. This is only updated once per frame, prior to the processing of
-	 * input events.
+	 * Returns whether this Drawable has input focus. This is only updated once
+	 * per frame, prior to the processing of input events.
 	 */
 	public final boolean isFocused() {
 		return focused;
 	}
 
 	/**
-	 * Returns whether input is enabled for this frame. This is only updated once per frame (immediately-ish) prior to
-	 * when a call to draw() would happen, if it happens or not.
+	 * Returns whether input is enabled for this frame. This is only updated
+	 * once per frame (immediately-ish) prior to when a call to draw() would
+	 * happen, if it happens or not.
 	 */
 	public final boolean isInputEnabled() {
 		return input_enabled;
 	}
 
 	/**
-	 * Returns the start of the contiguous set of ids that this Drawable was allocated to use when drawing itself the
-	 * last time <code>isInputEnabled()</code> returned true from a call by the SceneManager.
+	 * Returns the start of the contiguous set of ids that this Drawable was
+	 * allocated to use when drawing itself the last time
+	 * <code>isInputEnabled()</code> returned true from a call by the
+	 * SceneManager.
 	 */
 	public final int getDrawIDStart() {
 		return draw_id_start;
 	}
 
 	/**
-	 * Returns the length of the contiguous set of ids that this Drawable was allocated to use when drawing itself the
-	 * last time <code>isInputEnabled()</code> returned true from a call by the SceneManager.
+	 * Returns the length of the contiguous set of ids that this Drawable was
+	 * allocated to use when drawing itself the last time
+	 * <code>isInputEnabled()</code> returned true from a call by the
+	 * SceneManager.
 	 */
 	public final int getDrawIDCount() {
 		return draw_id_count;
@@ -175,23 +188,17 @@ public abstract class Drawable {
 	}
 
 	/**
-	 * Set the number of draw ids that will be allocated to this drawable iff <code>isInputEnabled()</code> returns true
-	 * from a call by the SceneManager.
-	 */
-	protected final void setRequestedIDCount(int count) {
-		requested_id_count = count;
-	}
-
-	/**
-	 * Assuming that this Drawable currently has focus, determines if it will allow the focus to be released to another
-	 * Drawable, including <code>null</code>.
+	 * Assuming that this Drawable currently has focus, determines if it will
+	 * allow the focus to be released to another Drawable, including
+	 * <code>null</code>.
 	 */
 	public boolean releaseFocusTo(Drawable d) {
 		return true;
 	}
 
 	/**
-	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled by the SceneManager.
+	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled
+	 * by the SceneManager.
 	 * 
 	 * @param framewidth
 	 *            Current render frame width
