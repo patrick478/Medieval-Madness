@@ -50,29 +50,29 @@ public class Game {
 		}
 		
 		// TODO remove
-		MovableEntity ball = new Player(Vec3.zero, 1231231);
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream("ball.txt");
-			ball.setMeshContexts(MeshLoader.loadComp261(fis));
-			fis.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		MovableEntity ball = new Player(Vec3.zero, 1231231);
+//		FileInputStream fis;
+//		try {
+//			fis = new FileInputStream("ball.txt");
+//			ball.setMeshContexts(MeshLoader.loadComp261(fis));
+//			fis.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		for (Drawable d : ball.getMeshContexts()) {
+//			world.addDrawable(d);
+//		}
+//		
+//		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
+//		world.getCamera().trackReferenceFrame(camera_rf);
+//		camera_rf.setPosition(Vec3.create(-10, 10, -10));
+//		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
+//		
+//		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
 		
-		for (Drawable d : ball.getMeshContexts()) {
-			world.addDrawable(d);
-		}
-		
-		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
-		world.getCamera().trackReferenceFrame(camera_rf);
-		camera_rf.setPosition(Vec3.create(-10, 10, -10));
-		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
-		
-		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
-		
-		ball.updateMotion(Vec3.create(0, 0.5, 0), Vec3.create(0.5, 0, 0.5), Quat.one, Vec3.zero, System.currentTimeMillis());
+//		ball.updateMotion(Vec3.create(0, 0.5, 0), Vec3.create(0.5, 0, 0.5), Quat.one, Vec3.zero, System.currentTimeMillis());
 		
 	}
 	
@@ -125,5 +125,9 @@ public class Game {
 		this.world.addDrawable(mc);
 		
 		
+	}
+
+
+	public void changeState(PlayState playState) {
 	}
 }

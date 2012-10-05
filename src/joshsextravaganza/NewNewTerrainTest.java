@@ -1,5 +1,6 @@
 package joshsextravaganza;
 
+import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +168,22 @@ public class NewNewTerrainTest {
 		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
 		//scene.getCamera().setFOV(Math.PI / 12);
 		
-		
-		ball.updateMotion(Vec3.create(0, 0.5, 0), Vec3.create(1, 0, 1), Quat.one, Vec3.zero, System.currentTimeMillis());
+		Vec3 vel = Vec3.zero;
+		Vec3 location = Vec3.zero;
+		double speed = 2.5;
+		while(true)
+		{
+			if(rwin.getKey(KeyEvent.VK_UP))
+			{
+				vel = vel.setX(speed);
+				vel = vel.setZ(speed);
+			}
+			else
+				vel = Vec3.zero;
+			
+			ball.updateMotion(ball.getPosition(), vel, Quat.one, Vec3.zero, System.currentTimeMillis());
+			
+			location.add(vel);
+		}
 	}
 }

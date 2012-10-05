@@ -2,7 +2,6 @@ package server.game;
 
 import common.entity.*;
 import common.packets.ChangeEntityModePacket;
-import common.packets.EntityMode;
 
 import java.util.*;
 
@@ -47,10 +46,14 @@ public class PlayerManager {
 		ChangeEntityModePacket pk = new ChangeEntityModePacket();
 		pk.entityID = sp.id;
 		pk.mode = EntityMode.Born;
+		pk.type = EntityType.Moveable;
 		
 		for(ServerPlayer op : this.players.values())
 		{
-			System.out.printf("Notifying Mr. %s\n", sp.id);
+			if(op.equals(sp))
+				continue;
+			
+			System.out.printf("Notifying Mr. %s of player in type %s\n", sp.id, pk.type.toString());
 			op.session.send(pk);
 		}
 	}

@@ -45,7 +45,6 @@ public class Client {
 		Player p = EntityFactory.createPlayer(Vec3.zero, System.nanoTime());
 		gameWorld.addMoveableEntity(p);
 		gameWorld.setPlayer(p.id);
-		
 	}
 
 	public void setState(AbstractState newState) {
@@ -75,7 +74,7 @@ public class Client {
 					- lastStartTime;
 			lastStartTime = System.currentTimeMillis();
 
-			this.gameState.update(elapsedTimeSinceLastUpdate);
+			this.gameState.update(elapsedTimeSinceLastUpdate, window);
 
 			long currentTimeForTick = System.currentTimeMillis()
 					- lastStartTime;

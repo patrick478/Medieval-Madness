@@ -1,4 +1,4 @@
-package common.packets;
+package common.entity;
 
 public enum EntityMode {
 	Born,
