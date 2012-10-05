@@ -1,8 +1,11 @@
 version 1
 default_spawn_cache_size=10
+default_spawn_segment_x=0
+default_spawn_segment_z=0
 default_x=100
 default_z=100
 game_seed=1348825157938
 listen_port=14121
+min_segment_send_range=50
 sfq_tp_max_threads=100
 ticks_per_second=30
