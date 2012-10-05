@@ -143,7 +143,7 @@ public class SegmentGenerator {
 //				}
 //			}
 
-			//next applying perlin noise
+//			//next applying perlin noise
 //			for (int z = -1; z <= Segment.size + 1; z++) {
 //				for (int x = -1; x <= Segment.size + 1; x++) {
 //					hm[x + 1][z + 1] += (float) perlin.getNoise((x
@@ -155,15 +155,15 @@ public class SegmentGenerator {
 
 		}
 		
-		//next applying perlin noise regarless of position of polygon
-		for (int z = -1; z <= Segment.size + 1; z++) {
-			for (int x = -1; x <= Segment.size + 1; x++) {
-				hm[x + 1][z + 1] += (float) perlin.getNoise((x
-						/ (double) Segment.size + posx)
-						/ frequency, (z / (double) Segment.size + posz)
-						/ frequency, 0, 8);
-			}
-		}
+//		//next applying perlin noise regarless of position of polygon
+//		for (int z = -1; z <= Segment.size + 1; z++) {
+//			for (int x = -1; x <= Segment.size + 1; x++) {
+//				hm[x + 1][z + 1] += (float) perlin.getNoise((x
+//						/ (double) Segment.size + posx)
+//						/ frequency, (z / (double) Segment.size + posz)
+//						/ frequency, 0, 8);
+//			}
+//		}
 
 		//finally create the segment and place in the cache and return
 		Segment s = new Segment(posx, posz, hm);

@@ -58,7 +58,7 @@ public class TerrainHeightNormalTest {
 		Segment current = sg.getSegment(0, 0);
 		scene.addDrawable(current.getMeshContext());
 		
-		Vec3 oldVel = Vec3.create(1, 0, 1);
+		Vec3 oldVel = Vec3.create(50, 0, 50);
 		
 		while(true){
 			//new vec direction
@@ -72,15 +72,15 @@ public class TerrainHeightNormalTest {
 			}
 			
 			Vec3 norm = current.getNormal(xPos, zPos);
-			//something funky going on with this... TODO FIXME TODO FIXME
-			Vec3 vel = norm.cross(oldVel.unit().cross(norm.unit())).unit().scale(oldVel.mag());
+			//something funky going on with this..
+			Vec3 vel = norm.cross(oldVel.cross(norm)).unit().scale(oldVel.mag());
 			
 			
 			
 			ball.updateMotion(Vec3.create(xPos, current.getHeight(xPos, zPos)+0.5, zPos), 
-					oldVel, Quat.one, Vec3.zero, System.currentTimeMillis());
+					vel, Quat.one, Vec3.zero, System.currentTimeMillis());
 			
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 		
 	}

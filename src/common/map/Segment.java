@@ -80,6 +80,11 @@ public class Segment {
 		return (d0.cross(d1).add(d1.cross(d2)).add(d2.cross(d3)).add(d3.cross(d0))).unit();
 	}
 	
+	//values go from 0 to size (inclusive)
+	private Vec3 vectorAt(int x, int z){
+		return Vec3.create(x, heightAt(x, z), z);
+	}
+	
 	/**
 	 * Translates the given relative value x, to a global position
 	 * based on the segment position given. Assumes x is a value
@@ -106,7 +111,7 @@ public class Segment {
 	
 	/**
 	 * Returns the height at the given global positions inside the Segment.
-	 * returns 0 if the positions are not contained inside the segment
+	 * Returns 0 if the position is not contained inside the segment.
 	 * 
 	 * @param x global x position
 	 * @param z global z position
@@ -132,10 +137,70 @@ public class Segment {
 			double left = (botLeft-topLeft)*(z%1) + topLeft;
 			double right = (botRight-topRight)*(z%1) + topRight;
 
-			return (right-left) * (z%1) + left;
+			return (right-left) * (x%1) + left;
 			
 		}
 		return 0;
+	}
+	
+	/**
+	 * Returns the flat normal at the given global positions inside the Segment.
+	 * The flat normal is the normal calculated by taking the surrounding points
+	 * at the highest LOD and working out the normal of the plane they create.
+	 * Returns 0 if the position is not contained inside the segment
+	 * 
+	 * @param x global x position
+	 * @param z global z position
+	 * @return the flat normal of the segment at the given global position
+	 */
+	public Vec3 getFlatNormal(double x, double z){
+		if(contains(x, z)){
+			
+			//relative positions
+			x = relativePos(x);
+			z = relativePos(z);
+			
+			//relative positions rounded down 
+			int relX = (int) x;
+			int relZ = (int) z;
+			
+			Vec3 p1, p2, p3;
+			
+			//if an even cumulative index make the triangle cut across 
+			//the square go from top left to bottom right
+			if((relX+relZ)%2==0){
+				
+				//if point is on the top right triangle
+				if((x%1)>(z%1)){
+					p1 = vectorAt(relX+1, relZ);
+					p2 = vectorAt(relX, relZ);
+					p3 = vectorAt(relX+1, relZ+1);
+				//else point is in bottom left triangle
+				}else{
+					p1 = vectorAt(relX, relZ);
+					p2 = vectorAt(relX, relZ+1);
+					p3 = vectorAt(relX+1, relZ+1);
+				}
+				
+			//else from top right to bottom left
+			}else{
+				
+				//if point is on the top left triangle
+				if((x%1)+(z%1)<1){
+					p1 = vectorAt(relX+1, relZ);
+					p2 = vectorAt(relX, relZ);
+					p3 = vectorAt(relX, relZ+1);
+				//else point is in bottom right triangle
+				}else{
+					p1 = vectorAt(relX, relZ+1);
+					p2 = vectorAt(relX+1, relZ+1);
+					p3 = vectorAt(relX+1, relZ);
+				}
+			}
+			
+			return Vec3.createPlaneNorm(p1, p2, p3);
+		}
+		return Vec3.create(0,1,0);
 	}
 	
 	/**
@@ -205,9 +270,6 @@ public class Segment {
 				// mLOD.addNormal(0, 1, 0);
 			}
 		}
-
-		Random r = new Random(32);
-
 		int[] tri_vt_1a = new int[] { mLOD.addTexCoord(0, 1), mLOD.addTexCoord(1, 1), mLOD.addTexCoord(0, 0) };
 		int[] tri_vt_1b = new int[] { mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0), mLOD.addTexCoord(0, 0) };
 		int[] tri_vt_2a = new int[] { mLOD.addTexCoord(0, 1), mLOD.addTexCoord(1, 1), mLOD.addTexCoord(1, 0) };
@@ -218,11 +280,15 @@ public class Segment {
 			for (int x = 0; x < size; x++) {
 				int[] tri0, tri1;
 
-				if (r.nextBoolean()) {
+				//if an even cumulative index make the triangle cut across 
+				//the square go from top left to bottom right
+				if ((x+z)%2==0) {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x + 1][z + 1] };
 					tri1 = new int[] { ind[x][z], ind[x][z + 1], ind[x + 1][z + 1] };
 					mLOD.addPolygon(tri0, tri_vt_1a, tri0, null);
 					mLOD.addPolygon(tri1, tri_vt_1b, tri1, null);
+					
+				//else from top right to bottom left
 				} else {
 					tri0 = new int[] { ind[x + 1][z], ind[x][z], ind[x][z + 1] };
 					tri1 = new int[] { ind[x + 1][z], ind[x][z + 1], ind[x + 1][z + 1] };
