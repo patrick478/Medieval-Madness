@@ -14,86 +14,93 @@ public class Game {
 	private static Game instance = null;
 	public static Game getInstance()
 	{
-		if(instance == null)
-			instance = new Game();
-		
+//		if(instance == null)
+//			instance = new Game();
+//		
 		return instance;
 	}
-	
-	private double trackDistance = 100;
-	private double existDistance = 400;
 	
 	private Map<Long, MovableEntity> movableEntities = new HashMap<Long, MovableEntity>();	
 	private Map<Long, Entity> staticEntities = new HashMap<Long, Entity>();	
 	
 	private Map<Long, Segment> terrain = new HashMap<Long, Segment>();	
 	
-	private Scene world;
+	private Client client = null;
 	private MovableEntity player = null;
+	private Scene world = null;
 	
-	public Game(){
+	// temporary
+	private MovableEntity ball = null;
+	
+	public Game(Client c){
 		instance = this;
+		client = c;
 	}
 	
 	
 	public void loadScene(Scene _world){
 		world = _world;
-		world.getCamera().trackReferenceFrame(player);
+		
+		// these loops are bad - what if the scene already has the terrain?!
 		for(MovableEntity me : movableEntities.values()){
 			//add mesh
 		}
+		
 		for(Entity m : staticEntities.values()){
 			//add mesh
 		}
+		
 		for(Segment s : terrain.values()){
-			//add mesh
+			
 		}
 		
-		// TODO remove
-//		MovableEntity ball = new Player(Vec3.zero, 1231231);
-//		FileInputStream fis;
-//		try {
-//			fis = new FileInputStream("ball.txt");
-//			ball.setMeshContexts(MeshLoader.loadComp261(fis));
-//			fis.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		for (Drawable d : ball.getMeshContexts()) {
-//			world.addDrawable(d);
-//		}
-//		
-//		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
-//		world.getCamera().trackReferenceFrame(camera_rf);
-//		camera_rf.setPosition(Vec3.create(-10, 10, -10));
-//		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
-//		
-//		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
+
+		ball = new Player(Vec3.zero, 1231231);
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream("ball.txt");
+			ball.setMeshContexts(MeshLoader.loadComp261(fis));
+			fis.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-//		ball.updateMotion(Vec3.create(0, 0.5, 0), Vec3.create(0.5, 0, 0.5), Quat.one, Vec3.zero, System.currentTimeMillis());
+		for (Drawable d : ball.getMeshContexts()) {
+			world.addDrawable(d);
+		}
 		
+		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
+		world.getCamera().trackReferenceFrame(camera_rf);
+		camera_rf.setPosition(Vec3.create(-10, 10, -10));
+		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
+		
+		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
 	}
 	
-	public Scene getScene(){
-		return world;
-	}
-	
-	public void enterWorld(int worldID)
+	public void enterWorld(int worldID, long entityID)
 	{
-		System.out.printf("Entering world %d\n", worldID);
+		System.out.printf("Entering world %d and i am entity #%d\n", worldID, entityID);
+		this.setPlayer(entityID);
+		this.player.updateMotion(movableEntities.get(entityID).getPosition(), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 	}
 
 	public boolean setPlayer(long eid){
 		player = movableEntities.get(eid);
-		System.out.println(world);
-		world.getCamera().trackReferenceFrame(player);
+//		System.out.println(world);
+//		world.getCamera().trackReferenceFrame(player);
 		return player!=null;
 	}
 	
 	public void entityMoved(Long eid, Vec3 pos, Vec3 linVel, Quat ori, Vec3 angVel, Long time){
-		MovableEntity e = movableEntities.get(eid);
+		MovableEntity e;
+		do
+		{
+			e = movableEntities.get(eid);
+			if(e == null)
+				movableEntities.put(eid, new Player(Vec3.one, eid));
+		} while(e == null);
+			
 		if(e!=null ){//TODO fix the time signiture 
 			e.updateMotion(pos, linVel, ori, angVel, time);
 		}
@@ -120,14 +127,9 @@ public class Game {
 	
 	public void addTerrain(Segment tim){
 		//add mesh
+		System.out.printf("Adding segment at %d %d\n", tim.xPos, tim.zPos);
 		terrain.put(tim.id, tim);
 		MeshContext mc = tim.getMeshContext();
-		this.world.addDrawable(mc);
-		
-		
-	}
-
-
-	public void changeState(PlayState playState) {
+		this.client.getState().getScene().addDrawable(mc);
 	}
 }

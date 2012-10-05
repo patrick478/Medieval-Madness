@@ -10,4 +10,9 @@ public class ServerPlayer extends Player {
 	public ServerPlayer(Vec3 _radius, long id) {
 		super(_radius, id);
 	}
+	
+	public void setPosition(Vec3 pos)
+	{
+		this.position = pos;
+	}
 }

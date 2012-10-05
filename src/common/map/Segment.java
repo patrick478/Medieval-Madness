@@ -90,7 +90,7 @@ public class Segment {
 	 * @return global position of that value
 	 */
 	private double globalPos(double x, int segPos){
-		return (x + (xPos * size)) * horzScale;
+		return (x + (segPos * size)) * horzScale;
 	}
 	
 	/**

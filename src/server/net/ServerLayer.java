@@ -111,7 +111,7 @@ public class ServerLayer extends NetworkLayer implements Runnable {
 						switch(change.type) {
 							case ChangeRequest.CHANGEOPS:
 								SelectionKey key = change.socket.keyFor(this.selector);
-								if(key.isValid())
+								if(key != null && key.isValid())
 									key.interestOps(change.ops);
 								break;
 						}

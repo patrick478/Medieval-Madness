@@ -11,6 +11,7 @@ import server.datalayer.SQLite;
 import server.face.ConsoleFace;
 import server.face.ServerFace;
 import server.game.GameEngine;
+import server.game.PlayerManager;
 import server.net.ServerLayer;
 import server.session.SessionMngr;
 import common.settings.Settings;
@@ -99,6 +100,7 @@ public class Server implements Runnable {
 		
 		// warm the session manager
 		SessionMngr.warm(this.face.getOut());
+		PlayerManager.warm(this);
 		
 		// start the face
 		faceThread.start();

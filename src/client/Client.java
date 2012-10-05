@@ -35,7 +35,7 @@ public class Client {
 		window.setVisible(true);
 		scenemgr = new SceneManager(width, height);
 		scenemgr.setDisplayTarget(window);
-		gameWorld = new Game();
+		gameWorld = new Game(this);
 		
 		
 		this.setState(new StartupState());
@@ -55,6 +55,11 @@ public class Client {
 		gameState = newState;
 		scenemgr.attachToScene(gameState.getScene());
 		scenemgr.getProfiler().setResetOutput(null);
+	}
+	
+	public AbstractState getState()
+	{
+		return this.gameState;
 	}
 	
 	public Game getGameWorld(){

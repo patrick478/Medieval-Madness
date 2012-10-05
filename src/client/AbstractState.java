@@ -31,7 +31,7 @@ public abstract class AbstractState {
 		this.client = pClient;
 		this.gameWorld = gameWorld;
 		
-		gameWorld.loadScene(myScene);
+//		gameWorld.loadScene(myScene);
 	}
 	
 	/**

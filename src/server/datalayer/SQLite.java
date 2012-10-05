@@ -41,7 +41,7 @@ public class SQLite extends DataProvider implements Runnable {
 			try {
 				if(!current.isNonQuery)
 				{
-					System.out.println("Running query: " + current.sql());
+//					System.out.println("Running query: " + current.sql());
 					st = this.db.prepare(current.sql());
 					while(st.step())
 					{
@@ -52,7 +52,7 @@ public class SQLite extends DataProvider implements Runnable {
 						}
 						current.data.add(row);
 					}
-					System.out.println("Query complete.");
+//					System.out.println("Query complete.");
 				}
 				else
 				{
@@ -146,7 +146,7 @@ public class SQLite extends DataProvider implements Runnable {
 			} catch (InterruptedException e) {
 				return false;
 			}
-			System.out.println("Waiting..");
+//			System.out.println("Waiting..");
 		}
 		System.out.printf("This query is complete: %s\n", query);
 		

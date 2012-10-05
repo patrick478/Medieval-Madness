@@ -1,5 +1,6 @@
 package client.networking;
 
+import initial3d.engine.Vec3;
 import client.Game;
 import client.PlayState;
 import common.Packet;
@@ -44,12 +45,16 @@ public class NetworkHandler {
 			break;
 			case EnterWorldPacket.ID:
 				EnterWorldPacket ewp = (EnterWorldPacket)p;
-				Game.getInstance().enterWorld(ewp.newWorld);
+				Game.getInstance().enterWorld(ewp.newWorld, ewp.playerEntity);
 			break;
 			case SegmentPacket.ID:
 				SegmentPacket sp = (SegmentPacket)p;
 				Game.getInstance().addTerrain(sp.segment);
 //				System.out.println("Got segment packet from server");
+			break;
+			case EntityUpdatePacket.ID:
+				EntityUpdatePacket eup = (EntityUpdatePacket)p;
+				Game.getInstance().entityMoved(eup.entityID, eup.position, eup.velocity, eup.orientation, eup.angularVel, System.currentTimeMillis());
 			break;
 			case ChangeEntityModePacket.ID:
 //				System.out.println("Holy fuck it worked!");
