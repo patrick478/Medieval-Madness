@@ -169,34 +169,6 @@ public class ServerWorker implements Runnable {
 						
 						EntityManager.getInstance().addMoveableEntity(player, id);
 						PlayerManager.getInstance().addPlayer(username, player);
-					
-//						// send into game world
-//						EnterWorldPacket ewp = new EnterWorldPacket();
-//						ewp.newWorld = 0;
-//						sl.send(s.getSocket(), ewp.toData().getData());
-//						
-//						int range = 12;
-//						for(int i = -(range / 2) + 1; i <= (range/2); i++)
-//						{
-//							for(int j = -(range / 2) + 1; j <= (range/2); j++)
-//							{
-////								SegmentPacket sp = new SegmentPacket();
-////								sp.segment = this.parentServer.game.getSegment(i, j);
-////								System.out.printf("Sent segment. Request(i:%d;j%d)-Sent(i:%d;j:%d)\n", i, j, sp.segment.xPos, sp.segment.zPos);
-////								sl.send(s.getSocket(), sp.toData().getData());
-//								System.out.printf("Transmitting x=%dz=%d\n", i, j);
-//								this.parentServer.game.addSegmentRequest(s, i, j);
-//								
-////								try {
-////									//Thread.sleep(500);
-////								} catch (InterruptedException e) {
-////									// TODO Auto-generated catch block
-////									e.printStackTrace();
-////								}
-//							}
-//						}
-//						
-//						System.out.println("Test packets queued");
 					}
 					
 				}

@@ -29,9 +29,6 @@ public class Game {
 	private MovableEntity player = null;
 	private Scene world = null;
 	
-	// temporary
-	private MovableEntity ball = null;
-	
 	public Game(Client c){
 		instance = this;
 		client = c;
@@ -55,7 +52,26 @@ public class Game {
 		}
 		
 
-		ball = new Player(Vec3.zero, 1231231);
+	}
+	
+	public void enterWorld(int worldID, long entityID)
+	{
+		System.out.printf("Entering world %d and i am entity #%d\n", worldID, entityID);
+		this.setPlayer(entityID);
+		this.player.updateMotion(movableEntities.get(entityID).getPosition(), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+	}
+
+	public boolean setPlayer(long eid){
+		player = movableEntities.get(eid);
+//		System.out.println(world);
+//		world.getCamera().trackReferenceFrame(player);
+		return player!=null;
+	}
+	
+	private Player makePlayerIntoBall()
+	{
+
+		Player ball = new Player(Vec3.zero, 1231231);
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream("ball.txt");
@@ -76,20 +92,7 @@ public class Game {
 		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
 		
 		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
-	}
-	
-	public void enterWorld(int worldID, long entityID)
-	{
-		System.out.printf("Entering world %d and i am entity #%d\n", worldID, entityID);
-		this.setPlayer(entityID);
-		this.player.updateMotion(movableEntities.get(entityID).getPosition(), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
-	}
-
-	public boolean setPlayer(long eid){
-		player = movableEntities.get(eid);
-//		System.out.println(world);
-//		world.getCamera().trackReferenceFrame(player);
-		return player!=null;
+		return ball;
 	}
 	
 	public void entityMoved(Long eid, Vec3 pos, Vec3 linVel, Quat ori, Vec3 angVel, Long time){
@@ -98,12 +101,14 @@ public class Game {
 		{
 			e = movableEntities.get(eid);
 			if(e == null)
-				movableEntities.put(eid, new Player(Vec3.one, eid));
+				movableEntities.put(eid, makePlayerIntoBall());
 		} while(e == null);
 			
 		if(e!=null ){//TODO fix the time signiture 
+			System.out.printf("Updated entity %d to %f,%f,%f\n", eid, pos.x, pos.y, pos.z);
 			e.updateMotion(pos, linVel, ori, angVel, time);
 		}
+		
 	}
 	
 	//TODO wtf is this method going to do?
@@ -127,7 +132,10 @@ public class Game {
 	
 	public void addTerrain(Segment tim){
 		//add mesh
-		System.out.printf("Adding segment at %d %d\n", tim.xPos, tim.zPos);
+//		System.out.printf("Adding segment at %d %d\n", tim.xPos, tim.zPos);
+		if(terrain.containsKey(tim.id))
+			return;
+		
 		terrain.put(tim.id, tim);
 		MeshContext mc = tim.getMeshContext();
 		this.client.getState().getScene().addDrawable(mc);
