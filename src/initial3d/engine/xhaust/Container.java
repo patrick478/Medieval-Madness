@@ -1,5 +1,7 @@
 package initial3d.engine.xhaust;
 
+import initial3d.Initial3D;
+
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,8 +64,10 @@ public class Container extends Component {
 	}
 	
 	@Override
-	void doRepaint(Graphics g) {
+	boolean doRepaint(Graphics g, Initial3D i3d, int id, double zview) {
 		
+		
+		return true;
 	}
-
+	
 }

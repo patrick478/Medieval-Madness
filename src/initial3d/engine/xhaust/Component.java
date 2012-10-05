@@ -1,5 +1,8 @@
 package initial3d.engine.xhaust;
 
+import static initial3d.Initial3D.POLYGON;
+import initial3d.Initial3D;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collections;
@@ -21,18 +24,29 @@ public abstract class Component {
 	}
 	
 	/* package-private */
-	final void setDrawID(int id) {
-		drawid = id;
-	}
-	
-	/* package-private */
 	final int getDrawID() {
 		return drawid;
 	}
 	
 	/* package-private */
-	void doRepaint(Graphics g) {
+	boolean doRepaint(Graphics g, Initial3D i3d, int id, double zview) {
+		drawid = id;
+
+		i3d.objectID(id);
+		i3d.begin(POLYGON);
 		
+		i3d.vertex3d(0, -height, zview);
+		i3d.vertex3d(-width, -height, zview);
+		i3d.vertex3d(-width, 0, zview);
+		i3d.vertex3d(0, 0, zview);
+		
+		i3d.end();
+		
+		if (repaint_required) {
+			paint(g);
+			return true;
+		}
+		return false;
 	}
 	
 	/* package-private */

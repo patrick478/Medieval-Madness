@@ -21,6 +21,7 @@ public class Pane extends Drawable {
 	private final Texture tex;
 	
 	private final int width, height;
+	private int x, y;
 	
 	private final Container root;
 	
@@ -50,6 +51,19 @@ public class Pane extends Drawable {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public void setPosition(int x_, int y_) {
+		x = x_;
+		y = y_;
 	}
 
 	@Override
@@ -85,36 +99,41 @@ public class Pane extends Drawable {
 		
 		i3d.disable(LIGHTING);
 		
-		i3d.enable(TEXTURE_2D);
-		i3d.texImage2D(FRONT, tex, null, null);
-		
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
 		i3d.loadIdentity();
+		
+		i3d.translateX(width / 2 + x);
+		i3d.translateY(height / 2 + y);
 		
 		double scale = ytop * 2d / (double) frameheight;
 		TransformationMatrix4D.scale(xtemp, scale, scale, 1, 1);
 		i3d.multMatrix(xtemp);
 		
+		
 		i3d.matrixMode(VIEW);
 		i3d.pushMatrix();
 		i3d.loadIdentity();
 		
-		
-		i3d.objectID(getDrawIDStart());
+		i3d.enable(TEXTURE_2D);
+		i3d.texImage2D(FRONT, tex, null, null);
 		
 		i3d.begin(POLYGON);
 		
 		i3d.texCoord2d(0, 1);
-		i3d.vertex3d(width / 2, -height / 2, zview);
+		i3d.vertex3d(0, -height, zview);
 		i3d.texCoord2d(1, 1);
-		i3d.vertex3d(-width / 2, -height / 2, zview);
+		i3d.vertex3d(-width, -height, zview);
 		i3d.texCoord2d(1, 0);
-		i3d.vertex3d(-width / 2, height / 2, zview);
+		i3d.vertex3d(-width, 0, zview);
 		i3d.texCoord2d(0, 0);
-		i3d.vertex3d(width / 2, height / 2, zview);
+		i3d.vertex3d(0, 0, zview);
 		
 		i3d.end();
+		
+		i3d.disable(TEXTURE_2D);
+		
+		
 		
 		i3d.popMatrix();
 		i3d.matrixMode(MODEL);
