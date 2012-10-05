@@ -7,10 +7,10 @@ import initial3d.engine.Vec3;
 import org.junit.Test;
 
 import common.DataPacket;
+import common.entity.EntityMode;
 import common.map.Segment;
 import common.map.SegmentGenerator;
 import common.packets.ChangeEntityModePacket;
-import common.packets.EntityMode;
 import common.packets.EntityUpdatePacket;
 import common.packets.LoginPacket;
 import common.packets.SegmentPacket;

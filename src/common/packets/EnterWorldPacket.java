@@ -6,6 +6,7 @@ import common.Packet;
 public class EnterWorldPacket extends Packet {
 	public static final short ID = 3;
 	
+	public long playerEntity;
 	public int newWorld;
 
 	public EnterWorldPacket()
@@ -18,6 +19,7 @@ public class EnterWorldPacket extends Packet {
 		if(packet.getShort() != EnterWorldPacket.ID)
 			return;
 		
+		this.playerEntity = packet.getLong();
 		this.newWorld = packet.getInt();
 	}
 
@@ -26,6 +28,7 @@ public class EnterWorldPacket extends Packet {
 		DataPacket p = new DataPacket();
 		
 		p.addShort(EnterWorldPacket.ID);
+		p.addLong(this.playerEntity);
 		p.addInt(newWorld);
 		return p;
 	}

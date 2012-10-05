@@ -21,7 +21,7 @@ public class SegmentGenerator {
 	private final double[][] regionHeight;
 	private static final int regionSize = 256; // segments per region
 	private static final double frequency = 3; //noise frequency for segments
-	private static final double heightScale = 100; //
+	private static final double heightScale = 100; // scales the case values passed to the segments
 
 	private Map<Long, Segment> segmentCache = new HashMap<Long, Segment>();
 	
@@ -103,47 +103,47 @@ public class SegmentGenerator {
 							* (float) heightScale;
 				}
 			}
-			//ERODE
-			for (int x = 1; x < regionHeight.length - 1; x++) {
-				for (int z = 1; z < regionHeight.length - 1; z++) {
-					double d_max = 0.0f;
-					int[] match = { 0, 0 };
-					for (int u = -1; u <= 1; u++) {
-						for (int v = -1; v <= 1; v++) {
-							if (Math.abs(u) + Math.abs(v) > 0) {
-								double d_i = regionHeight[x][z]
-										- regionHeight[x + u][z + v];
-								if (d_i > d_max) {
-									d_max = d_i;
-									match[0] = u;
-									match[1] = v;
-								}
-							}
-						}
-					}
-					if (0 < d_max && d_max <= (1 / (double) regionHeight.length-1)) {
-						double d_h = 0.5f * d_max;
-						regionHeight[x][z] -= d_h;
-						regionHeight[x + match[0]][z + match[1]] += d_h;
-					}
-				}
-			}
-			for(int i = 0 ; i<400; i++){
-				//SMOOTHEN
-				for (int x = 1; x < regionHeight.length - 1; x++) {
-					for (int z = 1; z < regionHeight.length - 1; z++) {
-						float total = 0.0f;
-						for (int u = -1; u <= 1; u++) {
-							for (int v = -1; v <= 1; v++) {
-								total += regionHeight[x + u][z + v];
-							}
-						}
-						regionHeight[x][z] = total / 9.0f;
-					}
-				}
-			}
+//			//ERODE
+//			for (int x = 1; x < regionHeight.length - 1; x++) {
+//				for (int z = 1; z < regionHeight.length - 1; z++) {
+//					double d_max = 0.0f;
+//					int[] match = { 0, 0 };
+//					for (int u = -1; u <= 1; u++) {
+//						for (int v = -1; v <= 1; v++) {
+//							if (Math.abs(u) + Math.abs(v) > 0) {
+//								double d_i = regionHeight[x][z]
+//										- regionHeight[x + u][z + v];
+//								if (d_i > d_max) {
+//									d_max = d_i;
+//									match[0] = u;
+//									match[1] = v;
+//								}
+//							}
+//						}
+//					}
+//					if (0 < d_max && d_max <= (1 / (double) regionHeight.length-1)) {
+//						double d_h = 0.5f * d_max;
+//						regionHeight[x][z] -= d_h;
+//						regionHeight[x + match[0]][z + match[1]] += d_h;
+//					}
+//				}
+//			}
+//			for(int i = 0 ; i<400; i++){
+//				//SMOOTHEN
+//				for (int x = 1; x < regionHeight.length - 1; x++) {
+//					for (int z = 1; z < regionHeight.length - 1; z++) {
+//						float total = 0.0f;
+//						for (int u = -1; u <= 1; u++) {
+//							for (int v = -1; v <= 1; v++) {
+//								total += regionHeight[x + u][z + v];
+//							}
+//						}
+//						regionHeight[x][z] = total / 9.0f;
+//					}
+//				}
+//			}
 
-			//next applying perlin noise
+//			//next applying perlin noise
 //			for (int z = -1; z <= Segment.size + 1; z++) {
 //				for (int x = -1; x <= Segment.size + 1; x++) {
 //					hm[x + 1][z + 1] += (float) perlin.getNoise((x
@@ -154,6 +154,16 @@ public class SegmentGenerator {
 //			}
 
 		}
+		
+//		//next applying perlin noise regarless of position of polygon
+//		for (int z = -1; z <= Segment.size + 1; z++) {
+//			for (int x = -1; x <= Segment.size + 1; x++) {
+//				hm[x + 1][z + 1] += (float) perlin.getNoise((x
+//						/ (double) Segment.size + posx)
+//						/ frequency, (z / (double) Segment.size + posz)
+//						/ frequency, 0, 8);
+//			}
+//		}
 
 		//finally create the segment and place in the cache and return
 		Segment s = new Segment(posx, posz, hm);
@@ -234,6 +244,14 @@ public class SegmentGenerator {
 		
 		return m;
 	}
+	
+	//Takes world coordinates and gives back segment at that vlue
+	public Segment segmentAt(double x, double z){
+		int segX = (int)(x/Segment.horzScale)/Segment.size;
+		int segY = (int)(z/Segment.horzScale)/Segment.size;
+		return getSegment(segX, segY);
+	}
+	
 	
 	public static void main(String[] args){
 		SegmentGenerator sg = new SegmentGenerator(32);

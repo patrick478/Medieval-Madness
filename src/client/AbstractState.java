@@ -1,5 +1,6 @@
 package client;
 
+import initial3d.engine.RenderWindow;
 import initial3d.engine.Scene;
 
 /**
@@ -30,7 +31,7 @@ public abstract class AbstractState {
 		this.client = pClient;
 		this.gameWorld = gameWorld;
 		
-		gameWorld.loadScene(myScene);
+//		gameWorld.loadScene(myScene);
 	}
 	
 	/**
@@ -54,5 +55,5 @@ public abstract class AbstractState {
 	 * Updates the state which gives the state the opportunity to make any changes to the scene such as updating any animations, etc.
 	 * @param updateTime The number of milliseconds since update() was last called on ANY AbstractState
 	 */
-	public abstract void update(long updateTime);
+	public abstract void update(long updateTime, RenderWindow window);
 }

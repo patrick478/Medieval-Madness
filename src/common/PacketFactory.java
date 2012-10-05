@@ -27,9 +27,11 @@ public class PacketFactory
 				
 			case ChangeEntityModePacket.ID:
 				ret = new ChangeEntityModePacket();
+				break;
 				
 			case EntityUpdatePacket.ID:
 				ret = new EntityUpdatePacket();
+				break;
 				
 			default:
 				System.out.printf("[CRITICAL - UN_ID_PACKET] undef_recv_id = %d\n", p.peekShort());

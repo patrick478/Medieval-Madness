@@ -1,5 +1,6 @@
 package client;
 
+import initial3d.engine.RenderWindow;
 import initial3d.engine.Scene;
 
 import java.util.Scanner;
@@ -12,7 +13,7 @@ public class LoginState extends AbstractState {
 	}
 
 	@Override
-	public void update(long updateTime) {
+	public void update(long updateTime, RenderWindow window) {
 		if(!this.client.net.isConnected()) return;
 		
 		// THIS IS SO DISGUSTING - I CAN'T EVEN LOOK MYSELF IN THE MIRROR!

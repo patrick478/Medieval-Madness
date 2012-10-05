@@ -169,4 +169,8 @@ public class SegmentQueue implements Runnable {
 		double progress = (1f - (this.fetchQueue.size() / max)) * 100f;		
 		this.parentEngine.log.printf("SegmentFetch waiting on %d requests. %d percent complete.\n", this.fetchQueue.size(), (int)progress);
 	}
+
+	public Segment getSegmentFromWorld(double x, double z) {
+		return this.gen.segmentAt(x,  z);
+	}
 }

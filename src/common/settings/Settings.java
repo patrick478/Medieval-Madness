@@ -113,4 +113,11 @@ public class Settings {
 			this.setValue(name, Long.toString(val));
 		return Long.parseLong(this.settings.get(name));		
 	}
+	
+	public double getDoubleValue(String name, double def)
+	{
+		if(!this.settings.containsKey(name))
+			this.setValue(name, Double.toString(def));
+		return Double.parseDouble(this.settings.get(name));
+	}
 }

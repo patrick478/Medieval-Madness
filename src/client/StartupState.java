@@ -1,5 +1,6 @@
 package client;
 
+import initial3d.engine.RenderWindow;
 import initial3d.engine.Scene;
 
 public class StartupState extends AbstractState {
@@ -9,7 +10,7 @@ public class StartupState extends AbstractState {
 	}
 
 	@Override
-	public void update(long sinceLast) {
+	public void update(long sinceLast, RenderWindow window) {
 		this.client.net.Connect("127.0.0.1", 14121);
 		while(!this.client.net.isConnected())
 			try {

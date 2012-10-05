@@ -138,6 +138,18 @@ public class DataPacket {
 		return buf.getFloat(readPos - 4);
 	}
 	
+	public void addDouble(double d)
+	{
+		buf.putDouble(writePos, d);
+		writePos += 8;
+	}
+	
+	public double getDouble()
+	{
+		readPos += 8;
+		return buf.getDouble(readPos - 8);
+	}
+	
 	public void addLong(long l)
 	{
 		buf.putLong(writePos, l);

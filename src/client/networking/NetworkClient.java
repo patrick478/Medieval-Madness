@@ -18,9 +18,11 @@ public class NetworkClient {
 	SocketChannel clientChannel;
 	Selector selector;
 	NetworkThread nt;
+	Client client;
 	
 	public NetworkClient(Client c)
 	{
+		this.client = c;
 		this.log = c.log;
 	}
 	

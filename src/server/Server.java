@@ -6,11 +6,13 @@ import java.util.*;
 import server.commands.GameEngineCommands;
 import server.commands.PrintCommand;
 import server.commands.SessionCommand;
+import server.commands.TpCommand;
 import server.datalayer.DataProvider;
 import server.datalayer.SQLite;
 import server.face.ConsoleFace;
 import server.face.ServerFace;
 import server.game.GameEngine;
+import server.game.PlayerManager;
 import server.net.ServerLayer;
 import server.session.SessionMngr;
 import common.settings.Settings;
@@ -95,10 +97,12 @@ public class Server implements Runnable {
 		
 		this.serverCommands.put("print",  new PrintCommand(this));
 		this.serverCommands.put("session",  new SessionCommand(this));
-		this.serverCommands.put("ge", new GameEngineCommands(this));	
+		this.serverCommands.put("ge", new GameEngineCommands(this));
+		this.serverCommands.put("tp", new TpCommand(this));
 		
 		// warm the session manager
 		SessionMngr.warm(this.face.getOut());
+		PlayerManager.warm(this);
 		
 		// start the face
 		faceThread.start();
