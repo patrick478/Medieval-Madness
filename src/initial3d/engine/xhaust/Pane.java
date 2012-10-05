@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Drawable;
+import initial3d.linearmath.Matrix;
+import initial3d.linearmath.TransformationMatrix4D;
+import initial3d.linearmath.Vector4D;
 
 import static initial3d.Initial3D.*;
 
@@ -19,7 +22,13 @@ public class Pane extends Drawable {
 	
 	private final int width, height;
 	
-	private String str = "";
+	private final Container root;
+	
+	private final double[][] vec0 = new double[4][1];
+	private final double[][] vec1 = new double[4][1];
+	private final double[][] xtemp = Matrix.createIdentity(4);
+	
+	private String s = "";
 
 	public Pane(int width_, int height_) {
 		
@@ -31,6 +40,8 @@ public class Pane extends Drawable {
 
 		requestInputEnabled(true);
 		requestVisible(false);
+		
+		root = new Container(width, height);
 	}
 	
 	public int getWidth() {
@@ -48,30 +59,60 @@ public class Pane extends Drawable {
 			tex.drawImage(bi);
 		}
 		
+		// TODO handle this properly
+		i3d.nearClip(0.11);
+		i3d.farCull(0.2);
+		double zview = 0.19;
+		
+		vec0[0][0] = 0;
+		vec0[1][0] = 0;
+		vec0[2][0] = zview;
+		vec0[3][0] = 1;
+		
+		i3d.matrixMode(PROJ);
+		i3d.transformOne(vec1, vec0);
+		Vector4D.homogenise(vec1, vec1);
+		
+		vec1[0][0] = 1;
+		vec1[1][0] = 1;
+		
+		i3d.matrixMode(PROJ_INV);
+		i3d.transformOne(vec0, vec1);
+		Vector4D.homogenise(vec0, vec0);
+		
+		double xleft = vec0[0][0];
+		double ytop = vec0[1][0];
+		
 		i3d.disable(LIGHTING);
 		
 		i3d.enable(TEXTURE_2D);
 		i3d.texImage2D(FRONT, tex, null, null);
 		
-		i3d.objectID(getDrawIDStart());
-		
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
 		i3d.loadIdentity();
+		
+		double scale = ytop * 2d / (double) frameheight;
+		TransformationMatrix4D.scale(xtemp, scale, scale, 1, 1);
+		i3d.multMatrix(xtemp);
+		
 		i3d.matrixMode(VIEW);
 		i3d.pushMatrix();
 		i3d.loadIdentity();
 		
+		
+		i3d.objectID(getDrawIDStart());
+		
 		i3d.begin(POLYGON);
 		
 		i3d.texCoord2d(0, 1);
-		i3d.vertex3d(1, -1, 3);
+		i3d.vertex3d(width / 2, -height / 2, zview);
 		i3d.texCoord2d(1, 1);
-		i3d.vertex3d(-1, -1, 3);
+		i3d.vertex3d(-width / 2, -height / 2, zview);
 		i3d.texCoord2d(1, 0);
-		i3d.vertex3d(-1, 1, 3);
+		i3d.vertex3d(-width / 2, height / 2, zview);
 		i3d.texCoord2d(0, 0);
-		i3d.vertex3d(1, 1, 3);
+		i3d.vertex3d(width / 2, height / 2, zview);
 		
 		i3d.end();
 		
@@ -85,24 +126,28 @@ public class Pane extends Drawable {
 
 		// go down through components seeing if repaint required
 		// if true, repaint component and all subcomponents
+		// also draw invisible id poly and set id?
 		// return true if anything painted
 		
 		Graphics g = bi.createGraphics();
+		
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.BLACK);
-		g.drawString(str, 20, 20);
+		g.drawString(s, 5, 15);
 
 		return true;
 
 	}
+	
+	@Override
+	protected int getRequestedIDCount() {
+		return root.count();
+	}
 
 	@Override
 	protected void processKeyEvent(KeyEvent e) {
-		System.out.println(e.getKeyChar());
-		if (e.getID() == KeyEvent.KEY_TYPED) {
-			str += e.getKeyChar();
-		}
+		s += e.getKeyChar();
 	}
 
 	@Override

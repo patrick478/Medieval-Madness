@@ -146,10 +146,6 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 								drawid = 1;
 								i3d.clear(ID_BUFFER_BIT);
 							}
-							
-							// near clip + far cull
-							i3d.nearClip(0.2);
-							i3d.farCull(8800);
 
 							// draw stuff as appropriate
 							profiler.startSection("I3D-sceneman_draw");
@@ -162,7 +158,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 									boolean focus_requested = d.pollFocusRequested();
 									if (d.isVisible()) {
 
-										// TODO intelligent selection of what to draw
+										// TODO intelligent selection of what to
+										// draw
 
 										if (d.isInputEnabled()) {
 											event_drawables.add(d);
@@ -178,6 +175,10 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										} else {
 											i3d.disable(WRITE_ID);
 										}
+
+										// near clip + far cull
+										i3d.nearClip(0.2);
+										i3d.farCull(8800);
 
 										i3d.enable(LIGHTING);
 										i3d.enable(DEPTH_TEST);
@@ -246,7 +247,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										case KeyEvent.KEY_PRESSED:
 										case KeyEvent.KEY_RELEASED:
 										case KeyEvent.KEY_TYPED:
-											// send all key events to focused drawable
+											// send all key events to focused
+											// drawable
 											if (focused != null) {
 												focused.dispatchKeyEvent((KeyEvent) e);
 											}
@@ -257,7 +259,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										case MouseEvent.MOUSE_MOVED:
 										case MouseEvent.MOUSE_DRAGGED:
 										case MouseWheelEvent.MOUSE_WHEEL:
-											// mouse event behaviour determined by screen location
+											// mouse event behaviour determined
+											// by screen location
 											MouseEvent me = (MouseEvent) e;
 											int framex = getFrameX(me.getX());
 											int framey = getFrameY(me.getY());
@@ -272,7 +275,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 												}
 											}
 
-											// try to switch focus, if needed, on mouse pressed
+											// try to switch focus, if needed,
+											// on mouse pressed
 											if (me.getID() == MouseEvent.MOUSE_PRESSED
 													&& (focused == null || (!focused.equals(target) && focused
 															.releaseFocusTo(target)))) {
@@ -287,14 +291,16 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 												if (target != null) {
 													target.dispatchMouseEvent(me, event_drawid, framex, framey);
 												}
-												// TODO fire mouse entered / exited as needed?
-												
+												// TODO fire mouse entered /
+												// exited as needed?
+
 												break;
 											case MouseEvent.MOUSE_PRESSED:
 											case MouseEvent.MOUSE_RELEASED:
 											case MouseEvent.MOUSE_CLICKED:
 											case MouseWheelEvent.MOUSE_WHEEL:
-												// send to target if it has focus
+												// send to target if it has
+												// focus
 												if (focused != null && focused.equals(target)) {
 													target.dispatchMouseEvent(me, event_drawid, framex, framey);
 												}
@@ -304,7 +310,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 											}
 											break;
 										default:
-											// ignore mouse entered, exited actual events
+											// ignore mouse entered, exited
+											// actual events
 											// (and anything else...)
 										}
 
