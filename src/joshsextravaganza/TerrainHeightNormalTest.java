@@ -41,7 +41,7 @@ public class TerrainHeightNormalTest {
 		FileInputStream fis = new FileInputStream("ball.txt");
 		ball.setMeshContexts(MeshLoader.loadComp261(fis));
 		fis.close();
-		ball.updateMotion(Vec3.create(0, 0.5, 0), Vec3.create(1, 0, 1), Quat.one, Vec3.zero, System.currentTimeMillis());
+		ball.updateMotion(Vec3.create(1, 0.5, 1), Vec3.create(1, 0, 1), Quat.one, Vec3.zero, System.currentTimeMillis());
 		
 		//use camera to track
 		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
@@ -58,24 +58,29 @@ public class TerrainHeightNormalTest {
 		Segment current = sg.getSegment(0, 0);
 		scene.addDrawable(current.getMeshContext());
 		
+		Vec3 oldVel = Vec3.create(1, 0, 1);
+		
 		while(true){
-			if(!current.contains(ball.getPosition().x, ball.getPosition().z)){
-				scene.removeDrawable(current.getMeshContext());
-				current = sg.segmentAt(ball.getPosition().x, ball.getPosition().z);
-				scene.addDrawable(current.getMeshContext());
-			}
-			Thread.sleep(1000);
-			
 			//new vec direction
 			double xPos = ball.getPosition().x;
 			double zPos = ball.getPosition().z;
 			
-			Vec3 vel = Vec3.create(1, 0, 1).add(current.getNormal(xPos, zPos)).unit();
+			if(!current.contains(xPos, zPos)){
+				scene.removeDrawable(current.getMeshContext());
+				current = sg.segmentAt(xPos, zPos);
+				scene.addDrawable(current.getMeshContext());
+			}
+			
+			Vec3 norm = current.getNormal(xPos, zPos);
+			//something funky going on with this... TODO FIXME TODO FIXME
+			Vec3 vel = norm.cross(oldVel.unit().cross(norm.unit())).unit().scale(oldVel.mag());
 			
 			
 			
 			ball.updateMotion(Vec3.create(xPos, current.getHeight(xPos, zPos)+0.5, zPos), 
-					vel.scale(Vec3.create(1, 0, 1).mag()), Quat.one, Vec3.zero, System.currentTimeMillis());
+					oldVel, Quat.one, Vec3.zero, System.currentTimeMillis());
+			
+			Thread.sleep(100);
 		}
 		
 	}

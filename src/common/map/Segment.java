@@ -132,8 +132,6 @@ public class Segment {
 			double left = (botLeft-topLeft)*(z%1) + topLeft;
 			double right = (botRight-topRight)*(z%1) + topRight;
 
-			System.out.println("received height @ " + (right-left) * (z%1));
-			
 			return (right-left) * (z%1) + left;
 			
 		}
@@ -169,8 +167,6 @@ public class Segment {
 			Vec3 left = (botLeft.sub(topLeft)).scale(z%1).add(topLeft);
 			Vec3 right = (botRight.sub(topRight)).scale(z%1).add(topRight);
 
-			System.out.println("received height @ " + (right.sub(left)).scale((z%1)).add(left).toString());
-			
 			return (right.sub(left)).scale((z%1)).add(left);
 			
 		}
