@@ -252,6 +252,10 @@ public class SegmentGenerator {
 		return getSegment(segX, segY);
 	}
 	
+	public static int segCoordFromWorldCoord(double x)
+	{
+		return (int)(x/Segment.horzScale)/Segment.size;
+	}
 	
 	public static void main(String[] args){
 		SegmentGenerator sg = new SegmentGenerator(32);

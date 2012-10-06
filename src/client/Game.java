@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.*;
 import common.entity.*;
 import common.map.Segment;
+import common.map.SegmentGenerator;
 import comp261.modelview.MeshLoader;
 
 public class Game {
@@ -59,18 +60,20 @@ public class Game {
 		System.out.printf("Entering world %d and i am entity #%d\n", worldID, entityID);
 		this.setPlayer(entityID);
 		this.player.updateMotion(movableEntities.get(entityID).getPosition(), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+		
+		ensureTerrainRelevent();
 	}
 
 	public boolean setPlayer(long eid){
 		player = movableEntities.get(eid);
 //		System.out.println(world);
 //		world.getCamera().trackReferenceFrame(player);
+		trackPlayer(player);
 		return player!=null;
 	}
 	
-	private Player makePlayerIntoBall()
+	private Player getBall()
 	{
-
 		Player ball = new Player(Vec3.zero, 1231231);
 		FileInputStream fis;
 		try {
@@ -86,29 +89,35 @@ public class Game {
 			world.addDrawable(d);
 		}
 		
-		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ball);
+		return ball;
+	}
+	
+	private void trackPlayer(MovableEntity me)
+	{
+		if(me == null) return;
+		
+		MovableReferenceFrame camera_rf = new MovableReferenceFrame(me);
 		world.getCamera().trackReferenceFrame(camera_rf);
 		camera_rf.setPosition(Vec3.create(-10, 10, -10));
 		camera_rf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
 		
 		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
-		return ball;
 	}
 	
 	public void entityMoved(Long eid, Vec3 pos, Vec3 linVel, Quat ori, Vec3 angVel, Long time){
+		System.out.println("Moving");
 		MovableEntity e;
 		do
 		{
 			e = movableEntities.get(eid);
 			if(e == null)
-				movableEntities.put(eid, makePlayerIntoBall());
+				movableEntities.put(eid, getBall());
 		} while(e == null);
 			
 		if(e!=null ){//TODO fix the time signiture 
-			System.out.printf("Updated entity %d to %f,%f,%f\n", eid, pos.x, pos.y, pos.z);
-			e.updateMotion(pos, linVel, ori, angVel, time);
+//			System.out.printf("Updated entity %d to %f,%f,%f\n", eid, pos.x, pos.y, pos.z);
+			e.updateMotion(e.getPosition(), linVel, ori, angVel, time);
 		}
-		
 	}
 	
 	//TODO wtf is this method going to do?
@@ -132,12 +141,33 @@ public class Game {
 	
 	public void addTerrain(Segment tim){
 		//add mesh
-//		System.out.printf("Adding segment at %d %d\n", tim.xPos, tim.zPos);
+		System.out.printf("Adding segment at %d %d\n", tim.xPos, tim.zPos);
 		if(terrain.containsKey(tim.id))
 			return;
 		
 		terrain.put(tim.id, tim);
 		MeshContext mc = tim.getMeshContext();
-		this.client.getState().getScene().addDrawable(mc);
+		
+
+	}
+	
+	public void ensureTerrainRelevent()
+	{
+		int releventRange = 2;
+		int segX = SegmentGenerator.segCoordFromWorldCoord(player.getPosition().x);
+		int segZ = SegmentGenerator.segCoordFromWorldCoord(player.getPosition().z);
+		
+		for(Segment seg : terrain.values())
+		{
+			if(Math.abs(seg.xPos - segX) < releventRange && Math.abs(seg.zPos - segZ) < releventRange)
+			{
+				if(!this.client.getState().getScene().containsDrawable(seg.getMeshContext()))
+					this.client.getState().getScene().addDrawable(seg.getMeshContext());
+			}
+			else
+			{
+				this.client.getState().getScene().removeDrawable(seg.getMeshContext());
+			}
+		}
 	}
 }

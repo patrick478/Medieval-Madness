@@ -7,7 +7,9 @@ import java.nio.channels.*;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.*;
 
+import common.Command;
 import common.Log;
+import common.packets.ClientSendCommandPacket;
 import common.packets.LoginPacket;
 
 import client.Client;
@@ -46,5 +48,21 @@ public class NetworkClient {
 		lp.username = username;
 		lp.password = password;
 		this.nt.send(lp.toData());
+	}
+
+	public void sendCommandStart(Command forward) {
+		ClientSendCommandPacket cscp = new ClientSendCommandPacket();
+		cscp.command = forward;
+		cscp.active = true;
+		nt.send(cscp.toData());
+		System.out.printf("Notifying server that %s is now ACTIVE\n", forward.toString());
+	}
+
+	public void sendCommandEnd(Command forward) {
+		ClientSendCommandPacket cscp = new ClientSendCommandPacket();
+		cscp.command = forward;
+		cscp.active = false;
+		nt.send(cscp.toData());
+		System.out.printf("Notifying server that %s is now INACTIVE\n", forward.toString());
 	}
 }

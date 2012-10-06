@@ -117,8 +117,11 @@ public class SegmentQueue implements Runnable {
 				SegmentPacket sp = new SegmentPacket();
 				sp.segment = newSeg;
 				
-				if(sgi.getSession() != null)
+				if(sgi.getSession() != null && !sgi.getSession().hasSegment(newSeg.id))
+				{
 					this.parentEngine.enqueueSend(sgi.getSession(), sp.toData());
+					sgi.getSession().sentSegment(newSeg.id);
+				}
 				
 				synchronized(this.fetchQueue)
 				{

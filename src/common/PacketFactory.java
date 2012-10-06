@@ -33,6 +33,10 @@ public class PacketFactory
 				ret = new EntityUpdatePacket();
 				break;
 				
+			case ClientSendCommandPacket.ID:
+				ret = new ClientSendCommandPacket();
+				break;
+				
 			default:
 				System.out.printf("[CRITICAL - UN_ID_PACKET] undef_recv_id = %d\n", p.peekShort());
 				return null;

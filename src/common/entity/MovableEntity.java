@@ -8,6 +8,7 @@ public abstract class MovableEntity extends Entity{
 	protected long lastUpdate = 0;//TODO world time?
 	protected Vec3 linVelocity = Vec3.zero; //linear velocity
 	protected Vec3 angVelocity = Vec3.zero; //angular velocity
+	protected Vec3 intVelocity = Vec3.zero; //intended velocity
 	
 	public MovableEntity(Vec3 _radius, long id) {
 		super(_radius, id);
@@ -19,6 +20,10 @@ public abstract class MovableEntity extends Entity{
 	
 	public Vec3 getAngularVelocity(){
 		return angVelocity;
+	}
+	
+	public Vec3 getIntendedVelocity(){
+		return intVelocity;
 	}
 	
 	@Override
@@ -49,5 +54,10 @@ public abstract class MovableEntity extends Entity{
 		orientation = _orientation;
 		angVelocity = _angVelocity;
 		lastUpdate = timeStamp;
+	}
+	
+	public void updateIntendedVelocity(Vec3 _intVelocity){
+		intVelocity = _intVelocity;
+//		this.updateMotion(_position, _linVelocity, _orientation, _angVelocity, timeStamp)
 	}
 }

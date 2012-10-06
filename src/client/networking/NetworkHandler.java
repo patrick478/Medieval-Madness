@@ -58,18 +58,18 @@ public class NetworkHandler {
 			break;
 			case ChangeEntityModePacket.ID:
 //				System.out.println("Holy fuck it worked!");
-				ChangeEntityModePacket cemp = (ChangeEntityModePacket)p;
-				switch(cemp.mode)
-				{
-					case Born:
-						if(cemp.type == EntityType.Static)
-							System.out.println("Adding new static entity");
-						else if(cemp.type == EntityType.Moveable)
-							System.out.println("Adding new moveable entity");
-						else
-							System.out.printf("Error: Unknown entity type for change entity mode packet: %s\n", cemp.type.toString());
-					break;
-				}
+//				ChangeEntityModePacket cemp = (ChangeEntityModePacket)p;
+//				switch(cemp.mode)
+//				{
+//					case Born:
+//						if(cemp.type == EntityType.Static)
+//							System.out.println("Adding new static entity");
+//						else if(cemp.type == EntityType.Moveable)
+//							System.out.println("Adding new moveable entity");
+//						else
+//							System.out.printf("Error: Unknown entity type for change entity mode packet: %s\n", cemp.type.toString());
+//					break;
+//				}
 			break;
 		}
 	}

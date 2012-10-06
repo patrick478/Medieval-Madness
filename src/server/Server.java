@@ -11,6 +11,7 @@ import server.datalayer.DataProvider;
 import server.datalayer.SQLite;
 import server.face.ConsoleFace;
 import server.face.ServerFace;
+import server.game.EntityManager;
 import server.game.GameEngine;
 import server.game.PlayerManager;
 import server.net.ServerLayer;
@@ -103,6 +104,7 @@ public class Server implements Runnable {
 		// warm the session manager
 		SessionMngr.warm(this.face.getOut());
 		PlayerManager.warm(this);
+		EntityManager.warm(this);
 		
 		// start the face
 		faceThread.start();
@@ -149,8 +151,16 @@ public class Server implements Runnable {
 		
 	}
 
+	long lastPlayerUpdate = System.currentTimeMillis();
 	public void Tick(long elapsedTimeMillis)
 	{
+		EntityManager.getInstance().tick(elapsedTimeMillis);
+		
+		if(System.currentTimeMillis() - lastPlayerUpdate > 1000)
+		{
+			lastPlayerUpdate = System.currentTimeMillis();
+			PlayerManager.getInstance().notifyAllMoved();
+		}
 	}
 
 	@Override
@@ -165,7 +175,7 @@ public class Server implements Runnable {
 		while(true)
 		{
 			if(this.serverData.get("status") != ServerStatus.Running)
-				break;
+				continue;
 			
 			elapsedTimeSinceLastTick = System.currentTimeMillis() - lastStartTime;
 			lastStartTime = System.currentTimeMillis();

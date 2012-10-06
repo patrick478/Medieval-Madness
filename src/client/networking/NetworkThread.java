@@ -118,13 +118,14 @@ public class NetworkThread implements Runnable {
 			}
 		}
 		
-		byte[] data = buffer.array();
-		if(rx < 0)
+		if(rx <= 0)
 		{
 			this.isConnected = false;
 //			this.nClient.reconnect(); // TODO: Implement
+			return;
 		}
 		
+		byte[] data = buffer.array();
 		data = Arrays.copyOf(data, rx);
 		bq.append(data);
 		

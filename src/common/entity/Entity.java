@@ -50,6 +50,10 @@ public abstract class Entity implements ReferenceFrame{
 		return null;
 	}
 	
+	public double getHeight(){
+		return radius.y;
+	}
+	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
 	//TODO hackish method to get things moving

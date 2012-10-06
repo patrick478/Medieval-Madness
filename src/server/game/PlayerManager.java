@@ -59,6 +59,9 @@ public class PlayerManager {
 	
 	private void playerEnterWorld(ServerPlayer player)
 	{
+		ensureSegmentRange(player);
+		this.parentServer.game.segQueue.waitTillIdle();
+		
 		EntityUpdatePacket pk = new EntityUpdatePacket();
 		pk.entityID = player.id;
 		pk.angularVel = player.getAngularVelocity();
@@ -72,7 +75,6 @@ public class PlayerManager {
 		ewp.playerEntity = player.id;
 		
 		player.session.send(ewp);
-		ensureSegmentRange(player);
 	}
 	
 	private void notifyPlayerJoined(ServerPlayer sp)
@@ -104,8 +106,35 @@ public class PlayerManager {
 		for(int i = 0; i < segRange; i++)
 			for(int j = 0; j < segRange; j++)
 			{
-				System.out.printf("Sending segment @ %d, %d\n", i-seg2+curX, j-seg2+curZ);
+//				System.out.printf("Sending segment @ %d, %d\n", i-seg2+curX, j-seg2+curZ);
 				this.parentServer.game.addSegmentRequest(sp.session, i-seg2+curX, j-seg2+curZ);
 			}
+	}
+	
+	public void notifyMoved(ServerPlayer player)
+	{
+		EntityUpdatePacket pk = new EntityUpdatePacket();
+		pk.entityID = player.id;
+		pk.angularVel = player.getAngularVelocity();
+		pk.orientation = player.getOrientation();
+		pk.position = player.getPosition();
+		pk.velocity = player.getLinearVelocity();
+		player.session.send(pk);
+		for(ServerPlayer op : this.players.values())
+		{
+//			if(op.equals(player))
+//				continue;
+			
+//			System.out.printf("Notifying Mr. %s of player in type %s\n", sp.id, pk.type.toString());
+			op.session.send(pk);
+		}
+	}
+
+	public void notifyAllMoved() {
+		for(ServerPlayer op : this.players.values())
+		{
+			ensureSegmentRange(op);
+			notifyMoved(op);
+		}
 	}
 }
