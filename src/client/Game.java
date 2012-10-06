@@ -60,6 +60,8 @@ public class Game {
 		System.out.printf("Entering world %d and i am entity #%d\n", worldID, entityID);
 		this.setPlayer(entityID);
 		this.player.updateMotion(movableEntities.get(entityID).getPosition(), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+		
+		ensureTerrainRelevent();
 	}
 
 	public boolean setPlayer(long eid){
@@ -103,6 +105,7 @@ public class Game {
 	}
 	
 	public void entityMoved(Long eid, Vec3 pos, Vec3 linVel, Quat ori, Vec3 angVel, Long time){
+		System.out.println("Moving");
 		MovableEntity e;
 		do
 		{
@@ -113,7 +116,7 @@ public class Game {
 			
 		if(e!=null ){//TODO fix the time signiture 
 //			System.out.printf("Updated entity %d to %f,%f,%f\n", eid, pos.x, pos.y, pos.z);
-			e.updateMotion(pos, linVel, ori, angVel, time);
+			e.updateMotion(e.getPosition(), linVel, ori, angVel, time);
 		}
 	}
 	
@@ -145,7 +148,7 @@ public class Game {
 		terrain.put(tim.id, tim);
 		MeshContext mc = tim.getMeshContext();
 		
-		ensureTerrainRelevent();
+
 	}
 	
 	public void ensureTerrainRelevent()

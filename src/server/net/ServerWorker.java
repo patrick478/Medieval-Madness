@@ -243,7 +243,7 @@ public class ServerWorker implements Runnable {
 		
 		
 		Vec3 motion = p.getOrientation().rot(target);
-		p.updateMotion(p.getPosition(), motion, Quat.one, Vec3.zero, System.currentTimeMillis());
+		p.updateIntendedVelocity(motion);
 		
 		PlayerManager.getInstance().notifyMoved(p);
 

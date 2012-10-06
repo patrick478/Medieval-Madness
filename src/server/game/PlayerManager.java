@@ -59,6 +59,9 @@ public class PlayerManager {
 	
 	private void playerEnterWorld(ServerPlayer player)
 	{
+		ensureSegmentRange(player);
+		this.parentServer.game.segQueue.waitTillIdle();
+		
 		EntityUpdatePacket pk = new EntityUpdatePacket();
 		pk.entityID = player.id;
 		pk.angularVel = player.getAngularVelocity();
@@ -72,7 +75,6 @@ public class PlayerManager {
 		ewp.playerEntity = player.id;
 		
 		player.session.send(ewp);
-		ensureSegmentRange(player);
 	}
 	
 	private void notifyPlayerJoined(ServerPlayer sp)
@@ -104,7 +106,7 @@ public class PlayerManager {
 		for(int i = 0; i < segRange; i++)
 			for(int j = 0; j < segRange; j++)
 			{
-				System.out.printf("Sending segment @ %d, %d\n", i-seg2+curX, j-seg2+curZ);
+//				System.out.printf("Sending segment @ %d, %d\n", i-seg2+curX, j-seg2+curZ);
 				this.parentServer.game.addSegmentRequest(sp.session, i-seg2+curX, j-seg2+curZ);
 			}
 	}
