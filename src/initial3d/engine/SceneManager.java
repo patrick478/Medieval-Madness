@@ -180,8 +180,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 										i3d.nearClip(0.2);
 										i3d.farCull(8800);
 
-										i3d.enable(LIGHTING);
-										i3d.enable(DEPTH_TEST);
+										i3d.enable(LIGHTING | DEPTH_TEST | WRITE_COLOR | WRITE_Z);
 										d.draw(i3d, width, height);
 
 									}

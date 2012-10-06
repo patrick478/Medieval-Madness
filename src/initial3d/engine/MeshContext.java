@@ -7,14 +7,15 @@ import initial3d.linearmath.Matrix;
 public class MeshContext extends Drawable {
 
 	private final Mesh mesh;
-	private final Material mtl;
+	private Material mtl;
 	private ReferenceFrame rf;
+	private double scale = 1;
 
 	private final double[][] xformtemp = Matrix.create(4, 4);
 	private final float[] coltemp = new float[3];
 
 	public MeshContext(Mesh mesh_, Material mtl_, ReferenceFrame rf_) {
-		if (mesh_ == null || mtl_ == null) throw new IllegalArgumentException("Nulls not permitted.");
+		if (mesh_ == null || mtl_ == null) throw new IllegalArgumentException("Null mesh or material not permitted.");
 		mesh = mesh_;
 		mtl = mtl_;
 		trackReferenceFrame(rf_);
@@ -26,6 +27,19 @@ public class MeshContext extends Drawable {
 
 	public final Material getMaterial() {
 		return mtl;
+	}
+
+	public final void setMaterial(Material mtl_) {
+		if (mtl_ == null) throw new IllegalArgumentException("Null material not permitted.");
+		mtl = mtl_;
+	}
+
+	public final double getScale() {
+		return scale;
+	}
+
+	public final void setScale(double scale_) {
+		scale = scale_;
 	}
 
 	public final void trackReferenceFrame(ReferenceFrame rf_) {
@@ -82,6 +96,9 @@ public class MeshContext extends Drawable {
 			r.getPosition().toTranslationMatrix(xformtemp);
 			i3d.multMatrix(xformtemp);
 		}
+
+		// scale mesh (about mesh origin)
+		i3d.scale(scale);
 
 	}
 

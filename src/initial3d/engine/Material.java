@@ -14,6 +14,8 @@ public class Material {
 	public static final Material DEFAULT = new Material(DEFAULT_KA, DEFAULT_KD, DEFAULT_KS, DEFAULT_KE,
 			DEFAULT_SHININESS, DEFAULT_OPACITY);
 
+	public static final Material BLACK = new Material(Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, 1f, 1f);
+
 	public final Color ka, kd, ks, ke;
 	public final float shininess, opacity;
 
@@ -45,7 +47,7 @@ public class Material {
 		opacity = basemtl.opacity;
 
 		if (map_kd_ == null) throw new IllegalArgumentException();
-		
+
 		map_kd = map_kd_;
 		map_ks = map_ks_;
 		map_ke = map_ke_;

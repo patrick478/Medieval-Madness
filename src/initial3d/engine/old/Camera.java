@@ -17,15 +17,15 @@ public class Camera {
 	Camera() {
 
 	}
-	
+
 	public synchronized Vec3 getPosition() {
 		return pos;
 	}
-	
+
 	public synchronized void setPosition(Vec3 v) {
 		pos = v;
 	}
-	
+
 	public synchronized void setPosition(double x, double y, double z) {
 		pos = Vec3.create(x, y, z);
 	}
@@ -53,11 +53,11 @@ public class Camera {
 	public synchronized void setRoll(double roll) {
 		this.roll = roll;
 	}
-	
+
 	public synchronized double getFOV() {
 		return fov;
 	}
-	
+
 	public synchronized void setFOV(double fov_) {
 		fov = fov_;
 	}
@@ -65,7 +65,7 @@ public class Camera {
 	public synchronized Vec3 getNormal() {
 		return Vec3.create(worldnormal).unit();
 	}
-	
+
 	public synchronized Vec3 getUpNormal() {
 		return Vec3.create(worldup).unit();
 	}
@@ -73,7 +73,7 @@ public class Camera {
 	public synchronized void move(double dx, double dy, double dz) {
 		pos = pos.add(dx, dy, dz);
 	}
-	
+
 	public synchronized void move(Vec3 delta) {
 		pos = pos.add(delta);
 	}
@@ -87,12 +87,14 @@ public class Camera {
 	synchronized void loadTransformTo(Initial3D i3d) {
 		i3d.matrixMode(Initial3D.VIEW);
 		i3d.loadIdentity();
+
+		i3d.rotateZ(-roll);
+		i3d.rotateX(-pitch);
+		i3d.rotateY(-yaw);
+
 		i3d.translateX(-pos.x);
 		i3d.translateY(-pos.y);
 		i3d.translateZ(-pos.z);
-		i3d.rotateY(-yaw);
-		i3d.rotateX(-pitch);
-		i3d.rotateZ(-roll);
 		i3d.matrixMode(Initial3D.VIEW_INV);
 		i3d.transformOne(worldnormal, kvector);
 		i3d.transformOne(worldup, jvector);

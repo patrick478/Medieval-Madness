@@ -18,28 +18,21 @@ public class Container extends Component {
 	public void add(Component c) {
 		children.add(c);
 	}
-	
+
 	@Override
 	public Iterable<Component> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
 
-	protected void paintChildren(Graphics g) {
-		for (Component c : children) {
-			Graphics g2 = g.create(c.getX(), c.getY(), c.getWidth(), c.getHeight());
-			c.paint(g2);
-		}
-	}
-	
 	@Override
 	public int count() {
-		int i = 1;
+		int i = super.count();
 		for (Component c : children) {
 			i += c.count();
 		}
 		return i;
 	}
-	
+
 	@Override
 	public void repaint() {
 		super.repaint();
@@ -47,7 +40,16 @@ public class Container extends Component {
 			c.repaint();
 		}
 	}
-	
+
+	@Override
+	boolean repainted() {
+		boolean r = super.repainted();
+		for (Component c : children) {
+			r |= c.repainted();
+		}
+		return r;
+	}
+
 	@Override
 	Component findByID(int id) {
 		Component cid = super.findByID(id);
@@ -62,12 +64,22 @@ public class Container extends Component {
 		}
 		return null;
 	}
-	
+
 	@Override
-	boolean doRepaint(Graphics g, Initial3D i3d, int id, double zview) {
-		
-		
-		return true;
+	int doRepaint(Graphics g, Initial3D i3d, int id, double zview) {
+		id = super.doRepaint(g, i3d, id, zview);
+
+		for (Component c : children) {
+			Graphics g2 = g.create(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+			i3d.pushMatrix();
+			i3d.translateX(-c.getX());
+			i3d.translateY(-c.getY());
+			id = c.doRepaint(g2, i3d, id, zview);
+			i3d.popMatrix();
+			g2.dispose();
+		}
+
+		return id;
 	}
-	
+
 }
