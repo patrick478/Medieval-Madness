@@ -6,11 +6,13 @@ import initial3d.engine.Vec3;
 
 import org.junit.Test;
 
+import common.Command;
 import common.DataPacket;
 import common.entity.EntityMode;
 import common.map.Segment;
 import common.map.SegmentGenerator;
 import common.packets.ChangeEntityModePacket;
+import common.packets.ClientSendCommandPacket;
 import common.packets.EntityUpdatePacket;
 import common.packets.LoginPacket;
 import common.packets.SegmentPacket;
@@ -115,6 +117,19 @@ public class PacketTests {
 		assertEquals(test.velocity, velocity);
 
 
+	}
+	
+	@Test
+	public void TestClientSendCommandPacket() {
+		ClientSendCommandPacket pk = new ClientSendCommandPacket();
+		pk.command = Command.Forward;
+		pk.active = true;
+		
+		ClientSendCommandPacket test = new ClientSendCommandPacket();
+		test.fromData(pk.toData());
+		
+		assertTrue(pk.active);
+		assertEquals(pk.command, Command.Forward);
 	}
 
 	

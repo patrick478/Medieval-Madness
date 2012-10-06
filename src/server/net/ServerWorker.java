@@ -1,5 +1,6 @@
 package server.net;
 
+import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 
 import java.nio.channels.*;
@@ -19,6 +20,7 @@ import common.Packet;
 import common.PacketFactory;
 import common.entity.Player;
 import common.packets.*;
+import common.Command;
 
 public class ServerWorker implements Runnable {
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
@@ -111,6 +113,10 @@ public class ServerWorker implements Runnable {
 				dataEvent = (ServerDataEvent)queue.remove(0);
 			}
 			
+			for(int i = 0; i < dataEvent.data.length; i++)
+				System.out.printf("0x%02X ", dataEvent.data[i]);
+			System.out.println();
+
 			DataPacket p = new DataPacket(dataEvent.data, false);
 			Session s = SessionMngr.getInstance().getSession(dataEvent.session);
 			if(s == null) return; // TODO: This is bad.
@@ -169,10 +175,78 @@ public class ServerWorker implements Runnable {
 						
 						EntityManager.getInstance().addMoveableEntity(player, id);
 						PlayerManager.getInstance().addPlayer(username, player);
+						s.setPlayer(player);
+						s.setState(SessionState.Playing);
 					}
 					
 				}
 				break;
+				
+			case Playing:
+				switch(from.ID())
+				{
+					case ClientSendCommandPacket.ID:
+						ClientSendCommandPacket cscp = (ClientSendCommandPacket)from;
+						handleClientCommand(cscp.command, cscp.active, s);
+					break;
+				}
+				break;
 		}
+	}
+	
+	void handleClientCommand(Command c, boolean isActive, Session s)
+	{
+		double speed = 2;
+		
+		System.out.printf("Moving: %s, active: %b\n", c.toString(), isActive);
+		ServerPlayer p = s.getPlayer();
+		
+		Vec3 forward = Vec3.create(1, 0, 1);
+		Vec3 backward = Vec3.create(-1, 0, -1);
+		Vec3 left = Vec3.create(1, 0, -1);
+		Vec3 right = Vec3.create(-1, 0, 1);
+		
+		if(isActive)
+		{
+			System.out.printf("adding %s to commandset\n", c.toString());
+			p.activeCommands.add(c);
+		}
+		else
+		{
+			System.out.printf("removing %s from commandset\n", c.toString());
+			p.activeCommands.remove(c);
+		}
+		
+		Vec3 target = Vec3.zero;
+		
+		for(Command cur : p.activeCommands)
+		{
+			System.out.printf("Adding %s to targetVector (%s)\n", cur.toString(), target.toString());
+			switch(cur)
+			{
+				case Forward:
+					target = target.add(forward);
+					break;
+				case Backward:
+					target = target.add(backward);
+					break;
+				case Left:
+					target = target.add(left);
+					break;
+				case Right:
+					target = target.add(right);
+					break;
+			}
+		}
+		if(target.x > 1) target = target.setX(1);
+		if(target.z > 1) target = target.setZ(1);
+		
+		
+		Vec3 motion = p.getOrientation().rot(target);
+		p.updateMotion(p.getPosition(), motion, Quat.one, Vec3.zero, System.currentTimeMillis());
+		
+		PlayerManager.getInstance().notifyMoved(p);
+
+	
 	}
 }

@@ -3,7 +3,10 @@ package client;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import common.Command;
 import common.entity.MovableEntity;
 import common.entity.Player;
 import comp261.modelview.MeshLoader;
@@ -22,8 +25,15 @@ public class PlayState extends AbstractState {
 	
 	private Scene scene = new Scene();
 	
+	private Map<Command, Boolean> commandsActive = new HashMap<Command, Boolean>(); 
+	
 	public PlayState() {
 		this.gameWorld.getInstance().loadScene(scene);
+		
+		commandsActive.put(Command.Forward,  false);
+		commandsActive.put(Command.Backward,  false);
+		commandsActive.put(Command.Left,  false);
+		commandsActive.put(Command.Right,  false);
 	}
 
 	@Override
@@ -33,5 +43,33 @@ public class PlayState extends AbstractState {
 	
 	@Override
 	public void update(long updateTime, RenderWindow window) {
+		doKeyCommand(window, KeyEvent.VK_UP, Command.Forward);
+//		doKeyCommand(window, KeyEvent.VK_W, Command.Forward);
+		
+		doKeyCommand(window, KeyEvent.VK_DOWN, Command.Backward);
+//		doKeyCommand(window, KeyEvent.VK_S, Command.Backward);
+		
+		doKeyCommand(window, KeyEvent.VK_LEFT, Command.Left);
+//		doKeyCommand(window, KeyEvent.VK_A, Command.Left);
+		
+		doKeyCommand(window, KeyEvent.VK_RIGHT, Command.Right);
+//		doKeyCommand(window, KeyEvent.VK_D, Command.Right);
+	}
+	
+	private void doKeyCommand(RenderWindow window, int key, Command command)
+	{
+//		if(!commandsActive.containsKey(command)) commandsActive.put(command,  false);
+		
+		if(window.getKey(key) && !commandsActive.get(command))			
+		{
+			this.client.net.sendCommandStart(command);
+			commandsActive.put(command, true);
+		}
+		
+		if(!window.getKey(key) && commandsActive.get(command))
+		{
+			this.client.net.sendCommandEnd(command);
+			commandsActive.put(command, false);
+		}
 	}
 }

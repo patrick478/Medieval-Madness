@@ -149,8 +149,14 @@ public class Server implements Runnable {
 		
 	}
 
+	long lastPlayerUpdate = System.currentTimeMillis();
 	public void Tick(long elapsedTimeMillis)
 	{
+		if(System.currentTimeMillis() - lastPlayerUpdate > 1000)
+		{
+			lastPlayerUpdate = System.currentTimeMillis();
+			PlayerManager.getInstance().notifyAllMoved();
+		}
 	}
 
 	@Override
@@ -165,7 +171,7 @@ public class Server implements Runnable {
 		while(true)
 		{
 			if(this.serverData.get("status") != ServerStatus.Running)
-				break;
+				continue;
 			
 			elapsedTimeSinceLastTick = System.currentTimeMillis() - lastStartTime;
 			lastStartTime = System.currentTimeMillis();

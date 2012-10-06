@@ -52,6 +52,15 @@ public class Scene {
 		if (d == null) throw new IllegalArgumentException();
 		remove_drawable.addAll(d);
 	}
+	
+
+	// FIXME: Ben, is this valid?
+	public boolean containsDrawable(Drawable d) {
+		if(d == null) throw new IllegalArgumentException();
+		if(remove_drawable.contains(d)) return false;
+		else if(drawables.contains(d) || add_drawable.contains(d)) return true;
+		else return false;
+	}
 
 	public <T extends Collection<Drawable>> T extractDrawables(T c) {
 		c.addAll(drawables);
@@ -156,5 +165,6 @@ public class Scene {
 	protected void poke() {
 
 	}
+
 
 }

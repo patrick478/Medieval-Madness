@@ -40,11 +40,11 @@ public class Client {
 		
 		this.setState(new StartupState());
 		
-		//temp
-		//Adding player into the game
-		Player p = EntityFactory.createPlayer(Vec3.zero, System.nanoTime());
-		gameWorld.addMoveableEntity(p);
-		gameWorld.setPlayer(p.id);
+//		//temp
+//		//Adding player into the game
+//		Player p = EntityFactory.createPlayer(Vec3.zero, System.nanoTime());
+//		gameWorld.addMoveableEntity(p);
+//		gameWorld.setPlayer(p.id);
 	}
 
 	public void setState(AbstractState newState) {

@@ -1,22 +1,28 @@
 package server.session;
 
 import java.nio.channels.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import common.DataPacket;
 import common.Packet;
 
+import server.game.ServerPlayer;
 import server.net.ServerLayer;
 
 public class Session {
 	private SocketChannel socket;
 	private SessionState state;
 	private ServerLayer parentLayer;
+	private ServerPlayer player;
 	private int substate = 0;
+	private List<Long> sentSegments;
 	
 	public Session(SocketChannel sc, ServerLayer pl) {
 		state = SessionState.Welcome;
 		socket = sc;
 		this.parentLayer = pl;
+		this.sentSegments = new ArrayList<Long>();
 	}
 	
 	public SocketChannel getSocket()
@@ -51,5 +57,24 @@ public class Session {
 	public void send(DataPacket dp)
 	{
 		this.parentLayer.send(this.socket, dp.getData());
+	}
+
+	public void setPlayer(ServerPlayer player) {
+		this.player = player;
+	}
+	
+	public ServerPlayer getPlayer()
+	{
+		return this.player;
+	}
+	
+	public boolean hasSegment(long id)
+	{
+		return sentSegments.contains(id);
+	}
+	
+	public void sentSegment(long id)
+	{
+		sentSegments.add(id);
 	}
 }

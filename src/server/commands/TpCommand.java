@@ -13,10 +13,12 @@ public class TpCommand extends Command {
 
 	@Override
 	public void execute(String[] args) {
+		if(args.length < 4) return;
+		
 		String username = args[1];
 		double x = Double.parseDouble(args[2]);
-		double z = Double.parseDouble(args[2]);
-		double y = this.parentServer.game.segQueue.getSegmentFromWorld(x,  z).getHeight(x, z);
+		double z = Double.parseDouble(args[3]);		
+		double y = this.parentServer.game.segQueue.getSegmentFromWorld(x,  z).getHeight(x, z) + 0.5f;
 		Vec3 target = Vec3.create(x, y, z);
 		ServerPlayer sp = PlayerManager.getInstance().getPlayer(username);
 		sp.teleportTo(target);
