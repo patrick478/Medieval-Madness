@@ -3,7 +3,7 @@ package game;
 import initial3d.Profiler;
 import initial3d.engine.RenderWindow;
 import initial3d.engine.SceneManager;
-import game.GameStates.PreloadGameState;
+import game.states.PreloadGameState;
 
 /***
  * Main game class

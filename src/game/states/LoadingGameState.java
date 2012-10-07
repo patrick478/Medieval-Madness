@@ -1,4 +1,4 @@
-package game.GameStates;
+package game.states;
 
 import java.util.*;
 import game.Game;

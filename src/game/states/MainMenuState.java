@@ -1,4 +1,4 @@
-package game.GameStates;
+package game.states;
 
 import game.Game;
 import game.GameState;
