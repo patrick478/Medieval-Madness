@@ -2,9 +2,7 @@ package game.GameStates;
 
 import java.awt.event.KeyEvent;
 
-import initial3d.engine.MovableReferenceFrame;
-import initial3d.engine.Quat;
-import initial3d.engine.Vec3;
+import initial3d.engine.*;
 import game.Floor;
 import game.FloorGenerator;
 import game.Game;
@@ -37,6 +35,22 @@ public class PlayState extends GameState {
 		{
 			we.addToScene(scene);
 		}
+		
+		MeshLOD mlod = new MeshLOD(1, 5, 5, 5, 5, 5);
+		mlod.addVertex(-0.5, 0, -0.5);
+		mlod.addVertex(-0.5, 0, 0.5);
+		mlod.addVertex(0.5, 0, -0.5);
+		mlod.addVertex(0.5, 0, 0.5);
+		mlod.addPolygon(new int[] { 1, 2, 4, 3}, null, null, null);
+		Mesh floorMesh = new Mesh();
+		floorMesh.add(mlod);
+		
+		Material mat = new Material(Color.BLACK, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);
+		MovableReferenceFrame floorRf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
+		floorRf.setPosition(Vec3.create(5, -0.5, 5));
+		MeshContext mc = new MeshContext(floorMesh, mat, floorRf);
+		mc.setScale(10);
+		scene.addDrawable(mc);
 		
 		
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(player);
