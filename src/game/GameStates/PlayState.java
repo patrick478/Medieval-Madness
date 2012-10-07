@@ -19,7 +19,7 @@ public class PlayState extends GameState {
 		System.out.println("here");
 	}
 	
-	Entity e = new WallEntity();
+	Entity e = new WallEntity(Vec3.zero, Vec3.one, 1, 1);
 
 	@Override
 	public void initalise() {
