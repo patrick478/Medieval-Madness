@@ -59,4 +59,22 @@ public abstract class Entity implements ReferenceFrame {
 			s.addDrawable(m);
 		}
 	}
+	
+	/**
+	 * Returns the bound of the current position of this entity. 
+	 * @return The bounding volume for this entity
+	 */
+	public Bound getBound(){
+		return getBound(position);
+	}
+	
+	/**
+	 * Returns the bound of the given position of this entity.
+	 * Allows the caller to specify the position of the entity
+	 * and get the bounding volume at the point.
+	 * 
+	 * @return The bounding volume for this entity at given location
+	 */
+	protected abstract Bound getBound(Vec3 position);
+	
 }

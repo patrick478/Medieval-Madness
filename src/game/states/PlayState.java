@@ -90,7 +90,7 @@ public class PlayState extends GameState {
 		player.moveTo(player.getPosition().add(intent));
 		
 		for(WallEntity w : floor.getWalls()){
-			if(w.getBound().intersects((BoundingSphere)player.getBound())){
+			if(w.getBound().intersects(player.getBound())){
 				System.out.println("denied");
 				player.moveTo(player.getPosition().sub(intent));
 				break;

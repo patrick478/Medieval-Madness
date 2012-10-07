@@ -9,6 +9,7 @@ import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 import java.io.FileInputStream;
@@ -34,10 +35,6 @@ public class WallEntity extends Entity {
 		
 	}
 	
-	public Bound getBound(){
-		return bound;
-	}
-	
 	// TODO: Work-in-progress
 	public List<MeshContext> getWall()
 	{
@@ -51,9 +48,22 @@ public class WallEntity extends Entity {
 		return meshes;
 	}
 
+	//TODO change this to stop giving the meshes for a wall
+	//mesh construction for a wall should be done by the floor class
+//	@Override
+//	public void addToScene(Scene s)
+//	{
+//		
+//	}
+	
 	@Override
 	public void poke() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected Bound getBound(Vec3 position) {
+		return bound;
 	}
 }
