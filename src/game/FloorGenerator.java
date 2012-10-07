@@ -83,8 +83,12 @@ public class FloorGenerator {
 		}
 		
 		
-		
-		
+		Random r = new Random();
+		for(int i = 0; i < size * 3; i++)
+		{
+			int x = r.nextInt(size), z = r.nextInt(size);
+			maze[x][z] = new Space(z, z, Space.WALL);
+		}
 
 		return maze;
 	}

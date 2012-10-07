@@ -19,7 +19,7 @@ public class Floor {
 		size = Vec3.create(_size, 0, _size);
 	}
 	
-	private List<WallEntity> getWalls(){
+	public List<WallEntity> getWalls(){
 		return walls;
 	}
 }
