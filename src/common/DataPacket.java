@@ -193,4 +193,9 @@ public class DataPacket {
 			return null;
 		}
 	}
+	
+	public int getLength()
+	{
+		return writePos;
+	}
 }

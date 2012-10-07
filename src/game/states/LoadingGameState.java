@@ -44,8 +44,8 @@ public class LoadingGameState extends GameState implements ContentRequest {
 			this.game.changeState(new PlayState(this.game));
 			System.out.println("Finished waiting for content");
 		}
-		else
-			System.out.printf("Loading %.2f complete..\n", loadProgress);
+//		else
+//			System.out.printf("Loading %.2f complete..\n", loadProgress);
 	}
 
 	@Override
