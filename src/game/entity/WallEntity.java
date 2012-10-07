@@ -2,12 +2,14 @@ package game.entity;
 
 import game.bound.Bound;
 import game.bound.BoundingBox;
+import game.bound.BoundingSphere;
 import game.modelloader.Content;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 import java.io.FileInputStream;
@@ -20,21 +22,17 @@ import comp261.modelview.MeshLoader;
 
 public class WallEntity extends Entity {
 	
-	private static final Vec3 wallSize = Vec3.create(1, 2, 1);
-	private Bound bound;
+	private static final Vec3 wallSize = Vec3.create(1, 1, 1);
 	
 	public WallEntity(Vec3 _pos)
 	{
 		position = _pos;
-		bound = new BoundingBox(_pos, wallSize);
+//		bound = new BoundingBox(_pos.sub(wallSize.scale(0.5)), wallSize);
+		bound = new BoundingSphere(_pos, 0.5);
 		
 		this.addMeshContexts(this.getWall());
 		
 		
-	}
-	
-	public Bound getBound(){
-		return bound;
 	}
 	
 	// TODO: Work-in-progress
@@ -50,9 +48,22 @@ public class WallEntity extends Entity {
 		return meshes;
 	}
 
+	//TODO change this to stop giving the meshes for a wall
+	//mesh construction for a wall should be done by the floor class
+//	@Override
+//	public void addToScene(Scene s)
+//	{
+//		
+//	}
+	
 	@Override
 	public void poke() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected Bound getBound(Vec3 position) {
+		return bound;
 	}
 }

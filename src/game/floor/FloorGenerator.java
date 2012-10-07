@@ -20,6 +20,7 @@ public class FloorGenerator {
 	
 	public FloorGenerator(long _seed){
 		seed = _seed;
+		floorPlans.add(new RandomFloor(seed));
 		floorPlans.add(new OpenFloor(seed));
 		floorPlans.add(new RandomFloor(seed));
 	}
