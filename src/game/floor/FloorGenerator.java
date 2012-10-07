@@ -16,9 +16,12 @@ public class FloorGenerator {
 	private final long seed;
 	
 	private HashMap<Integer, Floor> floorCache = new HashMap<Integer, Floor>();
+	private List<AbstractFloorPlanner> floorPlans = new ArrayList<AbstractFloorPlanner>();
 	
 	public FloorGenerator(long _seed){
 		seed = _seed;
+		floorPlans.add(new OpenFloor(seed));
+		floorPlans.add(new RandomFloor(seed));
 	}
 	
 	public Floor getFloor(int level){
@@ -32,7 +35,7 @@ public class FloorGenerator {
 		//Vital to implementation, size must be different between levels
 		int size = level * incr + base;
 		List<WallEntity> walls = new ArrayList<WallEntity>();
-		Space[][] maze = generateMaze(size);
+		Space[][] maze = floorPlans.get(level%(floorPlans.size())).generateMaze(size);
 		
 		//create a wall entity for each wall space in the maze
 		for(int x=0; x<size; x++){
@@ -47,34 +50,5 @@ public class FloorGenerator {
 		Floor floor = new Floor(size, walls);
 		floorCache.put(level, floor);
 		return floor;
-	}
-	
-	private Space[][] generateMaze(int size){
-		//rely on wrap around to generate unique longs for each size
-		Random rand = new Random(size * seed);
-		
-		Space[][] maze = new Space[size][size];
-		
-		for(int x=0; x<size; x++){
-			for(int z=0; z<size; z++){
-				maze[x][z] = new Space(x, z, Space.EMPTY);
-			}
-		}
-		
-		
-		
-		return maze;
-	}
-	
-	public static void main(String[] args){
-		FloorGenerator fg = new FloorGenerator(32l);
-		final int size = 10;
-		Space[][] maze = fg.generateMaze(size);
-		for(int x=0; x<size; x++){
-			for(int z=0; z<size; z++){
-				System.out.printf("%s", (maze[x][z].type == Space.EMPTY) ? "-":"8");
-			}
-			System.out.printf("\n");
-		}
 	}
 }

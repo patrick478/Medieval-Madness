@@ -275,7 +275,6 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 			canvas.createBufferStrategy(2);
 			bs = canvas.getBufferStrategy();
 		}
-
 	}
 
 	/**

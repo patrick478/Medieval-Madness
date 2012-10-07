@@ -13,6 +13,7 @@ public abstract class Entity implements ReferenceFrame {
 	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
+	/**Intended as an update method TODO fill in the description later*/
 	public abstract void poke();
 	
 	@Override

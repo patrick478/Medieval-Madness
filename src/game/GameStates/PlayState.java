@@ -24,7 +24,8 @@ public class PlayState extends GameState {
 		super(parent);
 	}
 	
-	PlayerEntity player = null;
+	private PlayerEntity player = null;
+	private boolean mouseLock = false;
 	
 	@Override
 	public void initalise() {
@@ -72,9 +73,26 @@ public class PlayState extends GameState {
 			this.player.moveTo(this.player.getPosition().add(Vec3.create(0.1, 0, 0)));
 		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
 			this.player.moveTo(this.player.getPosition().add(Vec3.create(-0.1, 0, 0)));
+		if(game.getWindow().getKey(KeyEvent.VK_F))
+			setFirstPerson(true);
+		if(game.getWindow().getKey(KeyEvent.VK_T))
+			setFirstPerson(false);
+		
 	}
 
 	@Override
 	public void destroy() {
 	}	
+	
+	private void setFirstPerson(boolean _val){
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(player);
+		scene.getCamera().trackReferenceFrame(cameraRf);
+		if(_val){
+			cameraRf.setPosition(Vec3.create(0, 0.5, 0));
+			cameraRf.setOrientation(player.getOrientation());
+		}else{
+			cameraRf.setPosition(Vec3.create(0, 9, -10));
+			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
+		}
+	}
 }

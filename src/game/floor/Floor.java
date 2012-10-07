@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import game.entity.WallEntity;
+import initial3d.engine.MeshContext;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 public class Floor {
@@ -21,5 +23,13 @@ public class Floor {
 	
 	public List<WallEntity> getWalls(){
 		return walls;
+	}
+	
+	public void addToScene(Scene s)
+	{
+		for(WallEntity w : walls)
+		{
+			w.addToScene(s);
+		}
 	}
 }
