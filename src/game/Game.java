@@ -142,4 +142,8 @@ public class Game implements Runnable {
 		this.sceneManager.getProfiler().setResetOutput(null);
 	}
 	
+	public RenderWindow getWindow()
+	{
+		return this.gameWindow;
+	}	
 }

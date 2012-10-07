@@ -1,12 +1,17 @@
 package game.GameStates;
 
+import java.awt.event.KeyEvent;
+
 import initial3d.engine.MovableReferenceFrame;
 import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
-import game.Entity;
+import game.Floor;
+import game.FloorGenerator;
 import game.Game;
 import game.GameState;
-import game.WallEntity;
+import game.entity.Entity;
+import game.entity.PlayerEntity;
+import game.entity.WallEntity;
 
 /***
  * The game!
@@ -18,22 +23,39 @@ public class PlayState extends GameState {
 		super(parent);
 	}
 	
-
+	PlayerEntity player = null;
+	
 	@Override
 	public void initalise() {
-		Entity e = new WallEntity(Vec3.zero, Vec3.one, 1, 1);
+		player = new PlayerEntity(Vec3.create(1, 0, 1));
+		player.addToScene(scene);
 		
-		e.addToScene(scene);
+		FloorGenerator fg = new FloorGenerator(123873123312l);
+		Floor f = fg.getFloor(0);
 		
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(e);
+		for(WallEntity we : f.getWalls())
+		{
+			we.addToScene(scene);
+		}
+		
+		
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(-300, -250, -400));
-		cameraRf.setOrientation(Quat.create(Math.PI / 8, Vec3.i));
-		cameraRf.setOrientation(cameraRf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
+		cameraRf.setPosition(Vec3.create(0, 9, 0));
+		cameraRf.setOrientation(Quat.create(Math.PI / 2.3f, Vec3.i));
+		cameraRf.setOrientation(cameraRf.getOrientation().mul(Quat.create(Math.PI / 2, Vec3.j)));
 	}
 
 	@Override
 	public void update(double delta) {
+		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, 0.1)));
+		if(game.getWindow().getKey(KeyEvent.VK_LEFT))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, -0.1)));
+		if(game.getWindow().getKey(KeyEvent.VK_UP))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0.1, 0, 0)));
+		if(game.getWindow().getKey(KeyEvent.VK_DOWN))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(-0.1, 0, 0)));
 	}
 
 	@Override
