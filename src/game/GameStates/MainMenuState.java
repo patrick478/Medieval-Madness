@@ -17,12 +17,11 @@ public class MainMenuState extends GameState {
 
 	@Override
 	public void initalise() {
-		// for now - straight to the PlayState
-		this.game.changeState(new PlayState(this.game));
 	}
 
 	@Override
 	public void update(double delta) {
+		this.game.changeState(new LoadingGameState(this.game));
 	}
 
 	@Override

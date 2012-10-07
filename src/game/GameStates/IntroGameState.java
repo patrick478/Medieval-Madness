@@ -12,17 +12,16 @@ public class IntroGameState extends GameState {
 
 	public IntroGameState(Game parent) {
 		super(parent);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void initalise() {
-		this.game.changeState(new MainMenuState(this.game));
 	}
 
 
 	@Override
 	public void update(double delta) {
+		this.game.changeState(new MainMenuState(this.game));
 	}
 
 	@Override

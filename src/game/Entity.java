@@ -53,6 +53,5 @@ public class Entity implements ReferenceFrame {
 		{
 			s.addDrawable(m);
 		}
-		System.out.println("Added!");
 	}
 }
