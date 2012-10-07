@@ -53,11 +53,17 @@ public class FloorGenerator {
 		//rely on wrap around to generate unique longs for each size
 		Random rand = new Random(size * seed);
 		
+		Space[][] maze = new Space[size][size];
+		
+		for(int x=0; x<size; x++){
+			for(int z=0; z<size; z++){
+				maze[x][z] = new Space(x, z, Space.EMPTY);
+			}
+		}
 		
 		
 		
-		
-		return null;
+		return maze;
 	}
 	
 	public static void main(String[] args){

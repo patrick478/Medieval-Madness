@@ -1,5 +1,5 @@
 package game.floor;
 
-public abstract class FloorPlanner {
+public abstract class AbstractFloorPlanner {
 	public abstract Space[][] generateMaze(int size);
 }

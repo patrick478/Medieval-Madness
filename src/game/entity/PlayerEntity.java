@@ -2,6 +2,8 @@ package game.entity;
 
 import game.bound.Bound;
 import game.bound.BoundingBox;
+import game.bound.BoundingSphere;
+import game.entity.Entity;
 import game.modelloader.Content;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
@@ -18,19 +20,16 @@ import java.util.List;
 import common.Timer;
 import comp261.modelview.MeshLoader;
 
-public class WallEntity extends Entity {
+public class PlayerEntity extends Entity {
 	
-	private static final Vec3 wallSize = Vec3.create(1, 2, 1);
 	private Bound bound;
 	
-	public WallEntity(Vec3 _pos)
+	public PlayerEntity(Vec3 _pos)
 	{
 		position = _pos;
-		bound = new BoundingBox(_pos, wallSize);
+		bound = new BoundingSphere();
 		
-		this.addMeshContexts(this.getWall());
-		
-		
+		this.addMeshContexts(this.getBall());
 	}
 	
 	public Bound getBound(){
@@ -38,12 +37,12 @@ public class WallEntity extends Entity {
 	}
 	
 	// TODO: Work-in-progress
-	public List<MeshContext> getWall()
+	public List<MeshContext> getBall()
 	{
-		Material mat = new Material(Color.GRAY, new Color(0.9f, 0.9f, 0.9f), new Color(0.8f, 0.8f, 0.8f), new Color(0f, 0f, 0f), 1f, 1f);		
-		Mesh m = Content.loadContent("cube.obj");
+		Material mat = new Material(Color.RED, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);		
+		Mesh m = Content.loadContent("sphere.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
-		mc.setScale(1.001f);
+		mc.setScale(0.25);
 		List<MeshContext> meshes = new ArrayList<MeshContext>();
 		meshes.add(mc);
 		
@@ -54,5 +53,9 @@ public class WallEntity extends Entity {
 	public void poke() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void moveTo(Vec3 add) {
+		this.position = add;
 	}
 }
