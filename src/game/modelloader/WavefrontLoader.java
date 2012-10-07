@@ -37,7 +37,7 @@ public class WavefrontLoader extends AbstractContentLoader {
 		try {
 			return Load(new FileInputStream(filename));
 		} catch (FileNotFoundException e) {
-			System.out.println("Waaa!");
+			System.out.println("Waaa! Pomf =3. What are we going to do on stderr?");
 		}
 		
 		return null;
@@ -64,17 +64,17 @@ public class WavefrontLoader extends AbstractContentLoader {
 					
 					if(line.startsWith("v "))
 					{
-						float x = Float.parseFloat(tok.nextToken()), y = Float.parseFloat(tok.nextToken()), z = Float.parseFloat(tok.nextToken());
+						double x = Double.parseDouble(tok.nextToken()), y = Double.parseDouble(tok.nextToken()), z = Double.parseDouble(tok.nextToken());
 						mlod.addVertex(x, y, z);
 					}
 					else if(line.startsWith("vt "))
 					{
-						float u = Float.parseFloat(tok.nextToken()), v = Float.parseFloat(tok.nextToken());
+						double u = Double.parseDouble(tok.nextToken()), v = Double.parseDouble(tok.nextToken());
 						mlod.addTexCoord(u, v);
 					}
 					else if(line.startsWith("vn "))
 					{
-						float i = Float.parseFloat(tok.nextToken()), j = Float.parseFloat(tok.nextToken()), k = Float.parseFloat(tok.nextToken());
+						double i = Double.parseDouble(tok.nextToken()), j = Double.parseDouble(tok.nextToken()), k = Double.parseDouble(tok.nextToken());
 						mlod.addNormal(i, j, k);
 					}
 					else if(line.startsWith("f "))
