@@ -1,5 +1,7 @@
-package game;
+package game.entity;
 
+import game.bound.Bound;
+import game.bound.BoundingBox;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
@@ -16,25 +18,13 @@ import comp261.modelview.MeshLoader;
 
 public class WallEntity extends Entity {
 	
-	private final Vec3 pos1;
-	private final Vec3 pos2;
-	private final double width;
-	private final double height;
-	
+	private static final Vec3 wallSize = Vec3.create(1, 2, 1);
 	private Bound bound;
 	
-	public WallEntity(Vec3 _pos1, Vec3 _pos2, double _width, double _height)
+	public WallEntity(Vec3 _pos)
 	{
-		pos1 = _pos1;
-		pos2 = _pos2;
-		width = _width;
-		height = _height;
-		
-		Vec3 width = Vec3.create(_width, _height, _width);
-		if(pos1.x < pos2.x || pos1.z < pos2.z){
-			width.neg();
-		}
-		bound = new BoundingBox(_pos1.add(width), _pos2.sub(width));
+		position = _pos;
+		bound = new BoundingBox(_pos, wallSize);
 		
 		this.addMeshContexts(this.getWall());
 	}
@@ -76,5 +66,11 @@ public class WallEntity extends Entity {
 		meshes.add(mc);
 
 		return meshes;
+	}
+
+	@Override
+	public void poke() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,4 +1,4 @@
-package game;
+package game.bound;
 
 import initial3d.engine.Vec3;
 
@@ -10,6 +10,7 @@ public class BoundingBox extends Bound{
 	private final double volume;
 	
 	public BoundingBox(Vec3 position, Vec3 size){
+		super();
 		this.position = Vec3.negativeExtremes(position, position.add(size));
 		this.posex = Vec3.positiveExtremes(position, position.add(size));
 		this.size = posex.sub(this.position);

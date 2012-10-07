@@ -3,10 +3,10 @@ package game.GameStates;
 import initial3d.engine.MovableReferenceFrame;
 import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
-import game.Entity;
 import game.Game;
 import game.GameState;
-import game.WallEntity;
+import game.entity.Entity;
+import game.entity.WallEntity;
 
 /***
  * The game!
@@ -19,7 +19,7 @@ public class PlayState extends GameState {
 		System.out.println("here");
 	}
 	
-	Entity e = new WallEntity(Vec3.zero, Vec3.one, 1, 1);
+	Entity e = new WallEntity(Vec3.zero);
 
 	@Override
 	public void initalise() {

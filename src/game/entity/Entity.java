@@ -1,10 +1,10 @@
-package game;
+package game.entity;
 
 import java.util.*;
 
 import initial3d.engine.*;
 
-public class Entity implements ReferenceFrame {
+public abstract class Entity implements ReferenceFrame {
 	
 	protected Vec3 position = Vec3.zero;
 	protected Quat orientation = Quat.one;
@@ -12,6 +12,8 @@ public class Entity implements ReferenceFrame {
 	protected Vec3 radius;
 	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
+	
+	public abstract void poke();
 	
 	@Override
 	public ReferenceFrame getParent() {
