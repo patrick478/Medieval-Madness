@@ -14,18 +14,14 @@ public class FindGameState extends GameState {
 	}
 
 	@Override
+	public void initalise() {
+	}
+
+	@Override
 	public void update(double delta) {
 	}
 
 	@Override
-	public void initalise() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
+	public void destroy() {		
 	}	
 }

@@ -9,8 +9,6 @@ import game.GameState;
  *
  */
 public class PreloadGameState extends GameState {
-	private boolean createdWindow = false;
-	
 	public PreloadGameState(Game parent) {
 		super(parent);
 	}
@@ -18,20 +16,14 @@ public class PreloadGameState extends GameState {
 	@Override
 	public void update(double delta) {
 		// TODO: lots of stuff to do with creating and loading assets required to create the window
-		if(!createdWindow)
-		{
-			this.game.createWindow();
-			createdWindow = true;
-		}
-		
-		// for now, just move straight to the intro game state
-		this.game.changeState(new IntroGameState(this.game));
 	}
 
 	@Override
 	public void initalise() {
-		// TODO Auto-generated method stub
+		this.game.createWindow();		
 		
+		// for now, just move straight to the intro game state
+		this.game.changeState(new IntroGameState(this.game));
 	}
 
 	@Override

@@ -14,15 +14,13 @@ public class LoadingGameState extends GameState {
 	}
 
 	@Override
-	public void update(double delta) {
-		// for now - no loading
-		this.game.changeState(new PlayState(this.game));
+	public void initalise() {
 	}
 
 	@Override
-	public void initalise() {
-		// TODO Auto-generated method stub
-		
+	public void update(double delta) {
+		// for now - no loading
+		this.game.changeState(new PlayState(this.game));
 	}
 
 	@Override

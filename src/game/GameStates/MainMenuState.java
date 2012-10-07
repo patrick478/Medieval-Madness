@@ -16,18 +16,16 @@ public class MainMenuState extends GameState {
 	}
 
 	@Override
+	public void initalise() {
+		// for now - straight to the PlayState
+		this.game.changeState(new PlayState(this.game));
+	}
+
+	@Override
 	public void update(double delta) {
 	}
 
 	@Override
-	public void initalise() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
 	}	
 }

@@ -1,6 +1,7 @@
 package game;
 
 import initial3d.engine.RenderWindow;
+import initial3d.engine.SceneManager;
 import game.GameStates.PreloadGameState;
 
 /***
@@ -16,6 +17,7 @@ public class Game implements Runnable {
 	private Thread gameThread = null;
 	private boolean gameRunning = false;
 	private RenderWindow gameWindow = null;
+	private SceneManager sceneManager = null;
 	private int updatesPerSecond = 0;
 	
 	public Game()
@@ -96,6 +98,9 @@ public class Game implements Runnable {
 			this.currentGameState.destroy();
 		this.currentGameState = gs;
 		this.currentGameState.initalise();
+		
+		if(this.sceneManager != null)
+			this.sceneManager.attachToScene(this.currentGameState.scene);
 	}
 	
 	/***
@@ -119,6 +124,8 @@ public class Game implements Runnable {
 	{
 		this.gameWindow = RenderWindow.create(800, 600);
 		this.gameWindow.setVisible(true);
+		this.sceneManager = new SceneManager(800, 600);
+		this.sceneManager.setDisplayTarget(this.gameWindow);
 	}
 	
 }

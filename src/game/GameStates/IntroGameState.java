@@ -14,22 +14,19 @@ public class IntroGameState extends GameState {
 		super(parent);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
-	public void update(double delta) {
+	public void initalise() {
 		this.game.changeState(new MainMenuState(this.game));
 	}
 
+
 	@Override
-	public void initalise() {
-		// TODO Auto-generated method stub
-		
+	public void update(double delta) {
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
