@@ -2,6 +2,7 @@ package game.entity;
 
 import game.bound.Bound;
 import game.bound.BoundingBox;
+import game.modelloader.Content;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.Timer;
 import comp261.modelview.MeshLoader;
 
 public class WallEntity extends Entity {
@@ -27,6 +29,8 @@ public class WallEntity extends Entity {
 		bound = new BoundingBox(_pos, wallSize);
 		
 		this.addMeshContexts(this.getWall());
+		
+		
 	}
 	
 	public List<MeshContext> getBall()
@@ -57,14 +61,12 @@ public class WallEntity extends Entity {
 	// TODO: Work-in-progress
 	public List<MeshContext> getWall()
 	{
-		Material mat = new Material(Color.BLACK, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);
-		WavefrontLoader wl = new WavefrontLoader();
-		Mesh m = wl.Load("cube.obj");
+		Material mat = new Material(Color.BLACK, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);		
+		Mesh m = Content.loadContent("trumpet.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
-		
 		List<MeshContext> meshes = new ArrayList<MeshContext>();
 		meshes.add(mc);
-
+		
 		return meshes;
 	}
 

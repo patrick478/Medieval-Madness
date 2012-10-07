@@ -1,5 +1,6 @@
 package game;
 
+import initial3d.Profiler;
 import initial3d.engine.RenderWindow;
 import initial3d.engine.SceneManager;
 import game.GameStates.PreloadGameState;
@@ -70,17 +71,18 @@ public class Game implements Runnable {
 				lastUpsTime = 0;
 				ups = 0;
 			}
-			
 			this.getState().update(delta);
 			
 			try
 			{
 				long sleepTime = (lastUpdateTime - System.nanoTime() + optimalTime) / 1000000;
-				Thread.sleep(sleepTime);
+				if(sleepTime > 0)
+					Thread.sleep(sleepTime);
+				
 			}
 			catch(Exception e)
 			{
-				// FIXME
+				e.printStackTrace();
 			}
 		}
 	}
@@ -90,17 +92,28 @@ public class Game implements Runnable {
 	 * @param gs The state to be used as the main game state from now on
 	 */
 	public void changeState(GameState gs)
-	{
-		if(gs == null)
-			throw new IllegalArgumentException();
+	{		
+		Profiler p = new Profiler();
+		p.setResetOutput(System.out);
 		
+		p.startSection("ChangeState-DestroyOldGameState()");
 		if(this.currentGameState != null)
 			this.currentGameState.destroy();
-		this.currentGameState = gs;
-		this.currentGameState.initalise();
+		p.endSection("ChangeState-DestroyOldGameState()");
 		
+		this.currentGameState = gs;
+		
+		p.startSection("ChangeState-InitaliseNewState()");
+		this.currentGameState.initalise();
+		p.endSection("ChangeState-InitaliseNewState()");
+		
+		p.startSection("ChangeState-AttachToScene()");
 		if(this.sceneManager != null)
 			this.sceneManager.attachToScene(this.currentGameState.scene);
+		p.endSection("ChangeState-AttachToScene()");
+		
+		// This is used to figure out how long stuff is going.. disabled most of the time!
+		// p.reset();
 	}
 	
 	/***

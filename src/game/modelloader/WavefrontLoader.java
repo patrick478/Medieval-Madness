@@ -5,10 +5,12 @@ import initial3d.engine.MeshLOD;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -18,19 +20,19 @@ import java.util.StringTokenizer;
  * @author Ben
  *
  */
-public class WavefrontLoader extends AbstractModelLoader {
-	public static final int maxPolys = 100;
-	public static final int maxPolyVerts = 1000;
-	public static final int maxVerts = 1000;
+public class WavefrontLoader extends AbstractContentLoader {
+	public static final int maxPolys = 12000;
+	public static final int maxPolyVerts = 200;
+	public static final int maxVerts = 12000;
 	public static final int maxTexCoords = 1000;
-	public static final int maxNormals = 1000;
+	public static final int maxNormals = 1200;
 	public static final int maxVertColors = 1000;
 
 	public WavefrontLoader()
 	{
 	}
 	
-	public Mesh Load(String filename)
+	public Object Load(String filename)
 	{
 		try {
 			return Load(new FileInputStream(filename));
@@ -41,7 +43,7 @@ public class WavefrontLoader extends AbstractModelLoader {
 		return null;
 	}
 	
-	public Mesh Load(InputStream in)
+	public Object Load(InputStream in)
 	{
 		MeshLOD mlod = new MeshLOD(maxPolys, maxPolyVerts, maxVerts, maxTexCoords, maxNormals, maxVertColors);
 		
@@ -55,76 +57,65 @@ public class WavefrontLoader extends AbstractModelLoader {
 				if(line.length() > 0)
 				{
 					StringTokenizer tok = new StringTokenizer(line);
+					if(tok.hasMoreElements())
+						tok.nextToken();
+					else
+						continue;
+					
 					if(line.startsWith("v "))
 					{
-						tok.nextToken();
 						float x = Float.parseFloat(tok.nextToken()), y = Float.parseFloat(tok.nextToken()), z = Float.parseFloat(tok.nextToken());
-						System.out.printf("Adding vertex: %f, %f, %f\n", x, y, z);
 						mlod.addVertex(x, y, z);
 					}
 					else if(line.startsWith("vt "))
 					{
-						tok.nextToken();
 						float u = Float.parseFloat(tok.nextToken()), v = Float.parseFloat(tok.nextToken());
-						System.out.printf("Adding texture coordinate: %f, %f\n", u, v);
 						mlod.addTexCoord(u, v);
 					}
 					else if(line.startsWith("vn "))
 					{
-						tok.nextToken();
 						float i = Float.parseFloat(tok.nextToken()), j = Float.parseFloat(tok.nextToken()), k = Float.parseFloat(tok.nextToken());
-						System.out.printf("Adding vertex normal: %f, %f, %f\n", i, j, k);
 						mlod.addNormal(i, j, k);
 					}
 					else if(line.startsWith("f "))
 					{
-						tok.nextToken();
 						List<Integer> vertices = new ArrayList<Integer>();
 						List<Integer> textures = new ArrayList<Integer>();
 						List<Integer> normals = new ArrayList<Integer>();
 						while(tok.hasMoreTokens())
 						{
 							String token = tok.nextToken();
-							System.out.printf("Face line: %s, token=%s\n", line, token);
 							String first = token, second = null, third = null;
 							if(token.indexOf('/') > -1)
 							{
 								first = token.substring(0,  token.indexOf('/'));
 								second = token.substring(token.indexOf('/')+1, token.length());
-								System.out.printf("has texindex. first=%s, second=%s\n", first, second);
 								if(second.indexOf('/') > -1)
 								{
-									second = second.substring(0, second.indexOf('/'));
 									third = second.substring(second.indexOf('/')+1, second.length());
-									System.out.printf("has vertexindex. first=%s, second=%s, third=%s\n", first, second, third);
+									second = second.substring(0, second.indexOf('/'));
 								}
-							}
+							}   
 														
 							int vi = Integer.parseInt(first), ti = -1, ni = -1;
 							vertices.add(vi);
-							System.out.printf("Adding polygon vertex index: vi=%d\n", vi);
 							
-							if(second.length() > 0)
+							if(second != null && second.length() > 0)
 							{
 								ti = Integer.parseInt(second); 
 								textures.add(ti);
-								System.out.printf("Adding polygon texture index: ti=%d\n", ti);
 							}
 							
-							System.out.printf("here2\n");
-							
-							if(third.length() > 0)
+							if(third != null && third.length() > 0)
 							{
 								ni = Integer.parseInt(third);
 								normals.add(ni);
-								System.out.printf("Adding polygon normal index: ni=%d\n", ni);
 							}
 							
 						}
 						int[] v = toIntArray(vertices);
 						int[] vt = toIntArray(textures);
 						int[] vn = toIntArray(normals);
-//						System.out.printf("v.size()=%d, vt.size()=%d, vn.size()=%d\n", v.length, vt.length, vn.length);
 						
 						mlod.addPolygon(v, vt, vn, null);
 					}
@@ -135,12 +126,9 @@ public class WavefrontLoader extends AbstractModelLoader {
 		{
 			ex.printStackTrace();
 		}
-		
+
 		Mesh m = new Mesh();
 		m.add(mlod);
-		
-		Scanner s = new Scanner(System.in);
-		s.hasNext();
 		return m;
 	}
 	
