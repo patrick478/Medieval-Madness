@@ -2,6 +2,7 @@ package initial3d.engine.xhaust;
 
 import static initial3d.Initial3D.*;
 import initial3d.Initial3D;
+import initial3d.engine.ActionSource;
 import initial3d.engine.EventDispatcher;
 
 import java.awt.Color;
@@ -14,7 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.util.Collections;
 
-public abstract class Component {
+public abstract class Component extends ActionSource {
 
 	private final int width, height;
 	private volatile int x, y;
@@ -25,12 +26,19 @@ public abstract class Component {
 	private boolean repainted = false;
 	private int drawid;
 
+	private volatile Component parent = null;
+
 	private final EventDispatcher dispatcher = new EventDispatcher();
 
 	public Component(int width_, int height_) {
 		width = width_;
 		height = height_;
 
+	}
+
+	/* package-private */
+	final void setParent(Component c) {
+		parent = c;
 	}
 
 	/* package-private */
@@ -82,7 +90,18 @@ public abstract class Component {
 		return 1;
 	}
 
-	public void repaint() {
+	/** Invoke this to get this component (and anything else necessary) repainted. */
+	public final void repaint() {
+		// recurses up until opaque or null parent
+		if (!isOpaque() && parent != null) {
+			parent.repaint();
+		} else {
+			repaintDown();
+		}
+	}
+
+	protected void repaintDown() {
+		// recurses down setting repaint_required
 		repaint_required = true;
 	}
 
@@ -94,7 +113,7 @@ public abstract class Component {
 	}
 
 	protected void paintBorder(Graphics g) {
-		
+
 	}
 
 	public int getWidth() {
@@ -118,7 +137,7 @@ public abstract class Component {
 		y = y_;
 	}
 
-	public boolean getOpaque() {
+	public boolean isOpaque() {
 		return opaque;
 	}
 
@@ -134,9 +153,19 @@ public abstract class Component {
 		col_bg = c;
 	}
 
+	final void dispatchKeyEvent(KeyEvent e) {
+		processKeyEvent(e);
+		dispatcher.dispatchEvent(e);
+	}
+
+	final void dispatchMouseEvent(MouseEvent e) {
+		processMouseEvent(e);
+		dispatcher.dispatchEvent(e);
+	}
+
 	/** Override for custom processing of key events. */
 	protected void processKeyEvent(KeyEvent e) {
-		
+
 	}
 
 	/** Override for custom processing of mouse events. */

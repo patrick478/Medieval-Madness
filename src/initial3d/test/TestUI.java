@@ -2,13 +2,17 @@ package initial3d.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 
 import comp261.modelview.MeshLoader;
 
 import initial3d.engine.*;
+import initial3d.engine.xhaust.ButtonV0;
 import initial3d.engine.xhaust.Component;
 import initial3d.engine.xhaust.Pane;
 
@@ -21,6 +25,7 @@ public class TestUI {
 		rwin.setVisible(true);
 
 		SceneManager sman = new SceneManager(848, 480);
+		sman.getProfiler().setResetOutput(null);
 		sman.setDisplayTarget(rwin);
 		rwin.addKeyListener(sman);
 		rwin.addCanvasMouseListener(sman);
@@ -36,7 +41,8 @@ public class TestUI {
 		p.setPosition(128, 30);
 		p.getRoot().setBackgroundColor(Color.GRAY);
 
-		Component c = new Component(20, 20) {
+		final Component c = new ButtonV0(40, 20, "Hello");
+		final Component c1 = new Component(40, 20) {
 			String s = "";
 
 			@Override
@@ -57,7 +63,7 @@ public class TestUI {
 			}
 
 		};
-		Component c1 = new Component(40, 20) {
+		final Component c2 = new Component(50, 20) {
 			String s = "";
 
 			@Override
@@ -76,29 +82,23 @@ public class TestUI {
 					repaint();
 				}
 			}
-
+			
 		};
-		Component c2 = new Component(50, 20) {
-			String s = "";
+		
+		c.addActionListener(new ActionListener() {
 
 			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.setColor(Color.BLACK);
-				g.drawString(s, 5, 15);
-				g.setColor(Color.CYAN);
-				g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-			}
-
-			@Override
-			protected void processKeyEvent(KeyEvent e) {
-				if (e.getID() == KeyEvent.KEY_PRESSED) {
-					s += e.getKeyChar();
-					repaint();
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == c) {
+					c1.setBackgroundColor(Color.RED);
+					c1.repaint();
+					c2.setBackgroundColor(Color.GREEN);
+					c2.repaint();
 				}
 			}
-
-		};
+			
+		});
+		
 		c.setPosition(10, 10);
 		c1.setPosition(20, 40);
 		c2.setPosition(30, 70);

@@ -17,6 +17,7 @@ public class Container extends Component {
 
 	public void add(Component c) {
 		children.add(c);
+		c.setParent(this);
 	}
 
 	@Override
@@ -34,10 +35,11 @@ public class Container extends Component {
 	}
 
 	@Override
-	public void repaint() {
-		super.repaint();
+	protected void repaintDown() {
+		// recurses down setting repaint_required
+		super.repaintDown();
 		for (Component c : children) {
-			c.repaint();
+			c.repaintDown();
 		}
 	}
 

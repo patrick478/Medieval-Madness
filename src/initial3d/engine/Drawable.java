@@ -8,7 +8,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import initial3d.Initial3D;
 
-public abstract class Drawable {
+public abstract class Drawable extends ActionSource {
 
 	// external requests for state change
 	private volatile boolean request_focus = false;

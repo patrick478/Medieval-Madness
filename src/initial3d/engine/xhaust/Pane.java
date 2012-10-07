@@ -1,7 +1,10 @@
 package initial3d.engine.xhaust;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -28,7 +31,7 @@ public class Pane extends Drawable {
 	private final double[][] vec0 = new double[4][1];
 	private final double[][] vec1 = new double[4][1];
 	private final double[][] xtemp = Matrix.createIdentity(4);
-	
+
 	private Component focused;
 
 	public Pane(int width_, int height_) {
@@ -66,7 +69,7 @@ public class Pane extends Drawable {
 		x = x_;
 		y = y_;
 	}
-	
+
 	public Container getRoot() {
 		return root;
 	}
@@ -111,15 +114,27 @@ public class Pane extends Drawable {
 		double scale = ytop * 2d / (double) frameheight;
 		TransformationMatrix4D.scale(xtemp, scale, scale, 1, 1);
 		i3d.multMatrix(xtemp);
-		
+
 		i3d.translateX(width / 2 + x);
 		i3d.translateY(height / 2 + y);
 
 		i3d.disable(WRITE_COLOR | WRITE_Z);
 		Graphics g = bi.createGraphics();
+
+		if (!root.isOpaque()) {
+			// try to transparent-clear
+			Graphics2D g2d = (Graphics2D) g;
+			Composite ac_clear = AlphaComposite.getInstance(AlphaComposite.CLEAR);
+			Composite ac_old = g2d.getComposite();
+			g2d.setComposite(ac_clear);
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(0, 0, width, height);
+			g2d.setComposite(ac_old);
+		}
+
 		root.doRepaint(g, i3d, getDrawIDStart(), zview);
 		g.dispose();
-		
+
 		if (root.repainted()) {
 			tex.drawImage(bi);
 		}
@@ -157,7 +172,7 @@ public class Pane extends Drawable {
 		if (focused == null) {
 			return;
 		}
-		focused.processKeyEvent(e);
+		focused.dispatchKeyEvent(e);
 	}
 
 	@Override
@@ -167,13 +182,13 @@ public class Pane extends Drawable {
 			// this shouldn't happen
 			return;
 		}
-		
+
 		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
 			// allow mouse down to switch local focus
 			focused = target;
 		}
-		
-		target.processMouseEvent(e);
+
+		target.dispatchMouseEvent(e);
 	}
 
 }

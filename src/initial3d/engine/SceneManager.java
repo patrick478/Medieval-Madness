@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Initial3D SceneManager. Handles rendering of Scenes consisting of Drawables.
+ * 
+ * @author Ben Allen
+ */
 public class SceneManager implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener,
 		AWTEventListener {
 
@@ -109,11 +114,15 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			List<Drawable> event_drawables = new ArrayList<Drawable>();
 			List<Drawable> focus_drawables = new ArrayList<Drawable>();
 
+			Drawable last_target = null;
+			int last_target_id_offset = 0;
+
 			int drawid = 1;
 
 			while (true) {
 				try {
 					if (scene_change) {
+						// this is to stop this thread hogging the lock
 						Thread.yield();
 					}
 					boolean idle = false;
@@ -291,15 +300,40 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 												scene.setFocusedDrawable(focused);
 											}
 
-											switch (e.getID()) {
+											// about entered / exited events:
+											// they rely on the order ids are allocated within each
+											// Drawable being consistent
+
+											switch (me.getID()) {
 											case MouseEvent.MOUSE_MOVED:
 											case MouseEvent.MOUSE_DRAGGED:
 												// send regardless of focus
 												if (target != null) {
+													if (last_target != target
+															|| (event_drawid - target.getDrawIDStart()) != last_target_id_offset) {
+														// fire mouse entered
+														MouseEvent enterevent = new MouseEvent(me.getComponent(),
+																MouseEvent.MOUSE_ENTERED, me.getWhen(),
+																me.getModifiersEx(), me.getX(), me.getY(),
+																me.getXOnScreen(), me.getYOnScreen(),
+																me.getClickCount(), me.isPopupTrigger(), me.getButton());
+														target.dispatchMouseEvent(enterevent, event_drawid, framex,
+																framey);
+													}
 													target.dispatchMouseEvent(me, event_drawid, framex, framey);
 												}
-												// TODO fire mouse entered /
-												// exited as needed?
+												if (last_target != null
+														&& (last_target != target || (event_drawid - target
+																.getDrawIDStart()) != last_target_id_offset)) {
+													// fire mouse exited
+													MouseEvent exitevent = new MouseEvent(me.getComponent(),
+															MouseEvent.MOUSE_EXITED, me.getWhen(), me.getModifiersEx(),
+															me.getX(), me.getY(), me.getXOnScreen(), me.getYOnScreen(),
+															me.getClickCount(), me.isPopupTrigger(), me.getButton());
+													last_target.dispatchMouseEvent(exitevent,
+															last_target.getDrawIDStart() + last_target_id_offset,
+															framex, framey);
+												}
 
 												break;
 											case MouseEvent.MOUSE_PRESSED:
@@ -315,6 +349,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 											default:
 												// shouldn't happen
 											}
+
+											last_target = target;
+											last_target_id_offset = last_target == null ? 0 : event_drawid
+													- last_target.getDrawIDStart();
+
 											break;
 										default:
 											// ignore mouse entered, exited
