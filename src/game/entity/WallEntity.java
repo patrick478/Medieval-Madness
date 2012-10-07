@@ -40,9 +40,10 @@ public class WallEntity extends Entity {
 	// TODO: Work-in-progress
 	public List<MeshContext> getWall()
 	{
-		Material mat = new Material(Color.GRAY, new Color(0.9f, 9.1f, 9.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);		
+		Material mat = new Material(Color.GRAY, new Color(0.9f, 0.9f, 0.9f), new Color(0.8f, 0.8f, 0.8f), new Color(0f, 0f, 0f), 1f, 1f);		
 		Mesh m = Content.loadContent("cube.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
+		mc.setScale(1.001f);
 		List<MeshContext> meshes = new ArrayList<MeshContext>();
 		meshes.add(mc);
 		

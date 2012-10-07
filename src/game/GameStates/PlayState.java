@@ -41,20 +41,19 @@ public class PlayState extends GameState {
 		
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(0, 9, 0));
-		cameraRf.setOrientation(Quat.create(Math.PI / 2.3f, Vec3.i));
-		cameraRf.setOrientation(cameraRf.getOrientation().mul(Quat.create(Math.PI / 2, Vec3.j)));
+		cameraRf.setPosition(Vec3.create(0, 9, -10));
+		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 	}
 
 	@Override
 	public void update(double delta) {
-		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, 0.1)));
-		if(game.getWindow().getKey(KeyEvent.VK_LEFT))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, -0.1)));
 		if(game.getWindow().getKey(KeyEvent.VK_UP))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0.1, 0, 0)));
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, 0.1)));
 		if(game.getWindow().getKey(KeyEvent.VK_DOWN))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, -0.1)));
+		if(game.getWindow().getKey(KeyEvent.VK_LEFT))
+			this.player.moveTo(this.player.getPosition().add(Vec3.create(0.1, 0, 0)));
+		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
 			this.player.moveTo(this.player.getPosition().add(Vec3.create(-0.1, 0, 0)));
 	}
 
