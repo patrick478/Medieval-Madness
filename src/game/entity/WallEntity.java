@@ -2,6 +2,7 @@ package game.entity;
 
 import game.bound.Bound;
 import game.bound.BoundingBox;
+import game.bound.BoundingSphere;
 import game.modelloader.Content;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
@@ -20,13 +21,13 @@ import comp261.modelview.MeshLoader;
 
 public class WallEntity extends Entity {
 	
-	private static final Vec3 wallSize = Vec3.create(1, 2, 1);
-	private Bound bound;
+	private static final Vec3 wallSize = Vec3.create(1, 1, 1);
 	
 	public WallEntity(Vec3 _pos)
 	{
 		position = _pos;
-		bound = new BoundingBox(_pos, wallSize);
+//		bound = new BoundingBox(_pos.sub(wallSize.scale(0.5)), wallSize);
+		bound = new BoundingSphere(_pos, 0.5);
 		
 		this.addMeshContexts(this.getWall());
 		

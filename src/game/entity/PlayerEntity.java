@@ -20,20 +20,26 @@ import java.util.List;
 import common.Timer;
 import comp261.modelview.MeshLoader;
 
-public class PlayerEntity extends Entity {
+public class PlayerEntity extends MoveableEntity {
 	
-	private Bound bound;
+	private static final double baseSpeed = 0.1;
+	private final double radius;
 	
-	public PlayerEntity(Vec3 _pos)
+	public PlayerEntity(Vec3 _pos, double _radius)
 	{
 		position = _pos;
-		bound = new BoundingSphere();
+		radius = _radius;
+		bound = new BoundingSphere(_pos, _radius);
 		
 		this.addMeshContexts(this.getBall());
 	}
 	
 	public Bound getBound(){
-		return bound;
+		return new BoundingSphere(position, radius);
+	}
+	
+	public double getSpeed(){
+		return baseSpeed;
 	}
 	
 	// TODO: Work-in-progress
@@ -51,8 +57,6 @@ public class PlayerEntity extends Entity {
 
 	@Override
 	public void poke() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void moveTo(Vec3 add) {

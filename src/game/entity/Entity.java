@@ -2,6 +2,7 @@ package game.entity;
 
 import java.util.*;
 
+import game.bound.Bound;
 import initial3d.engine.*;
 
 public abstract class Entity implements ReferenceFrame {
@@ -10,6 +11,7 @@ public abstract class Entity implements ReferenceFrame {
 	protected Quat orientation = Quat.one;
 	
 	protected Vec3 radius;
+	protected Bound bound;
 	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	

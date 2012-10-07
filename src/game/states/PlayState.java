@@ -2,12 +2,10 @@ package game.states;
 
 import java.awt.event.KeyEvent;
 
-import initial3d.engine.MovableReferenceFrame;
-import initial3d.engine.Quat;
-import initial3d.engine.Vec3;
 import initial3d.engine.*;
 import game.Game;
 import game.GameState;
+import game.bound.BoundingSphere;
 import game.entity.Entity;
 import game.entity.PlayerEntity;
 import game.entity.WallEntity;
@@ -25,17 +23,20 @@ public class PlayState extends GameState {
 	}
 	
 	private PlayerEntity player = null;
+	MovableReferenceFrame cameraRf = null;
 	private boolean mouseLock = false;
+	
+	private Floor floor;
 	
 	@Override
 	public void initalise() {
-		player = new PlayerEntity(Vec3.create(1, 0, 1));
+		player = new PlayerEntity(Vec3.create(1, 0, 1), 0.1);
 		player.addToScene(scene);
 		
 		FloorGenerator fg = new FloorGenerator(123873123312l);
-		Floor f = fg.getFloor(0);
+		floor = fg.getFloor(0);
 		
-		for(WallEntity we : f.getWalls())
+		for(WallEntity we : floor.getWalls())
 		{
 			we.addToScene(scene);
 		}
@@ -61,23 +62,50 @@ public class PlayState extends GameState {
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 9, -10));
 		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
+		
+//		cameraRf = new MovableReferenceFrame(player);
+//		cameraRf.setPosition(Vec3.create(0, 0, 0));
+//		cameraRf.setOrientation(player.getOrientation());
 	}
 
 	@Override
 	public void update(double delta) {
+		Vec3 intent = Vec3.zero;
+		
 		if(game.getWindow().getKey(KeyEvent.VK_UP))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, 0.1)));
+			intent = intent.add(Vec3.create(0, 0, 0.1));
 		if(game.getWindow().getKey(KeyEvent.VK_DOWN))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0, 0, -0.1)));
+			intent = intent.add(Vec3.create(0, 0, -0.1));
 		if(game.getWindow().getKey(KeyEvent.VK_LEFT))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(0.1, 0, 0)));
+			intent = intent.add(Vec3.create(0.1, 0, 0));
 		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
-			this.player.moveTo(this.player.getPosition().add(Vec3.create(-0.1, 0, 0)));
+			intent = intent.add(Vec3.create(-0.1, 0, 0));
 		if(game.getWindow().getKey(KeyEvent.VK_F))
 			setFirstPerson(true);
 		if(game.getWindow().getKey(KeyEvent.VK_T))
 			setFirstPerson(false);
 		
+		intent = intent.unit().scale(player.getSpeed());
+		
+		player.moveTo(player.getPosition().add(intent));
+		
+		for(WallEntity w : floor.getWalls()){
+			if(w.getBound().intersects((BoundingSphere)player.getBound())){
+				System.out.println("denied");
+				player.moveTo(player.getPosition().sub(intent));
+				break;
+			}
+		}
+		
+//		if(game.getWindow().pollMouseTravelX()<0){
+//			
+//		}
+//		
+//		//radiains of rotation
+//		double radRot;
+//		
+//		player.getOrientation();
+//		player.setOrientation(_dir);
 	}
 
 	@Override
@@ -94,5 +122,15 @@ public class PlayState extends GameState {
 			cameraRf.setPosition(Vec3.create(0, 9, -10));
 			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		}
+	}
+	
+	private void scroll(double val){
+		if ((val < 0 && cameraRf.getPosition().mag() < 1) || 
+			(val > 0 && cameraRf.getPosition().mag() > 20) || 
+			(val==0)){
+			return;
+		}
+		
+		cameraRf.setPosition(cameraRf.getPosition().scale(val));
 	}
 }

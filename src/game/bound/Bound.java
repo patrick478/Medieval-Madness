@@ -23,4 +23,8 @@ public abstract class Bound {
 //	 * @return
 //	 */
 //	public abstract boolean intersects(Bound b);
+	
+	public abstract boolean intersects(BoundingBox b);
+	public abstract boolean intersects(BoundingSphere b);
+	public abstract boolean contains(Vec3 v);
 }

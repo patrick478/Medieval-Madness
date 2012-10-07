@@ -2,7 +2,7 @@ package game.entity;
 
 import initial3d.engine.Vec3;
 
-public class ProjectileEntity extends Entity{
+public class ProjectileEntity extends MoveableEntity {
 
 	public ProjectileEntity(Vec3 _start, Vec3 _vel){
 		position = _start;
