@@ -126,6 +126,7 @@ public class Game implements Runnable {
 		this.gameWindow.setVisible(true);
 		this.sceneManager = new SceneManager(800, 600);
 		this.sceneManager.setDisplayTarget(this.gameWindow);
+		this.sceneManager.getProfiler().setResetOutput(null);
 	}
 	
 }
