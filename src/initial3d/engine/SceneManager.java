@@ -25,6 +25,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 	private volatile Scene scene = null;
 	private volatile DisplayTarget dtarget = null;
 	private final Object lock_scene = new Object();
+	private volatile boolean scene_change = false;
 
 	private final BlockingQueue<AWTEvent> eventqueue = new LinkedBlockingQueue<AWTEvent>();
 	private volatile boolean eventsenabled = true;
@@ -55,9 +56,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 	}
 
 	public void attachToScene(Scene s) {
+		scene_change = true;
 		synchronized (lock_scene) {
 			scene = s;
 		}
+		scene_change = false;
 	}
 
 	public void setDisplayTarget(DisplayTarget dtarget_) {
@@ -110,6 +113,9 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 			while (true) {
 				try {
+					if (scene_change) {
+						Thread.yield();
+					}
 					boolean idle = false;
 					synchronized (lock_scene) {
 						if (scene != null) {
@@ -213,9 +219,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							profiler.endSection("I3D-sceneman_draw");
 
 							// push frame to output
-							profiler.startSection("I3D-sceneman_display");
-							dtarget.display(bi);
-							profiler.endSection("I3D-sceneman_display");
+							if (dtarget != null) {
+								profiler.startSection("I3D-sceneman_display");
+								dtarget.display(bi);
+								profiler.endSection("I3D-sceneman_display");
+							}
 
 							// process input events (sending mouse / keyboard
 							// events to drawables)
@@ -328,9 +336,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 						} else {
 							idle = true;
 							i3d.finish();
-							profiler.startSection("I3D-sceneman_display");
-							dtarget.display(bi);
-							profiler.endSection("I3D-sceneman_display");
+							if (dtarget != null) {
+								profiler.startSection("I3D-sceneman_display");
+								dtarget.display(bi);
+								profiler.endSection("I3D-sceneman_display");
+							}
 						}
 					}
 
