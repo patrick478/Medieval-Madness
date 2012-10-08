@@ -10,7 +10,7 @@ public class WelcomePacket extends Packet
 		super(ID);
 	}
 	
-	public int playerIndex = 1;
+	public int playerIndex = 999;
 	
 	@Override
 	public void fromData(DataPacket packet) {

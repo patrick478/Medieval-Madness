@@ -9,6 +9,7 @@ import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
 import game.net.*;
+import game.net.packets.MovementPacket;
 import game.states.*;
 
 /***
@@ -31,7 +32,7 @@ public class Game implements Runnable {
 	private int playerIndex = -1;
 	
 	public PlayerEntity player = null;
-	public Map<Integer, MoveableEntity> players = new HashMap<Integer, MoveableEntity>();
+	public MoveableEntity[] players = new MoveableEntity[4];
 	
 	public Game()
 	{
@@ -187,19 +188,18 @@ public class Game implements Runnable {
 	{
 		System.out.printf("Player index set to %d\n", pIndex);
 		this.playerIndex = pIndex;
+		this.player = new PlayerEntity(Vec3.create(pIndex+2, 0, pIndex+2), 0.1);
 		
 		// This needs to add the main player
-//		addPlayer(pIndex, player);
+		addPlayer(pIndex, player);
 		
 		// These can add the rest of the players
 		for(int i = 0; i < 4; i++)
 		{
 			if(i == pIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(Vec3.create(pIndex+1, 0, pIndex+1), 0.1);
-			p.addToScene(this.getState().scene);
-			addPlayer(i, player);
-			System.out.printf("Added player %d\n", i);
+			PlayerEntity p = new PlayerEntity(Vec3.create(i+2, 0, i+2), 0.1);
+			addPlayer(i, p);
 		}
 	}
 
@@ -209,18 +209,27 @@ public class Game implements Runnable {
 	
 	public void addPlayer(int index, MoveableEntity e)
 	{
-		this.players.put(index, e);
+		System.out.printf("Added player to players (%d)\n", index);
+		this.players[index] = e;
 	}
 
 	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity)
 	{
-		MoveableEntity me = this.players.get(playerIndex);
+		System.out.printf("playerIndex=%d\n", playerIndex);
+		MoveableEntity me = this.players[playerIndex];
 		if(me == null)
 			return;
+		
+		System.out.println("here");
 		
 		me.setPosition(position);
 		me.setVelocity(velocity);
 		
 		System.out.printf("Moving player %d to %s\n", playerIndex, position.toString());
+	}
+
+	public void transmitPlayerPosition() {
+		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(), this.player.getVelocity());
+		this.getNetwork().send(mp.toData());
 	}
 }

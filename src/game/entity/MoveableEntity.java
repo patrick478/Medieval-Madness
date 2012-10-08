@@ -8,6 +8,7 @@ public abstract class MoveableEntity extends Entity{
 
 	//velocity here is interpreted as the movement per update(poke)
 	protected Vec3 velocity = Vec3.zero;
+	protected long lastVelUpdate = System.currentTimeMillis();
 	
 	public Vec3 getVelocity(){
 		return velocity;
@@ -17,7 +18,16 @@ public abstract class MoveableEntity extends Entity{
 		position = _pos;
 	}
 	
+	// REALLY BEN!?!
+	@Override
+	public Vec3 getPosition()
+	{
+		this.position = position.add(this.velocity.scale((System.currentTimeMillis()-lastVelUpdate)/1000d));
+		return this.position;
+	}
+	
 	public void setVelocity(Vec3 _vel){
+		this.lastVelUpdate = System.currentTimeMillis();
 		velocity = _vel;
 	}
 	

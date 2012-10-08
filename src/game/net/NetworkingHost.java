@@ -58,6 +58,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			sc.thread.start();
 		}
 		
+		System.out.printf("Countdown till game start..\n");
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -76,14 +77,21 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	}
 
 	public void updateOthersOnMovements(ServerClient client) {
+		System.out.printf("Telling everyone that %d is now at %s\n", client.getPlayerIndex(), client.getPosition());
 		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
 		for(ServerClient sc : this.clients)
 		{
-			if(!sc.equals(client))
+			if(sc.equals(client))
+				continue;
+			
+			String msg = "Sending ";
+			for(int i = 0; i < packet.toData().getData().length; i++)
 			{
-				sc.send(packet.toData());
-				System.out.printf("Bahaa!!\n");
+				msg = String.format("%s, 0x%02X", msg, packet.toData().getData()[i]);
 			}
+			System.out.printf("%s to player index=%d\n", msg, sc.getPlayerIndex());
+			
+			sc.send(packet.toData());
 		}
 	}
 }

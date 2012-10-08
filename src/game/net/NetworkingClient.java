@@ -3,6 +3,7 @@ package game.net;
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 import game.states.*;
@@ -59,14 +60,27 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		
 		while(true)
 		{
-			byte data = 0;
+			byte data[] = new byte[8192];
+			int rx = -1;
 			try {
-				data = this.in.readByte();
+				rx = this.in.read(data, 0, 8192);
+			} catch(EOFException e) {
+				break;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			this.bq.append(new byte[] { data });
+			if(rx < 0) break;
+			
+			byte[] actualData = Arrays.copyOf(data, rx);
+			this.bq.append(actualData);
+			
+			if(packetSize < 0 && this.bq.getCount() >= 2)
+			{
+				byte[] lenData = new byte[2];
+				this.bq.read(lenData, 0, 2);
+				packetSize = peekShort(lenData);		
+			}
 			if(packetSize > 0 && this.bq.getCount() >= packetSize)
 			{
 				byte[] pData = new byte[packetSize];
@@ -75,12 +89,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				processPacket(dp);
 				packetSize = -1;
 //				this.dataPackets.add(dp);
-			}
-			else if(packetSize < 0 && this.bq.getCount() >= 2)
-			{
-				byte[] lenData = new byte[2];
-				this.bq.read(lenData, 0, 2);
-				packetSize = peekShort(lenData);		
 			}
 		}
 	}
@@ -102,8 +110,14 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				break;
 			
 			case MovementPacket.ID:
+				System.out.println("Packet is a movement packet");
+				for(int i = 0; i < dp.getData().length; i++)
+					System.out.printf("%s%02X", i == 0 ? "" : ", ", dp.getData()[i]);
+				System.out.println();
+				
 				MovementPacket mp = new MovementPacket();
 				mp.fromData(dp);
+				
 				System.out.println("here");
 				this.game.movePlayer(mp.playerIndex, mp.position, mp.velocity);
 				break;

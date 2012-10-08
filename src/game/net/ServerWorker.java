@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import common.DataPacket;
 import game.net.packets.MovementPacket;
@@ -14,7 +15,6 @@ public class ServerWorker implements Runnable
 {
 	ServerClient client = null;
 	NetworkingHost host = null;
-	int pIndex = 0;
 	public ServerWorker(ServerClient sc, NetworkingHost nh)
 	{
 		this.client = sc;
@@ -33,35 +33,45 @@ public class ServerWorker implements Runnable
 		}
 		
 		WelcomePacket wpacket = new WelcomePacket();
-		wpacket.playerIndex = this.pIndex;
+		wpacket.playerIndex = client.getPlayerIndex();
 		this.client.send(wpacket.toData());
 		
 		short packetSize = -1;
 		
 		while(true)
 		{
-			byte data = 0;
+			byte[] data = new byte[8192];
+			int rx = -1;
 			try {
-				data = this.client.in.readByte();
+				rx = client.in.read(data, 0, 8192);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			this.client.bq.append(new byte[] { data });
-			if(packetSize > 0 && this.client.bq.getCount() >= packetSize)
+			if(rx < 0) break;
+			byte[] actualData = Arrays.copyOf(data, rx);
+			
+			this.client.bq.append(actualData);
+			
+			while(true)
 			{
-				byte[] pData = new byte[packetSize];
-				this.client.bq.read(pData, 0, packetSize);
-				DataPacket dp = new DataPacket(pData, false);
-				processPacket(dp);
-				packetSize = -1;
-//				this.client.dataPackets.add(dp);
-			}
-			else if(packetSize < 0 && this.client.bq.getCount() >= 2)
-			{
-				byte[] lenData = new byte[2];
-				this.client.bq.read(lenData, 0, 2);
-				packetSize = peekShort(lenData);				
+				if(packetSize < 0 && this.client.bq.getCount() >= 2)
+				{
+					byte[] lenData = new byte[2];
+					this.client.bq.read(lenData, 0, 2);
+					packetSize = peekShort(lenData);				
+				}
+				else break;
+				
+				if(packetSize > 0 && this.client.bq.getCount() >= packetSize)
+				{
+					byte[] pData = new byte[packetSize];
+					this.client.bq.read(pData, 0, packetSize);
+					DataPacket dp = new DataPacket(pData, false);
+					processPacket(dp);
+					packetSize = -1;
+	//				this.client.dataPackets.add(dp);
+				}
 			}
 		}
 	}
@@ -75,7 +85,7 @@ public class ServerWorker implements Runnable
 				mp.fromData(dp);
 				this.client.setPosition(mp.position);
 				this.client.setVelocity(mp.velocity);
-				System.out.printf("Updating position of %d\n", this.pIndex);
+				System.out.printf("[ServerClientWorker] Updating position of %d\n", client.getPlayerIndex());
 				
 				this.host.updateOthersOnMovements(this.client);
 			break;

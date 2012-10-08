@@ -8,6 +8,7 @@ import game.Game;
 import game.GameState;
 import game.bound.BoundingSphere;
 import game.entity.Entity;
+import game.entity.MoveableEntity;
 import game.entity.PlayerEntity;
 import game.entity.WallEntity;
 import game.floor.Floor;
@@ -27,6 +28,8 @@ public class PlayState extends GameState {
 
 	MovableReferenceFrame cameraRf = null;
 	private boolean mouseLock = false;
+	
+	private boolean transmittedStop = false;
 
 	private double cam_pitch = 0;
 	private double player_yaw = 0;
@@ -35,8 +38,15 @@ public class PlayState extends GameState {
 
 	@Override
 	public void initalise() {
-		game.player = new PlayerEntity(Vec3.create(1, 0, 1), 0.1);
 		game.player.addToScene(scene);
+		for(int i = 0; i < game.players.length; i++)
+		{
+			if(game.players[i] == game.player)
+				continue;
+			
+			System.out.printf("Adding %d to scene.. %s\n", i, game.players[i]);
+			game.players[i].addToScene(scene);
+		}
 
 		FloorGenerator fg = new FloorGenerator(123873123312l);
 		floor = fg.getFloor(0);
@@ -115,19 +125,24 @@ public class PlayState extends GameState {
 			v = v.add(cside.neg());
 		}
 
-		v = v.unit().scale(speed * delta);
+		v = v.unit().scale(speed);
+		
+		game.player.setVelocity(v);
 		
 		if(!v.equals(Vec3.zero))
 		{
-			MovementPacket mp = new MovementPacket(this.game.getPlayerIndex(), game.player.getPosition(), game.player.getVelocity());
-			this.game.getNetwork().send(mp.toData());
+			game.transmitPlayerPosition();
+		}
+		else if(!transmittedStop)
+		{
+			game.transmitPlayerPosition();
+			transmittedStop = true;
 		}
 		
-		game.player.setPosition(game.player.getPosition().add(v));
 		for(WallEntity w : floor.getWalls()){
 			if(w.getBound().intersects(game.player.getBound())){
 				System.out.println("denied");
-				game.player.setPosition(game.player.getPosition().sub(v));
+				game.player.setVelocity(Vec3.zero);
 				break;
 			}
 		}
