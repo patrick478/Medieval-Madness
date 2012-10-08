@@ -73,7 +73,6 @@ public class PlayState extends GameState {
 
 	@Override
 	public void update(double delta) {
-<<<<<<< HEAD
 
 		RenderWindow rwin = game.getWindow();
 
@@ -117,7 +116,7 @@ public class PlayState extends GameState {
 			v = v.add(cside.neg());
 		}
 
-		v = v.unit().scale(speed);
+		v = v.unit().scale(speed * delta);
 		player.moveTo(player.getPosition().add(v));
 		for(WallEntity w : floor.getWalls()){
 			if(w.getBound().intersects(player.getBound())){
