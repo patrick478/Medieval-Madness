@@ -11,6 +11,7 @@ import game.entity.PlayerEntity;
 import game.entity.WallEntity;
 import game.floor.Floor;
 import game.floor.FloorGenerator;
+import game.net.packets.MovementPacket;
 
 /***
  * The game!
@@ -87,12 +88,18 @@ public class PlayState extends GameState {
 		
 		intent = intent.unit().scale(player.getSpeed());
 		
-		player.moveTo(player.getPosition().add(intent));
+		player.setPosition(player.getPosition().add(intent));
+		
+		if(!intent.equals(Vec3.zero))
+		{
+			MovementPacket mp = new MovementPacket(player.getPosition(), player.getVelocity());
+			this.game.getNetwork().send(mp.toData());
+		}
 		
 		for(WallEntity w : floor.getWalls()){
 			if(w.getBound().intersects(player.getBound())){
 				System.out.println("denied");
-				player.moveTo(player.getPosition().sub(intent));
+				player.setPosition(player.getPosition().sub(intent));
 				break;
 			}
 		}

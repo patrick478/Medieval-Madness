@@ -59,10 +59,6 @@ public class PlayerEntity extends MoveableEntity {
 	public void poke() {
 	}
 
-	public void moveTo(Vec3 add) {
-		this.position = add;
-	}
-
 	@Override
 	protected Bound getBound(Vec3 position) {
 		// TODO Auto-generated method stub

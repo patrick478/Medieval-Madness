@@ -1,11 +1,10 @@
 package game;
 
-import initial3d.Profiler;
-import initial3d.engine.RenderWindow;
-import initial3d.engine.SceneManager;
-import game.net.NetworkMode;
-import game.net.NetworkingHost;
-import game.states.PreloadGameState;
+import game.net.NetworkingClient;
+import initial3d.*;
+import initial3d.engine.*;
+import game.net.*;
+import game.states.*;
 
 /***
  * Main game class
@@ -22,7 +21,7 @@ public class Game implements Runnable {
 	private RenderWindow gameWindow = null;
 	private SceneManager sceneManager = null;
 	private int updatesPerSecond = 0;
-	private NetworkMode network = null;
+	private NetworkingClient network = null;
 	private NetworkingHost nhost = null;
 	private int playerIndex = -1;
 	
@@ -152,12 +151,12 @@ public class Game implements Runnable {
 		return this.gameWindow;
 	}	
 	
-	public NetworkMode getNetwork()
+	public NetworkingClient getNetwork()
 	{
 		return this.network;
 	}
 	
-	public void setNetwork(NetworkMode nm)
+	public void setNetwork(NetworkingClient nm)
 	{
 		if(this.network != null)
 			this.network.destroy();

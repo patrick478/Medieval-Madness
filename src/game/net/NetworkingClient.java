@@ -108,5 +108,14 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		bb.put(data[0]);
 		bb.put(data[1]);
 		return bb.getShort(0);
+	}
+
+	public void send(DataPacket data) {
+		try {
+			this.out.write(data.getData());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}	
 }

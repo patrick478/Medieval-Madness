@@ -12,6 +12,10 @@ public abstract class MoveableEntity extends Entity{
 	public Vec3 getVelocity(){
 		return velocity;
 	}
+
+	public void setPosition(Vec3 _pos) {
+		position = _pos;
+	}
 	
 	public void setVelocity(Vec3 _vel){
 		velocity = _vel;

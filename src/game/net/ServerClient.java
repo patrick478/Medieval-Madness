@@ -1,5 +1,7 @@
 package game.net;
 
+import initial3d.engine.Vec3;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -14,6 +16,9 @@ public class ServerClient
 	
 	public DataInputStream in;
 	public DataOutputStream out;
+	
+	public Vec3 position = Vec3.zero;
+	public Vec3 velocity = Vec3.zero;
 	
 	BufferQueue bq = new BufferQueue(8096);
 	public BlockingQueue<DataPacket> dataPackets = new LinkedBlockingQueue<DataPacket>();
@@ -38,5 +43,15 @@ public class ServerClient
 	public int getPlayerIndex()
 	{
 		return this.playerIndex;
+	}
+
+	public void setPosition(Vec3 p)
+	{
+		this.position = p;
+	}
+	
+	public void setVelocity(Vec3 v)
+	{
+		this.velocity = v;
 	}
 }

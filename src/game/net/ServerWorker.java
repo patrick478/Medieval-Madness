@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import common.DataPacket;
+import game.net.packets.MovementPacket;
 import game.net.packets.Packet;
 import game.net.packets.WelcomePacket;
 
@@ -50,7 +51,8 @@ public class ServerWorker implements Runnable
 				byte[] pData = new byte[packetSize];
 				this.client.bq.read(pData, 0, packetSize);
 				DataPacket dp = new DataPacket(pData, false);
-				this.client.dataPackets.add(dp);
+				processPacket(dp);
+//				this.client.dataPackets.add(dp);
 			}
 			else if(packetSize < 0 && this.client.bq.getCount() >= 2)
 			{
@@ -58,6 +60,21 @@ public class ServerWorker implements Runnable
 				this.client.bq.read(lenData, 0, 2);
 				packetSize = peekShort(lenData);				
 			}
+		}
+	}
+	
+	private void processPacket(DataPacket dp)
+	{
+		switch(dp.peekShort())
+		{
+			case MovementPacket.ID:
+				MovementPacket mp = new MovementPacket();
+				mp.fromData(dp);
+				this.client.setPosition(mp.position);
+				this.client.setVelocity(mp.velocity);
+				System.out.printf("Updating position of %d\n", this.pIndex);
+				
+			break;
 		}
 	}
 	
