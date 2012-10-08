@@ -10,6 +10,11 @@ public class Camera {
 	private volatile double fov = Math.PI / 3;
 
 	private final double[][] xformtemp = Matrix.create(4, 4);
+	
+	private final double[][] kvector = Vec3.k.to4ArrayNormal();
+	private final double[][] jvector = Vec3.j.to4ArrayNormal();
+	private final double[][] worldnormal = new double[4][1];
+	private final double[][] worldup = new double[4][1];
 
 	public Camera() {
 
@@ -34,6 +39,14 @@ public class Camera {
 	public void setFOV(double fov_) {
 		fov = fov_;
 	}
+	
+	public synchronized Vec3 getNormal() {
+		return Vec3.create(worldnormal).unit();
+	}
+
+	public synchronized Vec3 getUpNormal() {
+		return Vec3.create(worldup).unit();
+	}
 
 	/* package-private */
 	void loadViewTransform(Initial3D i3d) {
@@ -42,6 +55,10 @@ public class Camera {
 		i3d.loadIdentity();
 
 		loadViewTransform_rec(i3d, track_frame);
+		
+		i3d.matrixMode(VIEW_INV);
+		i3d.transformOne(worldnormal, kvector);
+		i3d.transformOne(worldup, jvector);
 
 	}
 

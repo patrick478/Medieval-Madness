@@ -10,6 +10,7 @@ import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
+import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 
 import java.io.FileInputStream;
@@ -55,7 +56,11 @@ public class PlayerEntity extends Entity {
 		
 	}
 
-	public void moveTo(Vec3 add) {
-		this.position = add;
+	public void moveTo(Vec3 newpos) {
+		this.position = newpos;
+	}
+	
+	public void setOrientation(Quat orient) {
+		orientation = orient;
 	}
 }
