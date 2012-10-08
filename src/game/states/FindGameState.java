@@ -2,6 +2,7 @@ package game.states;
 
 import game.Game;
 import game.GameState;
+import game.net.NetworkingClient;
 
 /***
  * This state will display a list of games to join and allow a user to join a game
@@ -15,6 +16,7 @@ public class FindGameState extends GameState {
 
 	@Override
 	public void initalise() {
+		this.game.setNetwork(new NetworkingClient());
 	}
 
 	@Override

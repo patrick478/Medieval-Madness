@@ -2,6 +2,8 @@ package game.states;
 
 import game.Game;
 import game.GameState;
+import game.net.NetworkingClient;
+import game.net.NetworkingHost;
 
 /***
  * The create-a-game state, should show all the options then when "next" is pressed, goto the LobbyState.
@@ -15,6 +17,9 @@ public class CreateGameState extends GameState {
 
 	@Override
 	public void initalise() {
+		System.out.printf("Creating game..\n");
+		this.game.setHost(new NetworkingHost());
+		this.game.setNetwork(new NetworkingClient());
 	}
 
 	@Override

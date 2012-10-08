@@ -32,6 +32,7 @@ public class BoundingBox extends Bound{
 	}
 	
 	//Obsolete method
+	@Override
 	public boolean contains(Vec3 v){
 		if(v == null) return false;
 		if (this.position.x <= v.x &&
@@ -54,6 +55,11 @@ public class BoundingBox extends Bound{
 		return false;
 	}
 	
+	@Override
+	public boolean intersects(BoundingSphere b) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	public BoundingBox getIntersection(BoundingBox b){
 

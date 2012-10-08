@@ -3,6 +3,8 @@ package game;
 import initial3d.Profiler;
 import initial3d.engine.RenderWindow;
 import initial3d.engine.SceneManager;
+import game.net.NetworkMode;
+import game.net.NetworkingHost;
 import game.states.PreloadGameState;
 
 /***
@@ -20,6 +22,9 @@ public class Game implements Runnable {
 	private RenderWindow gameWindow = null;
 	private SceneManager sceneManager = null;
 	private int updatesPerSecond = 0;
+	private NetworkMode network = null;
+	private NetworkingHost nhost = null;
+	private int playerIndex = -1;
 	
 	public Game()
 	{
@@ -146,4 +151,34 @@ public class Game implements Runnable {
 	{
 		return this.gameWindow;
 	}	
+	
+	public NetworkMode getNetwork()
+	{
+		return this.network;
+	}
+	
+	public void setNetwork(NetworkMode nm)
+	{
+		if(this.network != null)
+			this.network.destroy();
+		
+		this.network = nm;
+		
+		this.network.start(this);
+	}
+
+	public void setHost(NetworkingHost networkingHost) {
+		if(this.nhost != null)
+			this.nhost.destroy();
+		
+		this.nhost = networkingHost;
+		
+		this.nhost.start(this);
+	}
+
+	public void setPlayerIndex(int pIndex) 
+	{
+		System.out.printf("Player index set to %d\n", pIndex);
+		this.playerIndex = pIndex;
+	}
 }

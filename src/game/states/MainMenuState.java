@@ -1,5 +1,7 @@
 package game.states;
 
+import java.util.Scanner;
+
 import game.Game;
 import game.GameState;
 
@@ -17,11 +19,30 @@ public class MainMenuState extends GameState {
 
 	@Override
 	public void initalise() {
+		Scanner scanner = new Scanner(System.in);
+		while(true)
+		{
+			System.out.printf("--Main Menu--\n1)Host a game\n2)Join a game\n\tChoice? ");
+			scanner.hasNextInt();
+			int option = scanner.nextInt();
+			if(option == 1)
+			{
+				this.game.changeState(new CreateGameState(this.game));
+				break;
+			}
+			else if(option == 2)
+			{
+				this.game.changeState(new FindGameState(this.game));
+				break;
+			}
+			else
+				System.out.printf("Unknown menu option\n");
+		}
+			
 	}
 
 	@Override
 	public void update(double delta) {
-		this.game.changeState(new LoadingGameState(this.game));
 	}
 
 	@Override

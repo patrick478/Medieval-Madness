@@ -6,6 +6,7 @@ import initial3d.engine.*;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
+import game.bound.BoundingSphere;
 import game.entity.Entity;
 import game.entity.PlayerEntity;
 import game.entity.WallEntity;
@@ -24,20 +25,24 @@ public class PlayState extends GameState {
 	}
 
 	private PlayerEntity player = null;
+	MovableReferenceFrame cameraRf = null;
 	private boolean mouseLock = false;
 
 	private double cam_pitch = 0;
 	private double player_yaw = 0;
+	
+	private Floor floor;
 
 	@Override
 	public void initalise() {
-		player = new PlayerEntity(Vec3.create(1, 0, 1));
+		player = new PlayerEntity(Vec3.create(1, 0, 1), 0.1);
 		player.addToScene(scene);
 
 		FloorGenerator fg = new FloorGenerator(123873123312l);
-		Floor f = fg.getFloor(0);
-
-		for (WallEntity we : f.getWalls()) {
+		floor = fg.getFloor(0);
+		
+		for(WallEntity we : floor.getWalls())
+		{
 			we.addToScene(scene);
 		}
 
@@ -68,6 +73,7 @@ public class PlayState extends GameState {
 
 	@Override
 	public void update(double delta) {
+<<<<<<< HEAD
 
 		RenderWindow rwin = game.getWindow();
 
@@ -111,9 +117,15 @@ public class PlayState extends GameState {
 			v = v.add(cside.neg());
 		}
 
-		v = v.unit().scale(delta * speed);
+		v = v.unit().scale(speed);
 		player.moveTo(player.getPosition().add(v));
-
+		for(WallEntity w : floor.getWalls()){
+			if(w.getBound().intersects(player.getBound())){
+				System.out.println("denied");
+				player.moveTo(player.getPosition().sub(v));
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -129,5 +141,15 @@ public class PlayState extends GameState {
 			cameraRf.setPosition(Vec3.create(0, 9, -10));
 			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		}
+	}
+	
+	private void scroll(double val){
+		if ((val < 0 && cameraRf.getPosition().mag() < 1) || 
+			(val > 0 && cameraRf.getPosition().mag() > 20) || 
+			(val==0)){
+			return;
+		}
+		
+		cameraRf.setPosition(cameraRf.getPosition().scale(val));
 	}
 }
