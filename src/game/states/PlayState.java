@@ -25,7 +25,6 @@ public class PlayState extends GameState {
 		super(parent);
 	}
 
-	private PlayerEntity player = null;
 	MovableReferenceFrame cameraRf = null;
 	private boolean mouseLock = false;
 
@@ -36,8 +35,8 @@ public class PlayState extends GameState {
 
 	@Override
 	public void initalise() {
-		player = new PlayerEntity(Vec3.create(1, 0, 1), 0.1);
-		player.addToScene(scene);
+		game.player = new PlayerEntity(Vec3.create(1, 0, 1), 0.1);
+		game.player.addToScene(scene);
 
 		FloorGenerator fg = new FloorGenerator(123873123312l);
 		floor = fg.getFloor(0);
@@ -64,7 +63,7 @@ public class PlayState extends GameState {
 		mc.setScale(10);
 		scene.addDrawable(mc);
 
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(player);
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.3, -0.5));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
@@ -74,31 +73,6 @@ public class PlayState extends GameState {
 
 	@Override
 	public void update(double delta) {
-		Vec3 intent = Vec3.zero;
-		
-		if(game.getWindow().getKey(KeyEvent.VK_UP))
-			intent = intent.add(Vec3.create(0, 0, 0.1));
-		if(game.getWindow().getKey(KeyEvent.VK_DOWN))
-			intent = intent.add(Vec3.create(0, 0, -0.1));
-		if(game.getWindow().getKey(KeyEvent.VK_LEFT))
-			intent = intent.add(Vec3.create(0.1, 0, 0));
-		if(game.getWindow().getKey(KeyEvent.VK_RIGHT))
-			intent = intent.add(Vec3.create(-0.1, 0, 0));
-		if(game.getWindow().getKey(KeyEvent.VK_F))
-			setFirstPerson(true);
-		if(game.getWindow().getKey(KeyEvent.VK_T))
-			setFirstPerson(false);
-		
-		intent = intent.unit().scale(player.getSpeed());
-		
-		player.setPosition(player.getPosition().add(intent));
-		
-		if(!intent.equals(Vec3.zero))
-		{
-			MovementPacket mp = new MovementPacket(player.getPosition(), player.getVelocity());
-			this.game.getNetwork().send(mp.toData());
-		}
-
 		RenderWindow rwin = game.getWindow();
 
 		double speed = 1;
@@ -120,7 +94,7 @@ public class PlayState extends GameState {
 		MovableReferenceFrame rf = (MovableReferenceFrame) cam.getTrackedReferenceFrame();
 		rf.setOrientation(Quat.create(cam_pitch, Vec3.i));
 		
-		player.setOrientation(Quat.create(player_yaw, Vec3.j));
+		game.player.setOrientation(Quat.create(player_yaw, Vec3.j));
 
 		Vec3 cnorm = cam.getNormal().flattenY().unit();
 		Vec3 cup = Vec3.j;
@@ -141,12 +115,19 @@ public class PlayState extends GameState {
 			v = v.add(cside.neg());
 		}
 
-		v = v.unit().scale(speed);
-		player.setPosition(player.getPosition().add(v));
+		v = v.unit().scale(speed * delta);
+		
+		if(!v.equals(Vec3.zero))
+		{
+			MovementPacket mp = new MovementPacket(this.game.getPlayerIndex(), game.player.getPosition(), game.player.getVelocity());
+			this.game.getNetwork().send(mp.toData());
+		}
+		
+		game.player.setPosition(game.player.getPosition().add(v));
 		for(WallEntity w : floor.getWalls()){
-			if(w.getBound().intersects(player.getBound())){
+			if(w.getBound().intersects(game.player.getBound())){
 				System.out.println("denied");
-				player.setPosition(player.getPosition().sub(intent));
+				game.player.setPosition(game.player.getPosition().sub(v));
 				break;
 			}
 		}
@@ -160,7 +141,7 @@ public class PlayState extends GameState {
 		MovableReferenceFrame cameraRf = (MovableReferenceFrame) scene.getCamera().getTrackedReferenceFrame();
 		if (_val) {
 			cameraRf.setPosition(Vec3.create(0, 0.5, 0));
-			cameraRf.setOrientation(player.getOrientation());
+			cameraRf.setOrientation(game.player.getOrientation());
 		} else {
 			cameraRf.setPosition(Vec3.create(0, 9, -10));
 			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));

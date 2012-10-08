@@ -1,6 +1,7 @@
 package game.net;
 
 import game.net.packets.EnterGamePacket;
+import game.net.packets.MovementPacket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,7 +14,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	Thread serverThread;
 	
 	int numPlayers = 0;
-	public static final int maxPlayers = 1;
+	public static final int maxPlayers = 2;
 	public List<ServerClient> clients = new ArrayList<ServerClient>();
 	
 	@Override
@@ -51,7 +52,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			ServerClient sc = new ServerClient(numPlayers++);
 			sc.socket = cSocket;
 			this.clients.add(sc);
-			ServerWorker sw = new ServerWorker(sc);
+			ServerWorker sw = new ServerWorker(sc, this);
 			
 			sc.thread = new Thread(sw);
 			sc.thread.start();
@@ -71,6 +72,18 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		{
 			System.out.printf("Sent 'enterGame' to player #%d\n", sc.getPlayerIndex());
 			sc.send(egp.toData());
+		}
+	}
+
+	public void updateOthersOnMovements(ServerClient client) {
+		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
+		for(ServerClient sc : this.clients)
+		{
+			if(!sc.equals(client))
+			{
+				sc.send(packet.toData());
+				System.out.printf("Bahaa!!\n");
+			}
 		}
 	}
 }

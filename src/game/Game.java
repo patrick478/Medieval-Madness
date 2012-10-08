@@ -1,5 +1,10 @@
 package game;
 
+import java.util.*;
+
+import game.entity.PlayerEntity;
+
+import game.entity.MoveableEntity;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
@@ -24,6 +29,9 @@ public class Game implements Runnable {
 	private NetworkingClient network = null;
 	private NetworkingHost nhost = null;
 	private int playerIndex = -1;
+	
+	public PlayerEntity player = null;
+	public Map<Integer, MoveableEntity> players = new HashMap<Integer, MoveableEntity>();
 	
 	public Game()
 	{
@@ -179,5 +187,40 @@ public class Game implements Runnable {
 	{
 		System.out.printf("Player index set to %d\n", pIndex);
 		this.playerIndex = pIndex;
+		
+		// This needs to add the main player
+//		addPlayer(pIndex, player);
+		
+		// These can add the rest of the players
+		for(int i = 0; i < 4; i++)
+		{
+			if(i == pIndex) continue;
+			
+			PlayerEntity p = new PlayerEntity(Vec3.create(pIndex+1, 0, pIndex+1), 0.1);
+			p.addToScene(this.getState().scene);
+			addPlayer(i, player);
+			System.out.printf("Added player %d\n", i);
+		}
+	}
+
+	public int getPlayerIndex() {
+		return this.playerIndex;
+	}
+	
+	public void addPlayer(int index, MoveableEntity e)
+	{
+		this.players.put(index, e);
+	}
+
+	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity)
+	{
+		MoveableEntity me = this.players.get(playerIndex);
+		if(me == null)
+			return;
+		
+		me.setPosition(position);
+		me.setVelocity(velocity);
+		
+		System.out.printf("Moving player %d to %s\n", playerIndex, position.toString());
 	}
 }

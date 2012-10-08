@@ -13,10 +13,12 @@ import game.net.packets.WelcomePacket;
 public class ServerWorker implements Runnable 
 {
 	ServerClient client = null;
+	NetworkingHost host = null;
 	int pIndex = 0;
-	public ServerWorker(ServerClient sc)
+	public ServerWorker(ServerClient sc, NetworkingHost nh)
 	{
 		this.client = sc;
+		this.host = nh;
 		System.out.printf("Client %d networking ready..\n", client.getPlayerIndex());
 	}
 	
@@ -52,6 +54,7 @@ public class ServerWorker implements Runnable
 				this.client.bq.read(pData, 0, packetSize);
 				DataPacket dp = new DataPacket(pData, false);
 				processPacket(dp);
+				packetSize = -1;
 //				this.client.dataPackets.add(dp);
 			}
 			else if(packetSize < 0 && this.client.bq.getCount() >= 2)
@@ -74,6 +77,7 @@ public class ServerWorker implements Runnable
 				this.client.setVelocity(mp.velocity);
 				System.out.printf("Updating position of %d\n", this.pIndex);
 				
+				this.host.updateOthersOnMovements(this.client);
 			break;
 		}
 	}

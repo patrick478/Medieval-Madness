@@ -73,6 +73,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				this.bq.read(pData, 0, packetSize);
 				DataPacket dp = new DataPacket(pData, false);
 				processPacket(dp);
+				packetSize = -1;
 //				this.dataPackets.add(dp);
 			}
 			else if(packetSize < 0 && this.bq.getCount() >= 2)
@@ -99,6 +100,13 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				dp.getShort();
 				this.game.changeState(new LoadingGameState(this.game));
 				break;
+			
+			case MovementPacket.ID:
+				MovementPacket mp = new MovementPacket();
+				mp.fromData(dp);
+				System.out.println("here");
+				this.game.movePlayer(mp.playerIndex, mp.position, mp.velocity);
+				break;
 		}
 	}
 
@@ -117,5 +125,5 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
 }

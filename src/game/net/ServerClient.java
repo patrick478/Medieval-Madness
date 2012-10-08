@@ -54,4 +54,13 @@ public class ServerClient
 	{
 		this.velocity = v;
 	}
+
+	public Vec3 getPosition() {
+		return this.position;
+	}
+	
+	public Vec3 getVelocity()
+	{
+		return this.velocity;
+	}
 }
