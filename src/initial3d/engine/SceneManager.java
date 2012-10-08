@@ -109,7 +109,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.lightfv(light, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
 			i3d.lightf(light, INTENSITY, 0.9f);
 			i3d.enable(light);
-			double[] light0p = new double[] { 0, 1, 0, 0 };
+			double[] light0p = new double[] { 0, 0.5, 0.5, 0 };
 
 			List<Drawable> event_drawables = new ArrayList<Drawable>();
 			List<Drawable> focus_drawables = new ArrayList<Drawable>();

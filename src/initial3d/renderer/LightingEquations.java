@@ -203,7 +203,7 @@ final class LightingEquations {
 			// lambert term
 			float LdotN = Lx * Nx + Ly * Ny + Lz * Nz;
 
-			if (LdotN > 0) {
+			if (LdotN > 0.05) {
 
 				float LdotN_falloff = LdotN * falloff;
 				out_r += unsafe.getFloat(pLight + 20) * kd_r * LdotN_falloff;
