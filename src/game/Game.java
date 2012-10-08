@@ -65,7 +65,7 @@ public class Game implements Runnable {
 			long now = System.nanoTime();
 			long updateLength = now - lastUpdateTime;
 			lastUpdateTime = now;
-			double delta = updateLength / ((double)optimalTime);
+			double delta = updateLength / 1000000000d;
 			
 			lastUpsTime += updateLength;
 			ups++;
