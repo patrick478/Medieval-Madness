@@ -41,6 +41,8 @@ public class Floor {
 		}
 		floor_tex = Initial3D.createTexture(Texture.requiredSize(Math.max(bi.getHeight(), bi.getWidth())));
 		floor_tex.drawImage(bi);
+		floor_tex.useMipMaps(true);
+		floor_tex.composeMipMaps();
 		
 		Material mat = new Material(Color.WHITE, 
 				new Color(0.6f, 0.6f, 0.6f), 

@@ -12,7 +12,8 @@ class TextureImpl extends Texture {
 
 	private static final Unsafe unsafe = Util.getUnsafe();
 
-	private final int level;
+	private final short level_ceil;
+	private short level_floor = 4;
 	private final int size;
 	private final long pTex;
 	private final long pLevel;
@@ -28,7 +29,7 @@ class TextureImpl extends Texture {
 	}
 
 	TextureImpl(int size_) {
-		int level_ = 0;
+		short level_ = 0;
 		switch (size_) {
 		case 1024:
 			level_++;
@@ -55,12 +56,12 @@ class TextureImpl extends Texture {
 		default:
 			throw new IllegalArgumentException("Illegal size for texture: " + size_);
 		}
-		level = level_;
+		level_ceil = level_;
 		size = size_;
 		alloc = (long) (8 + size * size * 16 * 1.4d);
 		checkAllocate(alloc);
 		pTex = unsafe.allocateMemory(alloc);
-		pLevel = pTex + levelOffset(level);
+		pLevel = pTex + levelOffset(level_ceil);
 		clear();
 	}
 
@@ -155,7 +156,8 @@ class TextureImpl extends Texture {
 		// also clear the usemipmaps flag
 		unsafe.setMemory(pTex, alloc, (byte) 0);
 		// have to put levels back
-		unsafe.putInt(pTex, level);
+		unsafe.putShort(pTex, level_ceil);
+		unsafe.putShort(pTex + 2, level_floor);
 	}
 
 	@Override
@@ -189,7 +191,7 @@ class TextureImpl extends Texture {
 
 	@Override
 	public void composeMipMaps() {
-		if (level > 0) composeMipMaps(level - 1);
+		if (level_ceil > 0) composeMipMaps(level_ceil - 1);
 	}
 
 	private void composeMipMaps(int mmlevel) {

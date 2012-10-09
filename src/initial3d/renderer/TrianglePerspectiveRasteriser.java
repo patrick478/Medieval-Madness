@@ -192,7 +192,7 @@ final class TrianglePerspectiveRasteriser {
 								unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 								unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 							}
-							
+
 							if ((flags & 0x400000L) != 0) {
 								unsafe.putInt(pID + ix * 4, objid);
 							}
@@ -220,7 +220,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -440,7 +440,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -476,7 +476,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -541,7 +541,7 @@ final class TrianglePerspectiveRasteriser {
 
 		// block size
 		final int q = 8;
-		
+
 		// bounding rectangle, clamped to screen bounds
 		// also skip if no visible area (this implements (limited) x,y view frustum culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
@@ -633,7 +633,7 @@ final class TrianglePerspectiveRasteriser {
 		final float dcB_dx = cB10 - cB00;
 		final float dcB_dy = cB01 - cB00;
 		final float dcB_dqy = dcB_dy * q;
-		
+
 		// deltas 28.4
 		final int DX12 = X1 - X2;
 		final int DX23 = X2 - X3;
@@ -732,15 +732,15 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
-									
+									// unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+									// unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+									// unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -775,21 +775,21 @@ final class TrianglePerspectiveRasteriser {
 						int j = x + offset + q;
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (CX1 > 0 && CX2 > 0 && CX3 > 0 && iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
-								
+
 								// zwrite, if enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-//									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-//									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-//									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
-									
+									// unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
+									// unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
+									// unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -894,11 +894,14 @@ final class TrianglePerspectiveRasteriser {
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
 		long pMap_kd = unsafe.getLong(pMtl + 64);
-		int map_kd_maxlevel = unsafe.getInt(pMap_kd);
+		short map_kd_maxlevel = unsafe.getShort(pMap_kd);
+		short map_kd_minlevel = unsafe.getShort(pMap_kd + 2);
 		long pMap_ks = unsafe.getLong(pMtl + 72);
-		int map_ks_maxlevel = unsafe.getInt(pMap_ks);
+		short map_ks_maxlevel = unsafe.getShort(pMap_ks);
+		short map_ks_minlevel = unsafe.getShort(pMap_ks + 2);
 		long pMap_ke = unsafe.getLong(pMtl + 80);
-		int map_ke_maxlevel = unsafe.getInt(pMap_ke);
+		short map_ke_maxlevel = unsafe.getShort(pMap_ke);
+		short map_ke_minlevel = unsafe.getShort(pMap_ke + 2);
 
 		// mip-maps
 		boolean mipmap_kd = unsafe.getInt(pMap_kd + 4) == 1 && ((flags & 0x4000L) != 0);
@@ -1057,12 +1060,12 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_max = max(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
+				float dUV_dxy_approx = min(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
-				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_approx) + 0x00140000) & 0x7F800000) >>> 23);
 
-				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
-				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
+				int map_kd_level = mipmap_kd ? clamp(mmlevel, map_kd_minlevel, map_kd_maxlevel) : map_kd_maxlevel;
+				int map_ke_level = mipmap_ke ? clamp(mmlevel, map_ke_minlevel, map_ke_maxlevel) : map_ke_maxlevel;
 
 				// FIXME proper ztest, stencil test, alpha test...
 
@@ -1093,7 +1096,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -1146,7 +1149,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -1248,11 +1251,14 @@ final class TrianglePerspectiveRasteriser {
 		// material -> textures
 		long pMtl = frontface ? pBase + 0x00000900 : pBase + 0x00040900;
 		long pMap_kd = unsafe.getLong(pMtl + 64);
-		int map_kd_maxlevel = unsafe.getInt(pMap_kd);
+		short map_kd_maxlevel = unsafe.getShort(pMap_kd);
+		short map_kd_minlevel = unsafe.getShort(pMap_kd + 2);
 		long pMap_ks = unsafe.getLong(pMtl + 72);
-		int map_ks_maxlevel = unsafe.getInt(pMap_ks);
+		short map_ks_maxlevel = unsafe.getShort(pMap_ks);
+		short map_ks_minlevel = unsafe.getShort(pMap_ks + 2);
 		long pMap_ke = unsafe.getLong(pMtl + 80);
-		int map_ke_maxlevel = unsafe.getInt(pMap_ke);
+		short map_ke_maxlevel = unsafe.getShort(pMap_ke);
+		short map_ke_minlevel = unsafe.getShort(pMap_ke + 2);
 
 		// mip-maps
 		boolean mipmap_kd = unsafe.getInt(pMap_kd + 4) == 1 && ((flags & 0x4000L) != 0);
@@ -1452,12 +1458,12 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
 				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
-				float dUV_dxy_max = max(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
+				float dUV_dxy_approx = min(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
-				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_max) + 0x00140000) & 0x7F800000) >>> 23);
+				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_approx) + 0x00140000) & 0x7F800000) >>> 23);
 
-				int map_kd_level = mipmap_kd ? clamp(mmlevel, 0, map_kd_maxlevel) : map_kd_maxlevel;
-				int map_ke_level = mipmap_ke ? clamp(mmlevel, 0, map_ke_maxlevel) : map_ke_maxlevel;
+				int map_kd_level = mipmap_kd ? clamp(mmlevel, map_kd_minlevel, map_kd_maxlevel) : map_kd_maxlevel;
+				int map_ke_level = mipmap_ke ? clamp(mmlevel, map_ke_minlevel, map_ke_maxlevel) : map_ke_maxlevel;
 
 				// TODO proper ztest, stencil test, alpha test...
 
@@ -1491,7 +1497,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax) * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax) * kd_b + ke_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
@@ -1553,7 +1559,7 @@ final class TrianglePerspectiveRasteriser {
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax) * kd_g + ke_g);
 									unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax) * kd_b + ke_b);
 								}
-								
+
 								if ((flags & 0x400000L) != 0) {
 									unsafe.putInt(pID + ix * 4, objid);
 								}
