@@ -146,6 +146,7 @@ public class PlayState extends GameState {
 		if(!v.equals(Vec3.zero))
 		{
 			game.transmitPlayerPosition();
+			transmittedStop = false;
 		}
 		else if(!transmittedStop)
 		{
