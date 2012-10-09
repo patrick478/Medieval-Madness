@@ -20,7 +20,7 @@ public class FloorGenerator {
 	
 	public FloorGenerator(long _seed){
 		seed = _seed;
-//		floorPlans.add(new RandomFloor(seed));
+		floorPlans.add(new RandomFloor(seed));
 		floorPlans.add(new OpenFloor(seed));
 //		floorPlans.add(new RandomFloor(seed));
 	}
@@ -38,17 +38,8 @@ public class FloorGenerator {
 		List<WallEntity> walls = new ArrayList<WallEntity>();
 		Space[][] maze = floorPlans.get(level%(floorPlans.size())).generateMaze(size);
 		
-		//create a wall entity for each wall space in the maze
-		for(int x=0; x<size; x++){
-			for(int z=0; z<size; z++){
-				if(maze[x][z].type==Space.WALL){
-					walls.add(new WallEntity(Vec3.create(x, 0, z)));
-				}
-			}
-		}
-		
 		//store and return the new floor
-		Floor floor = new Floor(size, walls);
+		Floor floor = new Floor(maze);
 		floorCache.put(level, floor);
 		return floor;
 	}

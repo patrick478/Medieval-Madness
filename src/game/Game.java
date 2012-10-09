@@ -222,14 +222,14 @@ public class Game implements Runnable {
 		
 		System.out.println("here");
 		
-		me.setPosition(position);
-		me.setVelocity(velocity);
+		//TODO needs tp be more than 2 variables, and needs a syncronized timestamp thingymobob
+		me.updateMotion(position, velocity, Quat.one, Vec3.zero, System.currentTimeMillis());
 		
 		System.out.printf("Moving player %d to %s\n", playerIndex, position.toString());
 	}
 
 	public void transmitPlayerPosition() {
-		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(), this.player.getVelocity());
+		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(), this.player.getLinVelocity());
 		this.getNetwork().send(mp.toData());
 	}
 }

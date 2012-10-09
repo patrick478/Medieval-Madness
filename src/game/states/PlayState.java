@@ -49,29 +49,30 @@ public class PlayState extends GameState {
 		}
 
 		FloorGenerator fg = new FloorGenerator(123873123312l);
-		floor = fg.getFloor(0);
+		floor = fg.getFloor(2);
+		floor.addToScene(scene);
 		
-		for(WallEntity we : floor.getWalls())
-		{
-			we.addToScene(scene);
-		}
-
-		MeshLOD mlod = new MeshLOD(1, 5, 5, 5, 5, 5);
-		mlod.addVertex(-0.5, 0, -0.5);
-		mlod.addVertex(-0.5, 0, 0.5);
-		mlod.addVertex(0.5, 0, -0.5);
-		mlod.addVertex(0.5, 0, 0.5);
-		mlod.addPolygon(new int[] { 1, 2, 4, 3 }, null, null, null);
-		Mesh floorMesh = new Mesh();
-		floorMesh.add(mlod);
-
-		Material mat = new Material(Color.BLACK, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(
-				0f, 0f, 0f), 1f, 1f);
-		MovableReferenceFrame floorRf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
-		floorRf.setPosition(Vec3.create(5, -0.5, 5));
-		MeshContext mc = new MeshContext(floorMesh, mat, floorRf);
-		mc.setScale(10);
-		scene.addDrawable(mc);
+//		for(WallEntity we : floor.getWalls())
+//		{
+//			we.addToScene(scene);
+//		}
+//
+//		MeshLOD mlod = new MeshLOD(1, 5, 5, 5, 5, 5);
+//		mlod.addVertex(-0.5, 0, -0.5);
+//		mlod.addVertex(-0.5, 0, 0.5);
+//		mlod.addVertex(0.5, 0, -0.5);
+//		mlod.addVertex(0.5, 0, 0.5);
+//		mlod.addPolygon(new int[] { 1, 2, 4, 3 }, null, null, null);
+//		Mesh floorMesh = new Mesh();
+//		floorMesh.add(mlod);
+//
+//		Material mat = new Material(Color.BLACK, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(
+//				0f, 0f, 0f), 1f, 1f);
+//		MovableReferenceFrame floorRf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
+//		floorRf.setPosition(Vec3.create(5, -0.5, 5));
+//		MeshContext mc = new MeshContext(floorMesh, mat, floorRf);
+//		mc.setScale(10);
+//		scene.addDrawable(mc);
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
@@ -104,8 +105,6 @@ public class PlayState extends GameState {
 		MovableReferenceFrame rf = (MovableReferenceFrame) cam.getTrackedReferenceFrame();
 		rf.setOrientation(Quat.create(cam_pitch, Vec3.i));
 		
-		game.player.setOrientation(Quat.create(player_yaw, Vec3.j));
-
 		Vec3 cnorm = cam.getNormal().flattenY().unit();
 		Vec3 cup = Vec3.j;
 		Vec3 cside = Vec3.j.cross(cnorm);
@@ -125,10 +124,14 @@ public class PlayState extends GameState {
 			v = v.add(cside.neg());
 		}
 
-		v = v.unit().scale(speed);
+		if (v.mag() > 0.0001) {
+			v = v.unit().scale(speed);
+		}
 		
-		game.player.setVelocity(v);
+		//TODO also needs to be changed
+		game.player.updateMotion(game.player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
 		
+		//other Ben's doing...
 		if(!v.equals(Vec3.zero))
 		{
 			game.transmitPlayerPosition();
@@ -139,13 +142,13 @@ public class PlayState extends GameState {
 			transmittedStop = true;
 		}
 		
-		for(WallEntity w : floor.getWalls()){
-			if(w.getBound().intersects(game.player.getBound())){
-				System.out.println("denied");
-				game.player.setVelocity(Vec3.zero);
-				break;
-			}
-		}
+//		for(WallEntity w : floor.getWalls()){
+//			if(w.getBound().intersects(game.player.getBound())){
+//				System.out.println("denied");
+//				game.player.setVelocity(Vec3.zero);
+//				break;
+//			}
+//		}
 	}
 
 	@Override

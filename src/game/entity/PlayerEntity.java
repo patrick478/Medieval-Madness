@@ -60,10 +60,6 @@ public class PlayerEntity extends MoveableEntity {
 	public void poke() {
 	}
 	
-	public void setOrientation(Quat orient) {
-		orientation = orient;
-	}
-
 	@Override
 	protected Bound getBound(Vec3 position) {
 		// TODO Auto-generated method stub

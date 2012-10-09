@@ -6,33 +6,47 @@ import initial3d.engine.Vec3;
 
 public abstract class MoveableEntity extends Entity{
 
-	//velocity here is interpreted as the movement per update(poke)
-	protected Vec3 velocity = Vec3.zero;
-	protected long lastVelUpdate = System.currentTimeMillis();
+	protected Vec3 linVelocity = Vec3.zero;
+	protected Vec3 angVelocity = Vec3.zero;
+	private long lastUpdate = 0;
 	
-	public Vec3 getVelocity(){
-		return velocity;
-	}
-
-	public void setPosition(Vec3 _pos) {
-		position = _pos;
-	}
-	
-	// REALLY BEN!?!
 	@Override
-	public Vec3 getPosition()
-	{
-		this.position = position.add(this.velocity.scale((System.currentTimeMillis()-lastVelUpdate)/1000d));
-		return this.position;
+	public void poke(){
+		updateMotion(getPosition(), linVelocity, getOrientation(), angVelocity, System.currentTimeMillis());
 	}
 	
-	public void setVelocity(Vec3 _vel){
-		this.lastVelUpdate = System.currentTimeMillis();
-		velocity = _vel;
+	@Override
+	public Vec3 getPosition(){
+		return position.add(linVelocity.scale((System.currentTimeMillis()-lastUpdate)/1000d));
 	}
 	
-	public void setOrientation(Quat _dir){
-		orientation = _dir;
+	@Override
+	public Quat getOrientation(){
+		//TODO MYBEN GET HERE
+		return orientation;
+	}
+	
+	public Vec3 getLinVelocity(){
+		return linVelocity;
+	}
+	
+	public Vec3 getAngVelocity(){
+		return angVelocity;
+	}
+	
+	/**
+	 * Stops the motion of the MoveableEntity
+	 */
+	public void fix(){
+		linVelocity = Vec3.zero;
+	}
+	
+	public void updateMotion(Vec3 _pos, Vec3 _linvel, Quat _orient, Vec3 _angvel, long _timeStamp){
+		position = _pos;
+		linVelocity = _linvel;
+		orientation = _orient;
+		angVelocity = _angvel;
+		lastUpdate = _timeStamp;
 	}
 	
 	/**
@@ -43,6 +57,6 @@ public abstract class MoveableEntity extends Entity{
 	 * this movable entity
 	 */
 	public Bound getNextBound(){
-		return getBound(position.add(velocity));
+		return getBound(getPosition());
 	}
 }

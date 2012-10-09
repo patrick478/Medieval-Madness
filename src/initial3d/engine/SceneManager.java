@@ -102,6 +102,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.shadeModel(SHADEMODEL_FLAT);
 			i3d.enable(MIPMAPS);
 
+			i3d.sceneAmbientfv(new float[]{.5f, .5f, .5f});
+			
 			// temp light
 			long light = LIGHT0;
 			i3d.lightfv(light, DIFFUSE, new float[] { 1f, 1f, 0.7f });
