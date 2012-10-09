@@ -102,16 +102,16 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.shadeModel(SHADEMODEL_FLAT);
 			i3d.enable(MIPMAPS);
 
-			i3d.sceneAmbientfv(new float[]{.5f, .5f, .5f});
+			float[] coltemp = new float[3];
 			
 			// temp light
-			long light = LIGHT0;
-			i3d.lightfv(light, DIFFUSE, new float[] { 1f, 1f, 0.7f });
-			i3d.lightfv(light, SPECULAR, new float[] { 1f, 1f, 0.7f });
-			i3d.lightfv(light, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
-			i3d.lightf(light, INTENSITY, 0.9f);
-			i3d.enable(light);
-			double[] light0p = new double[] { 0, 0.5, 0.5, 0 };
+//			long light = LIGHT0;
+//			i3d.lightfv(light, DIFFUSE, new float[] { 1f, 1f, 0.7f });
+//			i3d.lightfv(light, SPECULAR, new float[] { 1f, 1f, 0.7f });
+//			i3d.lightfv(light, AMBIENT, new float[] { 0.01f, 0.01f, 0.01f });
+//			i3d.lightf(light, INTENSITY, 0.9f);
+//			i3d.enable(light);
+//			double[] light0p = new double[] { 0, 0.5, 0.5, 0 };
 
 			List<Drawable> event_drawables = new ArrayList<Drawable>();
 			List<Drawable> focus_drawables = new ArrayList<Drawable>();
@@ -142,18 +142,39 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							// projection / fog / whatever if needed
 							if (Math.abs(cam.getFOV() - camera_fov) > 0.001
 									|| Math.abs(dtarget.getDisplayWidth() / (double) dtarget.getDisplayHeight()
-											- display_ar) > 0.001) {
+											- display_ar) > 0.001 || scene.pollFogInit()) {
 								camera_fov = cam.getFOV();
 								display_ar = dtarget.getDisplayWidth() / (double) dtarget.getDisplayHeight();
-								loadProjection(NEAR_PLANE, FAR_PLANE, camera_fov, display_ar);
+								loadProjection(NEAR_PLANE, FAR_PLANE, camera_fov, display_ar, scene.getFogParamA(),
+										scene.getFogParamB());
+							}
+							
+							if (scene.getFogEnabled()) {
+								i3d.enable(FOG);
+								i3d.fogColorfv(scene.getFogColor().toArray(coltemp));
+							} else {
+								i3d.disable(FOG);
 							}
 
 							// load view transform
 							cam.loadViewTransform(i3d);
 
 							// load lights as appropriate
-							i3d.lightdv(light, POSITION, light0p);
-							// TODO proper lighting
+							i3d.sceneAmbientfv(scene.getAmbient().toArray(coltemp));
+							
+							int i = 0;
+							for (Light l : scene.getLights()) {
+								// TODO light priorities
+								if (i >= i3d.maxLights()) {
+									break;
+								}
+								i3d.enable(LIGHT0 + i);
+								l.loadTo(i3d, LIGHT0 + i);
+								i++;
+							}
+							for (; i < i3d.maxLights(); i++) {
+								i3d.disable(LIGHT0 + i);
+							}
 
 							// optimised id buffer clearing
 							if (drawid < 0) {
@@ -403,10 +424,10 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 		}
 
-		private void loadProjection(double near, double far, double fov, double ratio) {
+		private void loadProjection(double near, double far, double fov, double ratio, float fog_a, float fog_b) {
 			i3d.matrixMode(PROJ);
 			i3d.loadPerspectiveFOV(near, far, fov, ratio);
-			i3d.initFog();
+			i3d.initFog(fog_a, fog_b);
 		}
 
 		private int getFrameX(int screenx) {

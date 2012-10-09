@@ -20,6 +20,14 @@ public class Scene {
 
 	private final Set<Drawable> drawables = new HashSet<Drawable>();
 	private final Set<Light> lights = new HashSet<Light>();
+	
+	private volatile boolean fog_enabled = false;
+	private volatile boolean fog_init = false;
+	private volatile float fog_param_a = 255f * 1.5f;
+	private volatile float fog_param_b = 4096f * 1.5f;
+	private volatile Color fog_color = Color.WHITE;
+	
+	private volatile Color scene_ambient = Color.BLACK;
 
 	private volatile Drawable focused = null;
 
@@ -28,7 +36,54 @@ public class Scene {
 	public Scene() {
 
 	}
+	
+	/* package-private */
+	final boolean pollFogInit() {
+		try {
+			return fog_init;
+		} finally {
+			fog_init = false;
+		}
+	}
 
+	public Color getAmbient() {
+		return scene_ambient;
+	}
+	
+	public void setAmbient(Color c) {
+		scene_ambient = c;
+	}
+	
+	public void setFogEnabled(boolean b) {
+		fog_enabled = b;
+		fog_init = true;
+	}
+	
+	public boolean getFogEnabled() {
+		return fog_enabled;
+	}
+	
+	public float getFogParamA() {
+		return fog_param_a;
+	}
+	
+	public float getFogParamB() {
+		return fog_param_b;
+	}
+	
+	public Color getFogColor() {
+		return fog_color;
+	}
+	
+	public void setFogParams(float fog_a, float fog_b) {
+		fog_param_a = fog_a;
+		fog_param_b = fog_b;
+	}
+	
+	public void setFogColor(Color c) {
+		fog_color = c;
+	}
+	
 	public Drawable getFocusedDrawable() {
 		return focused;
 	}
@@ -53,9 +108,8 @@ public class Scene {
 		remove_drawable.addAll(d);
 	}
 	
-
-	// FIXME: Ben, is this valid?
 	public boolean containsDrawable(Drawable d) {
+		// FIXME syncro
 		if(d == null) throw new IllegalArgumentException();
 		if(remove_drawable.contains(d)) return false;
 		else if(drawables.contains(d) || add_drawable.contains(d)) return true;
@@ -63,6 +117,7 @@ public class Scene {
 	}
 
 	public <T extends Collection<Drawable>> T extractDrawables(T c) {
+		// FIXME syncro
 		c.addAll(drawables);
 		return c;
 	}
@@ -82,6 +137,7 @@ public class Scene {
 	}
 
 	public <T extends Collection<Light>> T extractLights(T c) {
+		// FIXME syncro
 		c.addAll(lights);
 		return c;
 	}

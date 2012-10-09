@@ -13,7 +13,7 @@ class TextureImpl extends Texture {
 	private static final Unsafe unsafe = Util.getUnsafe();
 
 	private final short level_ceil;
-	private short level_floor = 4;
+	private short level_floor = 0;
 	private final int size;
 	private final long pTex;
 	private final long pLevel;
@@ -192,6 +192,15 @@ class TextureImpl extends Texture {
 	@Override
 	public void composeMipMaps() {
 		if (level_ceil > 0) composeMipMaps(level_ceil - 1);
+	}
+
+	@Override
+	public void setMipMapFloor(short i) {
+		if (i < 0 || i > level_ceil) {
+			throw new IllegalArgumentException();
+		}
+		level_floor = i;
+		unsafe.putShort(pTex + 2, level_floor);
 	}
 
 	private void composeMipMaps(int mmlevel) {

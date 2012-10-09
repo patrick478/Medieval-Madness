@@ -32,8 +32,6 @@ public abstract class Initial3D {
 		return Initial3DFactory.createTexture(size);
 	}
 
-	public static final int MAX_LIGHTS = 8;
-	
 	// shared
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
@@ -65,10 +63,9 @@ public abstract class Initial3D {
 	public static final long WRITE_ID = 0x400000L;
 	public static final long LIGHT0 = 0x800000L;
 	// LIGHT_MAX must be >= LIGHT0 && < 0x1000000L so lights don't interfere with other flags
-	public static final long LIGHT_MAX = LIGHT0 + MAX_LIGHTS;
 	// 0x1000000L;
 	
-	// gen_alpha_random (might be interesting combined with changing alpha test)
+	// alpharef_random (might be interesting combined with changing material opacity)
 	// - otherwise load from diffuse material
 	public static final long ALPHAREF_RANDOM = 0x2000000L;
 	// 0x4000000L;
@@ -175,7 +172,9 @@ public abstract class Initial3D {
 	
 	public abstract Profiler getProfiler();
 	
-	public abstract void initFog();
+	public abstract void initFog(float fog_a, float fog_b);
+	
+	public abstract void fogColorfv(float[] v);
 
 	public abstract void viewportSize(int w, int h);
 	
@@ -232,6 +231,8 @@ public abstract class Initial3D {
 	public abstract void stencilFunc(int func, int ref, int mask);
 
 	public abstract void stencilOp(int sfail, int dfail, int dpass);
+	
+	public abstract int maxLights();
 
 	public abstract void lightf(long light, int pname, float v);
 

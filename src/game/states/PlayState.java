@@ -80,6 +80,17 @@ public class PlayState extends GameState {
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		
 		game.getWindow().setMouseCapture(true);
+		
+		scene.setAmbient(new Color(0.2f, 0.2f, 0.2f));
+		scene.setFogColor(Color.GRAY);
+		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
+		scene.setFogEnabled(true);
+		
+		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
+		scene.addLight(l);
+		
+		Light l2 = new Light.SphericalPointLight(game.player, Color.GREEN, 0.5f);
+		scene.addLight(l2);
 	}
 
 	@Override

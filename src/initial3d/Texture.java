@@ -40,6 +40,9 @@ public abstract class Texture {
 
 	public abstract void useMipMaps(boolean b);
 
+	/** Set the number of mipmaps (from 1x1 inclusive up) to not use. */
+	public abstract void setMipMapFloor(short i);
+
 	public abstract void composeMipMaps();
 
 	public void setTexelNoWrap(int u, int v, float a, float r, float g, float b) {

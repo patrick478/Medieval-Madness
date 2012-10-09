@@ -129,7 +129,7 @@ public class Engine extends Thread {
 
 		i3d.matrixMode(PROJ);
 		i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(), frame.getRenderWidth() / (double) frame.getRenderHeight());
-		i3d.initFog();
+		i3d.initFog(255f * 1.5f, 4096f * 1.5f);
 
 		float[] coltemp = new float[3];
 
@@ -367,7 +367,7 @@ public class Engine extends Thread {
 			i3d.matrixMode(PROJ);
 			i3d.loadPerspectiveFOV(0.1, sky_z + 1, cam.getFOV(),
 					frame.getRenderWidth() / (double) frame.getRenderHeight());
-			i3d.initFog();
+			i3d.initFog(255f * 1.5f, 4096f * 1.5f);
 		}
 
 		if (frame.pollKey(KeyEvent.VK_BRACELEFT)) {

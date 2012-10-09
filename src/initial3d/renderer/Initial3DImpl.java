@@ -15,6 +15,9 @@ class Initial3DImpl extends Initial3D {
 
 	static final int MEM_SIZE = 268435456;
 	static final int MAX_VECTORS = 49152;
+	
+	private static final int MAX_LIGHTS = 16;
+	private static final long LIGHT_MAX = LIGHT0 + MAX_LIGHTS - 1;
 
 	protected final Unsafe unsafe;
 	protected final long pBase;
@@ -168,7 +171,7 @@ class Initial3DImpl extends Initial3D {
 	}
 
 	@Override
-	public void initFog() {
+	public void initFog(float fog_a, float fog_b) {
 		// depends on matrices
 		initPipelineGeneral();
 
@@ -199,9 +202,8 @@ class Initial3DImpl extends Initial3D {
 				// grab z component of normalised vector - dot prod with (0,0,1)
 				float fc = (float) unsafe.getDouble(pTemp + 16);
 				// write derived values
-				float m = 1.5f;
-				unsafe.putFloat(pFC + 4, 255f * m);
-				unsafe.putFloat(pFC + 8, 4096f * m * fc);
+				unsafe.putFloat(pFC + 4, fog_a);
+				unsafe.putFloat(pFC + 8, fog_b * fc);
 				x++;
 				if (x >= w) {
 					x = 0;
@@ -210,6 +212,13 @@ class Initial3DImpl extends Initial3D {
 			}
 		}
 
+	}
+	
+	@Override
+	public void fogColorfv(float[] v) {
+		putFloat(0x0000008C + 4, v[0]);
+		putFloat(0x0000008C + 8, v[1]);
+		putFloat(0x0000008C + 12, v[2]);
 	}
 
 	@Override
@@ -437,6 +446,11 @@ class Initial3DImpl extends Initial3D {
 	protected final long getLightQPointer(long light) {
 		if (light < LIGHT0 || light > LIGHT_MAX) throw new IllegalArgumentException();
 		return 0x0CE00900 + (light - LIGHT0) * 256;
+	}
+	
+	@Override
+	public int maxLights() {
+		return MAX_LIGHTS;
 	}
 
 	@Override
