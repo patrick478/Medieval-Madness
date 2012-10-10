@@ -151,7 +151,13 @@ public class Game implements Runnable {
 		this.gameWindow = RenderWindow.create(800, 600);
 		this.gameWindow.setVisible(true);
 		this.sceneManager = new SceneManager(800, 600);
-		this.sceneManager.setDisplayTarget(this.gameWindow);
+		RenderWindow rwin = this.gameWindow;
+		this.sceneManager.setDisplayTarget(rwin);
+		rwin.addKeyListener(sceneManager);
+		rwin.addCanvasMouseListener(sceneManager);
+		rwin.addCanvasMouseMotionListener(sceneManager);
+		rwin.addMouseWheelListener(sceneManager);
+		
 		this.sceneManager.getProfiler().setResetOutput(null);
 	}
 	

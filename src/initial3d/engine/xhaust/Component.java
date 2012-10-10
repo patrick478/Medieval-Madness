@@ -70,8 +70,12 @@ public abstract class Component extends ActionSource {
 	}
 
 	/* package-private */
-	boolean repainted() {
-		return repainted;
+	boolean pollRepainted() {
+		try {
+			return repainted;
+		} finally {
+			repainted = false;
+		}
 	}
 
 	/* package-private */
@@ -90,7 +94,10 @@ public abstract class Component extends ActionSource {
 		return 1;
 	}
 
-	/** Invoke this to get this component (and anything else necessary) repainted. */
+	/**
+	 * Invoke this to get this component (and anything else necessary)
+	 * repainted.
+	 */
 	public final void repaint() {
 		// recurses up until opaque or null parent
 		if (!isOpaque() && parent != null) {
