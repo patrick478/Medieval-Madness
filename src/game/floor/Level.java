@@ -24,6 +24,19 @@ public class Level {
 		
 	}
 	
+	public void addEntity(Entity _entity){
+		entities.add(_entity);
+		entityID.put(_entity.id, _entity);
+	}
+	
+	public Entity getEntity(long _eid){
+		return entityID.get(_eid);
+	}
+	
+	public void removeEntity(long _eid){
+		entities.remove(entityID.remove(_eid));
+	}
+	
 	public boolean collides(Bound _b, boolean _solid){
 		for(Entity e : entities){
 			if(e.isSolid()==_solid && e.getBound().intersects(_b)){

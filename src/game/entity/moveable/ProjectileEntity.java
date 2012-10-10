@@ -1,4 +1,4 @@
-package game.entity;
+package game.entity.moveable;
 
 import game.bound.Bound;
 import initial3d.engine.Vec3;

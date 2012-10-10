@@ -1,6 +1,7 @@
-package game.entity;
+package game.entity.moveable;
 
 import game.bound.Bound;
+import game.entity.Entity;
 import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 
@@ -28,6 +29,16 @@ public abstract class MoveableEntity extends Entity{
 	public Quat getOrientation(){
 		//TODO MYBEN GET HERE
 		return orientation;
+	}
+	
+	@Override
+	public void setPosition(Vec3 _pos){
+		updateMotion(_pos, linVelocity, getOrientation(), angVelocity, System.currentTimeMillis());
+	}
+	
+	@Override
+	public void setOrientation(Quat _orient){
+		updateMotion(getPosition(), linVelocity, _orient, angVelocity, System.currentTimeMillis());
 	}
 	
 	public Vec3 getLinVelocity(){

@@ -12,7 +12,7 @@ import java.util.Random;
 public class FloorGenerator {
 
 	private final int base = 10;//base size of mazes
-	private final int incr = 10;//base increment for maze levels
+	private final int incr = 2;//base increment for maze levels
 	private final long seed;
 	
 	private HashMap<Integer, Floor> floorCache = new HashMap<Integer, Floor>();

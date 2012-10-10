@@ -33,6 +33,14 @@ public abstract class Entity implements ReferenceFrame {
 		return this.orientation;
 	}
 	
+	public void setPosition(Vec3 _pos) {
+		position = _pos;
+	}
+	
+	public void setOrientation(Quat _orient) {
+		orientation = _orient;
+	}
+	
 	public void addMeshContext(MeshContext mesh)
 	{
 		if(mesh == null)

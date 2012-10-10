@@ -2,9 +2,11 @@ package game;
 
 import java.util.*;
 
-import game.entity.PlayerEntity;
 
-import game.entity.MoveableEntity;
+import game.entity.Entity;
+import game.entity.moveable.MoveableEntity;
+import game.entity.moveable.PlayerEntity;
+import game.floor.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
@@ -30,6 +32,8 @@ public class Game implements Runnable {
 	private NetworkingClient network = null;
 	private NetworkingHost nhost = null;
 	private int playerIndex = -1;
+	
+	private Level currentLevel;//TODO
 	
 	public PlayerEntity player = null;
 	public MoveableEntity[] players = new MoveableEntity[4];
@@ -239,4 +243,46 @@ public class Game implements Runnable {
 		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(), this.player.getLinVelocity());
 		this.getNetwork().send(mp.toData());
 	}
+	
+	
+	
+	//METHODS CALLED BY THE EVENT CLASSES
+	//TODO need to notify the clients about this
+	
+	public void moveEntity(long _eid, Vec3 _pos){
+		Entity e = currentLevel.getEntity(_eid);
+		e.setPosition(_pos);
+	}
+	
+	public void turnEntity(long _eid, Quat _orient){
+		Entity e = currentLevel.getEntity(_eid);
+		e.setOrientation(_orient);
+	}
+	
+	public void addEntity(Entity _entity){
+		currentLevel.addEntity(_entity);
+	}
+	
+	public void removeEntity(long _eid){
+		currentLevel.removeEntity(_eid);
+	}
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
