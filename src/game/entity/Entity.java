@@ -7,16 +7,16 @@ import initial3d.engine.*;
 
 public abstract class Entity implements ReferenceFrame {
 	
+	public final long id;
+	
 	protected Vec3 position = Vec3.zero;
 	protected Quat orientation = Quat.one;
 	
-	protected Vec3 radius;
-	protected Bound bound;
-	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
-	/**Intended as an update method TODO fill in the description later*/
-	public abstract void poke();
+	public Entity(long _id){
+		id = _id;
+	}
 	
 	@Override
 	public ReferenceFrame getParent() {
@@ -41,6 +41,7 @@ public abstract class Entity implements ReferenceFrame {
 		this.meshes.add(mesh);
 	}
 	
+	//TODO hackish at best please remove at some point cheers (dj)
 	public void addMeshContexts(List<MeshContext> newMeshes)
 	{
 		for(MeshContext m : newMeshes)
@@ -52,8 +53,16 @@ public abstract class Entity implements ReferenceFrame {
 		return meshes;
 	}
 	
-	public void addToScene(Scene s)
-	{
+	/**
+	 * Adds all Drawable components that make up the 
+	 * graphical part of the entity to the given scene
+	 * 
+	 * @param s A non-null scene object
+	 */
+	public void addToScene(Scene s){
+		if(s==null){
+			throw new IllegalArgumentException("Paramter Scene cannot be null");
+		}
 		for(MeshContext m : meshes)
 		{
 			s.addDrawable(m);
@@ -68,6 +77,9 @@ public abstract class Entity implements ReferenceFrame {
 		return getBound(position);
 	}
 	
+	/**Intended as an update method TODO fill in the description later*/
+	public abstract void poke();
+	
 	/**
 	 * Returns the bound of the given position of this entity.
 	 * Allows the caller to specify the position of the entity
@@ -77,4 +89,5 @@ public abstract class Entity implements ReferenceFrame {
 	 */
 	protected abstract Bound getBound(Vec3 position);
 	
+	public abstract boolean isSolid();
 }
