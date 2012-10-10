@@ -207,11 +207,14 @@ public class Floor {
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				Vec3[] vert = pos_y_verPos;
+				int[] text_coord;
 				int y;
 				if(_floor[x][z].type==Space.WALL){
-					y = 0;
+					y = 1;
+					text_coord = wall_top_tex_coord;
 				}else{
 					y = 0;
+					text_coord = floor_tex_coord;
 				}
 				
 				for(double vz=z; vz < z + 1; vz += 1d/detail){
@@ -221,7 +224,7 @@ public class Floor {
 								meshlod.addVertex(vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail),
 								meshlod.addVertex(vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail),
 								meshlod.addVertex(vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail)};
-						meshlod.addPolygon(ver_final, floor_tex_coord, pos_y_norm, null);
+						meshlod.addPolygon(ver_final, text_coord, pos_y_norm, null);
 					}
 				}
 			}

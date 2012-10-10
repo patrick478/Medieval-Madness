@@ -88,6 +88,14 @@ public class BoundingBox extends Bound{
 
 	}
 	
+	public Vec3 getNegExtreme(){
+		return neg_ext;
+	}
+	
+	public Vec3 getPosExtreme(){
+		return pos_ext;
+	}
+	
 	
 	@Override
 	public String toString(){
