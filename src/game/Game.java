@@ -194,7 +194,7 @@ public class Game implements Runnable {
 	{
 		System.out.printf("Player index set to %d\n", pIndex);
 		this.playerIndex = pIndex;
-		this.player = new PlayerEntity(Vec3.create(pIndex+2, 0, pIndex+2), 0.1);
+		this.player = new PlayerEntity(Vec3.create(pIndex+2, 0.25, pIndex+2), 0.1);
 		
 		// This needs to add the main player
 		addPlayer(pIndex, player);
@@ -204,7 +204,7 @@ public class Game implements Runnable {
 		{
 			if(i == pIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(Vec3.create(i+2, 0, i+2), 0.1);
+			PlayerEntity p = new PlayerEntity(Vec3.create(i+2, 0.25, i+2), 0.1);
 			addPlayer(i, p);
 		}
 	}
