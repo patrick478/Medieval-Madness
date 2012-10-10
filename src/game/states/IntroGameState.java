@@ -21,7 +21,7 @@ public class IntroGameState extends GameState {
 
 	@Override
 	public void update(double delta) {
-		this.game.changeState(new MainMenuState(this.game));
+		this.game.changeState(new MainMenuGUIState(this.game));
 	}
 
 	@Override

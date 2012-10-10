@@ -135,7 +135,7 @@ public class Pane extends Drawable {
 		root.doRepaint(g, i3d, getDrawIDStart(), zview);
 		g.dispose();
 
-		if (root.repainted()) {
+		if (root.pollRepainted()) {
 			tex.drawImage(bi);
 		}
 

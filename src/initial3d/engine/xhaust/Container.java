@@ -44,10 +44,10 @@ public class Container extends Component {
 	}
 
 	@Override
-	boolean repainted() {
-		boolean r = super.repainted();
+	boolean pollRepainted() {
+		boolean r = super.pollRepainted();
 		for (Component c : children) {
-			r |= c.repainted();
+			r |= c.pollRepainted();
 		}
 		return r;
 	}
