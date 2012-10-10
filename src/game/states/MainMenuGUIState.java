@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import soundengine.SimpleAudioPlayer;
+
 import game.Game;
 import game.GameState;
 
@@ -36,10 +38,14 @@ public class MainMenuGUIState extends GameState {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("released")){
-				if(e.getSource().equals(joinArea))
+				if(e.getSource().equals(joinArea)){
+				SimpleAudioPlayer.stopMusic();
 					game.changeState(new FindGameState(game));
-				else if(e.getSource().equals(startArea))
+				}
+				else if(e.getSource().equals(startArea)){
+					SimpleAudioPlayer.stopMusic();
 					game.changeState(new CreateGameState(game));
+				}
 
 			}
 			else if(e.getActionCommand().equals("mouseover")){
@@ -64,7 +70,7 @@ public class MainMenuGUIState extends GameState {
 
 	@Override
 	public void initalise() {
-
+		SimpleAudioPlayer.play("resources/menumusic.wav");
 		Pane p = new Pane(800, 600);
 
 		//stuff
