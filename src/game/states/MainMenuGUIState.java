@@ -43,11 +43,11 @@ public class MainMenuGUIState extends GameState {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("released")){
 				if(e.getSource().equals(joinArea)){
-				SimpleAudioPlayer.stopMusic();
+				//SimpleAudioPlayer.stopMusic();
 					game.changeState(new FindGameState(game));
 				}
 				else if(e.getSource().equals(startArea)){
-					SimpleAudioPlayer.stopMusic();
+					//SimpleAudioPlayer.stopMusic();
 					game.changeState(new CreateGameState(game));
 				}
 
@@ -86,7 +86,7 @@ public class MainMenuGUIState extends GameState {
 
 	@Override
 	public void initalise() {
-		SimpleAudioPlayer.play("resources/menumusic.wav");
+		//SimpleAudioPlayer.play("resources/menumusic.wav");
 		Pane p = new Pane(800, 600);
 
 		//stuff
