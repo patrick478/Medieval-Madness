@@ -55,13 +55,17 @@ public class Floor {
 	public Floor(Space[][] _floor){
 		size = _floor.length;
 		//add the walls
+		
+		//TODO FIXME stuff
+		long i = 125l;
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				if(_floor[x][z].type==Space.WALL){
-					walls.add(new WallEntity(Vec3.create(x,0,z)));
+					walls.add(new WallEntity(i++, Vec3.create(x,0,z)));
 				}
 			}
 		}
+		
 		mesh = buildMesh(_floor);
 	}
 	
@@ -84,39 +88,50 @@ public class Floor {
 
 		int[] pos_x_norm = new int[]{pos_x, pos_x, pos_x, pos_x};
 		Vec3[] pos_x_verPos = new Vec3[]{
-			Vec3.create(0, 0, 0), Vec3.create(0, 1, 0),
-			Vec3.create(0, 1, 1), Vec3.create(0, 0, 1)};
+			Vec3.create(0, 1, 1), Vec3.create(0, 0, 1),
+			Vec3.create(0, 0, 0), Vec3.create(0, 1, 0)};
 		
 		int[] neg_x_norm = new int[]{neg_x, neg_x, neg_x, neg_x};
 		Vec3[] neg_x_verPos = new Vec3[]{
-			Vec3.create(0, 0, 0), Vec3.create(0, 0, 1),
-			Vec3.create(0, 1, 1), Vec3.create(0, 1, 0)};
+			Vec3.create(0, 1, 0), Vec3.create(0, 0, 0),
+			Vec3.create(0, 0, 1), Vec3.create(0, 1, 1)};
 	
 		int[] pos_z_norm = new int[]{pos_z, pos_z, pos_z, pos_z};
 		Vec3[] pos_z_verPos = new Vec3[]{
-			Vec3.create(0, 0, 0), Vec3.create(1, 0, 0),
-			Vec3.create(1, 1, 0), Vec3.create(0, 1, 0)};
+			Vec3.create(0, 1, 0), Vec3.create(0, 0, 0),
+			Vec3.create(1, 0, 0), Vec3.create(1, 1, 0)};
 		
 		int[] neg_z_norm = new int[]{neg_z, neg_z, neg_z, neg_z};
 		Vec3[] neg_z_verPos = new Vec3[]{
-			Vec3.create(0, 0, 0), Vec3.create(0, 1, 0),
-			Vec3.create(1, 1, 0), Vec3.create(1, 0, 0)};
+			Vec3.create(1, 1, 0), Vec3.create(1, 0, 0),
+			Vec3.create(0, 0, 0), Vec3.create(0, 1, 0)};
+		
+		int[] pos_y_norm = new int[]{pos_y, pos_y, pos_y, pos_y};
+		Vec3[] pos_y_verPos = new Vec3[]{
+				Vec3.create(0, 0, 0), Vec3.create(0, 0, 1),
+				Vec3.create(1, 0, 1), Vec3.create(1, 0, 0)};
 
 		int[] wall_top_tex_coord = new int[]{
 				meshlod.addTexCoord(0, 0),
-				meshlod.addTexCoord(0.25, 0),
+				meshlod.addTexCoord(0, 0.25),
 				meshlod.addTexCoord(0.25, 0.25),
-				meshlod.addTexCoord(0, 0.25)};
+				meshlod.addTexCoord(0.25, 0)};
 		int[] wall_side_tex_coord = new int[]{
 				meshlod.addTexCoord(0.25, 0),
-				meshlod.addTexCoord(0.5, 0),
-				meshlod.addTexCoord(0.5, 0.25),
-				meshlod.addTexCoord(0.25, 0.25)};
-		int[] floor_tex_coord = new int[]{
-				meshlod.addTexCoord(0, 0),
-				meshlod.addTexCoord(0.25, 0),
 				meshlod.addTexCoord(0.25, 0.25),
-				meshlod.addTexCoord(0, 0.25)};
+				meshlod.addTexCoord(0.5, 0.25),
+				meshlod.addTexCoord(0.5, 0)};
+		int[] floor_tex_coord = new int[]{
+				meshlod.addTexCoord(0.25, 0.25),
+				meshlod.addTexCoord(0.25, 0.5),
+				meshlod.addTexCoord(0.5, 0.5),
+				meshlod.addTexCoord(0.5, 0.25)};
+//		int[] roof_tex_coord = new int[]{
+//				meshlod.addTexCoord(0, 0),
+//				meshlod.addTexCoord(0.25, 0),
+//				meshlod.addTexCoord(0.25, 0.25),
+//				meshlod.addTexCoord(0, 0.25)};
+		
 		
 		
 		
@@ -188,6 +203,31 @@ public class Floor {
 		}
 		
 		
+		//TODO FIXME floor doesn't show up
+		for(int x=0; x < size; x++){
+			for(int z=0; z < size; z++){
+				Vec3[] vert = pos_y_verPos;
+				int y;
+				if(_floor[x][z].type==Space.WALL){
+					y = 0;
+				}else{
+					y = 0;
+				}
+				
+				for(double vz=z; vz < z + 1; vz += 1d/detail){
+					for(double vx=x; vx < x + 1; vx += 1d/detail){
+						int[] ver_final = new int[]{
+								meshlod.addVertex(vx + vert[0].x/detail, y + vert[0].y/detail, vz + vert[0].z/detail),
+								meshlod.addVertex(vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail),
+								meshlod.addVertex(vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail),
+								meshlod.addVertex(vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail)};
+						meshlod.addPolygon(ver_final, floor_tex_coord, pos_y_norm, null);
+					}
+				}
+			}
+		}
+		
+		
 
 		Mesh mesh = new Mesh();
 		mesh.add(meshlod);
@@ -196,8 +236,11 @@ public class Floor {
 		rf.setPosition(Vec3.create(-0.5, 0, -0.5));
 		MeshContext mesh_con = new MeshContext(mesh, floor_mtl, rf);
 		
-		
 		return mesh_con;
+	}
+	
+	private void verAt(){
+		
 	}
 	
 	public List<WallEntity> getWalls(){

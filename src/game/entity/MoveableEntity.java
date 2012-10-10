@@ -10,6 +10,10 @@ public abstract class MoveableEntity extends Entity{
 	protected Vec3 angVelocity = Vec3.zero;
 	private long lastUpdate = 0;
 	
+	public MoveableEntity(long _id) {
+		super(_id);
+	}
+	
 	@Override
 	public void poke(){
 		updateMotion(getPosition(), linVelocity, getOrientation(), angVelocity, System.currentTimeMillis());

@@ -26,25 +26,29 @@ public class PlayerEntity extends MoveableEntity {
 	private static final double baseSpeed = 0.1;
 	private final double radius;
 	
-	public PlayerEntity(Vec3 _pos, double _radius)
-	{
+	public PlayerEntity(long _id, Vec3 _pos, double _radius){
+		super(_id);
 		position = _pos;
 		radius = _radius;
-		bound = new BoundingSphere(_pos, _radius);
-		
 		this.addMeshContexts(this.getBall());
 	}
 	
-	public Bound getBound(){
+	@Override
+	protected Bound getBound(Vec3 position) {
 		return new BoundingSphere(position, radius);
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return true;
 	}
 	
 	public double getSpeed(){
 		return baseSpeed;
 	}
 	
-	// TODO: Work-in-progress
-	public List<MeshContext> getBall()
+	// TODO: Work-in-progress GET YOUR SHIT TOGETHER
+	private List<MeshContext> getBall()
 	{
 		Material mat = new Material(Color.RED, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);		
 		Mesh m = Content.loadContent("sphere.obj");
@@ -54,15 +58,5 @@ public class PlayerEntity extends MoveableEntity {
 		meshes.add(mc);
 		
 		return meshes;
-	}
-
-	@Override
-	public void poke() {
-	}
-	
-	@Override
-	protected Bound getBound(Vec3 position) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

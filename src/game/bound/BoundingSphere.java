@@ -11,12 +11,14 @@ public class BoundingSphere extends Bound{
 		radius = _radius;
 	}
 	
+	@Override
 	public Vec3 getPosition(){
 		return position;
 	}
 	
-	public double getRadius(){
-		return radius;
+	@Override
+	public Bound setPosition(Vec3 v) {
+		return new BoundingSphere(v, radius);
 	}
 	
 	@Override
@@ -35,5 +37,9 @@ public class BoundingSphere extends Bound{
 	public boolean intersects(BoundingSphere b){
 		double distance = position.sub(b.position).mag();
 		return distance < radius + b.radius;
+	}
+	
+	public double getRadius(){
+		return radius;
 	}
 }

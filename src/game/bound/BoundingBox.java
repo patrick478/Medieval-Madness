@@ -4,48 +4,22 @@ import initial3d.engine.Vec3;
 
 public class BoundingBox extends Bound{
 
-	private final Vec3 posex;// positive extreme
-	private final Vec3 position; //lowest co-ordinates of bounding box, negative extreme
+	private final Vec3 position;
+	private final Vec3 pos_ext;// positive extreme
+	private final Vec3 neg_ext; //lowest co-ordinates of bounding box, negative extreme
 	private final Vec3 size; //always positive values
 	private final double volume;
 	
-	public BoundingBox(Vec3 position, Vec3 size){
+	public BoundingBox(Vec3 _position, Vec3 _radius){
 		super();
-		this.position = Vec3.negativeExtremes(position, position.add(size));
-		this.posex = Vec3.positiveExtremes(position, position.add(size));
-		this.size = posex.sub(this.position);
+		position = _position;
+		neg_ext = Vec3.negativeExtremes(_position.sub(_radius), _position.add(_radius));
+		pos_ext = Vec3.positiveExtremes(_position.sub(_radius), _position.add(_radius));
+		size = pos_ext.sub(this.neg_ext);
 		volume = size.x * size.y * size.z;
 	}
 	
-
-	public boolean contains(BoundingBox b){
-		if(b == null) return false;
-		if (this.position.x <= b.position.x &&
-			this.position.y <= b.position.y &&
-			this.position.z <= b.position.z &&
-			this.position.add(this.size).x >= b.position.add(b.size).x &&
-			this.position.add(this.size).y >= b.position.add(b.size).y &&
-			this.position.add(this.size).z >= b.position.add(b.size).z){
-			return true;
-		}
-		return false;
-	}
-	
-	//Obsolete method
 	@Override
-	public boolean contains(Vec3 v){
-		if(v == null) return false;
-		if (this.position.x <= v.x &&
-			this.position.y <= v.y &&
-			this.position.z <= v.z &&
-			this.position.add(this.size).x > v.add(this.size).x &&
-			this.position.add(this.size).y > v.add(this.size).y &&
-			this.position.add(this.size).z > v.add(this.size).z){
-			return true;
-		}
-		return false;
-	}
-	
 	public boolean intersects(BoundingBox b){
 		if (b == null) return false;
 		b = getIntersection(b);
@@ -57,37 +31,66 @@ public class BoundingBox extends Bound{
 	
 	@Override
 	public boolean intersects(BoundingSphere b) {
-		// TODO Auto-generated method stub
+		if (b == null) return false;
+		
+		return false;
+	}
+	
+	@Override
+	public boolean contains(Vec3 v){
+		if(v == null) return false;
+		if (this.neg_ext.x <= v.x &&
+			this.neg_ext.y <= v.y &&
+			this.neg_ext.z <= v.z &&
+			this.neg_ext.add(this.size).x > v.add(this.size).x &&
+			this.neg_ext.add(this.size).y > v.add(this.size).y &&
+			this.neg_ext.add(this.size).z > v.add(this.size).z){
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public Vec3 getPosition() {
+		return position;
+	}
+
+
+	@Override
+	public Bound setPosition(Vec3 _pos) {
+		return new BoundingBox(_pos, size.scale(0.5));
+	}
+
+	public boolean contains(BoundingBox b){
+		if(b == null) return false;
+		if (this.neg_ext.x <= b.neg_ext.x &&
+			this.neg_ext.y <= b.neg_ext.y &&
+			this.neg_ext.z <= b.neg_ext.z &&
+			this.neg_ext.add(this.size).x >= b.neg_ext.add(b.size).x &&
+			this.neg_ext.add(this.size).y >= b.neg_ext.add(b.size).y &&
+			this.neg_ext.add(this.size).z >= b.neg_ext.add(b.size).z){
+			return true;
+		}
 		return false;
 	}
 	
 	public BoundingBox getIntersection(BoundingBox b){
 
-		Vec3 interNegex = Vec3.positiveExtremes(this.position, b.position);
-		Vec3 interPosex = Vec3.negativeExtremes(this.posex, b.posex);
+		Vec3 int_neg_ext = Vec3.positiveExtremes(this.neg_ext, b.neg_ext);
+		Vec3 int_pos_ext = Vec3.negativeExtremes(this.pos_ext, b.pos_ext);
 		
-		if (interPosex.x>=interNegex.x &&
-			interPosex.y>=interNegex.y &&
-			interPosex.z>=interNegex.z){
-			return new BoundingBox(interNegex, interPosex.sub(interNegex));
+		if (int_pos_ext.x>=int_neg_ext.x &&
+			int_pos_ext.y>=int_neg_ext.y &&
+			int_pos_ext.z>=int_neg_ext.z){
+			return new BoundingBox(int_neg_ext, int_pos_ext.sub(int_neg_ext));
 		}
 		return null;
 
 	}
 	
-	public double getVolume(){
-		return volume;
-	}
-	
-	public Vec3 getPosition(){
-		return position;
-	}
-	public Vec3 getSize(){
-		return size;
-	}
 	
 	@Override
 	public String toString(){
-		return String.format("%.3f,%.3f,%.3f",position.x, position.y, position.z);
+		return String.format("%.3f,%.3f,%.3f",neg_ext.x, neg_ext.y, neg_ext.z);
 	}
 }
