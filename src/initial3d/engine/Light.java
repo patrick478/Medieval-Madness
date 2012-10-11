@@ -120,8 +120,8 @@ public abstract class Light {
 		}
 		
 		protected void update() {
-			atten_lin = 2f / radius;
-			atten_quad = 1f / (radius * radius);
+			atten_lin = 1f / radius;
+			atten_quad = 1f / (4 * radius * radius);
 		}
 
 	}

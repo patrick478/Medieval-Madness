@@ -71,18 +71,20 @@ public class PlayState extends GameState {
 		
 		game.getWindow().setMouseCapture(true);
 		
-		scene.setAmbient(new Color(0.2f, 0.2f, 0.2f));
+		scene.setAmbient(new Color(0.1f, 0.1f, 0.1f));
 		scene.setFogColor(Color.BLACK);
 		scene.setFogParams(255f * 1.5f, 512f * 1.5f);
 		scene.setFogEnabled(true);
 		
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
-		scene.addLight(l);
+		//scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.55f);
+		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
 		
 		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		game.player.getMeshContexts().get(0).requestVisible(false);
 		
 	}
 
