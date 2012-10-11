@@ -149,9 +149,9 @@ public class PlayState extends GameState {
 			v = v.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
 		
-		if(Game.getInstance().getLevel().collides(game.player.getNextBound(), true)){
+		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
 			System.out.println("denied");
-			game.player.fix();
+			Game.getInstance().player.fix();
 		}
 		
 		//TODO also needs to be changed
