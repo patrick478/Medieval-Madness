@@ -4,6 +4,7 @@ import game.bound.Bound;
 import game.bound.BoundingBox;
 import game.bound.BoundingSphere;
 import game.entity.Entity;
+import game.item.AbstractItem;
 import game.modelloader.Content;
 import game.modelloader.WavefrontLoader;
 import initial3d.engine.Color;
@@ -58,4 +59,6 @@ public class PlayerEntity extends MoveableEntity {
 		
 		return meshes;
 	}
+
+	
 }

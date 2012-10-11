@@ -30,29 +30,7 @@ public class WallEntity extends Entity {
 		position = _pos;
 //		bound = new BoundingBox(_pos.sub(wallSize.scale(0.5)), wallSize);
 		bound = new BoundingSphere(_pos, 0.5);
-//		
-//		this.addMeshContexts(this.getWall());
 	}
-	
-//	// TODO: Work-in-progress
-//	public List<MeshContext> getWall(){
-//		Material mat = new Material(Color.BLACK, new Color(0.9f, 0.9f, 0.9f), new Color(0.1f, 0.1f, 0.1f), new Color(0f, 0f, 0f), 1f, 1f);		
-//		Mesh m = Content.loadContent("cube2.obj");
-//		MeshContext mc = new MeshContext(m, mat, this);
-////		mc.setScale(1.001d);
-//		List<MeshContext> meshes = new ArrayList<MeshContext>();
-//		meshes.add(mc);
-//		
-//		return meshes;
-//	}
-
-	//TODO change this to stop giving the meshes for a wall
-	//mesh construction for a wall should be done by the floor class
-//	@Override
-//	public void addToScene(Scene s)
-//	{
-//		
-//	}
 	
 	@Override
 	public void poke() {}

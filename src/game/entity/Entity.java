@@ -33,12 +33,28 @@ public abstract class Entity implements ReferenceFrame {
 		return this.orientation;
 	}
 	
+	/**
+	 * Sets the position of the entity to the specified position.
+	 * If parameter is null, does nothing.
+	 * 
+	 * @param _pos The position to set the entity to.
+	 */
 	public void setPosition(Vec3 _pos) {
-		position = _pos;
+		if(_pos!=null){
+			position = _pos;
+		}
 	}
 	
+	/**
+	 * Sets the absolute orientation of the entity to the specified 
+	 * orientation. If parameter is null, does nothing.
+	 * 
+	 * @param _orient The orientation to set the entity to.
+	 */
 	public void setOrientation(Quat _orient) {
-		orientation = _orient;
+		if(_orient!=null){
+			orientation = _orient;
+		}
 	}
 	
 	public void addMeshContext(MeshContext mesh)
@@ -78,15 +94,29 @@ public abstract class Entity implements ReferenceFrame {
 	}
 	
 	/**
-	 * Returns the bound of the current position of this entity. 
+	 * Returns the bound of the current position of this entity.
+	 *  
 	 * @return The bounding volume for this entity
 	 */
 	public Bound getBound(){
 		return getBound(position);
 	}
 	
-	/**Intended as an update method TODO fill in the description later*/
+	/**
+	 * Updates the current entity. Relies on being called regularly
+	 * on every entity to perform their operations regularly.
+	 */
 	public abstract void poke();
+	
+
+	/**
+	 * Returns whether the Entity is solid and should be used
+	 * for collision detection on the physical level.
+	 * 
+	 * @return Whether the Entity is solid/impassable
+	 */
+	public abstract boolean isSolid();
+	
 	
 	/**
 	 * Returns the bound of the given position of this entity.
@@ -97,5 +127,4 @@ public abstract class Entity implements ReferenceFrame {
 	 */
 	protected abstract Bound getBound(Vec3 position);
 	
-	public abstract boolean isSolid();
 }
