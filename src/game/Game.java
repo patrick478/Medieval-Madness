@@ -42,7 +42,7 @@ public class Game implements Runnable {
 	private NetworkingHost nhost = null;
 	private int playerIndex = -1;
 	
-	private Level currentLevel;//TODO
+	private Level currentLevel = null;//TODO
 	
 	private long predictedLatency = 0;
 	
