@@ -41,14 +41,17 @@ final class TrianglePerspectiveRasteriser {
 	}
 
 	/**
-	 * Rasterise a triangle with nothing interpolated. Algorithm based (heavily) on <a
-	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this article</a>.
+	 * Rasterise a triangle with nothing interpolated. Algorithm based (heavily)
+	 * on <a
+	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this
+	 * article</a>.
 	 */
 	static final void rasteriseTriangle(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
 		// THIS LINE IS ONLY FOR DEBUGGING SEGFAULTS
 		// verifyTriangle(unsafe, pBase, pTri);
 
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 
 		// check deleted
@@ -82,7 +85,8 @@ final class TrianglePerspectiveRasteriser {
 		final int q = 8;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements x,y view frustum culling)
+		// also skip if no visible area (this implements x,y view frustum
+		// culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
 		int maxx = (max(X1, max(X2, X3)) + 0xF) >> 4;
 		minx = max(minx, 0);
@@ -183,7 +187,8 @@ final class TrianglePerspectiveRasteriser {
 						for (int ix = x + offset; ix < j; ++ix) {
 
 							// hold on...
-							// if flat or gourard, write predetermined color ( * texture color) to color buffer
+							// if flat or gourard, write predetermined color ( *
+							// texture color) to color buffer
 							// if phong, run phong equation
 
 							// colorwrite, if enabled
@@ -247,14 +252,17 @@ final class TrianglePerspectiveRasteriser {
 	}
 
 	/**
-	 * Rasterise a triangle with only inverse z interpolated. Algorithm based (heavily) on <a
-	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this article</a>.
+	 * Rasterise a triangle with only inverse z interpolated. Algorithm based
+	 * (heavily) on <a
+	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this
+	 * article</a>.
 	 */
 	static final void rasteriseTriangle_z(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
 		// THIS LINE IS ONLY FOR DEBUGGING SEGFAULTS
 		// verifyTriangle(unsafe, pBase, pTri);
 
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 
 		// check deleted
@@ -289,7 +297,8 @@ final class TrianglePerspectiveRasteriser {
 		final int q = 8;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements x,y view frustum culling)
+		// also skip if no visible area (this implements x,y view frustum
+		// culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
 		int maxx = (max(X1, max(X2, X3)) + 0xF) >> 4;
 		minx = max(minx, 0);
@@ -428,10 +437,12 @@ final class TrianglePerspectiveRasteriser {
 							if (iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
 
 								// hold on...
-								// if flat or gourard, write predetermined color ( * texture color) to color buffer
+								// if flat or gourard, write predetermined color
+								// ( * texture color) to color buffer
 								// if phong, run phong equation
 
-								// zwrite, if enabled and TODO depth test enabled
+								// zwrite, if enabled and TODO depth test
+								// enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
@@ -508,7 +519,8 @@ final class TrianglePerspectiveRasteriser {
 
 	/** Interpolate vertex colors. */
 	static final void rasteriseTriangle_z_color(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 
 		// check deleted
@@ -543,7 +555,8 @@ final class TrianglePerspectiveRasteriser {
 		final int q = 8;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements (limited) x,y view frustum culling)
+		// also skip if no visible area (this implements (limited) x,y view
+		// frustum culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
 		int maxx = (max(X1, max(X2, X3)) + 0xF) >> 4;
 		minx = max(minx, 0);
@@ -724,17 +737,22 @@ final class TrianglePerspectiveRasteriser {
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
 								// hold on...
-								// if flat or gourard, write predetermined color ( * texture color) to color buffer
+								// if flat or gourard, write predetermined color
+								// ( * texture color) to color buffer
 								// if phong, run phong equation
 
-								// zwrite, if enabled and TODO depth test enabled
+								// zwrite, if enabled and TODO depth test
+								// enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-									// unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-									// unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-									// unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+									// unsafe.putFloat(pColor + ix * 16 + 4,
+									// clamp(cR, cRmin, cRmax));
+									// unsafe.putFloat(pColor + ix * 16 + 8,
+									// clamp(cG, cGmin, cGmax));
+									// unsafe.putFloat(pColor + ix * 16 + 12,
+									// clamp(cB, cBmin, cBmax));
 
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
@@ -781,9 +799,12 @@ final class TrianglePerspectiveRasteriser {
 
 								// colorwrite, if enabled
 								if ((flags & 0x80000L) != 0) {
-									// unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
-									// unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
-									// unsafe.putFloat(pColor + ix * 16 + 12, clamp(cB, cBmin, cBmax));
+									// unsafe.putFloat(pColor + ix * 16 + 4,
+									// clamp(cR, cRmin, cRmax));
+									// unsafe.putFloat(pColor + ix * 16 + 8,
+									// clamp(cG, cGmin, cGmax));
+									// unsafe.putFloat(pColor + ix * 16 + 12,
+									// clamp(cB, cBmin, cBmax));
 
 									unsafe.putFloat(pColor + ix * 16 + 4, clamp(cR, cRmin, cRmax));
 									unsafe.putFloat(pColor + ix * 16 + 8, clamp(cG, cGmin, cGmax));
@@ -829,14 +850,17 @@ final class TrianglePerspectiveRasteriser {
 	}
 
 	/**
-	 * Rasterise a triangle with inverse z and texture u,v interpolated. Algorithm based (heavily) on <a
-	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this article</a>.
+	 * Rasterise a triangle with inverse z and texture u,v interpolated.
+	 * Algorithm based (heavily) on <a
+	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this
+	 * article</a>.
 	 */
 	static final void rasteriseTriangle_z_uv(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
 		// THIS LINE IS ONLY FOR DEBUGGING SEGFAULTS
 		// verifyTriangle(unsafe, pBase, pTri);
 
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 
 		// check deleted
@@ -872,7 +896,8 @@ final class TrianglePerspectiveRasteriser {
 		final float iq = 1f / q;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements x,y view frustum culling)
+		// also skip if no visible area (this implements x,y view frustum
+		// culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
 		int maxx = (max(X1, max(X2, X3)) + 0xF) >> 4;
 		minx = max(minx, 0);
@@ -1059,7 +1084,8 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dx = ((ViZoffset + dViZ_dqx) * iiZq0 - Voffset) * iq;
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
-				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
+				// want mipmap level where this corresponds to at most 1 and
+				// greater than 0.5 texels
 				float dUV_dxy_approx = min(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
 				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_approx) + 0x00140000) & 0x7F800000) >>> 23);
@@ -1078,6 +1104,7 @@ final class TrianglePerspectiveRasteriser {
 
 								// texture fetch
 								int qTx_kd = TextureImpl.getTextureOffset(U, V, map_kd_level);
+								float opacity = unsafe.getFloat(pMap_kd + qTx_kd);
 								float kd_r = unsafe.getFloat(pMap_kd + qTx_kd + 4);
 								float kd_g = unsafe.getFloat(pMap_kd + qTx_kd + 8);
 								float kd_b = unsafe.getFloat(pMap_kd + qTx_kd + 12);
@@ -1087,18 +1114,23 @@ final class TrianglePerspectiveRasteriser {
 								float ke_g = unsafe.getFloat(pMap_ke + qTx_ke + 8);
 								float ke_b = unsafe.getFloat(pMap_ke + qTx_ke + 12);
 
-								// zwrite, if enabled and TODO depth test enabled
-								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
+								if (opacity > 0.5f) {
 
-								// colorwrite, if enabled
-								if ((flags & 0x80000L) != 0) {
-									unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
-									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
-									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
-								}
+									// zwrite, if enabled and TODO depth test
+									// enabled
+									if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
-								if ((flags & 0x400000L) != 0) {
-									unsafe.putInt(pID + ix * 4, objid);
+									// colorwrite, if enabled
+									if ((flags & 0x80000L) != 0) {
+										unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
+										unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
+										unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
+									}
+
+									if ((flags & 0x400000L) != 0) {
+										unsafe.putInt(pID + ix * 4, objid);
+									}
+
 								}
 
 							}
@@ -1131,6 +1163,7 @@ final class TrianglePerspectiveRasteriser {
 
 								// texture fetch
 								int qTx_kd = TextureImpl.getTextureOffset(U, V, map_kd_level);
+								float opacity = unsafe.getFloat(pMap_kd + qTx_kd);
 								float kd_r = unsafe.getFloat(pMap_kd + qTx_kd + 4);
 								float kd_g = unsafe.getFloat(pMap_kd + qTx_kd + 8);
 								float kd_b = unsafe.getFloat(pMap_kd + qTx_kd + 12);
@@ -1140,18 +1173,22 @@ final class TrianglePerspectiveRasteriser {
 								float ke_g = unsafe.getFloat(pMap_ke + qTx_ke + 8);
 								float ke_b = unsafe.getFloat(pMap_ke + qTx_ke + 12);
 
-								// zwrite, if enabled and TODO depth test enabled
-								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
+								if (opacity > 0.5f) {
 
-								// colorwrite, if enabled
-								if ((flags & 0x80000L) != 0) {
-									unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
-									unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
-									unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
-								}
+									// zwrite, if enabled and TODO depth test
+									// enabled
+									if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
-								if ((flags & 0x400000L) != 0) {
-									unsafe.putInt(pID + ix * 4, objid);
+									// colorwrite, if enabled
+									if ((flags & 0x80000L) != 0) {
+										unsafe.putFloat(pColor + ix * 16 + 4, col_r * kd_r + ke_r);
+										unsafe.putFloat(pColor + ix * 16 + 8, col_g * kd_g + ke_g);
+										unsafe.putFloat(pColor + ix * 16 + 12, col_b * kd_b + ke_b);
+									}
+
+									if ((flags & 0x400000L) != 0) {
+										unsafe.putInt(pID + ix * 4, objid);
+									}
 								}
 
 							}
@@ -1189,11 +1226,14 @@ final class TrianglePerspectiveRasteriser {
 	}
 
 	/**
-	 * Rasterise a triangle with inverse z, vertex colors and texture u,v interpolated. Algorithm based (heavily) on <a
-	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this article</a>.
+	 * Rasterise a triangle with inverse z, vertex colors and texture u,v
+	 * interpolated. Algorithm based (heavily) on <a
+	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this
+	 * article</a>.
 	 */
 	static final void rasteriseTriangle_z_color_uv(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 
 		// check deleted
@@ -1229,7 +1269,8 @@ final class TrianglePerspectiveRasteriser {
 		final float iq = 1f / q;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements (limited) x,y view frustum culling)
+		// also skip if no visible area (this implements (limited) x,y view
+		// frustum culling)
 		int minx = (min(X1, min(X2, X3)) + 0xF) >> 4;
 		int maxx = (max(X1, max(X2, X3)) + 0xF) >> 4;
 		minx = max(minx, 0);
@@ -1457,7 +1498,8 @@ final class TrianglePerspectiveRasteriser {
 				float dV_dx = ((ViZoffset + dViZ_dqx) * iiZq0 - Voffset) * iq;
 				float dV_dy = ((ViZoffset + dViZ_dqy) * iiZ0q - Voffset) * iq;
 
-				// want mipmap level where this corresponds to at most 1 and greater than 0.5 texels
+				// want mipmap level where this corresponds to at most 1 and
+				// greater than 0.5 texels
 				float dUV_dxy_approx = min(abs(dU_dx) + abs(dU_dy), abs(dV_dx) + abs(dV_dy));
 				// float exponent -1 => level 0, exponent -2 => level 1
 				int mmlevel = 126 - (((Float.floatToRawIntBits(dUV_dxy_approx) + 0x00140000) & 0x7F800000) >>> 23);
@@ -1488,7 +1530,8 @@ final class TrianglePerspectiveRasteriser {
 								float ke_g = unsafe.getFloat(pMap_ke + qTx_ke + 8);
 								float ke_b = unsafe.getFloat(pMap_ke + qTx_ke + 12);
 
-								// zwrite, if enabled and TODO depth test enabled
+								// zwrite, if enabled and TODO depth test
+								// enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
@@ -1550,7 +1593,8 @@ final class TrianglePerspectiveRasteriser {
 								float ke_g = unsafe.getFloat(pMap_ke + qTx_ke + 8);
 								float ke_b = unsafe.getFloat(pMap_ke + qTx_ke + 12);
 
-								// zwrite, if enabled and TODO depth test enabled
+								// zwrite, if enabled and TODO depth test
+								// enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled
@@ -1609,7 +1653,8 @@ final class TrianglePerspectiveRasteriser {
 
 	/** Interpolate vertex normals and positions (phong N and V). */
 	static final void rasteriseTriangle_nv(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
-		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0, (long) pvn0, (long) pvv0, {16},
+		// [ (int) tri_norm_zsign, (int) flags, {56} | (long) pv0, (long) pvt0,
+		// (long) pvn0, (long) pvv0, {16},
 		// (float4) vlight0 | <v*1> | <v*2> ]
 		// check deleted
 		if ((unsafe.getInt(pTri + 4) & 0x1) != 0) return;
@@ -1648,7 +1693,8 @@ final class TrianglePerspectiveRasteriser {
 		final float iq = 1f / q;
 
 		// bounding rectangle, clamped to screen bounds
-		// also skip if no visible area (this implements x,y view frustum culling)
+		// also skip if no visible area (this implements x,y view frustum
+		// culling)
 		int minx = (Math.min(X1, Math.min(X2, X3)) + 0xF) >> 4;
 		int maxx = (Math.max(X1, Math.max(X2, X3)) + 0xF) >> 4;
 		minx = Math.max(minx, 0);
@@ -1864,7 +1910,8 @@ final class TrianglePerspectiveRasteriser {
 						for (int ix = x + offset; ix < j; ++ix) {
 							if (iZ > zsign * unsafe.getFloat(pZ + ix * 4)) {
 
-								// zwrite, if enabled and TODO depth test enabled
+								// zwrite, if enabled and TODO depth test
+								// enabled
 								if ((flags & 0x100000L) != 0) unsafe.putFloat(pZ + ix * 4, iZ * zsign);
 
 								// colorwrite, if enabled

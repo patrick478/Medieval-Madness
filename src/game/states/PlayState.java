@@ -66,6 +66,7 @@ public class PlayState extends GameState {
 		p.getRoot().add(i);
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
+		p.getRoot().setOpaque(false);
 		scene.addDrawable(p);
 		
 		

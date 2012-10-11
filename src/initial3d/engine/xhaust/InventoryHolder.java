@@ -26,12 +26,20 @@ public class InventoryHolder extends Container {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// TODO Auto-generated constructor stub
+		
+		setOpaque(false);
+		
 		first = new Picture(blank, 0, 0, 50, 50);
 		second = new Picture(blank, 50, 0, 50, 50);
 		third = new Picture(blank, 100, 0, 50, 50);
 		fourth = new Picture(blank, 150, 0, 50, 50);
 		fifth = new Picture(blank, 200, 0, 50, 50);
+		
+		first.setOpaque(false);
+		second.setOpaque(false);
+		third.setOpaque(false);
+		fourth.setOpaque(false);
+		fifth.setOpaque(false);
 		
 		add(first);
 		add(second);
