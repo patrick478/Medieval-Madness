@@ -11,10 +11,10 @@ public abstract class AbstractLevelPlanner {
 	public AbstractLevelPlanner(long _seed){
 		seed = _seed;
 	}
-	public abstract List<Entity> populateFloor(int size);
 	
-	public long getSeed()
-	{
+	public long getSeed(){
 		return this.seed;
 	}
+	
+	public abstract Level designLevel(Floor _floor);
 }
