@@ -6,10 +6,21 @@ import initial3d.linearmath.Matrix;
 
 public class MeshContext extends Drawable {
 
+	public static final double DEFAULT_NEAR_CLIP = SceneManager.NEAR_PLANE + 0.01;
+	public static final double DEFAULT_FAR_CULL = SceneManager.FAR_PLANE;
+
+	public static final int HINT_SMOOTH_SHADING = 0x1;
+
+	private final Object lock_hints = new Object();
+	private volatile int hintflags;
+
 	private final Mesh mesh;
 	private Material mtl;
 	private ReferenceFrame rf;
 	private double scale = 1;
+
+	private double near_clip = DEFAULT_NEAR_CLIP;
+	private double far_cull = DEFAULT_FAR_CULL;
 
 	private final double[][] xformtemp = Matrix.create(4, 4);
 	private final float[] coltemp = new float[3];
@@ -42,6 +53,40 @@ public class MeshContext extends Drawable {
 		scale = scale_;
 	}
 
+	public final void setNearClip(double d) {
+		near_clip = d;
+	}
+
+	public final void setFarCull(double d) {
+		far_cull = d;
+	}
+
+	public final double getNearClip() {
+		return near_clip;
+	}
+
+	public final double getFarCull() {
+		return far_cull;
+	}
+
+	public final void setHint(int hint) {
+		synchronized (lock_hints) {
+			hintflags |= hint;
+		}
+	}
+
+	public final void unsetHint(int hint) {
+		synchronized (lock_hints) {
+			hintflags &= ~hint;
+		}
+	}
+
+	public final boolean checkHint(int hint) {
+		synchronized (lock_hints) {
+			return (hintflags & hint) == hint;
+		}
+	}
+
 	public final void trackReferenceFrame(ReferenceFrame rf_) {
 		rf = rf_ == null ? ReferenceFrame.SCENE_ROOT : rf_;
 	}
@@ -52,6 +97,9 @@ public class MeshContext extends Drawable {
 
 	@Override
 	protected final void draw(Initial3D i3d, int framewidth, int frameheight) {
+
+		i3d.nearClip(near_clip);
+		i3d.farCull(far_cull);
 
 		i3d.matrixMode(MODEL);
 		i3d.pushMatrix();
@@ -79,6 +127,10 @@ public class MeshContext extends Drawable {
 		i3d.normalData(mlod.normals);
 
 		i3d.objectID(getDrawIDStart());
+		
+		if (checkHint(HINT_SMOOTH_SHADING)) {
+			i3d.shadeModel(SHADEMODEL_GOURARD);
+		}
 
 		i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
 

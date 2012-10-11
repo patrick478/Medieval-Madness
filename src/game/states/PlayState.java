@@ -91,6 +91,10 @@ public class PlayState extends GameState {
 		
 		Light l2 = new Light.SphericalPointLight(game.player, Color.GREEN, 0.5f);
 		scene.addLight(l2);
+		
+		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		
 	}
 
 	@Override

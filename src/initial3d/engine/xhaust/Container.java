@@ -16,8 +16,31 @@ public class Container extends Component {
 	}
 
 	public void add(Component c) {
+		if (c.getPane() != null) {
+			throw new IllegalArgumentException("Cannot add a component to more than one pane.");
+		}
 		children.add(c);
 		c.setParent(this);
+		c.setPane(getPane());
+	}
+
+	public boolean remove(Component c) {
+		if (children.remove(c)) {
+			c.setParent(null);
+			c.setPane(null);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean contains(Component c) {
+		if (super.contains(c)) return true;
+		for (Component c2 : children) {
+			if (c2.contains(c)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -44,10 +67,10 @@ public class Container extends Component {
 	}
 
 	@Override
-	boolean pollRepainted() {
-		boolean r = super.pollRepainted();
+	boolean repainted() {
+		boolean r = super.repainted();
 		for (Component c : children) {
-			r |= c.pollRepainted();
+			r |= c.repainted();
 		}
 		return r;
 	}

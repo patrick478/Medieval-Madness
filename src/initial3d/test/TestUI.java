@@ -14,6 +14,7 @@ import comp261.modelview.MeshLoader;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.ButtonV0;
 import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Pane;
 
 public class TestUI {
@@ -106,10 +107,33 @@ public class TestUI {
 		p.getRoot().add(c);
 		p.getRoot().add(c1);
 		p.getRoot().add(c2);
+		
+		p.setRotation(Math.PI / 4);
 
 		p.requestVisible(true);
 
 		scene.addDrawable(p);
+		
+		Thread.sleep(2000);
+		
+		final DialogPane dp = new DialogPane(200, 200, p, true);
+		
+		final Component b = new ButtonV0(40, 20, "DIE");
+		
+		dp.getRoot().add(b);
+		
+		b.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dp.requestRemoval();
+			}
+			
+		});
+		
+		dp.requestVisible(true);
+		
+		scene.addDrawable(dp);
 
 		MovableReferenceFrame camera_rf = new MovableReferenceFrame(null);
 		scene.getCamera().trackReferenceFrame(camera_rf);
@@ -117,6 +141,11 @@ public class TestUI {
 		camera_rf.setOrientation(Quat.create(Math.PI / 16, Vec3.i));
 
 		camera_rf.setOrientation(camera_rf.getOrientation().mul(Quat.create(Math.PI / 4, Vec3.j)));
+		
+//		while (true) {
+//			p.setRotation(p.getRotation() + Math.PI / 60);
+//			Thread.sleep(33);
+//		}
 
 	}
 

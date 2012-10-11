@@ -166,12 +166,12 @@ public class Scene {
 			Drawable d = remove_drawable.poll();
 			drawables.remove(d);
 			if (d.equals(focused)) focused = null;
-			d.onSceneRemove(this);
+			d.notifySceneRemove(this);
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0 && !add_drawable.isEmpty();) {
 			Drawable d = add_drawable.poll();
 			drawables.add(d);
-			d.onSceneAdd(this);
+			d.notifySceneAdd(this);
 		}
 		for (int i = CHANGE_LIMIT; i-- > 0 && !remove_light.isEmpty();) {
 			lights.remove(remove_light.poll());

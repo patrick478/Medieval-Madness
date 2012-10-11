@@ -239,6 +239,8 @@ public class Floor {
 		rf.setPosition(Vec3.create(-0.5, 0, -0.5));
 		MeshContext mesh_con = new MeshContext(mesh, floor_mtl, rf);
 		
+		mesh_con.setFarCull(10);
+		
 		return mesh_con;
 	}
 	

@@ -22,8 +22,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 	// note: near clip must be further than near plane, far cull is independent
 	// of far plane setting
-	private static final double NEAR_PLANE = 0.1;
-	private static final double FAR_PLANE = 9001;
+	public static final double NEAR_PLANE = 0.1;
+	public static final double FAR_PLANE = 9001;
 
 	private final int width, height;
 
@@ -214,11 +214,8 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 											i3d.disable(WRITE_ID);
 										}
 
-										// near clip + far cull
-										i3d.nearClip(0.2);
-										i3d.farCull(8800);
-
 										i3d.enable(LIGHTING | DEPTH_TEST | WRITE_COLOR | WRITE_Z);
+										i3d.shadeModel(SHADEMODEL_FLAT);
 										d.draw(i3d, width, height);
 
 									}
