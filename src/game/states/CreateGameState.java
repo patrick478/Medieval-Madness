@@ -2,7 +2,10 @@ package game.states;
 
 import initial3d.engine.xhaust.Pane;
 import initial3d.engine.xhaust.Picture;
-import initial3d.engine.xhaust.TextFieldV0;
+import initial3d.engine.xhaust.vision.ActionIDList;
+import initial3d.engine.xhaust.vision.Button;
+import initial3d.engine.xhaust.vision.Input;
+import initial3d.engine.xhaust.vision.Label;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +30,9 @@ public class CreateGameState extends GameState {
 	}
 	
 	Picture pic;
-	TextFieldV0 numPlayers;
+	Input numPlayers;
+	Label numPlayersLabel;
+	Button createGameButton;
 
 	@Override
 	public void initalise() {
@@ -41,13 +46,19 @@ public class CreateGameState extends GameState {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		numPlayers = new TextFieldV0(80, 32);
+		
+		numPlayersLabel = new Label("Max players: ");
+		numPlayersLabel.setPosition(20,  100);
+		numPlayers = new Input(30);
 		numPlayers.setNumericOnly(true);
-		numPlayers.setPosition(100, 100);
-		numPlayers.addActionListener(new ActionListener() {
-
+		numPlayers.setPosition(110, 100);
+		
+		createGameButton = new Button("Create Game");
+		createGameButton.setPosition(300, 200);
+		createGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
 				Game.getInstance().setHost(new NetworkingHost());
 				Game.getInstance().getHost().setNumPlayers(Integer.parseInt(numPlayers.getText()));
 				Game.getInstance().getHost().start();
@@ -59,13 +70,14 @@ public class CreateGameState extends GameState {
 			}
 		});
 		
-		pic = new Picture(bg ,0,0, 800,600);
+		pic = new Picture(bg, 0, 0, 800, 600);
 		
 		p.getRoot().add(pic);
+		p.getRoot().add(numPlayersLabel);
 		p.getRoot().add(numPlayers);
+		p.getRoot().add(createGameButton);
+		p.setPosition(0, 0);
 		numPlayers.requestLocalFocus();
-		
-		
 		
 		scene.addDrawable(p);
 

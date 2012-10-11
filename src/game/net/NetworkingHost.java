@@ -1,6 +1,7 @@
 package game.net;
 
 import game.net.packets.EnterGamePacket;
+import game.net.packets.MovementPacket;
 import game.net.packets.PingPacket;
 import game.net.packets.WelcomePacket;
 
@@ -270,5 +271,17 @@ public class NetworkingHost extends NetworkMode implements Runnable
 //			sc.send(packet.toData());
 //		}
 //	}
+
+	public void updateOthersOnMovements(ServerClient client) {
+		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
+		for(ServerClient sc : this.clients.values())
+		{
+			if(sc.equals(client))
+				continue;
+			
+			
+			this.send(sc.getSocket(), packet.toData().getData());
+		}
+	}
 
 }

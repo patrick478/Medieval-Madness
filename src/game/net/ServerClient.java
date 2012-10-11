@@ -48,6 +48,7 @@ public class ServerClient
 	}
 
 	public Vec3 getPosition() {
+		// FIXME: Scaling via time etc - or something
 		return this.position;
 	}
 	

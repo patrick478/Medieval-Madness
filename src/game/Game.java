@@ -46,7 +46,7 @@ public class Game implements Runnable {
 	private int maxPlayers = 1;
 	
 	public PlayerEntity player = null;
-	private List<PlayerEntity> players = new ArrayList<PlayerEntity>();
+	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
 	
 	private Game()
 	{
@@ -230,7 +230,7 @@ public class Game implements Runnable {
 	
 	public void addPlayer(int index, PlayerEntity e)
 	{
-		this.players.add(index,  e);
+		this.players.put(index,  e);
 	}
 
 	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity)

@@ -4,6 +4,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import common.DataPacket;
+import game.net.packets.MovementPacket;
 import game.net.packets.PingPacket;
 
 public class ServerWorker implements Runnable 
@@ -68,6 +69,15 @@ public class ServerWorker implements Runnable
 					this.server.send(client.getSocket(),  syncPacket.toData().getData());
 					client.sentSync();
 				}
+			break;
+			
+			case MovementPacket.ID:
+				MovementPacket mp = new MovementPacket();
+				mp.fromData(dp);
+				client.setPosition(mp.position);
+				client.setVelocity(mp.velocity);
+				
+				this.server.updateOthersOnMovements(client);
 			break;
 		}
 	}

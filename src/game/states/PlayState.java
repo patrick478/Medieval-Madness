@@ -41,7 +41,7 @@ public class PlayState extends GameState {
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(0, 0.5, -0.9));
+		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
 		InventoryHolder i = new InventoryHolder();
@@ -60,8 +60,8 @@ public class PlayState extends GameState {
 		scene.setFogEnabled(true);
 		
 		// Enable this for a sun like effect - ie more ambient light
-		//Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
-		//scene.addLight(l);
+		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, new Color(30, 30, 30), Vec3.create(0, 1, 1));
+		scene.addLight(l);
 		
 		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
@@ -117,6 +117,11 @@ public class PlayState extends GameState {
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
 		} else if(rwin.getKey(KeyEvent.VK_P)) {
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
+		}
+		
+		if(rwin.getKey(KeyEvent.VK_ESCAPE))
+		{
+			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		}
 		
 		double maxDelta = 0.01;
