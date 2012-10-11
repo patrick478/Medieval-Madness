@@ -43,11 +43,11 @@ public class MainMenuGUIState extends GameState {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("released")){
 				if(e.getSource().equals(joinArea)){
-				SimpleAudioPlayer.stopMusic();
+				//SimpleAudioPlayer.stopMusic();
 					game.changeState(new FindGameState(game));
 				}
 				else if(e.getSource().equals(startArea)){
-					SimpleAudioPlayer.stopMusic();
+					//SimpleAudioPlayer.stopMusic();
 					game.changeState(new CreateGameState(game));
 				}
 
@@ -86,7 +86,7 @@ public class MainMenuGUIState extends GameState {
 
 	@Override
 	public void initalise() {
-		SimpleAudioPlayer.play("resources/menumusic.wav");
+		//SimpleAudioPlayer.play("resources/menumusic.wav");
 		Pane p = new Pane(800, 600);
 
 		//stuff
@@ -100,9 +100,9 @@ public class MainMenuGUIState extends GameState {
 			BufferedImage rightArrow = ImageIO.read(new File("resources/rightarrow.png"));
 			BufferedImage leftArrow = ImageIO.read(new File("resources/leftarrow.png"));
 			leftTop = new Picture(leftArrow, 240, 345,35,35);
-			leftBottom = new Picture(leftArrow, 200, 407,35,35);
+			leftBottom = new Picture(leftArrow, 225, 407,35,35);
 			rightTop = new Picture(rightArrow, 525, 345,35,35);
-			rightBottom = new Picture(rightArrow, 570, 407,35,35);
+			rightBottom = new Picture(rightArrow, 540, 407,35,35);
 
 			
 

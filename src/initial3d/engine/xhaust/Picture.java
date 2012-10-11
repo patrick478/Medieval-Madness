@@ -2,13 +2,14 @@ package initial3d.engine.xhaust;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class Picture extends Component{
 	private Boolean isVisible = true;
-	Image img;
+	BufferedImage img;
 
 	
-	public Picture(Image i, int x, int y, int width_, int height_) {
+	public Picture(BufferedImage i, int x, int y, int width_, int height_) {
 		super(width_, height_);
 		img = i;
 		this.setPosition(x, y);
@@ -23,7 +24,7 @@ public class Picture extends Component{
 		isVisible = false;
 	}
 
-	public void setPicture(Image img){
+	public void setPicture(BufferedImage img){
 		this.img = img;
 		repaint();
 	}

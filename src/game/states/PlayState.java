@@ -3,6 +3,8 @@ package game.states;
 import java.awt.event.KeyEvent;
 
 import initial3d.engine.*;
+import initial3d.engine.xhaust.InventoryHolder;
+import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
@@ -48,41 +50,27 @@ public class PlayState extends GameState {
 			game.players[i].addToScene(scene);
 		}
 
+		
 		FloorGenerator fg = new FloorGenerator(123873123312l);
 		floor = fg.getFloor(2);
 		floor.addToScene(scene);
-		
-//		for(WallEntity we : floor.getWalls())
-//		{
-//			we.addToScene(scene);
-//		}
-//
-//		MeshLOD mlod = new MeshLOD(1, 5, 5, 5, 5, 5);
-//		mlod.addVertex(-0.5, 0, -0.5);
-//		mlod.addVertex(-0.5, 0, 0.5);
-//		mlod.addVertex(0.5, 0, -0.5);
-//		mlod.addVertex(0.5, 0, 0.5);
-//		mlod.addPolygon(new int[] { 1, 2, 4, 3 }, null, null, null);
-//		Mesh floorMesh = new Mesh();
-//		floorMesh.add(mlod);
-//
-//		Material mat = new Material(Color.BLACK, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(
-//				0f, 0f, 0f), 1f, 1f);
-//		MovableReferenceFrame floorRf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
-//		floorRf.setPosition(Vec3.create(5, -0.5, 5));
-//		MeshContext mc = new MeshContext(floorMesh, mat, floorRf);
-//		mc.setScale(10);
-//		scene.addDrawable(mc);
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.3, -0.5));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
+		Pane p = new Pane(250, 50);
+		InventoryHolder i = new InventoryHolder();
+		p.getRoot().add(i);
+		p.requestVisible(true);
+		p.setPosition(-275, -275);
+		scene.addDrawable(p);
+		
 		
 		game.getWindow().setMouseCapture(true);
 		
 		scene.setAmbient(new Color(0.2f, 0.2f, 0.2f));
-		scene.setFogColor(Color.GRAY);
+		scene.setFogColor(Color.BLACK);
 		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
 		scene.setFogEnabled(true);
 		
@@ -93,7 +81,6 @@ public class PlayState extends GameState {
 		scene.addLight(l2);
 		
 		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
-		
 		
 	}
 
@@ -159,9 +146,9 @@ public class PlayState extends GameState {
 		}
 		
 //		for(WallEntity w : floor.getWalls()){
-//			if(w.getBound().intersects(game.player.getBound())){
+//			if(w.getBound().intersects(game.player.getNextBound())){
 //				System.out.println("denied");
-//				game.player.setVelocity(Vec3.zero);
+//				game.player.fix();
 //				break;
 //			}
 //		}

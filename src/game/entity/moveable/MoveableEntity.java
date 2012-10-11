@@ -5,6 +5,13 @@ import game.entity.Entity;
 import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 
+/**
+ * An abstract representation of an Entity that has the capability to
+ * move and update itself in the world.
+ * 
+ * @author scottjosh
+ *
+ */
 public abstract class MoveableEntity extends Entity{
 
 	protected Vec3 linVelocity = Vec3.zero;
@@ -50,13 +57,29 @@ public abstract class MoveableEntity extends Entity{
 	}
 	
 	/**
-	 * Stops the motion of the MoveableEntity
+	 * Stops the motion of the MoveableEntity, should be called
+	 * when the MoveableEntity's last position is the intended
+	 * position.
 	 */
 	public void fix(){
 		linVelocity = Vec3.zero;
 	}
 	
+	/**
+	 * Updates the position, linear velocity, orientation, angular velocity
+	 * of the entity and allows it to regulate it's position by supplying it
+	 * with timestamp. Does not accept null for any parameter.
+	 * 
+	 * @param _pos The position of the MoveableEntity at the given time
+	 * @param _linvel The linear velocity of the MoveableEntity at the given time
+	 * @param _orient The orientation of the MoveableEntity at the given time
+	 * @param _angvel The angular velocity of the MoveableEntity at the given time
+	 * @param _timeStamp The time in which the update originally occurred.
+	 */
 	public void updateMotion(Vec3 _pos, Vec3 _linvel, Quat _orient, Vec3 _angvel, long _timeStamp){
+		if(_pos==null || _linvel==null || _orient==null || _angvel==null){
+			throw new IllegalArgumentException("Values passed cannot be null");
+		}
 		position = _pos;
 		linVelocity = _linvel;
 		orientation = _orient;
