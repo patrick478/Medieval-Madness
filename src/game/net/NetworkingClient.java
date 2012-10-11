@@ -20,7 +20,9 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 	DataInputStream in;
 	DataOutputStream out;
 	
-	BufferQueue bq = new BufferQueue(8096);
+	private static final int BUFFER_SIZE = 80000;
+	
+	BufferQueue bq = new BufferQueue(BUFFER_SIZE);
 	BlockingQueue<DataPacket> dataPackets = new LinkedBlockingQueue<DataPacket>();
 	
 	@Override
@@ -60,10 +62,10 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		
 		while(true)
 		{
-			byte data[] = new byte[8192];
+			byte data[] = new byte[BUFFER_SIZE];
 			int rx = -1;
 			try {
-				rx = this.in.read(data, 0, 8192);
+				rx = this.in.read(data, 0, BUFFER_SIZE);
 			} catch(EOFException e) {
 				break;
 			} catch (IOException e) {

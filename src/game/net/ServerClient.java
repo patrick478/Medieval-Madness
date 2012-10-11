@@ -24,7 +24,9 @@ public class ServerClient
 	public int syncsLeft = 5;
 	public long lastSync = System.currentTimeMillis();
 	
-	BufferQueue bq = new BufferQueue(8096);
+	static final int BUFFER_SIZE = 80000;
+	
+	BufferQueue bq = new BufferQueue(BUFFER_SIZE);
 	public BlockingQueue<DataPacket> dataPackets = new LinkedBlockingQueue<DataPacket>();
 	
 	private int playerIndex = -1;

@@ -52,7 +52,7 @@ public class PlayState extends GameState {
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(0, 0.3, -0.5));
+		cameraRf.setPosition(Vec3.create(0, 0.5, -0.9));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
 		InventoryHolder i = new InventoryHolder();
@@ -76,10 +76,7 @@ public class PlayState extends GameState {
 		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
 		
-		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
-		
-		game.player.getMeshContexts().get(0).requestVisible(false);
-		
+		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);		
 	}
 
 	@Override

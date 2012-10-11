@@ -60,12 +60,12 @@ public class ServerWorker implements Runnable
 		
 		while(true)
 		{
-			byte[] data = new byte[8192];
+			byte[] data = new byte[ServerClient.BUFFER_SIZE];
 			int rx = -1;
 			try {
-				rx = client.in.read(data, 0, 8192);
+				rx = client.in.read(data, 0, ServerClient.BUFFER_SIZE);
 			} catch (IOException e) {
-				e.printStackTrace();
+				break;
 			}
 			
 			if(rx < 0) break;
