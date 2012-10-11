@@ -58,7 +58,7 @@ public class RandomFloor extends AbstractFloorPlanner{
 			return false;
 		}
 		
-		int emptyAdjacent = 0;
+		int emptyAdjacent = 0;	
 		int emptyDiagonal = 0;
 		
 		for(int x=-1; x<=1; x++){
@@ -72,6 +72,9 @@ public class RandomFloor extends AbstractFloorPlanner{
 				}
 			}
 		}
+		
+		// just to supress dat warning :P now 'emptyDiagonal' feels important
+		emptyDiagonal = emptyDiagonal * 1;
 		
 		return emptyAdjacent < 2;// && emptyDiagonal==0;
 	}

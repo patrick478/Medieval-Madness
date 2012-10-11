@@ -15,6 +15,11 @@ public class LevelGenerator {
 		floorGen = new FloorGenerator(_seed);
 	}
 	
+	public long getSeed()
+	{
+		return this.seed;
+	}
+	
 	public Level getLevel(int _level){
 		Floor floor = floorGen.getFloor(_level);
 		

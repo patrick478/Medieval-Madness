@@ -1,6 +1,5 @@
 package initial3d.engine.xhaust;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -30,7 +29,6 @@ public class MouseArea extends Component{
 		case MouseEvent.MOUSE_RELEASED:
 			if (mousedown) {
 				// fire action event
-				// TODO how do i constructed action event?
 				ActionEvent ae = new ActionEvent(this, 0, "released");
 				dispatchActionEvent(ae);
 			}
@@ -47,6 +45,16 @@ public class MouseArea extends Component{
 			mouseover = false;
 		}
 		repaint();
+	}
+	
+	public boolean isMouseDown()
+	{
+		return this.mousedown;
+	}
+	
+	public boolean isMouseOver()
+	{
+		return this.mouseover;
 	}
 
 }

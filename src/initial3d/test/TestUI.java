@@ -5,12 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
-
-import comp261.modelview.MeshLoader;
-
 import initial3d.engine.*;
 import initial3d.engine.xhaust.ButtonV0;
 import initial3d.engine.xhaust.Component;

@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import game.Game;
 import game.GameState;
 import game.net.NetworkingClient;
-import game.net.NetworkingHost;
 
 /***
  * This state will display a list of games to join and allow a user to join a game

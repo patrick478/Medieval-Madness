@@ -1,6 +1,5 @@
 package game.states;
 
-import initial3d.engine.xhaust.LabelV0;
 import initial3d.engine.xhaust.Pane;
 import initial3d.engine.xhaust.Picture;
 import initial3d.engine.xhaust.TextFieldV0;
@@ -52,9 +51,10 @@ public class CreateGameState extends GameState {
 				Game.getInstance().setHost(new NetworkingHost());
 				Game.getInstance().getHost().setNumPlayers(Integer.parseInt(numPlayers.getText()));
 				Game.getInstance().getHost().start();
-				System.out.printf("Creating game..\n");
+				
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().start();
+				
 				Game.getInstance().changeState(new LobbyState());
 			}
 		});

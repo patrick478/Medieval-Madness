@@ -1,7 +1,6 @@
 package game.entity.trigger;
 
 import initial3d.engine.Vec3;
-import game.Game;
 import game.bound.Bound;
 import game.entity.Entity;
 import game.event.AbstractEvent;

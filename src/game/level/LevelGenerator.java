@@ -23,4 +23,9 @@ public class LevelGenerator {
 		Level level = new Level(floor, new ArrayList<Entity>());
 		return level;
 	}
+	
+	public long getSeed()
+	{
+		return this.seed;
+	}
 }

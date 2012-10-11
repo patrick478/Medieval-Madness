@@ -1,7 +1,6 @@
 package game.item;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public abstract class Item {
 	private final BufferedImage icon;
@@ -31,5 +30,14 @@ public abstract class Item {
 	public boolean addItem(Item _item){
 		_item.parent = this;
 		return true;
+	}
+	
+	/***
+	 * Returns the parent item of this item
+	 * @return Item of parent, or null if root level item
+	 */
+	public Item getParent()
+	{
+		return this.parent;
 	}
 }

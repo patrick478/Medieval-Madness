@@ -1,8 +1,6 @@
 package game.event;
 
-import game.Game;
 import game.entity.Entity;
-import game.entity.trigger.TriggerEntity;
 
 public abstract class AbstractEvent {
 

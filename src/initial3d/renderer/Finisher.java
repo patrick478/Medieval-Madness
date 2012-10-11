@@ -48,6 +48,7 @@ class Finisher {
 		profiler.endSection("I3D_finish");
 	}
 
+	@SuppressWarnings("unused")
 	private static final void finishRegion(Unsafe unsafe, long pBase, Object framebuffer, long qFrame, int Yi, int Yf) {
 		final long flags = unsafe.getLong(pBase + 0x00000008);
 		final int width = unsafe.getInt(pBase + 0x00000000);

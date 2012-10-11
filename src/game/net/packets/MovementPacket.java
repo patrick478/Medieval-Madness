@@ -2,7 +2,6 @@ package game.net.packets;
 
 import initial3d.engine.Vec3;
 import common.DataPacket;
-import game.entity.*;
 
 public class MovementPacket extends Packet
 {

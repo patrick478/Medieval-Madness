@@ -2,9 +2,7 @@ package game;
 
 import java.util.*;
 
-
 import game.entity.Entity;
-import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
 import game.level.Level;
 import game.net.NetworkingClient;
@@ -42,12 +40,13 @@ public class Game implements Runnable {
 	private NetworkingHost nhost = null;
 	private int playerIndex = -1;
 	
-	private Level currentLevel = null;//TODO
+	private Level currentLevel = null;
 	
 	private long predictedLatency = 0;
+	private int maxPlayers = 1;
 	
 	public PlayerEntity player = null;
-	public MoveableEntity[] players = new MoveableEntity[4];
+	private List<PlayerEntity> players = new ArrayList<PlayerEntity>();
 	
 	private Game()
 	{
@@ -70,7 +69,7 @@ public class Game implements Runnable {
 		try {
 			this.gameThread.join();
 		} catch (InterruptedException e) {
-			System.out.println("Error: Unable to stop the main game thread");
+			e.printStackTrace();
 		}
 	}
 	
@@ -203,7 +202,6 @@ public class Game implements Runnable {
 
 	public void setPlayerIndex(int pIndex) 
 	{
-		System.out.printf("Player index set to %d\n", pIndex);
 		this.playerIndex = pIndex;
 
 		this.player = new PlayerEntity(0, Vec3.create(pIndex+2, 0.125, pIndex+2), 0.125);
@@ -211,46 +209,44 @@ public class Game implements Runnable {
 		// This needs to add the main player
 		addPlayer(pIndex, player);
 		
+	}
+
+	public void setMaxPlayers(short _maxPlayers) {
 		// These can add the rest of the players
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < _maxPlayers; i++)
 		{
-			if(i == pIndex) continue;
+			if(i == this.playerIndex) continue;
 			
 			PlayerEntity p = new PlayerEntity(0, Vec3.create(i+2, 0.125, i+2), 0.125);
 			addPlayer(i, p);
 		}
+		
+		this.maxPlayers = _maxPlayers;
 	}
 
 	public int getPlayerIndex() {
 		return this.playerIndex;
 	}
 	
-	public void addPlayer(int index, MoveableEntity e)
+	public void addPlayer(int index, PlayerEntity e)
 	{
-		System.out.printf("Added player to players (%d)\n", index);
-		this.players[index] = e;
+		this.players.add(index,  e);
 	}
 
 	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity)
 	{
-		System.out.printf("playerIndex=%d\n", playerIndex);
-		MoveableEntity me = this.players[playerIndex];
+		PlayerEntity me = this.players.get(playerIndex);
 		if(me == null)
 			return;
 		
-		System.out.println("here");
-		
-		//TODO needs tp be more than 2 variables, and needs a syncronized timestamp thingymobob
-		me.updateMotion(position, velocity, Quat.one, Vec3.zero, System.currentTimeMillis());
-		
-		System.out.printf("Moving player %d to %s\n", playerIndex, position.toString());
+		//TODO need to transmit orientation and angular velocity
+		me.updateMotion(position, velocity, Quat.one, Vec3.zero, this.getGameTime());
 	}
 
 	public void transmitPlayerPosition() {
 		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(), this.player.getLinVelocity());
 		this.getNetwork().send(mp.toData());
 	}
-	
 	
 	
 	//METHODS CALLED BY THE EVENT CLASSES
@@ -303,6 +299,19 @@ public class Game implements Runnable {
 
 	public NetworkingHost getHost() {
 		return this.nhost;
+	}
+	
+	public int getMaxPlayers()
+	{
+		return this.maxPlayers;
+	}
+	
+	public PlayerEntity[] getPlayers() {
+		PlayerEntity[] ps = new PlayerEntity[this.players.size()];
+		for(int i = 0; i < this.players.size(); i++)
+			ps[i] = this.players.get(i);
+		
+		return ps;
 	}
 }
 

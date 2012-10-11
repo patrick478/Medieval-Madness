@@ -126,7 +126,8 @@ public class Pane extends Drawable {
 		i3d.transformOne(vec0, vec1);
 		Vector4D.homogenise(vec0, vec0);
 
-		double xleft = vec0[0][0];
+		// FIXME: What is the purpose of this? I commented it out temporarily.
+		// double xleft = vec0[0][0];
 		double ytop = vec0[1][0];
 
 		i3d.disable(LIGHTING);

@@ -1,29 +1,14 @@
 package game.level.impl;
 
-import game.level.AbstractFloorPlanner;
-import game.level.Space;
+import game.level.*;
 
 public class DungeonFloor extends AbstractFloorPlanner{
-
-	
-	
-	public DungeonFloor(long _seed) {
+	protected DungeonFloor(long _seed) {
 		super(_seed);
 	}
 
 	@Override
-	public Space[][] generateMaze(int _size) {
-		Space[][] floor = new Space[_size][_size];
-		
-		
-		
-		
-		return null;
-	}
-
-	private void addFloor(Space[][] floor){
-		
-		
-		
+	public Space[][] generateMaze(int size) {
+		throw new RuntimeException("DungeonFloor not yet implemented");
 	}
 }

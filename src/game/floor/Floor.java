@@ -127,11 +127,16 @@ public class Floor {
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.5, 0.5),
 				meshlod.addTexCoord(0.5, 0.25)};
+		
+		/*
+		 * These coordinates are used for a roof we'll probably never have.
+		 * Keep only for completeness.
 		int[] roof_tex_coord = new int[]{
 				meshlod.addTexCoord(0, 0.25),
 				meshlod.addTexCoord(0, 0.5),
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.25, 0.25)};
+		*/
 		
 		
 		

@@ -6,7 +6,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.abs;
 import static initial3d.renderer.Util.*;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({"restriction", "unused"})
 final class TrianglePerspectiveRasteriser {
 
 	private TrianglePerspectiveRasteriser() {
@@ -46,6 +46,7 @@ final class TrianglePerspectiveRasteriser {
 	 * href=http://devmaster.net/forums/topic/1145-advanced-rasterization/>this
 	 * article</a>.
 	 */
+
 	static final void rasteriseTriangle(Unsafe unsafe, long pBase, long pTri, int Yi, int Yf) {
 		// THIS LINE IS ONLY FOR DEBUGGING SEGFAULTS
 		// verifyTriangle(unsafe, pBase, pTri);
