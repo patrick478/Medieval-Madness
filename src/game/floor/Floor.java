@@ -25,7 +25,7 @@ public class Floor {
 
 	private final int size;
 	private final MeshContext mesh;
-	private static final int detail = 2; 
+	private static final int detail = 4; 
 	
 	private List<WallEntity> walls = new ArrayList<WallEntity>();
 	
@@ -70,10 +70,11 @@ public class Floor {
 	}
 	
 	private MeshContext buildMesh(Space[][] _floor){
-		int meshSize = size*detail;
+		int meshSize = size*detail+1;
+		int[][][] ver = new int[meshSize][detail*2+1][meshSize];
 		//TODO change the anmount of texture coords to be loaded AND LOAD THEM YOU FUCKWIT
-		MeshLOD meshlod = new MeshLOD(meshSize*meshSize*12, 4, meshSize*meshSize*12, 
-				25, 6, 1);
+		MeshLOD meshlod = new MeshLOD(meshSize*meshSize*detail*2+1, 4, 
+				meshSize*meshSize*detail*2+1, 25, 6, 1);
 		
 		
 		
@@ -126,11 +127,11 @@ public class Floor {
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.5, 0.5),
 				meshlod.addTexCoord(0.5, 0.25)};
-//		int[] roof_tex_coord = new int[]{
-//				meshlod.addTexCoord(0, 0),
-//				meshlod.addTexCoord(0.25, 0),
-//				meshlod.addTexCoord(0.25, 0.25),
-//				meshlod.addTexCoord(0, 0.25)};
+		int[] roof_tex_coord = new int[]{
+				meshlod.addTexCoord(0, 0.25),
+				meshlod.addTexCoord(0, 0.5),
+				meshlod.addTexCoord(0.25, 0.5),
+				meshlod.addTexCoord(0.25, 0.25)};
 		
 		
 		
@@ -157,10 +158,10 @@ public class Floor {
 						for(double vz=z; vz < z + 1; vz += 1d/detail){
 							//could span this out a bit TODO
 							int[] ver_final = new int[]{
-									meshlod.addVertex(x + vert[0].x/detail, vy + vert[0].y/detail, vz + vert[0].z/detail),
-									meshlod.addVertex(x + vert[1].x/detail, vy + vert[1].y/detail, vz + vert[1].z/detail),
-									meshlod.addVertex(x + vert[2].x/detail, vy + vert[2].y/detail, vz + vert[2].z/detail),
-									meshlod.addVertex(x + vert[3].x/detail, vy + vert[3].y/detail, vz + vert[3].z/detail)};
+									verAt(x + vert[0].x/detail, vy + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
+									verAt(x + vert[1].x/detail, vy + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
+									verAt(x + vert[2].x/detail, vy + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
+									verAt(x + vert[3].x/detail, vy + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
 							meshlod.addPolygon(ver_final, wall_side_tex_coord, norm, null);
 						}
 					}
@@ -191,10 +192,10 @@ public class Floor {
 							//could span this out a bit TODO
 							//Off by one with the z here? TODO FIXME
 							int[] ver_final = new int[]{
-									meshlod.addVertex(vx + vert[0].x/detail, vy + vert[0].y/detail, z + vert[0].z/detail),
-									meshlod.addVertex(vx + vert[1].x/detail, vy + vert[1].y/detail, z + vert[1].z/detail),
-									meshlod.addVertex(vx + vert[2].x/detail, vy + vert[2].y/detail, z + vert[2].z/detail),
-									meshlod.addVertex(vx + vert[3].x/detail, vy + vert[3].y/detail, z + vert[3].z/detail)};
+									verAt(vx + vert[0].x/detail, vy + vert[0].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(vx + vert[1].x/detail, vy + vert[1].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(vx + vert[2].x/detail, vy + vert[2].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(vx + vert[3].x/detail, vy + vert[3].y/detail, z + vert[0].z/detail, ver, meshlod)};
 							meshlod.addPolygon(ver_final, wall_side_tex_coord, norm, null);
 						}
 					}
@@ -203,7 +204,7 @@ public class Floor {
 		}
 		
 		
-		//TODO FIXME floor doesn't show up
+		//now we create the floor
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				Vec3[] vert = pos_y_verPos;
@@ -220,17 +221,18 @@ public class Floor {
 				for(double vz=z; vz < z + 1; vz += 1d/detail){
 					for(double vx=x; vx < x + 1; vx += 1d/detail){
 						int[] ver_final = new int[]{
-								meshlod.addVertex(vx + vert[0].x/detail, y + vert[0].y/detail, vz + vert[0].z/detail),
-								meshlod.addVertex(vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail),
-								meshlod.addVertex(vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail),
-								meshlod.addVertex(vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail)};
+								verAt(vx + vert[0].x/detail, y + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
+								verAt(vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
+								verAt(vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
+								verAt(vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
 						meshlod.addPolygon(ver_final, text_coord, pos_y_norm, null);
 					}
 				}
 			}
 		}
 		
-		
+
+		System.out.println(meshlod.getVertices().count());
 
 		Mesh mesh = new Mesh();
 		mesh.add(meshlod);
@@ -242,8 +244,14 @@ public class Floor {
 		return mesh_con;
 	}
 	
-	private void verAt(){
-		
+	private int verAt(double _x, double _y, double _z, int[][][]_ver, MeshLOD _meshlod){
+		int x = (int) Math.round(_x*detail);
+		int y = (int) Math.round(_y*detail);
+		int z = (int) Math.round(_z*detail);
+		if(_ver[x][y][z]==0){
+			_ver[x][y][z] = _meshlod.addVertex(_x, _y, _z);
+		}
+		return _ver[x][y][z];
 	}
 	
 	public List<WallEntity> getWalls(){
