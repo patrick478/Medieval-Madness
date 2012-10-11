@@ -30,10 +30,19 @@ public class BoundingBox extends Bound{
 	}
 	
 	@Override
-	public boolean intersects(BoundingSphere b) {
-		if (b == null) return false;
-		
-		return false;
+	public boolean intersects(BoundingSphere _b) {
+		double dis_sqr = 0;//distance squared between sphere and box 
+		double[][] sph_cen =  _b.getPosition().to3Array();
+		double[][] box_min =  this.neg_ext.to3Array();
+		double[][] box_max =  this.pos_ext.to3Array();
+		for(int i=0; i<3; i++){
+			if(sph_cen[i][0] < box_min[i][0]){
+				dis_sqr += Math.pow(sph_cen[i][0] - box_min[i][0], 2);
+			}else if(sph_cen[i][0] > box_max[i][0]){
+				dis_sqr += Math.pow(sph_cen[i][0] - box_max[i][0], 2);
+			}
+		}
+		return Math.pow(_b.getRadius(), 2) > dis_sqr ;
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package game.level;
 
 import game.bound.Bound;
 import game.entity.Entity;
+import game.entity.WallEntity;
 import game.entity.trigger.TriggerEntity;
 
 import initial3d.engine.Scene;

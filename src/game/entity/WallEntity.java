@@ -22,14 +22,14 @@ import comp261.modelview.MeshLoader;
 
 public class WallEntity extends Entity {
 	
-	private static final Vec3 wallSize = Vec3.create(1, 1, 1);//TODO even need this?
+	private static final Vec3 wallRadius = Vec3.create(0.5, 0.5, 0.5);//TODO even need this?
 	private final Bound bound; 
 	
 	public WallEntity(long _id, Vec3 _pos){
 		super(_id);
 		position = _pos;
-//		bound = new BoundingBox(_pos.sub(wallSize.scale(0.5)), wallSize);
-		bound = new BoundingSphere(_pos, 0.5);
+		bound = new BoundingBox(_pos, wallRadius);
+//		bound = new BoundingSphere(_pos, 0.5);
 	}
 	
 	@Override

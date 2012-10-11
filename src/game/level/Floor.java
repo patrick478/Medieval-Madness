@@ -64,7 +64,7 @@ public class Floor {
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				if(_floor[x][z].type==Space.WALL){
-					walls.add(new WallEntity(i++, Vec3.create(x,0,z)));
+					walls.add(new WallEntity(i++, Vec3.create(x,0.5,z)));
 				}
 			}
 		}

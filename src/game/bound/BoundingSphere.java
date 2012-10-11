@@ -28,17 +28,19 @@ public class BoundingSphere extends Bound {
 	}
 
 	@Override
-	public boolean intersects(BoundingBox b){
-//		double dis;
-//		Vec3 neg_ext = b.getNegExtreme().sub(position);
-//		Vec3 pos_ext = b.getPosExtreme().sub(position);
-//		Vec3 closestPoint = Vec3.create(
-//				Math.pow(Math.min(Math.abs(neg_ext.x), Math.abs(pos_ext.x)), 2), 
-//				Math.pow(Math.min(Math.abs(neg_ext.y), Math.abs(pos_ext.y)), 2), 
-//				Math.pow(Math.min(Math.abs(neg_ext.z), Math.abs(pos_ext.z)), 2));
-//		
-//		return closestPoint.mag() < radius;
-		return false;
+	public boolean intersects(BoundingBox _b){
+		double dis_sqr = 0;//distance squared between sphere and box 
+		double[][] sph_cen =  this.position.to3Array();
+		double[][] box_min =  _b.getNegExtreme().to3Array();
+		double[][] box_max =  _b.getPosExtreme().to3Array();
+		for(int i=0; i<3; i++){
+			if(sph_cen[i][0] < box_min[i][0]){
+				dis_sqr += Math.pow(sph_cen[i][0] - box_min[i][0], 2);
+			}else if(sph_cen[i][0] > box_max[i][0]){
+				dis_sqr += Math.pow(sph_cen[i][0] - box_max[i][0], 2);
+			}
+		}
+		return Math.pow(this.radius, 2) > dis_sqr ;
 	}
 
 	@Override

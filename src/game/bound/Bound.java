@@ -11,6 +11,9 @@ import initial3d.engine.Vec3;
 public abstract class Bound {
 	
 	public final boolean intersects(Bound b){
+		if(b==null){
+			return false;
+		}
 		if(b instanceof BoundingBox){
 			return intersects((BoundingBox)b);
 		}else if(b instanceof BoundingSphere){

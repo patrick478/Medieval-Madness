@@ -150,7 +150,10 @@ public class PlayState extends GameState {
 			v = v.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
 		
-		
+		if(Game.getInstance().getLevel().collides(game.player.getNextBound(), true)){
+			System.out.println("denied");
+			game.player.fix();
+		}
 		
 		//TODO also needs to be changed
 		game.player.updateMotion(game.player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
@@ -167,13 +170,6 @@ public class PlayState extends GameState {
 			transmittedStop = true;
 		}
 		
-//		for(WallEntity w : floor.getWalls()){
-//			if(w.getBound().intersects(game.player.getNextBound())){
-//				System.out.println("denied");
-//				game.player.fix();
-//				break;
-//			}
-//		}
 	}
 
 	@Override
