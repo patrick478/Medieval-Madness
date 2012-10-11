@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class InventoryHolder extends Component{
+public class InventoryHolder extends Container {
 
 	Picture first ;
 	Picture second ;
@@ -17,8 +17,8 @@ public class InventoryHolder extends Component{
 
 	BufferedImage blank;
 	//TODO: add fields for different items
-	public InventoryHolder(int width_, int height_) {
-		super(width_, height_);
+	public InventoryHolder() {
+		super(250, 50);
 		try {
 			blank = ImageIO.read(new File("resources/inventory/blank.png"));
 			//TODO: Read in all different items
@@ -28,10 +28,17 @@ public class InventoryHolder extends Component{
 		}
 		// TODO Auto-generated constructor stub
 		first = new Picture(blank, 0, 0, 50, 50);
-		second = new Picture(blank, 0, 50, 50, 50);
-		third = new Picture(blank, 0, 100, 50, 50);
-		fourth = new Picture(blank, 0, 150, 50, 50);
-		fifth = new Picture(blank, 0, 200, 50, 50);
+		second = new Picture(blank, 50, 0, 50, 50);
+		third = new Picture(blank, 100, 0, 50, 50);
+		fourth = new Picture(blank, 150, 0, 50, 50);
+		fifth = new Picture(blank, 200, 0, 50, 50);
+		
+		add(first);
+		add(second);
+		add(third);
+		add(fourth);
+		add(fifth);
+
 
 	}
 
@@ -40,16 +47,6 @@ public class InventoryHolder extends Component{
 	}
 	
 
-	
-	
-	@Override
-	protected void paintComponent(Graphics g) {
-			first.repaint();
-			second.repaint();
-			third.repaint();
-			fourth.repaint();
-			fifth.repaint();
-	}
-	
+
 	
 }
