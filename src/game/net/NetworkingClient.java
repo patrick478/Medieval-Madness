@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
+import game.Game;
 import game.states.*;
 
 import common.BufferQueue;
@@ -20,6 +21,8 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 	DataInputStream in;
 	DataOutputStream out;
 	
+	public String remoteHost = "localhost";
+	
 	private static final int BUFFER_SIZE = 80000;
 	
 	BufferQueue bq = new BufferQueue(BUFFER_SIZE);
@@ -29,7 +32,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 	public void modeStart() 
 	{
 		try {
-			this.clientSocket = new Socket("localhost", 14121);
+			this.clientSocket = new Socket(remoteHost, 14121);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -101,7 +104,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			case WelcomePacket.ID:
 				dp.getShort();
 				int pIndex = dp.getShort();
-				this.game.setPlayerIndex(pIndex);
+				Game.getInstance().setPlayerIndex(pIndex);
 				break;
 				
 			case PingPacket.ID:
@@ -109,14 +112,14 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				pp.fromData(dp);
 				if(pp.isReply) return;
 				
-				this.game.setPredictedLatency(pp.predictedLatency);
+				Game.getInstance().setPredictedLatency(pp.predictedLatency);
 				pp.isReply = true;
 				this.send(pp.toData());
 				break;
 				
 			case EnterGamePacket.ID:
 				dp.getShort();
-				this.game.changeState(new LoadingGameState(this.game));
+				Game.getInstance().changeState(new LoadingGameState());
 				break;
 			
 			case MovementPacket.ID:
@@ -124,7 +127,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				MovementPacket mp = new MovementPacket();
 				mp.fromData(dp);
 				
-				this.game.movePlayer(mp.playerIndex, mp.position, mp.velocity);
+				Game.getInstance().movePlayer(mp.playerIndex, mp.position, mp.velocity);
 				break;
 		}
 	}
@@ -144,5 +147,9 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void setRemoteTarget(String text) {
+		this.remoteHost = text;
 	}
 }

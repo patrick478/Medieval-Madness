@@ -54,6 +54,7 @@ public class Pane extends Drawable {
 		requestVisible(false);
 
 		root = new Container(width, height);
+		root.setPane(this);
 		focused = root;
 		
 		zlevel = zlevel_;

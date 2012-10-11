@@ -24,8 +24,7 @@ import game.net.packets.MovementPacket;
  * 
  */
 public class PlayState extends GameState {
-	public PlayState(Game parent) {
-		super(parent);
+	public PlayState() {
 	}
 
 	MovableReferenceFrame cameraRf = null;
@@ -42,15 +41,15 @@ public class PlayState extends GameState {
 	public void initalise() {
 		
 		
-		for(int i = 0; i < game.players.length; i++)
+		for(int i = 0; i < Game.getInstance().players.length; i++)
 		{
-			game.players[i].addToScene(scene);
+			Game.getInstance().players[i].addToScene(scene);
 		}
 		
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
 
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.5, -0.9));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
@@ -63,7 +62,7 @@ public class PlayState extends GameState {
 		scene.addDrawable(p);
 		
 		
-		game.getWindow().setMouseCapture(true);
+		Game.getInstance().getWindow().setMouseCapture(true);
 		
 		scene.setAmbient(new Color(0.1f, 0.1f, 0.1f));
 		scene.setFogColor(Color.BLACK);
@@ -73,15 +72,15 @@ public class PlayState extends GameState {
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
 		//scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.25f);
+		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
 		
-		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);		
+		Game.getInstance().player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);		
 	}
 
 	@Override
 	public void update(double delta) {
-		RenderWindow rwin = game.getWindow();
+		RenderWindow rwin = Game.getInstance().getWindow();
 		if(targetFov < 0) targetFov = scene.getCamera().getFOV();
 
 		double speed = 1;
@@ -153,17 +152,17 @@ public class PlayState extends GameState {
 		
 		
 		//TODO also needs to be changed
-		game.player.updateMotion(game.player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
+		Game.getInstance().player.updateMotion(Game.getInstance().player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
 		
 		//other Ben's doing...
 		if(!v.equals(Vec3.zero))
 		{
-			game.transmitPlayerPosition();
+			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = false;
 		}
 		else if(!transmittedStop)
 		{
-			game.transmitPlayerPosition();
+			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
 		
@@ -184,7 +183,7 @@ public class PlayState extends GameState {
 		MovableReferenceFrame cameraRf = (MovableReferenceFrame) scene.getCamera().getTrackedReferenceFrame();
 		if (_val) {
 			cameraRf.setPosition(Vec3.create(0, 0.5, 0));
-			cameraRf.setOrientation(game.player.getOrientation());
+			cameraRf.setOrientation(Game.getInstance().player.getOrientation());
 		} else {
 			cameraRf.setPosition(Vec3.create(0, 9, -10));
 			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));

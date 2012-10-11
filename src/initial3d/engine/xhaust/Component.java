@@ -142,6 +142,8 @@ public abstract class Component extends ActionSource {
 	}
 
 	public final void requestLocalFocus() {
+		if(pane == null) throw new IllegalStateException("Add me to the pane, first!");
+		
 		pane.requestLocalFocusFor(this);
 	}
 

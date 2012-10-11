@@ -11,8 +11,7 @@ import game.GameState;
  *
  */
 public class LobbyState extends GameState {
-	public LobbyState(Game parent) {
-		super(parent);
+	public LobbyState() {
 	}
 
 	@Override
