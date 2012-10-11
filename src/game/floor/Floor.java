@@ -232,8 +232,6 @@ public class Floor {
 		}
 		
 
-		System.out.println(meshlod.getVertices().count());
-
 		Mesh mesh = new Mesh();
 		mesh.add(meshlod);
 		
@@ -242,6 +240,7 @@ public class Floor {
 		MeshContext mesh_con = new MeshContext(mesh, floor_mtl, rf);
 		
 		mesh_con.setFarCull(10);
+		mesh_con.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 		return mesh_con;
 	}
