@@ -9,6 +9,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import game.entity.WallEntity;
+import game.modelloader.Content;
 import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Color;
@@ -36,7 +37,7 @@ public class Floor {
 	static {
 		BufferedImage bi = null;
 		try {
-			bi = ImageIO.read(new File("resources/texturetiles.png"));
+			bi = ImageIO.read((File)Content.loadContent("resources/texturetiles.png"));
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
@@ -243,6 +244,8 @@ public class Floor {
 		rf.setPosition(Vec3.create(-0.5, 0, -0.5));
 		MeshContext mesh_con = new MeshContext(mesh, floor_mtl, rf);
 		
+		mesh_con.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		mesh_con.setFarCull(10);
 		return mesh_con;
 	}
 	

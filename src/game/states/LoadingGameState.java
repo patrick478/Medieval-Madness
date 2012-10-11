@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import game.Game;
 import game.GameState;
+import game.level.LevelGenerator;
 import game.modelloader.Content;
 import game.modelloader.ContentRequest;
 
@@ -28,24 +29,22 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	
 	BufferedImage bg;
 	Picture pic;
+	private boolean hasLoadedModels = false;
+	
+	private LevelGenerator levelGen = new LevelGenerator(32l);
 	
 	private List<String> waitingOn = new ArrayList<String>();
-	private String[] models = new String[] {
+	private String[] toLoad = new String[] {
 			"cube.obj",
 			"sphere.obj",
 			"human.obj",
 			"plane.obj",
-			"trumpet.obj"
+			"trumpet.obj",
+			"resources/texturetiles.png"
 	};
 
 	@Override
-	public void initalise() {
-		for(int i = 0; i < models.length; i++)
-		{
-			this.waitingOn.add(models[i]);
-			Content.preloadContent(models[i], this);
-		}
-		
+	public void initalise() {		
 		Pane p = new Pane(800, 600);
 		try {
 			bg = ImageIO.read(new File("resources/tower.jpg"));	
@@ -63,6 +62,21 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		scene.addDrawable(p);
 
 		p.requestVisible(true);
+				
+		System.out.println("You're a porqupine!");
+		Game.getInstance().setLevel(levelGen.getLevel(Game.getInstance().getCurrentLevelNumber()));
+		System.out.println("You're a porqupine, too!");
+		
+		loadModels();
+	}
+	
+	public void loadModels()
+	{
+		for(int i = 0; i < toLoad.length; i++)
+		{
+			this.waitingOn.add(toLoad[i]);
+			Content.preloadContent(toLoad[i], this);
+		}
 	}
 	
 	public void repaint(){
@@ -71,9 +85,9 @@ public class LoadingGameState extends GameState implements ContentRequest {
 
 	@Override
 	public void update(double delta) {
-		double loadProgress = Math.ceil((this.waitingOn.size() / models.length) * 100f);
+		double loadProgress = Math.ceil((this.waitingOn.size() / toLoad.length) * 100f);
 		// for now - no loading
-		if(this.waitingOn.size() == 0)
+		if(this.waitingOn.size() == 0 && hasLoadedModels)
 		{
 			this.game.changeState(new PlayState(this.game));
 			System.out.println("Finished waiting for content");
@@ -91,5 +105,6 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	@Override
 	public void loadComplete(String filename) {
 		this.waitingOn.remove(filename);
+		this.hasLoadedModels = true;
 	}	
 }

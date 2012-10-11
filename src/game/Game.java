@@ -6,7 +6,7 @@ import java.util.*;
 import game.entity.Entity;
 import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
-import game.floor.Level;
+import game.level.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
@@ -292,18 +292,17 @@ public class Game implements Runnable {
 	{
 		this.predictedLatency = pl;
 	}
+	
+	public Level getLevel(){
+		return currentLevel;
+	}
+	
+	public void setLevel(Level level){
+		currentLevel = level;
+	}
+
+	public int getCurrentLevelNumber() {
+		return 0;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
