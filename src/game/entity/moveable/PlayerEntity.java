@@ -50,7 +50,7 @@ public class PlayerEntity extends MoveableEntity {
 	
 	// TODO: Work-in-progress GET YOUR SHIT TOGETHER
 	private List<MeshContext> getBall(){
-		Material mat = new Material(Color.RED, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0f, 0f, 0f), 1f, 1f);		
+		Material mat = new Material(Color.RED, new Color(0.6f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), new Color(0.15f, 0f, 0f), 1f, 1f);		
 		Mesh m = Content.loadContent("sphere.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
 		mc.setScale(0.25);

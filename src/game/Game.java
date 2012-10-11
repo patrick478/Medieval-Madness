@@ -20,6 +20,15 @@ import game.states.*;
  *
  */
 public class Game implements Runnable {
+	private static Game gameInstance = null;
+	public static Game getInstance()
+	{
+		if(gameInstance == null)
+			gameInstance = new Game();
+		
+		return gameInstance;
+	}
+	
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
 	
@@ -35,10 +44,12 @@ public class Game implements Runnable {
 	
 	private Level currentLevel;//TODO
 	
+	private long predictedLatency = 0;
+	
 	public PlayerEntity player = null;
 	public MoveableEntity[] players = new MoveableEntity[4];
 	
-	public Game()
+	private Game()
 	{
 		this.changeState(new PreloadGameState(this));
 	}
@@ -267,10 +278,20 @@ public class Game implements Runnable {
 		currentLevel.removeEntity(_eid);
 	}
 	
+	public boolean isHost()
+	{
+		return this.nhost != null;
+	}
 	
-	
-	
-	
+	public long getGameTime()
+	{
+		return System.currentTimeMillis() + this.predictedLatency;
+	}
+
+	public void setPredictedLatency(long pl)
+	{
+		this.predictedLatency = pl;
+	}
 }
 
 

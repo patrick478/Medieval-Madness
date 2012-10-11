@@ -14,7 +14,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	Thread serverThread;
 	
 	int numPlayers = 0;
-	public static final int maxPlayers = 2;
+	public static final int maxPlayers = 1;
 	public List<ServerClient> clients = new ArrayList<ServerClient>();
 	
 	@Override
@@ -66,30 +66,20 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			e.printStackTrace();
 		}
 		
-		System.out.printf("Beginning game..\n");
 		EnterGamePacket egp = new EnterGamePacket();
 		
 		for(ServerClient sc : this.clients)
 		{
-			System.out.printf("Sent 'enterGame' to player #%d\n", sc.getPlayerIndex());
 			sc.send(egp.toData());
 		}
 	}
 
 	public void updateOthersOnMovements(ServerClient client) {
-		System.out.printf("Telling everyone that %d is now at %s\n", client.getPlayerIndex(), client.getPosition());
 		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
 		for(ServerClient sc : this.clients)
 		{
 			if(sc.equals(client))
 				continue;
-			
-			String msg = "Sending ";
-			for(int i = 0; i < packet.toData().getData().length; i++)
-			{
-				msg = String.format("%s, 0x%02X", msg, packet.toData().getData()[i]);
-			}
-			System.out.printf("%s to player index=%d\n", msg, sc.getPlayerIndex());
 			
 			sc.send(packet.toData());
 		}

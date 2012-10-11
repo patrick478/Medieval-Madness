@@ -66,13 +66,13 @@ public class PlayState extends GameState {
 		
 		scene.setAmbient(new Color(0.2f, 0.2f, 0.2f));
 		scene.setFogColor(Color.BLACK);
-		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
+		scene.setFogParams(255f * 1.5f, 512f * 1.5f);
 		scene.setFogEnabled(true);
 		
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
 		scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(game.player, Color.GREEN, 0.5f);
+		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.5f);
 		scene.addLight(l2);
 		
 		
@@ -119,10 +119,19 @@ public class PlayState extends GameState {
 		if (rwin.getKey(KeyEvent.VK_D)) {
 			v = v.add(cside.neg());
 		}
+		
+		// temp
+		if(rwin.getKey(KeyEvent.VK_O)) {
+			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
+		} else if(rwin.getKey(KeyEvent.VK_P)) {
+			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
+		}
 
 		if (v.mag() > 0.0001) {
 			v = v.unit().scale(speed);
 		}
+		
+		
 		
 		//TODO also needs to be changed
 		game.player.updateMotion(game.player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());

@@ -15,6 +15,7 @@ import initial3d.engine.*;
 import initial3d.engine.xhaust.ButtonV0;
 import initial3d.engine.xhaust.Component;
 import initial3d.engine.xhaust.Pane;
+import initial3d.engine.xhaust.TextFieldV0;
 
 public class TestUI {
 
@@ -37,11 +38,12 @@ public class TestUI {
 
 		// stuff
 
-		Pane p = new Pane(128, 128);
+		Pane p = new Pane(250, 250);
 		p.setPosition(128, 30);
 		p.getRoot().setBackgroundColor(Color.GRAY);
 
 		final Component c = new ButtonV0(40, 20, "Hello");
+		final Component ct = new TextFieldV0(120, 20);
 		final Component c1 = new Component(40, 20) {
 			String s = "";
 
@@ -102,10 +104,12 @@ public class TestUI {
 		c.setPosition(10, 10);
 		c1.setPosition(20, 40);
 		c2.setPosition(30, 70);
+		ct.setPosition(20, 80);
 
 		p.getRoot().add(c);
 		p.getRoot().add(c1);
 		p.getRoot().add(c2);
+		p.getRoot().add(ct);
 
 		p.requestVisible(true);
 

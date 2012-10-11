@@ -20,6 +20,10 @@ public class ServerClient
 	public Vec3 position = Vec3.zero;
 	public Vec3 velocity = Vec3.zero;
 	
+	private long predictedLatency = 0;
+	public int syncsLeft = 5;
+	public long lastSync = System.currentTimeMillis();
+	
 	BufferQueue bq = new BufferQueue(8096);
 	public BlockingQueue<DataPacket> dataPackets = new LinkedBlockingQueue<DataPacket>();
 	
@@ -62,5 +66,14 @@ public class ServerClient
 	public Vec3 getVelocity()
 	{
 		return this.velocity;
+	}
+	
+	public void setPredictedLatency(long pl) {
+		this.predictedLatency = pl;
+		System.out.printf("Setting latency to %d\n", pl);
+	}
+
+	public long getPredictedLatency() {
+		return this.predictedLatency;
 	}
 }

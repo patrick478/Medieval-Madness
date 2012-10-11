@@ -9,6 +9,7 @@ import java.util.Arrays;
 import common.DataPacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.Packet;
+import game.net.packets.PingPacket;
 import game.net.packets.WelcomePacket;
 
 public class ServerWorker implements Runnable 
@@ -19,7 +20,6 @@ public class ServerWorker implements Runnable
 	{
 		this.client = sc;
 		this.host = nh;
-		System.out.printf("Client %d networking ready..\n", client.getPlayerIndex());
 	}
 	
 	@Override
@@ -35,6 +35,13 @@ public class ServerWorker implements Runnable
 		WelcomePacket wpacket = new WelcomePacket();
 		wpacket.playerIndex = client.getPlayerIndex();
 		this.client.send(wpacket.toData());
+		
+		PingPacket pp = new PingPacket();
+		pp.time = System.currentTimeMillis();
+		pp.predictedLatency = client.getPredictedLatency();
+		pp.isReply = false;
+		this.client.send(pp.toData());
+		this.client.syncsLeft = 5;
 		
 		short packetSize = -1;
 		
@@ -85,9 +92,24 @@ public class ServerWorker implements Runnable
 				mp.fromData(dp);
 				this.client.setPosition(mp.position);
 				this.client.setVelocity(mp.velocity);
-				System.out.printf("[ServerClientWorker] Updating position of %d\n", client.getPlayerIndex());
 				
 				this.host.updateOthersOnMovements(this.client);
+			break;
+			
+			case PingPacket.ID:
+				PingPacket pp = new PingPacket();
+				pp.fromData(dp);
+				if(!pp.isReply) return; 
+				this.client.syncsLeft--;
+				this.client.setPredictedLatency(pp.predictedLatency);
+				if(this.client.syncsLeft > 0)
+				{
+					PingPacket pp2 = new PingPacket();
+					pp2.time = System.currentTimeMillis();
+					pp2.predictedLatency = this.client.getPredictedLatency();
+					pp2.isReply = false;
+					this.client.send(pp2.toData());
+				}
 			break;
 		}
 	}

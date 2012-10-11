@@ -198,4 +198,17 @@ public class DataPacket {
 	{
 		return writePos;
 	}
+	
+	public void addBoolean(boolean b)
+	{
+		buf.put(writePos, (b ? (byte)1 : (byte)0));
+		writePos++;
+	}
+	
+	public boolean getBoolean()
+	{
+		readPos++;
+		byte b = buf.get(readPos-1);
+		return (b > 0 ? true : false);
+	}
 }

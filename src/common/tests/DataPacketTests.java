@@ -87,4 +87,16 @@ public class DataPacketTests {
 		
 		byte[] test = new byte[] { (byte)1, (byte)0 };
 	}
+	
+	@Test
+	public void TestBoolean()
+	{
+		DataPacket dp = new DataPacket();
+		dp.addBoolean(true);
+		dp.addBoolean(false);
+		
+		DataPacket test = new DataPacket(dp.getData());
+		assertTrue(test.getBoolean());
+		assertFalse(test.getBoolean());
+	}
 }

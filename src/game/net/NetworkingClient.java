@@ -94,14 +94,22 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 	}
 	
 	private void processPacket(DataPacket dp) {
-		System.out.printf("Packet header id=%d\n", dp.peekShort());
 		switch(dp.peekShort())
 		{
 			case WelcomePacket.ID:
 				dp.getShort();
-				System.out.printf("length=%d\n", dp.getLength());
 				int pIndex = dp.getShort();
 				this.game.setPlayerIndex(pIndex);
+				break;
+				
+			case PingPacket.ID:
+				PingPacket pp = new PingPacket();
+				pp.fromData(dp);
+				if(pp.isReply) return;
+				
+				this.game.setPredictedLatency(pp.predictedLatency);
+				pp.isReply = true;
+				this.send(pp.toData());
 				break;
 				
 			case EnterGamePacket.ID:
@@ -110,15 +118,10 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				break;
 			
 			case MovementPacket.ID:
-				System.out.println("Packet is a movement packet");
-				for(int i = 0; i < dp.getData().length; i++)
-					System.out.printf("%s%02X", i == 0 ? "" : ", ", dp.getData()[i]);
-				System.out.println();
 				
 				MovementPacket mp = new MovementPacket();
 				mp.fromData(dp);
 				
-				System.out.println("here");
 				this.game.movePlayer(mp.playerIndex, mp.position, mp.velocity);
 				break;
 		}
