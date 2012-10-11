@@ -13,14 +13,14 @@ import game.event.AbstractEvent;
  */
 public abstract class TriggerEntity extends Entity{
 
-	//the game in which to call events on
-	protected final Game game;
 	//the first event of a linked list of events
 	protected final AbstractEvent event;
 	
-	public TriggerEntity(long _id, Game _game, AbstractEvent _event) {
+	public TriggerEntity(long _id, AbstractEvent _event) {
 		super(_id);
-		game = _game;
+		if(_event == null){
+			throw new IllegalArgumentException("Event cannot be null when creating a TriggerEntity");
+		}
 		event = _event;
 	}
 	

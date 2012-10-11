@@ -6,18 +6,7 @@ import game.entity.trigger.TriggerEntity;
 
 public abstract class AbstractEvent {
 
-	protected final Game game;
 	private AbstractEvent nextEvent = null;
-	
-	/**
-	 * Create an event that changes the game in a meaningful way
-	 * when triggered by some aspect of gameplay.
-	 * 
-	 * @param _game the game to change with the event
-	 */
-	public AbstractEvent(Game _game){
-		game = _game;
-	}
 	
 	/**
 	 * Adds an event to the end of the list of events.

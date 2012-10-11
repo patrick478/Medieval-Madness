@@ -23,6 +23,7 @@ public class Content implements Runnable {
 	public Content()
 	{
 		loaders.put("obj", new WavefrontLoader());
+		loaders.put("png", new ImageLoader());
 		
 		this.loadThread = new Thread(this);
 		this.loadThread.start();

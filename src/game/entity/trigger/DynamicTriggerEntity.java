@@ -10,8 +10,8 @@ public class DynamicTriggerEntity extends TriggerEntity{
 
 	private Entity parent;
 	
-	public DynamicTriggerEntity(long _id, Game _game, AbstractEvent _event, Entity _parent) {
-		super(_id, _game, _event);
+	public DynamicTriggerEntity(long _id, AbstractEvent _event, Entity _parent) {
+		super(_id, _event);
 		if(_parent==null){
 			throw new IllegalArgumentException("Cannot acceept null as a 'Parent' Entity");
 		}

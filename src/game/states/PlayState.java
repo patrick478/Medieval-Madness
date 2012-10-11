@@ -36,26 +36,19 @@ public class PlayState extends GameState {
 	private double cam_pitch = 0;
 	private double player_yaw = 0;
 	
-	private Floor floor;
-	
 	private double targetFov = -1;
 
 	@Override
 	public void initalise() {
-		game.player.addToScene(scene);
+		
+		
 		for(int i = 0; i < game.players.length; i++)
 		{
-			if(game.players[i] == game.player)
-				continue;
-			
-			System.out.printf("Adding %d to scene.. %s\n", i, game.players[i]);
 			game.players[i].addToScene(scene);
 		}
-
 		
-		FloorGenerator fg = new FloorGenerator(123873123312l);
-		floor = fg.getFloor(2);
-		floor.addToScene(scene);
+		System.out.println(Game.getInstance().getLevel());
+		Game.getInstance().getLevel().addToScene(scene);
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(game.player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
