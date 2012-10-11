@@ -10,8 +10,7 @@ import game.GameState;
  */
 public class IntroGameState extends GameState {
 
-	public IntroGameState(Game parent) {
-		super(parent);
+	public IntroGameState() {
 	}
 	
 	@Override
@@ -21,7 +20,7 @@ public class IntroGameState extends GameState {
 
 	@Override
 	public void update(double delta) {
-		this.game.changeState(new MainMenuGUIState(this.game));
+		Game.getInstance().changeState(new MainMenuState());
 	}
 
 	@Override

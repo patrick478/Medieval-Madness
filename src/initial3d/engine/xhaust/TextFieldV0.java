@@ -13,6 +13,7 @@ public class TextFieldV0 extends Component {
 	private String text = "";
 	private boolean carrot = true;
 	private long lastSwitch = System.currentTimeMillis();
+	private boolean numeric = false;
 	int carrotPos = 0;
 	
 	private ActionListener l = new ActionListener() {
@@ -45,14 +46,14 @@ public class TextFieldV0 extends Component {
 		
 		int width = g.getFontMetrics().stringWidth(text);
 		int precarotPx = g.getFontMetrics().stringWidth(text.substring(0, carrotPos));
-		int visible = width - this.getWidth();
+		int visible = width - this.getWidth() - 5;
 		if(visible < 0) visible = 0;
-		if(precarotPx > this.getWidth()) precarotPx = this.getWidth();
+		if(precarotPx > this.getWidth() - 4) precarotPx = this.getWidth();
 		
 		g.drawString(text, 1 - visible, 15);
 		g.setColor(Color.WHITE);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		if(this.carrot)
+		if(this.carrot && this.isFocused())
 		{
 			g.setColor(new Color(120, 120, 120));		
 			g.drawRect(precarotPx + 1, 2, 1, getHeight() - 5);
@@ -70,7 +71,10 @@ public class TextFieldV0 extends Component {
 			{
 				case KeyEvent.VK_BACK_SPACE:
 				if(text.length() > 0)
-					text = text.substring(0, text.length() - 1);
+				{
+					text = text.substring(0, carrotPos - 1) + text.substring(carrotPos, text.length());
+					carrotPos--;
+				}
 				break;
 				
 				case KeyEvent.VK_LEFT:
@@ -83,8 +87,16 @@ public class TextFieldV0 extends Component {
 						this.carrotPos++;
 				break;
 				
+				case KeyEvent.VK_ENTER:
+						ActionEvent ae = new ActionEvent(this, 0, text);
+						dispatchActionEvent(ae);
+				break;
+				
 				default:
-					text = text.substring(0, this.carrotPos) + e.getKeyChar() + text.substring(this.carrotPos, text.length());
+					char c = e.getKeyChar();
+					if(numeric) { try { Integer.parseInt(c + ""); } catch(NumberFormatException exp) { return; } }
+					
+					text = text.substring(0, this.carrotPos) + c + text.substring(this.carrotPos, text.length());
 					carrotPos++;
 				break;
 			}
@@ -92,5 +104,13 @@ public class TextFieldV0 extends Component {
 		
 		
 		this.repaint();
+	}
+
+	public void setNumericOnly(boolean b) {
+		this.numeric = b;
+	}
+
+	public String getText() {
+		return this.text;
 	}
 }

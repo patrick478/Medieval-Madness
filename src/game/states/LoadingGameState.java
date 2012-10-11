@@ -23,8 +23,7 @@ import game.modelloader.ContentRequest;
  *
  */
 public class LoadingGameState extends GameState implements ContentRequest {
-	public LoadingGameState(Game parent) {
-		super(parent);
+	public LoadingGameState() {
 	}
 	
 	BufferedImage bg;
@@ -89,7 +88,7 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		// for now - no loading
 		if(this.waitingOn.size() == 0 && hasLoadedModels)
 		{
-			this.game.changeState(new PlayState(this.game));
+			Game.getInstance().changeState(new PlayState());
 			System.out.println("Finished waiting for content");
 		}
 //		else

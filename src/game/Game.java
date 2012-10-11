@@ -51,7 +51,6 @@ public class Game implements Runnable {
 	
 	private Game()
 	{
-		this.changeState(new PreloadGameState(this));
 	}
 	
 	/***
@@ -59,6 +58,7 @@ public class Game implements Runnable {
 	 */
 	public void start()
 	{
+		this.changeState(new PreloadGameState());
 		this.gameRunning = true;
 		this.gameThread = new Thread(this);
 		this.gameThread.start();
@@ -192,8 +192,6 @@ public class Game implements Runnable {
 			this.network.destroy();
 		
 		this.network = nm;
-		
-		this.network.start(this);
 	}
 
 	public void setHost(NetworkingHost networkingHost) {
@@ -201,8 +199,6 @@ public class Game implements Runnable {
 			this.nhost.destroy();
 		
 		this.nhost = networkingHost;
-		
-		this.nhost.start(this);
 	}
 
 	public void setPlayerIndex(int pIndex) 
@@ -303,6 +299,10 @@ public class Game implements Runnable {
 
 	public int getCurrentLevelNumber() {
 		return 1;
+	}
+
+	public NetworkingHost getHost() {
+		return this.nhost;
 	}
 }
 

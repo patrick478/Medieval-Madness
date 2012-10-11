@@ -14,13 +14,13 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	Thread serverThread;
 	
 	int numPlayers = 0;
-	public static final int maxPlayers = 1;
+	public int maxPlayers = -1;
 	public List<ServerClient> clients = new ArrayList<ServerClient>();
 	
 	public List<ServerWorker> workers = new ArrayList<ServerWorker>();
 	
 	@Override
-	public void modeStart()
+	protected void modeStart()
 	{
 		try {
 			this.serverSocket = new ServerSocket(14121);
@@ -40,6 +40,9 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	
 	public void run()
 	{
+		if(this.maxPlayers < 1)
+			return;
+		
 		while(this.numPlayers < (this.maxPlayers))
 		{
 			Socket cSocket = null;
@@ -95,5 +98,10 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			
 			sc.send(packet.toData());
 		}
+	}
+
+	public void setNumPlayers(int n) {
+		System.out.printf("Number of players changed to %d\n", n);
+		this.maxPlayers = n;
 	}
 }
