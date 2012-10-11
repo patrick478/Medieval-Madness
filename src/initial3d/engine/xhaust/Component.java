@@ -28,12 +28,27 @@ public abstract class Component extends ActionSource {
 
 	private volatile Component parent = null;
 
+	private volatile Pane pane = null;
+
 	private final EventDispatcher dispatcher = new EventDispatcher();
 
 	public Component(int width_, int height_) {
 		width = width_;
 		height = height_;
 
+	}
+
+	/* package-private */
+	final void setPane(Pane p) {
+		pane = p;
+	}
+
+	public Pane getPane() {
+		return pane;
+	}
+	
+	public boolean isFocused() {
+		return this.equals(pane.getLocalFocused());
 	}
 
 	/* package-private */
@@ -64,18 +79,16 @@ public abstract class Component extends ActionSource {
 			repainted = true;
 			paintComponent(g);
 			paintBorder(g);
+		} else {
+			repainted = false;
 		}
 
 		return id + 1;
 	}
 
 	/* package-private */
-	boolean pollRepainted() {
-		try {
-			return repainted;
-		} finally {
-			repainted = false;
-		}
+	boolean repainted() {
+		return repainted;
 	}
 
 	/* package-private */
@@ -121,6 +134,14 @@ public abstract class Component extends ActionSource {
 
 	protected void paintBorder(Graphics g) {
 
+	}
+	
+	public boolean contains(Component c) {
+		 return this.equals(c);
+	}
+
+	public final void requestLocalFocus() {
+		pane.requestLocalFocusFor(this);
 	}
 
 	public int getWidth() {
@@ -178,6 +199,16 @@ public abstract class Component extends ActionSource {
 	/** Override for custom processing of mouse events. */
 	protected void processMouseEvent(MouseEvent e) {
 
+	}
+	
+	@Override
+	public final int hashCode() {
+		return super.hashCode();
+	}
+	
+	@Override
+	public final boolean equals(Object o) {
+		return super.equals(o);
 	}
 
 	public void addKeyListener(KeyListener l) {

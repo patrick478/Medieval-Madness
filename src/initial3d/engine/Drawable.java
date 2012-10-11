@@ -93,18 +93,30 @@ public abstract class Drawable extends ActionSource {
 	}
 
 	/* package-private */
-	final void onSceneAdd(Scene s) {
+	final void notifySceneAdd(Scene s) {
 		if (scene != null && !scene.equals(s))
 			throw new IllegalStateException("Cannot add Drawable to more than one Scene.");
 		scene = s;
+		onSceneAdd(s);
 	}
 
 	/* package-private */
-	final void onSceneRemove(Scene s) {
+	final void notifySceneRemove(Scene s) {
 		scene = null;
 		synchronized (wait_remove) {
 			wait_remove.notifyAll();
 		}
+		onSceneRemove(s);
+	}
+
+	/** Override to to stuff on adding to scene. */
+	protected void onSceneAdd(Scene s) {
+
+	}
+
+	/** Override to do stuff on removal from scene. */
+	protected void onSceneRemove(Scene s) {
+
 	}
 
 	/**

@@ -3,6 +3,7 @@ package game.states;
 import java.awt.event.KeyEvent;
 
 import initial3d.engine.*;
+import initial3d.engine.xhaust.InventoryHolder;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
@@ -58,8 +59,12 @@ public class PlayState extends GameState {
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.3, -0.5));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
-		Pane p = new Pane(800, 600);
-		
+		Pane p = new Pane(250, 50);
+		InventoryHolder i = new InventoryHolder();
+		p.getRoot().add(i);
+		p.requestVisible(true);
+		p.setPosition(-275, -275);
+		scene.addDrawable(p);
 		
 		
 		game.getWindow().setMouseCapture(true);
@@ -75,6 +80,7 @@ public class PlayState extends GameState {
 		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.5f);
 		scene.addLight(l2);
 		
+		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 	}
 

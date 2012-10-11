@@ -100,9 +100,9 @@ public class MainMenuGUIState extends GameState {
 			BufferedImage rightArrow = ImageIO.read(new File("resources/rightarrow.png"));
 			BufferedImage leftArrow = ImageIO.read(new File("resources/leftarrow.png"));
 			leftTop = new Picture(leftArrow, 240, 345,35,35);
-			leftBottom = new Picture(leftArrow, 200, 407,35,35);
+			leftBottom = new Picture(leftArrow, 225, 407,35,35);
 			rightTop = new Picture(rightArrow, 525, 345,35,35);
-			rightBottom = new Picture(rightArrow, 570, 407,35,35);
+			rightBottom = new Picture(rightArrow, 540, 407,35,35);
 
 			
 

@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Drawable;
+import initial3d.engine.MeshContext;
+import initial3d.engine.SceneManager;
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
 import initial3d.linearmath.Vector4D;
@@ -19,6 +21,11 @@ import initial3d.linearmath.Vector4D;
 import static initial3d.Initial3D.*;
 
 public class Pane extends Drawable {
+	
+	private static final double NEAR_CLIP = (SceneManager.NEAR_PLANE + MeshContext.DEFAULT_NEAR_CLIP) / 2;
+	private static final double FAR_CULL = MeshContext.DEFAULT_NEAR_CLIP;
+	
+	private volatile double rotation = 0;
 
 	private final BufferedImage bi;
 	private final Texture tex;
@@ -33,9 +40,10 @@ public class Pane extends Drawable {
 	private final double[][] xtemp = Matrix.createIdentity(4);
 
 	private Component focused;
-
-	public Pane(int width_, int height_) {
-
+	
+	private final int zlevel;
+	
+	protected Pane(int width_, int height_, int zlevel_) {
 		width = width_;
 		height = height_;
 
@@ -47,6 +55,12 @@ public class Pane extends Drawable {
 
 		root = new Container(width, height);
 		focused = root;
+		
+		zlevel = zlevel_;
+	}
+
+	public Pane(int width_, int height_) {
+		this(width_, height_, 1);
 	}
 
 	public int getWidth() {
@@ -64,10 +78,23 @@ public class Pane extends Drawable {
 	public int getY() {
 		return y;
 	}
-
+	
+	/* package-private */
+	final int getZLevel() {
+		return zlevel;
+	}
+	
 	public void setPosition(int x_, int y_) {
 		x = x_;
 		y = y_;
+	}
+	
+	public double getRotation() {
+		return rotation;
+	}
+	
+	public void setRotation(double r) {
+		rotation = r;
 	}
 
 	public Container getRoot() {
@@ -78,9 +105,9 @@ public class Pane extends Drawable {
 	protected void draw(Initial3D i3d, int framewidth, int frameheight) {
 
 		// TODO handle this properly
-		i3d.nearClip(0.11);
-		i3d.farCull(0.2);
-		double zview = 0.19;
+		i3d.nearClip(NEAR_CLIP);
+		i3d.farCull(FAR_CULL);
+		double zview = (NEAR_CLIP + FAR_CULL * zlevel) / (zlevel + 1);
 
 		vec0[0][0] = 0;
 		vec0[1][0] = 0;
@@ -115,8 +142,13 @@ public class Pane extends Drawable {
 		TransformationMatrix4D.scale(xtemp, scale, scale, 1, 1);
 		i3d.multMatrix(xtemp);
 
-		i3d.translateX(width / 2 + x);
-		i3d.translateY(height / 2 + y);
+		i3d.translateX(x);
+		i3d.translateY(y);
+		
+		i3d.rotateZ(rotation);
+		
+		i3d.translateX(width / 2);
+		i3d.translateY(height / 2);
 
 		i3d.disable(WRITE_COLOR | WRITE_Z);
 		Graphics g = bi.createGraphics();
@@ -135,7 +167,7 @@ public class Pane extends Drawable {
 		root.doRepaint(g, i3d, getDrawIDStart(), zview);
 		g.dispose();
 
-		if (root.pollRepainted()) {
+		if (root.repainted()) {
 			tex.drawImage(bi);
 		}
 
@@ -189,6 +221,16 @@ public class Pane extends Drawable {
 		}
 
 		target.dispatchMouseEvent(e);
+	}
+	
+	public void requestLocalFocusFor(Component c) {
+		if (root.contains(c)) {
+			focused = c;
+		}
+	}
+	
+	public Component getLocalFocused() {
+		return focused;
 	}
 
 }
