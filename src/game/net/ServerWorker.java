@@ -16,10 +16,17 @@ public class ServerWorker implements Runnable
 {
 	ServerClient client = null;
 	NetworkingHost host = null;
+	private boolean isReady = false;
+	
 	public ServerWorker(ServerClient sc, NetworkingHost nh)
 	{
 		this.client = sc;
 		this.host = nh;
+	}
+	
+	public boolean isReady()
+	{
+		return this.isReady;
 	}
 	
 	@Override
@@ -44,6 +51,12 @@ public class ServerWorker implements Runnable
 		this.client.syncsLeft = 5;
 		
 		short packetSize = -1;
+		
+		synchronized(this)
+		{
+			this.isReady = true;
+			this.notifyAll();
+		}
 		
 		while(true)
 		{
