@@ -15,6 +15,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -57,6 +59,7 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 	private volatile int mousex = 0;
 	private volatile int mousey = 0;
 	private volatile boolean mousecaptured = false;
+	private volatile boolean prev_mousecaptured = false;
 
 	private volatile boolean draw_crosshair = false;
 
@@ -88,6 +91,19 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 
 		BufferedImage cursorimg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		blankcursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorimg, new Point(0, 0), "blankcursor");
+		
+		this.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				RenderWindow.this.setMouseCapture(RenderWindow.this.getPrevMouseCapture());
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				RenderWindow.this.setPrevMouseCapture(RenderWindow.this.isMouseCaptured());
+				RenderWindow.this.setMouseCapture(false);
+			}
+		});
 
 		try {
 			robot = new Robot();
@@ -309,6 +325,21 @@ public class RenderWindow extends JFrame implements DisplayTarget {
 				robot.mouseMove(cloc.x + centrex, cloc.y + centrey);
 			}
 		}
+	}
+	
+	/**
+	 * Gets the previous state of the mouse captured prior to the window losing focus
+	 */
+	public boolean getPrevMouseCapture()
+	{
+		return this.prev_mousecaptured;
+	}
+	
+	/**
+	 * Sets the previous state of the mouse captured prior to the window losing focus
+	 */
+	public void setPrevMouseCapture(boolean b) {
+		this.prev_mousecaptured = b;
 	}
 
 	/**

@@ -37,6 +37,8 @@ public class PlayState extends GameState {
 	private double player_yaw = 0;
 	
 	private Floor floor;
+	
+	private double targetFov = -1;
 
 	@Override
 	public void initalise() {
@@ -77,7 +79,7 @@ public class PlayState extends GameState {
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
 		scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.5f);
+		Light l2 = new Light.SphericalPointLight(game.player, Color.ORANGE, 0.55f);
 		scene.addLight(l2);
 		
 		game.player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);
@@ -87,8 +89,10 @@ public class PlayState extends GameState {
 	@Override
 	public void update(double delta) {
 		RenderWindow rwin = game.getWindow();
+		if(targetFov < 0) targetFov = scene.getCamera().getFOV();
 
 		double speed = 1;
+		double sprintMulti = 1.5f;
 
 		int mx = rwin.pollMouseTravelX();
 		int my = rwin.pollMouseTravelY();
@@ -132,9 +136,25 @@ public class PlayState extends GameState {
 		} else if(rwin.getKey(KeyEvent.VK_P)) {
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
 		}
-
+		
+		double maxDelta = 0.01;
+		boolean sprinting = rwin.getKey(KeyEvent.VK_SHIFT);
+		if(sprinting) targetFov = Math.PI / 2.2;
+		else targetFov = Math.PI / 3;
+		
+		double dta = this.scene.getCamera().getFOV() - targetFov;
+		if(Math.abs(dta) > 0.1)
+		{
+			if(dta > maxDelta)
+				dta = maxDelta;
+			else if(dta < -maxDelta)
+				dta = -maxDelta;
+			
+			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - dta);
+		}
+		
 		if (v.mag() > 0.0001) {
-			v = v.unit().scale(speed);
+			v = v.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
 		
 		
