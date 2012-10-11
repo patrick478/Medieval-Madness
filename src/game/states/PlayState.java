@@ -150,8 +150,7 @@ public class PlayState extends GameState {
 		}
 		
 		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
-			System.out.println("denied");
-			Game.getInstance().player.fix();
+//			Game.getInstance().player.fix();
 		}
 		
 		//TODO also needs to be changed
@@ -173,26 +172,5 @@ public class PlayState extends GameState {
 
 	@Override
 	public void destroy() {
-	}
-
-	private void setFirstPerson(boolean _val) {
-		MovableReferenceFrame cameraRf = (MovableReferenceFrame) scene.getCamera().getTrackedReferenceFrame();
-		if (_val) {
-			cameraRf.setPosition(Vec3.create(0, 0.5, 0));
-			cameraRf.setOrientation(Game.getInstance().player.getOrientation());
-		} else {
-			cameraRf.setPosition(Vec3.create(0, 9, -10));
-			cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
-		}
-	}
-	
-	private void scroll(double val){
-		if ((val < 0 && cameraRf.getPosition().mag() < 1) || 
-			(val > 0 && cameraRf.getPosition().mag() > 20) || 
-			(val==0)){
-			return;
-		}
-		
-		cameraRf.setPosition(cameraRf.getPosition().scale(val));
 	}
 }

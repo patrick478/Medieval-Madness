@@ -206,7 +206,7 @@ public class Game implements Runnable {
 		System.out.printf("Player index set to %d\n", pIndex);
 		this.playerIndex = pIndex;
 
-		this.player = new PlayerEntity(0, Vec3.create(pIndex+2, .25, pIndex+2), 0.1);
+		this.player = new PlayerEntity(0, Vec3.create(pIndex+2, 0.125, pIndex+2), 0.125);
 		
 		// This needs to add the main player
 		addPlayer(pIndex, player);
@@ -216,7 +216,7 @@ public class Game implements Runnable {
 		{
 			if(i == pIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(0, Vec3.create(i+2, .25, i+2), 0.1);
+			PlayerEntity p = new PlayerEntity(0, Vec3.create(i+2, 0.125, i+2), 0.125);
 			addPlayer(i, p);
 		}
 	}
@@ -298,7 +298,7 @@ public class Game implements Runnable {
 	}
 
 	public int getCurrentLevelNumber() {
-		return 1;
+		return 0;
 	}
 
 	public NetworkingHost getHost() {
