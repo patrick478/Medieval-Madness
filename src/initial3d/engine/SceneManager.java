@@ -214,7 +214,9 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 											i3d.disable(WRITE_ID);
 										}
 
+										// FIXME properly reset i3d state before draw
 										i3d.enable(LIGHTING | DEPTH_TEST | WRITE_COLOR | WRITE_Z);
+										i3d.disable(TWO_SIDED_LIGHTING | TEXTURE_2D);
 										i3d.shadeModel(SHADEMODEL_FLAT);
 										d.draw(i3d, width, height);
 
@@ -244,6 +246,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							// end sky
 
 							// finish
+							i3d.enable(DEPTH_TEST | WRITE_COLOR | WRITE_Z);
 							i3d.finish();
 							profiler.endSection("I3D-sceneman_draw");
 
@@ -394,6 +397,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 
 						} else {
 							idle = true;
+							i3d.enable(DEPTH_TEST | WRITE_COLOR | WRITE_Z);
 							i3d.finish();
 							if (dtarget != null) {
 								profiler.startSection("I3D-sceneman_display");

@@ -150,8 +150,10 @@ final class LightingEquations {
 		float out_g = unsafe.getFloat(pBase + 0x0000006C + 8) * ka_g + unsafe.getFloat(pMtl + 56);
 		float out_b = unsafe.getFloat(pBase + 0x0000006C + 12) * ka_b + unsafe.getFloat(pMtl + 60);
 
-		// all lights, accounting for light enabling
+		// first light pointer
 		long pLight = pBase + 0x0CE00900;
+		
+		boolean twosided = (unsafe.getLong(pBase + 0x00000008) & 0x40L) != 0;
 
 		while ((unsafe.getInt(pLight + 80) & 0x2) == 0) {
 			// light not enabled => skip
@@ -202,8 +204,16 @@ final class LightingEquations {
 
 			// lambert term
 			float LdotN = Lx * Nx + Ly * Ny + Lz * Nz;
+			
+			// reverse normal if twosided enabled and lit from back
+			if (twosided && LdotN < 0) {
+				Nx = -Nx;
+				Ny = -Ny;
+				Nz = -Nz;
+				LdotN = -LdotN;
+			}
 
-			if (LdotN > 0.05) {
+			if (LdotN > 0.001) {
 
 				float LdotN_falloff = LdotN * falloff;
 				out_r += unsafe.getFloat(pLight + 20) * kd_r * LdotN_falloff;

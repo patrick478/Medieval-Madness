@@ -44,7 +44,7 @@ public abstract class Initial3D {
 	public static final long DEPTH_TEST = 0x8L;
 	public static final long FOG = 0x10L;
 	public static final long LIGHTING = 0x20L;
-	// 0x40L;
+	public static final long TWO_SIDED_LIGHTING = 0x40L;
 	// 0x80L;
 	// 0x100L;
 	// 0x200L;
