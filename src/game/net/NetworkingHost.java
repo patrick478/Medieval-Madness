@@ -17,6 +17,8 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	public static final int maxPlayers = 1;
 	public List<ServerClient> clients = new ArrayList<ServerClient>();
 	
+	public List<ServerWorker> workers = new ArrayList<ServerWorker>();
+	
 	@Override
 	public void modeStart()
 	{
@@ -56,15 +58,25 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			
 			sc.thread = new Thread(sw);
 			sc.thread.start();
+			workers.add(sw);
 		}
 		
-		System.out.printf("Countdown till game start..\n");
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for(ServerWorker sw : workers)
+		{
+			while(!sw.isReady())
+			{
+				synchronized(sw)
+				{
+					try {
+						sw.wait(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
+		
+		System.out.printf("Game starting..\n");
 		
 		EnterGamePacket egp = new EnterGamePacket();
 		

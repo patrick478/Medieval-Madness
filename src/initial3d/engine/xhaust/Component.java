@@ -21,6 +21,7 @@ public abstract class Component extends ActionSource {
 	private volatile int x, y;
 	private volatile boolean opaque = true;
 	private volatile Color col_bg = Color.WHITE;
+	private volatile Color col_fg = Color.BLACK;
 
 	private volatile boolean repaint_required = true;
 	private boolean repainted = false;
@@ -179,6 +180,14 @@ public abstract class Component extends ActionSource {
 
 	public void setBackgroundColor(Color c) {
 		col_bg = c;
+	}
+	
+	public Color getForegroundColor() {
+		return col_fg;
+	}
+	
+	public void setForegroundColor(Color c) {
+		col_fg = c;
 	}
 
 	final void dispatchKeyEvent(KeyEvent e) {

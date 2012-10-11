@@ -1,6 +1,16 @@
 package game.states;
 
+import initial3d.engine.Color;
+import initial3d.engine.xhaust.*;
+import initial3d.engine.xhaust.*;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
+
+import javax.imageio.ImageIO;
+
 import game.Game;
 import game.GameState;
 import game.modelloader.Content;
@@ -15,6 +25,9 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	public LoadingGameState(Game parent) {
 		super(parent);
 	}
+	
+	BufferedImage bg;
+	Picture pic;
 	
 	private List<String> waitingOn = new ArrayList<String>();
 	private String[] models = new String[] {
@@ -32,7 +45,28 @@ public class LoadingGameState extends GameState implements ContentRequest {
 			this.waitingOn.add(models[i]);
 			Content.preloadContent(models[i], this);
 		}
-		System.out.println("Loading content..");
+		
+		Pane p = new Pane(800, 600);
+		try {
+			bg = ImageIO.read(new File("resources/tower.jpg"));	
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		pic = new Picture(bg ,0,0, 800,600);
+		p.getRoot().add(pic);
+		//input from user
+		LabelV0 progress = new LabelV0(300, 30, "Loading..");
+		progress.setBackgroundColor(new java.awt.Color(160, 160, 160));
+		progress.setForegroundColor(java.awt.Color.BLACK);
+		progress.setPosition(470, 540);
+		p.getRoot().add(progress);
+		scene.addDrawable(p);
+
+		p.requestVisible(true);
+	}
+	
+	public void repaint(){
+		pic.repaint();
 	}
 
 	@Override
