@@ -1,0 +1,1064 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 14">
+<link id=Main-File rel=Main-File href="../i3d_memory_allocation.htm">
+<link rel=File-List href=filelist.xml>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:.75in .7in .75in .7in;
+	mso-header-margin:.3in;
+	mso-footer-margin:.3in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(0);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../i3d_memory_allocation.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]>
+</head>
+
+<body link=blue vlink=purple>
+
+<table border=0 cellpadding=0 cellspacing=0 width=1195 style='border-collapse:
+ collapse;table-layout:fixed;width:897pt'>
+ <col width=99 style='mso-width-source:userset;mso-width-alt:3620;width:74pt'>
+ <col width=137 style='mso-width-source:userset;mso-width-alt:5010;width:103pt'>
+ <col width=126 style='mso-width-source:userset;mso-width-alt:4608;width:95pt'>
+ <col width=108 style='mso-width-source:userset;mso-width-alt:3949;width:81pt'>
+ <col width=110 style='mso-width-source:userset;mso-width-alt:4022;width:83pt'>
+ <col class=xl68 width=116 style='mso-width-source:userset;mso-width-alt:4242;
+ width:87pt'>
+ <col class=xl68 width=120 style='mso-width-source:userset;mso-width-alt:4388;
+ width:90pt'>
+ <col width=116 style='mso-width-source:userset;mso-width-alt:4242;width:87pt'>
+ <col width=263 style='mso-width-source:userset;mso-width-alt:9618;width:197pt'>
+ <col width=64 span=2 style='width:48pt'>
+ <col width=76 span=11 style='mso-width-source:userset;mso-width-alt:2779;
+ width:57pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 width=99 style='height:15.0pt;width:74pt'></td>
+  <td width=137 style='width:103pt'></td>
+  <td width=126 style='width:95pt'></td>
+  <td width=108 style='width:81pt'></td>
+  <td width=110 style='width:83pt'></td>
+  <td class=xl68 width=116 style='width:87pt'></td>
+  <td class=xl68 width=120 style='width:90pt'></td>
+  <td width=116 style='width:87pt'></td>
+  <td width=263 style='width:197pt'></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 class=xl81 colspan=3 style='height:26.25pt;mso-ignore:colspan'>On
+  the Internals of Initial3D</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+  <td class=xl68></td>
+  <td class=xl68></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 colspan=4 style='height:15.0pt;mso-ignore:colspan'>An overview
+  of the allocation of memory internal to <font class="font7">Initial3D</font><font
+  class="font0">.</font></td>
+  <td></td>
+  <td class=xl68></td>
+  <td class=xl68></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 colspan=2 style='height:15.0pt;mso-ignore:colspan'>Ben Allen,
+  allenbenj, 300243905</td>
+  <td colspan=3 style='mso-ignore:colspan'></td>
+  <td class=xl68></td>
+  <td class=xl68></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 colspan=5 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td class=xl68></td>
+  <td class=xl68></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl73 style='height:15.0pt'>region</td>
+  <td class=xl69>region_address_dec</td>
+  <td class=xl69>region_size_dec</td>
+  <td class=xl69>address_dec</td>
+  <td class=xl69>size_dec</td>
+  <td class=xl69>address_hex</td>
+  <td class=xl69>size_hex</td>
+  <td class=xl70>type</td>
+  <td class=xl70>data</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>globals</td>
+  <td class=xl72 align=right>0</td>
+  <td class=xl72 align=right>256</td>
+  <td align=right>0</td>
+  <td align=right>4</td>
+  <td class=xl71>00000000</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>width</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>4</td>
+  <td align=right>4</td>
+  <td class=xl71>00000004</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>height</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>8</td>
+  <td align=right>8</td>
+  <td class=xl71>00000008</td>
+  <td class=xl71>00000008</td>
+  <td>long</td>
+  <td>state flags</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>16</td>
+  <td align=right>4</td>
+  <td class=xl71>00000010</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>depth func</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>20</td>
+  <td align=right>4</td>
+  <td class=xl71>00000014</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil func</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>24</td>
+  <td align=right>4</td>
+  <td class=xl71>00000018</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil ref</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>28</td>
+  <td align=right>4</td>
+  <td class=xl71>0000001C</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil mask</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>32</td>
+  <td align=right>4</td>
+  <td class=xl71>00000020</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil op s-fail</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>36</td>
+  <td align=right>4</td>
+  <td class=xl71>00000024</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil op d-fail</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>40</td>
+  <td align=right>4</td>
+  <td class=xl71>00000028</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>stencil op d-pass</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>44</td>
+  <td align=right>4</td>
+  <td class=xl71>0000002C</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>cull faces</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>48</td>
+  <td align=right>4</td>
+  <td class=xl71>00000030</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>proj type</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>52</td>
+  <td align=right>4</td>
+  <td class=xl71>00000034</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>shademodel</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>56</td>
+  <td align=right>4</td>
+  <td class=xl71>00000038</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>begin mode</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>60</td>
+  <td align=right>4</td>
+  <td class=xl71>0000003C</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>front poly mode</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>64</td>
+  <td align=right>4</td>
+  <td class=xl71>00000040</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>back poly mode</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>68</td>
+  <td align=right>8</td>
+  <td class=xl71>00000044</td>
+  <td class=xl71>00000008</td>
+  <td>double</td>
+  <td>near clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>76</td>
+  <td align=right>8</td>
+  <td class=xl71>0000004C</td>
+  <td class=xl71>00000008</td>
+  <td>double</td>
+  <td>far cull</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>84</td>
+  <td align=right>4</td>
+  <td class=xl71>00000054</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>alpha func</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>88</td>
+  <td align=right>4</td>
+  <td class=xl71>00000058</td>
+  <td class=xl71>00000004</td>
+  <td>float</td>
+  <td>alpha ref</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>92</td>
+  <td align=right>4</td>
+  <td class=xl71>0000005C</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>blend src</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>96</td>
+  <td align=right>4</td>
+  <td class=xl71>00000060</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>blend dst</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>100</td>
+  <td align=right>4</td>
+  <td class=xl71>00000064</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>object id</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>104</td>
+  <td align=right>4</td>
+  <td class=xl71>00000068</td>
+  <td class=xl71>00000004</td>
+  <td>int</td>
+  <td>zsign</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>108</td>
+  <td align=right>16</td>
+  <td class=xl71>0000006C</td>
+  <td class=xl71>00000010</td>
+  <td>float4</td>
+  <td>scene ambient (ARGB)</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>124</td>
+  <td align=right>4</td>
+  <td class=xl71>0000007C</td>
+  <td class=xl71>00000004</td>
+  <td>float</td>
+  <td class=xl77>near clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>128</td>
+  <td align=right>4</td>
+  <td class=xl71>00000080</td>
+  <td class=xl71>00000004</td>
+  <td>float</td>
+  <td class=xl77>far cull</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>132</td>
+  <td align=right>8</td>
+  <td class=xl71>00000084</td>
+  <td class=xl71>00000008</td>
+  <td>long</td>
+  <td>pEx vector allocation pointer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td class=xl72>&nbsp;</td>
+  <td align=right>140</td>
+  <td align=right>16</td>
+  <td class=xl71>0000008C</td>
+  <td class=xl71>00000010</td>
+  <td>float4</td>
+  <td>fog color</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>lights</td>
+  <td class=xl75 align=right>256</td>
+  <td class=xl75 align=right>2048</td>
+  <td align=right>256</td>
+  <td align=right>256</td>
+  <td class=xl76>00000100</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light0</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>512</td>
+  <td align=right>256</td>
+  <td class=xl76>00000200</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light1</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>768</td>
+  <td align=right>256</td>
+  <td class=xl76>00000300</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light2</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>1024</td>
+  <td align=right>256</td>
+  <td class=xl76>00000400</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light3</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>1280</td>
+  <td align=right>256</td>
+  <td class=xl76>00000500</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light4</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>1536</td>
+  <td align=right>256</td>
+  <td class=xl76>00000600</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light5</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>1792</td>
+  <td align=right>256</td>
+  <td class=xl76>00000700</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light6</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl75 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td class=xl75>&nbsp;</td>
+  <td align=right>2048</td>
+  <td align=right>256</td>
+  <td class=xl76>00000800</td>
+  <td class=xl76>00000100</td>
+  <td>i3d_light</td>
+  <td class=xl77>light7</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl67 style='height:15.0pt'>materials</td>
+  <td class=xl67 align=right>2304</td>
+  <td class=xl67 align=right>524288</td>
+  <td align=right>2304</td>
+  <td align=right>262144</td>
+  <td class=xl78>00000900</td>
+  <td class=xl78>00040000</td>
+  <td>i3d_material</td>
+  <td>front material</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl67 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl67>&nbsp;</td>
+  <td class=xl67>&nbsp;</td>
+  <td align=right>264448</td>
+  <td align=right>262144</td>
+  <td class=xl78>00040900</td>
+  <td class=xl78>00040000</td>
+  <td>i3d_material</td>
+  <td>back material</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>matrices</td>
+  <td class=xl79 align=right>526592</td>
+  <td class=xl79 align=right>195584</td>
+  <td align=right>526592</td>
+  <td align=right>128</td>
+  <td class=xl80>00080900</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>model</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>526720</td>
+  <td align=right>128</td>
+  <td class=xl80>00080980</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>view</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>526848</td>
+  <td align=right>128</td>
+  <td class=xl80>00080A00</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>proj</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>526976</td>
+  <td align=right>128</td>
+  <td class=xl80>00080A80</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>modelview</td>
+ </tr>
+ <tr height=20 style='page-break-before:always;height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527104</td>
+  <td align=right>128</td>
+  <td class=xl80>00080B00</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>viewproj</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527232</td>
+  <td align=right>128</td>
+  <td class=xl80>00080B80</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>modelviewproj</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527360</td>
+  <td align=right>128</td>
+  <td class=xl80>00080C00</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>model_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527488</td>
+  <td align=right>128</td>
+  <td class=xl80>00080C80</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>view_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527616</td>
+  <td align=right>128</td>
+  <td class=xl80>00080D00</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>proj_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527744</td>
+  <td align=right>128</td>
+  <td class=xl80>00080D80</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>modelview_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>527872</td>
+  <td align=right>128</td>
+  <td class=xl80>00080E00</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>viewproj_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td class=xl79>&nbsp;</td>
+  <td align=right>528000</td>
+  <td align=right>128</td>
+  <td class=xl80>00080E80</td>
+  <td class=xl80>00000080</td>
+  <td>i3d_matrix</td>
+  <td>modelviewproj_inv</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>clip planes</td>
+  <td class=xl88 align=right>722176</td>
+  <td class=xl88 align=right>1024</td>
+  <td align=right>722176</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0500</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td>left clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722240</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0540</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td>right clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722304</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0580</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td>top clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722368</td>
+  <td align=right>64</td>
+  <td class=xl92>000B05C0</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td>bottom clip</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722432</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0600</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722496</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0640</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722560</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0680</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722624</td>
+  <td align=right>64</td>
+  <td class=xl92>000B06C0</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722688</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0700</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722752</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0740</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722816</td>
+  <td align=right>64</td>
+  <td class=xl92>000B0780</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl88 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td class=xl88>&nbsp;</td>
+  <td align=right>722880</td>
+  <td align=right>64</td>
+  <td class=xl92>000B07C0</td>
+  <td class=xl92>00000040</td>
+  <td>i3d_clipfunc</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl83 style='height:15.0pt'>temp</td>
+  <td class=xl83 align=right>723200</td>
+  <td class=xl83 align=right>65536</td>
+  <td align=right>723200</td>
+  <td align=right>16</td>
+  <td class=xl85>000B0900</td>
+  <td class=xl85>00000010</td>
+  <td>unused</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl83 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td align=right>723216</td>
+  <td align=right>24576</td>
+  <td class=xl85>000B0910</td>
+  <td class=xl85>00006000</td>
+  <td>polyvert[]</td>
+  <td>polygon clipping output</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl83 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td align=right>747792</td>
+  <td align=right>256</td>
+  <td class=xl85>000B6910</td>
+  <td class=xl85>00000100</td>
+  <td>vector[]</td>
+  <td>xform temp for clip planes</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl83 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td class=xl83>&nbsp;</td>
+  <td align=right>748048</td>
+  <td align=right>32</td>
+  <td class=xl85>000B6A10</td>
+  <td class=xl85>00000020</td>
+  <td>vector</td>
+  <td>xform temp for fog correction</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>vector buffers</td>
+  <td class=xl82 align=right>788736</td>
+  <td class=xl82 align=right>9437184</td>
+  <td align=right>788736</td>
+  <td align=right>1572864</td>
+  <td class=xl86>000C0900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>vertices, proj space</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td align=right>2361600</td>
+  <td align=right>1572864</td>
+  <td class=xl86>00240900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>normals, view space</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td align=right>3934464</td>
+  <td align=right>1572864</td>
+  <td class=xl86>003C0900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>vertices, view space</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td align=right>5507328</td>
+  <td align=right>1572864</td>
+  <td class=xl86>00540900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>texture coords</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td align=right>7080192</td>
+  <td align=right>1572864</td>
+  <td class=xl86>006C0900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>vertex colors</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl82 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td class=xl82>&nbsp;</td>
+  <td align=right>8653056</td>
+  <td align=right>1572864</td>
+  <td class=xl86>00840900</td>
+  <td class=xl86>00180000</td>
+  <td>vector[]</td>
+  <td>pipeline-generated extra (pEx)</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'>triangle buffer</td>
+  <td class=xl84 align=right>10225920</td>
+  <td class=xl84 align=right>4194304</td>
+  <td align=right>10225920</td>
+  <td align=right>4194304</td>
+  <td class=xl87>009C0900</td>
+  <td class=xl87>00400000</td>
+  <td>tri[]</td>
+  <td>triangle buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>screen buffers</td>
+  <td class=xl89 align=right>14420224</td>
+  <td class=xl89 align=right>201588736</td>
+  <td align=right>14420224</td>
+  <td align=right>16777216</td>
+  <td class=xl90>00DC0900</td>
+  <td class=xl90>01000000</td>
+  <td>int[]</td>
+  <td>frame buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>31197440</td>
+  <td align=right>67108864</td>
+  <td class=xl90>01DC0900</td>
+  <td class=xl90>04000000</td>
+  <td>float4[]</td>
+  <td>color buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>98306304</td>
+  <td align=right>16777216</td>
+  <td class=xl90>05DC0900</td>
+  <td class=xl90>01000000</td>
+  <td>float[]</td>
+  <td>invz buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>115083520</td>
+  <td align=right>262144</td>
+  <td class=xl90>06DC0900</td>
+  <td class=xl90>00040000</td>
+  <td>float[]</td>
+  <td>sinvz buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>115345664</td>
+  <td align=right>16777216</td>
+  <td class=xl90>06E00900</td>
+  <td class=xl90>01000000</td>
+  <td>int[]</td>
+  <td>stencil buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>132122880</td>
+  <td align=right>16777216</td>
+  <td class=xl90>07E00900</td>
+  <td class=xl90>01000000</td>
+  <td>int[]</td>
+  <td>id buffer</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl89 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td class=xl89>&nbsp;</td>
+  <td align=right>148900096</td>
+  <td align=right>67108864</td>
+  <td class=xl90>08E00900</td>
+  <td class=xl90>04000000</td>
+  <td>float4[]</td>
+  <td>fog depth correction factors</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl74 style='height:15.0pt'>lights_new</td>
+  <td class=xl74 align=right>216008960</td>
+  <td class=xl74 align=right>4096</td>
+  <td align=right>216008960</td>
+  <td align=right>256</td>
+  <td class=xl91>0CE00900</td>
+  <td class=xl91>00000100</td>
+  <td>i3d_light</td>
+  <td>light0</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl74 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl74>&nbsp;</td>
+  <td class=xl74>&nbsp;</td>
+  <td align=right>216009216</td>
+  <td align=right>256</td>
+  <td class=xl91>0CE00A00</td>
+  <td class=xl91>00000100</td>
+  <td></td>
+  <td>light1</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl74 style='height:15.0pt'>&nbsp;</td>
+  <td class=xl74>&nbsp;</td>
+  <td class=xl74>&nbsp;</td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+  <td class=xl91>etc</td>
+  <td class=xl91>&nbsp;</td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'>end</td>
+  <td align=right>216013056</td>
+  <td colspan=3 style='mso-ignore:colspan'></td>
+  <td class=xl68></td>
+  <td class=xl68></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=99 style='width:74pt'></td>
+  <td width=137 style='width:103pt'></td>
+  <td width=126 style='width:95pt'></td>
+  <td width=108 style='width:81pt'></td>
+  <td width=110 style='width:83pt'></td>
+  <td width=116 style='width:87pt'></td>
+  <td width=120 style='width:90pt'></td>
+  <td width=116 style='width:87pt'></td>
+  <td width=263 style='width:197pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

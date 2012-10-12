@@ -10,17 +10,6 @@ public class DungeonFloor extends AbstractFloorPlanner{
 
 	@Override
 	public Space[][] generateMaze(int _size) {
-		Space[][] floor = new Space[_size][_size];
-		
-		
-		
-		
-		return null;
-	}
-
-	private void addFloor(Space[][] floor){
-		
-		
-		
+		throw new RuntimeException("DungeonFloor not yet implemented");
 	}
 }

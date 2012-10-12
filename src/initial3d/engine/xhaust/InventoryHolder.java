@@ -1,6 +1,5 @@
 package initial3d.engine.xhaust;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

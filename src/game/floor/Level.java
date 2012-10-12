@@ -23,6 +23,11 @@ public class Level {
 		}
 		
 	}
+
+	public Floor getFloor()
+	{
+		return this.floor;
+	}
 	
 	public void addEntity(Entity _entity){
 		entities.add(_entity);
@@ -60,6 +65,5 @@ public class Level {
 			}
 		}
 		return null;
-	}
-	
+	}	
 }

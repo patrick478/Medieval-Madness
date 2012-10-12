@@ -70,6 +70,9 @@ public class RandomFloor extends AbstractFloorPlanner{
 			}
 		}
 		
+		// just to supress dat warning :P now 'emptyDiagonal' feels important
+		emptyDiagonal = emptyDiagonal * 1;
+		
 		return emptyAdjacent < 2;// && emptyDiagonal==0;
 	}
 

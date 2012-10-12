@@ -1,6 +1,5 @@
 package common.settings;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Scanner;

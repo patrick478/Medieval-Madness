@@ -118,7 +118,8 @@ public class SimpleAudioPlayer extends Thread
 				}
 				if (nBytesRead >= 0)
 				{
-					int	nBytesWritten = line.write(abData, 0, nBytesRead);
+					//int	nBytesWritten = 
+					line.write(abData, 0, nBytesRead);
 				}
 			}
 		
@@ -134,19 +135,5 @@ public class SimpleAudioPlayer extends Thread
 		}
 			}
 		}).start();
-	}
-
-
-	private static void printUsageAndExit()
-	{
-		out("SimpleAudioPlayer: usage:");
-		out("\tjava SimpleAudioPlayer <soundfile>");
-		System.exit(1);
-	}
-
-
-	private static void out(String strMessage)
-	{
-		System.out.println(strMessage);
 	}
 }

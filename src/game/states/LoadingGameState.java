@@ -1,9 +1,6 @@
 package game.states;
 
-import initial3d.engine.Color;
 import initial3d.engine.xhaust.*;
-import initial3d.engine.xhaust.*;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +26,7 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	BufferedImage bg;
 	Picture pic;
 	private boolean hasLoadedModels = false;
+	private double loadProgress = 0;
 	
 	private LevelGenerator levelGen = new LevelGenerator(32l);
 	
@@ -62,9 +60,7 @@ public class LoadingGameState extends GameState implements ContentRequest {
 
 		p.requestVisible(true);
 				
-		System.out.println("You're a porqupine!");
 		Game.getInstance().setLevel(levelGen.getLevel(Game.getInstance().getCurrentLevelNumber()));
-		System.out.println("You're a porqupine, too!");
 		
 		loadModels();
 	}
@@ -84,7 +80,7 @@ public class LoadingGameState extends GameState implements ContentRequest {
 
 	@Override
 	public void update(double delta) {
-		double loadProgress = Math.ceil((this.waitingOn.size() / toLoad.length) * 100f);
+		this.loadProgress = Math.ceil((this.waitingOn.size() / toLoad.length) * 100f);
 		// for now - no loading
 		if(this.waitingOn.size() == 0 && hasLoadedModels)
 		{
@@ -99,6 +95,10 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	public void destroy() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public double getProgress() {
+		return this.loadProgress;
 	}
 
 	@Override

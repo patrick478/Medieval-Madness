@@ -20,6 +20,7 @@ import java.util.Scanner;
 
 public class Main {
 
+	@SuppressWarnings({ "deprecation", "unused" })
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream ifs = new FileInputStream(args[0]);
@@ -91,9 +92,9 @@ public class Main {
 		Initial3D i3d = Initial3D.createInstance();
 
 		// assemble polygon and vector buffers
-		PolygonBuffer pbuf = i3d.createPolygonBuffer(10000, 8);
-		VectorBuffer vbuf = i3d.createVectorBuffer(10000);
-		VectorBuffer nbuf = i3d.createVectorBuffer(10000);
+		PolygonBuffer pbuf = Initial3D.createPolygonBuffer(10000, 8);
+		VectorBuffer vbuf = Initial3D.createVectorBuffer(10000);
+		VectorBuffer nbuf = Initial3D.createVectorBuffer(10000);
 
 		for (Triangle t : trilist) {
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import common.DataPacket;
-import common.DataPacket;
 
 public class DataPacketTests {
 	
@@ -84,8 +83,6 @@ public class DataPacketTests {
 		for(int i = 0; i < p.getData().length; i++)
 			System.out.printf("0x%02X ", p.getData()[i]);
 		System.out.println();
-		
-		byte[] test = new byte[] { (byte)1, (byte)0 };
 	}
 	
 	@Test

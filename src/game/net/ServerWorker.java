@@ -1,34 +1,89 @@
 package game.net;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
+import java.nio.channels.SocketChannel;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import common.DataPacket;
 import game.net.packets.MovementPacket;
-import game.net.packets.Packet;
 import game.net.packets.PingPacket;
-import game.net.packets.WelcomePacket;
 
 public class ServerWorker implements Runnable 
 {
-	ServerClient client = null;
-	NetworkingHost host = null;
-	private boolean isReady = false;
+	BlockingQueue<ServerDataEvent> dataQueue = new LinkedBlockingQueue<ServerDataEvent>();
 	
-	public ServerWorker(ServerClient sc, NetworkingHost nh)
+	private NetworkingHost server;
+	public ServerWorker(NetworkingHost _server)
 	{
-		this.client = sc;
-		this.host = nh;
+		this.server = _server;
 	}
 	
-	public boolean isReady()
+	public void processData(NetworkingHost server, ServerClient c, SocketChannel sc, byte[] data, int rx)
 	{
-		return this.isReady;
+		byte[] dataCopy = new byte[rx];
+		System.arraycopy(data,  0,  dataCopy,  0,  rx);
+		dataQueue.add(new ServerDataEvent(server, sc, c, dataCopy));
+		
 	}
 	
+	@Override
+	public void run()
+	{
+		ServerDataEvent dEvent = null;
+		while(true)
+		{
+			try {
+				dEvent = this.dataQueue.take();
+			} catch (InterruptedException e) {
+				// TODO: Proper error message
+				System.err.printf("Ben - fix this!\n");
+			}
+			
+			// do some stuff with that data.
+			ServerClient client = dEvent.getClient();
+			client.addToDataBuffer(dEvent.getData());
+			
+			while(client.hasPackets())
+			{
+				DataPacket dp = client.getNextPacket();
+				processPacket(client, dp);
+			}
+		}
+	}
+
+	private void processPacket(ServerClient client, DataPacket dp) {
+		switch(dp.getShort())
+		{
+			case PingPacket.ID:
+				long recvTime = System.currentTimeMillis();
+				long roundTrip = recvTime - client.getLastSyncTime();
+				long latency = roundTrip / 2;
+				client.setPredictedLatency(latency);
+				
+				if(client.needsSync())
+				{
+					PingPacket syncPacket = new PingPacket();
+					syncPacket.isReply = false;
+					syncPacket.predictedLatency = client.getPredictedLatency();
+					syncPacket.time = System.currentTimeMillis();
+					client.setLastSyncSent(syncPacket.time);
+					this.server.send(client.getSocket(),  syncPacket.toData().getData());
+					client.sentSync();
+				}
+			break;
+			
+			case MovementPacket.ID:
+				MovementPacket mp = new MovementPacket();
+				mp.fromData(dp);
+				client.setPosition(mp.position);
+				client.setVelocity(mp.velocity);
+				
+				this.server.updateOthersOnMovements(client);
+			break;
+		}
+	}
+}
+
+	/*
 	@Override
 	public void run()
 	{
@@ -135,4 +190,4 @@ public class ServerWorker implements Runnable
 		return bb.getShort(0);
 	}
 	
-}
+}*/

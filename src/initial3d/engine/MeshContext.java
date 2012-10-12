@@ -10,6 +10,7 @@ public class MeshContext extends Drawable {
 	public static final double DEFAULT_FAR_CULL = SceneManager.FAR_PLANE;
 
 	public static final int HINT_SMOOTH_SHADING = 0x1;
+	public static final int HINT_TWO_SIDED_LIGHTING = 0x2;
 
 	private final Object lock_hints = new Object();
 	private volatile int hintflags;
@@ -116,7 +117,7 @@ public class MeshContext extends Drawable {
 
 		if (mtl.map_kd != null) {
 			i3d.enable(TEXTURE_2D);
-			i3d.texImage2D(FRONT, mtl.map_kd, null, null);
+			i3d.texImage2D(FRONT, mtl.map_kd, mtl.map_ks, mtl.map_ke);
 		}
 
 		// TODO select mesh lod
@@ -131,10 +132,13 @@ public class MeshContext extends Drawable {
 		if (checkHint(HINT_SMOOTH_SHADING)) {
 			i3d.shadeModel(SHADEMODEL_GOURARD);
 		}
+		
+		if (checkHint(HINT_TWO_SIDED_LIGHTING)) {
+			i3d.enable(TWO_SIDED_LIGHTING);
+		}
 
 		i3d.drawPolygons(mlod.polys, 0, mlod.polys.count());
 
-		i3d.disable(TEXTURE_2D);
 		i3d.popMatrix();
 
 	}

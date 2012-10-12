@@ -10,14 +10,7 @@ import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
-import game.bound.BoundingSphere;
-import game.entity.Entity;
-import game.entity.WallEntity;
-import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
-import game.floor.Floor;
-import game.floor.FloorGenerator;
-import game.net.packets.MovementPacket;
 
 /***
  * The game!
@@ -30,7 +23,6 @@ public class PlayState extends GameState {
 	}
 
 	MovableReferenceFrame cameraRf = null;
-	private boolean mouseLock = false;
 	
 	private boolean transmittedStop = false;
 
@@ -41,11 +33,9 @@ public class PlayState extends GameState {
 
 	@Override
 	public void initalise() {
-		
-		
-		for(int i = 0; i < Game.getInstance().players.length; i++)
+		for(PlayerEntity pe : Game.getInstance().getPlayers())
 		{
-			Game.getInstance().players[i].addToScene(scene);
+			pe.addToScene(scene);
 		}
 		
 		System.out.println(Game.getInstance().getLevel());
@@ -53,7 +43,7 @@ public class PlayState extends GameState {
 
 		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().player);
 		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(0, 0.5, -0.9));
+		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
 		InventoryHolder i = new InventoryHolder();
@@ -71,8 +61,9 @@ public class PlayState extends GameState {
 		scene.setFogParams(255f * 1.5f, 512f * 1.5f);
 		scene.setFogEnabled(true);
 		
-		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, Color.WHITE, Vec3.create(0, 1, 1));
-		//scene.addLight(l);
+		// Enable this for a sun like effect - ie more ambient light
+		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, new Color(30, 30, 30), Vec3.create(0, 1, 1));
+		scene.addLight(l);
 		
 		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
@@ -107,7 +98,6 @@ public class PlayState extends GameState {
 		rf.setOrientation(Quat.create(cam_pitch, Vec3.i));
 		
 		Vec3 cnorm = cam.getNormal().flattenY().unit();
-		Vec3 cup = Vec3.j;
 		Vec3 cside = Vec3.j.cross(cnorm);
 
 		Vec3 v = Vec3.zero;
@@ -132,6 +122,11 @@ public class PlayState extends GameState {
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
 		}
 		
+		if(rwin.getKey(KeyEvent.VK_ESCAPE))
+		{
+			rwin.setMouseCapture(!rwin.isMouseCaptured());
+		}
+		
 		double maxDelta = 0.01;
 		boolean sprinting = rwin.getKey(KeyEvent.VK_SHIFT);
 		if(sprinting) targetFov = Math.PI / 2.2;
@@ -152,8 +147,9 @@ public class PlayState extends GameState {
 			v = v.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
 		
+		// JOSH: shouldn't this take the velocity vector we just finished calculating into account? // FIXME
 		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
-//			Game.getInstance().player.fix();
+			Game.getInstance().player.fix();
 		}
 		
 		//TODO also needs to be changed
@@ -170,7 +166,6 @@ public class PlayState extends GameState {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
-		
 	}
 
 	@Override

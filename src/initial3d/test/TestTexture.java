@@ -1,9 +1,6 @@
 package initial3d.test;
 
-import initial3d.Initial3D;
 import initial3d.Texture;
-
-import static initial3d.Texture.Channel;
 
 public class TestTexture {
 

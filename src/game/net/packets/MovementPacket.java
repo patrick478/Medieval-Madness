@@ -2,15 +2,14 @@ package game.net.packets;
 
 import initial3d.engine.Vec3;
 import common.DataPacket;
-import game.entity.*;
 
 public class MovementPacket extends Packet
 {
 	public static final short ID = 3;
 	
-	public int playerIndex;
-	public Vec3 position;
-	public Vec3 velocity;
+	public int playerIndex = -1;
+	public Vec3 position = Vec3.one;
+	public Vec3 velocity = Vec3.zero;
 	
 	public MovementPacket()
 	{

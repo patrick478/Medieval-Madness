@@ -453,6 +453,7 @@ class Initial3DImpl extends Initial3D {
 		return MAX_LIGHTS;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void lightf(long light, int pname, float v) {
 		long qLight = getLightQPointer(light);

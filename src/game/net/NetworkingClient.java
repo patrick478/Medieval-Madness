@@ -43,7 +43,8 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		{
 			this.clientThread = new Thread(this);
 			this.clientThread.start();
-		}
+			System.out.println("Connected!");
+		}	
 	}
 
 	@Override
@@ -105,6 +106,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				dp.getShort();
 				int pIndex = dp.getShort();
 				Game.getInstance().setPlayerIndex(pIndex);
+				Game.getInstance().setMaxPlayers(dp.getShort());
 				break;
 				
 			case PingPacket.ID:

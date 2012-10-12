@@ -1,6 +1,5 @@
 package game.entity.trigger;
 
-import game.Game;
 import game.entity.Entity;
 import game.event.AbstractEvent;
 

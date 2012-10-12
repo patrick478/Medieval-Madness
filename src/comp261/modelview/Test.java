@@ -9,8 +9,8 @@ import initial3d.engine.old.MeshContext;
 import java.io.FileInputStream;
 
 
+@SuppressWarnings("deprecation")
 public class Test {
-
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream fis = new FileInputStream("ball.txt");
@@ -28,9 +28,6 @@ public class Test {
 		eng.start();
 		
 		eng.addMeshContext(mc);
-
-		
-
 	}
 
 }

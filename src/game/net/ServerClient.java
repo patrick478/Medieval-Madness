@@ -2,48 +2,34 @@ package game.net;
 
 import initial3d.engine.Vec3;
 
-import java.io.*;
-import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.*;
 
 import common.BufferQueue;
 import common.DataPacket;
 
 public class ServerClient 
-{
-	public Socket socket;
-	public Thread thread;
-	
-	public DataInputStream in;
-	public DataOutputStream out;
-	
-	public Vec3 position = Vec3.zero;
-	public Vec3 velocity = Vec3.zero;
+{	
+	private Vec3 position = Vec3.zero;
+	private Vec3 velocity = Vec3.zero;
 	
 	private long predictedLatency = 0;
-	public int syncsLeft = 5;
-	public long lastSync = System.currentTimeMillis();
-	
-	static final int BUFFER_SIZE = 80000;
-	
-	BufferQueue bq = new BufferQueue(BUFFER_SIZE);
-	public BlockingQueue<DataPacket> dataPackets = new LinkedBlockingQueue<DataPacket>();
+	private int syncsLeft = 5;
+	private long lastSync = System.currentTimeMillis();
 	
 	private int playerIndex = -1;
 	
+	private BufferQueue dq = new BufferQueue(8192);
+	private BlockingQueue<DataPacket> packets = new LinkedBlockingQueue<DataPacket>();
+	private short packetLength = -1;
+	
+	private SocketChannel socket;
 
-	public ServerClient(int pIndex)
+	public ServerClient(int pIndex, SocketChannel sc)
 	{
 		this.playerIndex = pIndex;
-	}
-	
-	public void send(DataPacket dp)
-	{
-		try {
-			this.out.write(dp.getData());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.socket = sc;
 	}
 	
 	public int getPlayerIndex()
@@ -62,6 +48,7 @@ public class ServerClient
 	}
 
 	public Vec3 getPosition() {
+		// FIXME: Scaling via time etc - or something
 		return this.position;
 	}
 	
@@ -72,10 +59,78 @@ public class ServerClient
 	
 	public void setPredictedLatency(long pl) {
 		this.predictedLatency = pl;
-		System.out.printf("Setting latency to %d\n", pl);
+		System.out.printf("Connection latency to player %d has been changed to %dms\n", this.getPlayerIndex(), pl);
 	}
 
 	public long getPredictedLatency() {
 		return this.predictedLatency;
+	}
+
+	public void addToDataBuffer(byte[] data) {
+		this.dq.append(data);
+		
+		readPacketsFromBuffer();
+	}
+	
+	private void readPacketsFromBuffer()
+	{
+		while(true)
+		{
+			if(this.packetLength < 0 && this.dq.getCount() > 2)
+			{
+				byte[] lenData = new byte[2];
+				this.dq.read(lenData, 0, 2);
+				this.packetLength = bytesToShort(lenData);
+			}
+			if(this.dq.getCount() >= this.packetLength && this.packetLength > 0)
+			{
+				byte[] data = new byte[this.packetLength];
+				this.dq.read(data, 0, packetLength);
+				DataPacket dp = new DataPacket(data, false);
+				this.packets.add(dp);
+				
+				this.packetLength = -1;
+			}
+			else
+				break;
+		}
+	}
+	
+	private short bytesToShort(byte[] data)
+	{
+		ByteBuffer b = ByteBuffer.wrap(data);
+		return b.getShort();
+	}
+
+	public boolean hasPackets() {
+		return !this.packets.isEmpty();
+	}
+
+	public DataPacket getNextPacket() {
+		return this.packets.poll();
+	}
+
+	public void setSyncsRequired(int i) {
+		this.syncsLeft = i;
+	}
+	
+	public void setLastSyncSent(long t) {
+		this.lastSync = t;
+	}
+
+	public void sentSync() {
+		this.syncsLeft--;
+	}
+
+	public long getLastSyncTime() {
+		return this.lastSync;
+	}
+
+	public boolean needsSync() {
+		return this.syncsLeft > 0;
+	}
+
+	public SocketChannel getSocket() {
+		return this.socket;
 	}
 }

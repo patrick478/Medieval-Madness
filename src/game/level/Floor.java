@@ -130,11 +130,15 @@ public class Floor {
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.5, 0.5),
 				meshlod.addTexCoord(0.5, 0.25)};
+		
+		/* This will probably be never used, keep only for completeness
+		 * Sets up the roof texture coordinators, for texturing a polygon on the roof/ceiling
 		int[] roof_tex_coord = new int[]{
 				meshlod.addTexCoord(0, 0.25),
 				meshlod.addTexCoord(0, 0.5),
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.25, 0.25)};
+		*/
 		
 		
 		
@@ -233,9 +237,6 @@ public class Floor {
 				}
 			}
 		}
-		
-
-		System.out.println(meshlod.getVertices().count());
 
 		Mesh mesh = new Mesh();
 		mesh.add(meshlod);
@@ -261,6 +262,10 @@ public class Floor {
 	
 	public Space[][] getData(){
 		return data;
+	}
+	
+	public int getSize(){
+		return size;
 	}
 	
 	public List<WallEntity> getWalls(){
