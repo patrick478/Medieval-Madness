@@ -65,7 +65,8 @@ public class PlayState extends GameState {
 		
 		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
-			
+		
+		Game.getInstance().player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);		
 	}
 
 	@Override
@@ -145,12 +146,11 @@ public class PlayState extends GameState {
 		
 		// JOSH: shouldn't this take the velocity vector we just finished calculating into account? // FIXME
 		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
-//			Game.getInstance().player.fix();
+			Game.getInstance().player.fix();
 		}
 		
 		//TODO also needs to be changed
-		PlayerEntity player = Game.getInstance().player;
-		player.updateMotion(player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
+		Game.getInstance().player.updateMotion(Game.getInstance().player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
 		
 		//other Ben's doing...
 		if(!v.equals(Vec3.zero))

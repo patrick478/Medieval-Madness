@@ -27,6 +27,10 @@ public class Button extends Component {
 		super(defaultWidth, defaultHeight);
 		this.text = _text;
 	}
+	public Button(String _text, int width) {
+		super(width, defaultHeight);
+		this.text = _text;
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g)
@@ -69,4 +73,6 @@ public class Button extends Component {
 		}
 		repaint();
 	}
+	
+	
 }
