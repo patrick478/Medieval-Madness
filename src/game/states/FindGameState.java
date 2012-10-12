@@ -6,6 +6,7 @@ import initial3d.engine.xhaust.TextFieldV0;
 import initial3d.engine.xhaust.vision.ActionIDList;
 import initial3d.engine.xhaust.vision.Button;
 import initial3d.engine.xhaust.vision.Input;
+import initial3d.engine.xhaust.vision.Label;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +90,25 @@ public class FindGameState extends GameState {
 			}
 		});
 		
+		
+		
+		//Code for the sever select part of the screen
+		
+		Label serverOne = new Label(300);
+		Label serverTwo = new Label(300);
+		Label serverThree = new Label(300);
+		Label serverFour = new Label(300);
+
+		serverOne.setPosition(90, 200);
+		serverTwo.setPosition(90, 226);
+		serverThree.setPosition(90, 252);
+		serverFour.setPosition(90, 278);
+
+		
+
+		
+		
+		
 		pic = new Picture(bg ,0,0, 800,600);
 		
 		
@@ -96,6 +116,10 @@ public class FindGameState extends GameState {
 		p.getRoot().add(target);
 		p.getRoot().add(joinGameButton);
 		p.getRoot().add(mainMenu);
+		p.getRoot().add(serverOne);
+		p.getRoot().add(serverTwo);
+		p.getRoot().add(serverThree);
+		p.getRoot().add(serverFour);
 
 		target.requestLocalFocus();
 		
