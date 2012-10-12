@@ -26,6 +26,9 @@ public class Container extends Component {
 
 	public boolean remove(Component c) {
 		if (children.remove(c)) {
+			if (c instanceof Container) {
+				((Container) c).clear();
+			}
 			c.setParent(null);
 			c.setPane(null);
 			return true;
@@ -41,6 +44,12 @@ public class Container extends Component {
 			}
 		}
 		return false;
+	}
+	
+	public void clear() {
+		for (Component c : new ArrayList<Component>(children)) {
+			remove(c);
+		}
 	}
 
 	@Override
