@@ -264,6 +264,10 @@ public class Floor {
 		return data;
 	}
 	
+	public int getSize(){
+		return size;
+	}
+	
 	public List<WallEntity> getWalls(){
 		return walls;
 	}
