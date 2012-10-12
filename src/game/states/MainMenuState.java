@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import soundengine.SimpleAudioPlayer;
+
 import game.Game;
 import game.GameState;
 
