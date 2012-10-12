@@ -43,7 +43,7 @@ public class SimpleAudioPlayer extends Thread
 	private static SourceDataLine	line;
 
 
-	public static void play(final String filename){
+	public static void play(final String filename, final Boolean loop){
 		new Thread(new Runnable(){
 			@Override
 			public void run(){
@@ -52,6 +52,7 @@ public class SimpleAudioPlayer extends Thread
 		/*
 		  We have to read in the sound file.
 		 */
+		do{
 		AudioInputStream	audioInputStream = null;
 		try
 		{
@@ -129,7 +130,8 @@ public class SimpleAudioPlayer extends Thread
 			line.drain();
 			line.close();
 		
-
+		}
+		while(loop);
 		//System.exit(0);
 		}
 			

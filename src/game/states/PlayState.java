@@ -2,6 +2,8 @@ package game.states;
 
 import java.awt.event.KeyEvent;
 
+import soundengine.SimpleAudioPlayer;
+
 import initial3d.engine.*;
 import initial3d.engine.xhaust.InventoryHolder;
 import initial3d.engine.xhaust.Pane;
@@ -75,7 +77,8 @@ public class PlayState extends GameState {
 		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
 		scene.addLight(l2);
 		
-		Game.getInstance().player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);		
+		Game.getInstance().player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	
+		SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 	}
 
 	@Override
