@@ -23,6 +23,16 @@ public class Label extends Component {
 		this.text = string;
 	}
 	
+	public Label(int i) {
+		super(i, defaultHeight);
+	}
+	
+	public void setText(String text){
+		this.text = text;
+	}
+	
+	
+	
 	@Override
 	protected void paintComponent(Graphics g)
 	{

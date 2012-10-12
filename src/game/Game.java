@@ -35,6 +35,7 @@ public class Game implements Runnable {
 	private final long optimalTime = 1000000000 / gameHz;
 
 	private GameState currentGameState;
+	private GameState previousState = null; 
 	private Thread gameThread = null;
 	private boolean gameRunning = false;
 	private RenderWindow gameWindow = null;
@@ -120,9 +121,9 @@ public class Game implements Runnable {
 		p.setResetOutput(System.out);
 
 		p.startSection("ChangeState-DestroyOldGameState()");
-		if (this.currentGameState != null) this.currentGameState.destroy();
+		if (this.previousState != null) this.previousState.destroy();
 		p.endSection("ChangeState-DestroyOldGameState()");
-
+		this.previousState = this.currentGameState;
 		this.currentGameState = gs;
 
 		p.startSection("ChangeState-InitaliseNewState()");
@@ -132,6 +133,19 @@ public class Game implements Runnable {
 		p.startSection("ChangeState-AttachToScene()");
 		if (this.sceneManager != null) this.sceneManager.attachToScene(this.currentGameState.scene);
 		p.endSection("ChangeState-AttachToScene()");
+
+		// This is used to figure out how long stuff is going.. disabled most of
+		// the time!
+		// p.reset();
+	}
+	
+	public void revertState() {
+		if (this.currentGameState != null) this.currentGameState.destroy();
+
+		this.currentGameState = this.previousState;
+
+		if (this.sceneManager != null) this.sceneManager.attachToScene(this.currentGameState.scene);
+
 
 		// This is used to figure out how long stuff is going.. disabled most of
 		// the time!
