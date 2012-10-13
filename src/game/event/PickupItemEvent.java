@@ -1,5 +1,7 @@
 package game.event;
 
+import java.util.List;
+
 import game.Game;
 import game.entity.Entity;
 import game.entity.moveable.PlayerEntity;
@@ -17,10 +19,15 @@ public class PickupItemEvent extends AbstractEvent{
 	}
 	
 	@Override
-	protected boolean applyEvent(long _timeStamp, Entity _trigger) {
-		if(_trigger instanceof PlayerEntity){
-			Game.getInstance().addItemToPlayer(_trigger.id, item);
-			return true;
+	protected boolean applyEvent(long _timeStamp, List<Entity> _trigger) {
+		for(Entity e : _trigger){
+			if(e instanceof PlayerEntity){
+				PlayerEntity p = (PlayerEntity)e;
+				if(!p.inventory().isFull()){
+					Game.getInstance().addItemToPlayer(e.id, item);
+					return true;
+				}
+			}
 		}
 		return false;
 	}

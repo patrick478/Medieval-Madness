@@ -1,5 +1,7 @@
 package game.entity.trigger;
 
+import java.util.List;
+
 import game.entity.Entity;
 import game.event.AbstractEvent;
 
@@ -42,9 +44,9 @@ public abstract class TriggerEntity extends Entity{
 	/**
 	 * Trigger and enact the list of events onto the game world.
 	 * 
-	 * @param _trigger the entity that triggered the event. May be null
+	 * @param _trigger the list of entities that triggered the event. Cannot be null but may be empty
 	 */
-	public void trigger(Entity _trigger){
+	public void trigger(List<Entity> _trigger){
 		event.activate(System.currentTimeMillis(), _trigger);
 	}
 	

@@ -3,6 +3,7 @@ package game;
 import java.util.*;
 
 import game.entity.Entity;
+import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.item.Item;
 import game.level.Level;
@@ -272,20 +273,21 @@ public class Game implements Runnable {
 	}
 
 	public void removeEntity(long _eid) {
-		currentGameState.scene.removeDrawables(
-				currentLevel.removeEntity(_eid).getMeshContexts());
+		Entity e = currentLevel.removeEntity(_eid);
+		if(e!=null){
+			currentGameState.scene.removeDrawables(e.getMeshContexts());
+		}
 	}
 	
-	public void spawnItem(){
-		
+	public void spawnItem(Item _item, Vec3 _position){
+		addEntity(new ItemEntity(_position, _item));
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){
-		System.out.println("ADDED ITEM TO PLAYE ^_^");
+		
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){
-		//TODO
 	}
 
 	public boolean isHost() {

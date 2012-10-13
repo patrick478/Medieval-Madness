@@ -2,6 +2,7 @@ package game.states;
 
 import java.awt.event.KeyEvent;
 import java.security.Identity;
+import java.util.List;
 
 import soundengine.SimpleAudioPlayer;
 
@@ -49,7 +50,7 @@ public class PlayState extends GameState {
 		System.out.println("Creating test object");
 		
 		Item it = new Item(null, null){};
-		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), 0.25, it);
+		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 //		ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 		
 		Material mat = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
@@ -208,10 +209,9 @@ public class PlayState extends GameState {
 		
 		if(Game.getInstance().isHost()){
 			for(TriggerEntity t : Game.getInstance().getLevel().getTriggers()){
-				Entity e = Game.getInstance().getLevel().firstCollision(t);
-				if(e!=null){
-					System.out.println("trigger");
-					t.trigger(e);
+				List<Entity> le = Game.getInstance().getLevel().collisions(t);
+				if(!le.isEmpty()){
+					t.trigger(le);
 				}
 			}
 		}

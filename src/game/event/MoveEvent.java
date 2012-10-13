@@ -1,9 +1,12 @@
 package game.event;
 
+import java.util.List;
+
 import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 import game.Game;
 import game.entity.Entity;
+import game.entity.moveable.PlayerEntity;
 
 public class MoveEvent extends AbstractEvent{
 
@@ -18,9 +21,14 @@ public class MoveEvent extends AbstractEvent{
 	}
 	
 	@Override
-	protected boolean applyEvent(long _timeStamp, Entity _trigger) {
-		Game.getInstance().moveEntity(target_id, target_pos);
-		Game.getInstance().turnEntity(target_id, target_orient);
-		return true;
+	protected boolean applyEvent(long _timeStamp, List<Entity> _trigger) {
+		for(Entity e : _trigger){
+			if(e instanceof PlayerEntity){
+				Game.getInstance().moveEntity(target_id, target_pos);
+				Game.getInstance().turnEntity(target_id, target_orient);
+				return true;
+			}
+		}
+		return false;
 	}
 }

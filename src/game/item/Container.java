@@ -39,6 +39,20 @@ public class Container extends Item{
 		return items.add(_item);
 	}
 	
+	public boolean isFull(){
+		if(items.size()<capacity){
+			return false;
+		}
+		for(Item i : items){
+			if(i instanceof Container){
+				if(!((Container)i).isFull()){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public boolean containsItem(Item _item){
 		for(Item i : items){
 			if(i.equals(_item)){
