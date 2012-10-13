@@ -10,6 +10,10 @@ public class EnemyEntity extends MoveableEntity {
 	public EnemyEntity(long _id) {
 		super(_id);
 	}
+	
+	public EnemyEntity() {
+		super();
+	}
 
 	@Override
 	protected Bound getBound(Vec3 position) {

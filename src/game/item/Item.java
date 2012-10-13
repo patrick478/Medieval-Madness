@@ -36,8 +36,7 @@ public abstract class Item {
 	 * Returns the parent item of this item
 	 * @return Item of parent, or null if root level item
 	 */
-	public Item getParent()
-	{
+	public Item getParent(){
 		return this.parent;
 	}
 }

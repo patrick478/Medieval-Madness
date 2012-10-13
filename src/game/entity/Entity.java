@@ -7,6 +7,9 @@ import initial3d.engine.*;
 
 public abstract class Entity implements ReferenceFrame {
 	
+	private static HashMap<Long, Entity> entityID = new HashMap<Long, Entity>();
+	private static long nextID = 0;
+	
 	public final long id;
 	
 	protected Vec3 position = Vec3.zero;
@@ -15,7 +18,19 @@ public abstract class Entity implements ReferenceFrame {
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
 	public Entity(long _id){
+		if(entityID.containsKey(_id)){
+			throw new IllegalArgumentException("Cannot create entity with existing ID");
+		}
 		id = _id;
+		entityID.put(id, this);
+	}
+	
+	public Entity(){
+		while(entityID.containsKey(nextID)){
+			nextID++;
+		}
+		id = nextID++;
+		entityID.put(id, this);
 	}
 	
 	@Override

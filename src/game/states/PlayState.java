@@ -96,33 +96,34 @@ public class PlayState extends GameState {
 		Vec3 cnorm = cam.getNormal().flattenY().unit();
 		Vec3 cside = Vec3.j.cross(cnorm);
 
-		Vec3 v = Vec3.zero;
+		Vec3 intent_vel = Vec3.zero;
 
 		if (rwin.getKey(KeyEvent.VK_W)) {
-			v = v.add(cnorm);
+			intent_vel = intent_vel.add(cnorm);
 		}
 		if (rwin.getKey(KeyEvent.VK_S)) {
-			v = v.add(cnorm.neg());
+			intent_vel = intent_vel.add(cnorm.neg());
 		}
 		if (rwin.getKey(KeyEvent.VK_A)) {
-			v = v.add(cside);
+			intent_vel = intent_vel.add(cside);
 		}
 		if (rwin.getKey(KeyEvent.VK_D)) {
-			v = v.add(cside.neg());
+			intent_vel = intent_vel.add(cside.neg());
 		}
 		
 		// temp
-		if(rwin.getKey(KeyEvent.VK_O)) {
-			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
-		} else if(rwin.getKey(KeyEvent.VK_P)) {
-			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
-		}
+//		if(rwin.getKey(KeyEvent.VK_O)) {
+//			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
+//		} else if(rwin.getKey(KeyEvent.VK_P)) {
+//			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
+//		}
 		
 		if(rwin.getKey(KeyEvent.VK_ESCAPE))
 		{
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		}
 		
+		//sprinting
 		double maxDelta = 0.01;
 		boolean sprinting = rwin.getKey(KeyEvent.VK_SHIFT);
 		if(sprinting) targetFov = Math.PI / 2.2;
@@ -139,21 +140,31 @@ public class PlayState extends GameState {
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - dta);
 		}
 		
-		if (v.mag() > 0.0001) {
-			v = v.unit().scale(speed * (sprinting ? sprintMulti : 1));
+		if (intent_vel.mag() > 0.0001) {
+			intent_vel = intent_vel.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
 		
-		// JOSH: shouldn't this take the velocity vector we just finished calculating into account? // FIXME
-		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
-//			Game.getInstance().player.fix();
-		}
 		
-		//TODO also needs to be changed
+		//Retrieve the player and set the velocity
 		PlayerEntity player = Game.getInstance().player;
-		player.updateMotion(player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
+		player.setIntVelocity(intent_vel);
 		
-		//other Ben's doing...
-		if(!v.equals(Vec3.zero))
+		//get the collision normals (if any)
+		Vec3 colNorm = Game.getInstance().getLevel().preCollision(player, true);
+		
+		//if there was a collision set the velocity appropriately
+		if(colNorm != null){
+			//vector magic
+			Vec3 intentUnit = intent_vel.unit();
+			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag();
+			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale);
+		}
+		
+		//poke all players and set the velocity
+		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
+		Game.getInstance().getLevel().pokeAll();
+		
+		if(!intent_vel.equals(Vec3.zero))
 		{
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = false;
