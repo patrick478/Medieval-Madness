@@ -12,6 +12,7 @@ public abstract class Light {
 	protected double[] spotdir = new double[4];
 	protected Color color_d = Color.WHITE, color_s = Color.WHITE, color_a = Color.BLACK;
 	protected float spot_cutoff = (float) Math.PI;
+	protected float spot_exp = 0f;
 	protected float[] coltemp = new float[3];
 	protected float atten_const = 1f;
 	protected float atten_lin = 0f;
@@ -47,6 +48,7 @@ public abstract class Light {
 		i3d.popMatrix();
 
 		i3d.lightf(light, SPOT_CUTOFF, spot_cutoff);
+		i3d.lightf(light, SPOT_EXPONENT, spot_exp);
 		i3d.lightfv(light, DIFFUSE, color_d.toArray(coltemp));
 		i3d.lightfv(light, SPECULAR, color_s.toArray(coltemp));
 		i3d.lightfv(light, AMBIENT, color_a.toArray(coltemp));
@@ -126,11 +128,23 @@ public abstract class Light {
 
 	}
 
-	public static class SpotLight extends Light {
-
-		public SpotLight(ReferenceFrame rf_) {
-			super(rf_);
-			throw new AssertionError("SpotLight is not implemented.");
+	public static class SpotLight extends SphericalPointLight {
+		
+		public SpotLight(ReferenceFrame rf_, Color c, float radius_, float spotcutoff_ , float spotexp_) {
+			super(rf_, c, radius_);
+			spotdir[0] = 0;
+			spotdir[1] = 0;
+			spotdir[2] = 1;
+			spot_cutoff = spotcutoff_;
+			spot_exp = spotexp_;
+		}
+		
+		public void setSpotCutoff(float spotcutoff_) {
+			spot_cutoff = spotcutoff_;
+		}
+		
+		public void setSpotExponent(float spotexp_) {
+			spot_exp = spotexp_;
 		}
 
 	}

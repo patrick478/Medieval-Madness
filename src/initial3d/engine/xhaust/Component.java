@@ -17,7 +17,7 @@ import java.util.Collections;
 
 public abstract class Component extends ActionSource implements Pane.PaneProvider {
 
-	private final int width, height;
+	private int width, height;
 	private volatile int x, y;
 	private volatile boolean opaque = true;
 	private volatile Color col_bg = Color.WHITE;
@@ -154,6 +154,11 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 
 	public int getHeight() {
 		return height;
+	}
+	
+	public void setSize(int width_, int height_) {
+		width = width_;
+		height = height_;
 	}
 
 	public int getX() {

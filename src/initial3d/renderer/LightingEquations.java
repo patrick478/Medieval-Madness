@@ -12,8 +12,9 @@ final class LightingEquations {
 	}
 
 	/**
-	 * Run the phong equation. pOutput is a pointer to RGB float3 for output purposes. N and V must be normalised
-	 * already; however the raw version of V must be supplied as well.
+	 * Run the phong equation. pOutput is a pointer to RGB float3 for output
+	 * purposes. N and V must be normalised already; however the raw version of
+	 * V must be supplied as well.
 	 */
 	static final void runPhong(Unsafe unsafe, long pBase, long pOutput, float ka_r, float ka_g, float ka_b, float kd_r,
 			float kd_g, float kd_b, float ks_r, float ks_g, float ks_b, float shininess, float Nx, float Ny, float Nz,
@@ -89,7 +90,8 @@ final class LightingEquations {
 				Ry *= imR;
 				Rz *= imR;
 
-				// this uses an approximation for the spec pow term (from wikipedia)
+				// this uses an approximation for the spec pow term (from
+				// wikipedia)
 
 				// use gamma = 4
 				float beta = shininess * 0.25f;
@@ -125,9 +127,10 @@ final class LightingEquations {
 	}
 
 	/**
-	 * Run the phong equation. pOutput is a pointer to RGB float3 for output purposes. N and V must be normalised
-	 * already; however the raw version of V must be supplied as well. This (new) version takes a pointer to a material,
-	 * and adds material emissivity.
+	 * Run the phong equation. pOutput is a pointer to RGB float3 for output
+	 * purposes. N and V must be normalised already; however the raw version of
+	 * V must be supplied as well. This (new) version takes a pointer to a
+	 * material, and adds material emissivity.
 	 */
 	static final void runPhong2(Unsafe unsafe, long pBase, long pOutput, long pMtl, float Nx, float Ny, float Nz,
 			float Vx, float Vy, float Vz, float Vx_raw, float Vy_raw, float Vz_raw) {
@@ -152,7 +155,7 @@ final class LightingEquations {
 
 		// first light pointer
 		long pLight = pBase + 0x0CE00900;
-		
+
 		boolean twosided = (unsafe.getLong(pBase + 0x00000008) & 0x40L) != 0;
 
 		while ((unsafe.getInt(pLight + 80) & 0x2) == 0) {
@@ -179,19 +182,22 @@ final class LightingEquations {
 				Lx *= imL;
 				Ly *= imL;
 				Lz *= imL;
-				
+
 				// if distance > effect radius, skip
 				if (imL < unsafe.getFloat(pLight + 108)) {
 					pLight += 0x100;
 					continue;
 				}
 
-				// light falloff as per the canonical light equation for point light attenuation
+				// light falloff as per the canonical light equation for point
+				// light attenuation
 				// imL == 1 / d == e
 				float e2 = imL * imL;
 				falloff = e2
 						* fastInverse(unsafe.getFloat(pLight + 88) * e2 + unsafe.getFloat(pLight + 92) * imL
 								+ unsafe.getFloat(pLight + 96));
+				// not entirely accurate, but cap falloff to 1
+				falloff = falloff > 1f ? 1f : falloff;
 
 			}
 
@@ -200,11 +206,30 @@ final class LightingEquations {
 			out_g += ka_g * unsafe.getFloat(pLight + 8);
 			out_b += ka_b * unsafe.getFloat(pLight + 12);
 
+			// spotlights
+			float spot_cutoff = unsafe.getFloat(pLight + 100);
+			if (spot_cutoff > 0.001) {
+				float LdotS = -1f
+						* (unsafe.getFloat(pLight + 64) * Lx + unsafe.getFloat(pLight + 68) * Ly + unsafe
+								.getFloat(pLight + 72) * Lz);
+
+				if (LdotS < spot_cutoff) {
+					pLight += 0x100;
+					continue;
+				}
+				
+				float spot_exp = unsafe.getFloat(pLight + 104);
+				
+				if (spot_exp > 0.001) {
+					falloff = falloff * (float) Math.pow(LdotS, spot_exp);
+				}
+			}
+
 			// do complicated part of equation
 
 			// lambert term
 			float LdotN = Lx * Nx + Ly * Ny + Lz * Nz;
-			
+
 			// reverse normal if twosided enabled and lit from back
 			if (twosided && LdotN < 0) {
 				Nx = -Nx;
@@ -230,7 +255,8 @@ final class LightingEquations {
 				Ry *= imR;
 				Rz *= imR;
 
-				// this uses an approximation for the spec pow term (from wikipedia)
+				// this uses an approximation for the spec pow term (from
+				// wikipedia)
 
 				// use gamma = 4
 				float beta = shininess * 0.25f;

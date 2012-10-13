@@ -219,7 +219,7 @@ public class Game implements Runnable {
 		for (int i = 0; i < _maxPlayers; i++) {
 			if (i == this.playerIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(0, Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
+			PlayerEntity p = new PlayerEntity(System.nanoTime(), Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
 			addPlayer(i, p);
 		}
 
