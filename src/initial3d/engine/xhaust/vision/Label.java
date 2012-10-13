@@ -41,4 +41,9 @@ public class Label extends Component {
 		g.setColor(new Color(230, 230, 230));
 		g.drawString(text, margin,  16);
 	}
+
+	public String getText() {
+		// TODO Auto-generated method stub
+		return text;
+	}
 }
