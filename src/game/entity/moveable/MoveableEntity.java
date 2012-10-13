@@ -17,10 +17,15 @@ public abstract class MoveableEntity extends Entity {
 
 	protected Vec3 linVelocity = Vec3.zero;
 	protected Vec3 angVelocity = Vec3.zero;
-	private long lastUpdate = 0;
+	protected Vec3 intVelocity = Vec3.zero;
+	protected long lastUpdate = 0;
 
 	public MoveableEntity(long _id) {
 		super(_id);
+	}
+	
+	public MoveableEntity() {
+		super(System.nanoTime());
 	}
 
 	protected double updateDelta() {
@@ -50,6 +55,18 @@ public abstract class MoveableEntity extends Entity {
 	@Override
 	public void setOrientation(Quat _orient) {
 		updateMotion(getPosition(), linVelocity, _orient, angVelocity, Game.time());
+	}
+	
+	/**
+	 * Sets the intentional velocity of the player. The intentional
+	 * velocity is the direction and magnitude in which the movable
+	 * entity wants move next. Used in conjunction with getNextBound()
+	 * which returns the next bounding volume at the intended position.
+	 * 
+	 * @param _intVelocity Intended velocity of the movable entity at this point
+	 */
+	public void setIntVelocity(Vec3 _intVelocity){
+		intVelocity = _intVelocity;
 	}
 
 	public Vec3 getLinVelocity() {
@@ -90,17 +107,18 @@ public abstract class MoveableEntity extends Entity {
 		}
 		position = _pos;
 		linVelocity = _linvel;
+		intVelocity = _linvel;
 		orientation = _orient;
 		angVelocity = _angvel;
 		lastUpdate = _timeStamp;
 	}
 
 	/**
-	 * Returns the bounding box of the next position of this particular entity.
+	 * Returns the bounding box of the next intended position of this particular entity.
 	 * 
 	 * @return The bounding volume at the next position for this movable entity
 	 */
 	public Bound getNextBound() {
-		return getBound(getPosition());
+		return getBound(position.add(intVelocity.scale(updateDelta())));
 	}
 }

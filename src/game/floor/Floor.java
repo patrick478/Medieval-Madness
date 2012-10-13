@@ -76,8 +76,6 @@ public class Floor {
 		MeshLOD meshlod = new MeshLOD(meshSize*meshSize*detail*2+1, 4, 
 				meshSize*meshSize*detail*2+1, 25, 6, 1);
 		
-		
-		
 		//could be used leter one maybe?
 		//int[][][] ind = new int[meshSize+1][detail+1][meshSize + 1];
 		

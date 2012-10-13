@@ -1,5 +1,6 @@
 package game.entity.moveable;
 
+import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
 import game.modelloader.Content;
@@ -8,12 +9,16 @@ import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
 import initial3d.engine.Vec3;
+
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerEntity extends MoveableEntity {
 	
-	private static final double baseSpeed = 0.1;
+	private final double baseSpeed = 1;
+	
+	
 	private final double radius;
 	private int selfIndex = 0;
 	
@@ -22,6 +27,13 @@ public class PlayerEntity extends MoveableEntity {
 		position = _pos;
 		radius = _radius;
 		this.selfIndex = pindex;
+		this.addMeshContexts(this.getBall());
+	}
+	
+	public PlayerEntity(Vec3 _pos, double _radius){
+		super();
+		position = _pos;
+		radius = _radius;
 		this.addMeshContexts(this.getBall());
 	}
 	

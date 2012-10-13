@@ -19,7 +19,7 @@ public class FloorGenerator {
 	public FloorGenerator(long _seed){
 		seed = _seed;
 		floorPlan = new OpenFloor(seed);
-	//	floorPlan = new RandomFloor(seed);
+//		floorPlan = new RandomFloor(seed);
 		
 	}
 	

@@ -28,25 +28,37 @@ public class BoundingSphere extends Bound {
 	}
 
 	@Override
-	public boolean intersects(BoundingBox _b){
-		double dis_sqr = 0;//distance squared between sphere and box 
+	public Vec3 intersects(BoundingBox _b){
+		double[][] result = new double[3][1];
+		
 		double[][] sph_cen =  this.position.to3Array();
 		double[][] box_min =  _b.getNegExtreme().to3Array();
 		double[][] box_max =  _b.getPosExtreme().to3Array();
+		
+		//for each plane record the 1-d vector from the 
+		//edges to the sphere on that plane.
 		for(int i=0; i<3; i++){
 			if(sph_cen[i][0] < box_min[i][0]){
-				dis_sqr += Math.pow(sph_cen[i][0] - box_min[i][0], 2);
+				result[i][0] =   box_min[i][0] - sph_cen[i][0]; //TODO not sure if right way round
 			}else if(sph_cen[i][0] > box_max[i][0]){
-				dis_sqr += Math.pow(sph_cen[i][0] - box_max[i][0], 2);
+				result[i][0] = box_max[i][0] - sph_cen[i][0];
 			}
 		}
-		return Math.pow(this.radius, 2) > dis_sqr ;
+		//compile the vector together and check the distance
+		Vec3 collisionNorm = Vec3.create(result);
+		if(this.radius > collisionNorm.mag()){
+			return collisionNorm.unit();
+		}
+		return null;
 	}
 
 	@Override
-	public boolean intersects(BoundingSphere b) {
-		double distance = position.sub(b.position).mag();
-		return distance < radius + b.radius;
+	public Vec3 intersects(BoundingSphere b) {
+		Vec3 collisionNorm = b.position.sub(position);
+		if(radius + b.radius > collisionNorm.mag()){
+			return collisionNorm.unit();
+		}
+		return null;
 	}
 
 	public double getRadius() {

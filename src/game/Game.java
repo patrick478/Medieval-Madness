@@ -4,6 +4,7 @@ import java.util.*;
 
 import game.entity.Entity;
 import game.entity.moveable.PlayerEntity;
+import game.item.Item;
 import game.level.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
@@ -217,7 +218,7 @@ public class Game implements Runnable {
 		// These can add the rest of the players
 		for (int i = 0; i < _maxPlayers; i++) {
 			if (i == this.playerIndex) continue;
-
+			
 			PlayerEntity p = new PlayerEntity(0, Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
 			addPlayer(i, p);
 		}
@@ -267,10 +268,20 @@ public class Game implements Runnable {
 
 	public void addEntity(Entity _entity) {
 		currentLevel.addEntity(_entity);
+		_entity.addToScene(currentGameState.scene);
 	}
 
 	public void removeEntity(long _eid) {
-		currentLevel.removeEntity(_eid);
+		currentGameState.scene.removeDrawables(
+				currentLevel.removeEntity(_eid).getMeshContexts());
+	}
+	
+	public void addItem(long _eid, Item _item){
+		//TODO
+	}
+	
+	public void removeItem(long _eid, Item _item){
+		//TODO
 	}
 
 	public boolean isHost() {

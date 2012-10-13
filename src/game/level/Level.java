@@ -1,10 +1,15 @@
 package game.level;
 
+import game.Game;
 import game.bound.Bound;
 import game.entity.Entity;
+import game.entity.moveable.MoveableEntity;
+import game.entity.moveable.PlayerEntity;
 import game.entity.trigger.TriggerEntity;
 
 import initial3d.engine.Scene;
+import initial3d.engine.Vec3;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +32,16 @@ public class Level {
 		for(Entity e : floor.getWalls()){
 			entities.add(e);
 		}
+		for(PlayerEntity p : Game.getInstance().getPlayers()){
+			entities.add(p);
+		}
+		
 		for(Entity e : entities){
 			entityID.put(e.id, e);
 			if(e instanceof TriggerEntity){
 				triggers.add((TriggerEntity) e);
 			}
 		}
-		
 	}
 	
 	/**
@@ -46,7 +54,32 @@ public class Level {
 		}
 	}
 	
+	/**
+	 * Returns the spawning location of the given player 
+	 * given via player index. Returns Vec3.zero if the index
+	 * of player doesn't exist.
+	 * 
+	 * @param _playerIdx The index of the player for the game
+	 * @return The starting position of the player
+	 */
+	public Vec3 getSpawnLocation(int _playerIdx){
+		switch(_playerIdx){
+			case 0: return Vec3.create(0.75, 0.125, 0.75);
+			case 1: return Vec3.create(1.25, 0.125, 0.75);
+			case 2: return Vec3.create(0.75, 0.125, 1.25);
+			case 3: return Vec3.create(1.25, 0.125, 1.25);
+		}
+		return Vec3.zero;
+	}
+	
+	/**
+	 * Adds all the entities contained on this level to the given scene.
+	 * Does nothing if the Scene is null;
+	 * 
+	 * @param _scene The scene to add entities to
+	 */
 	public void addToScene(Scene _scene){
+		if(_scene == null)return;
 		floor.addToScene(_scene);
 		for(Entity e : entities){
 			e.addToScene(_scene);
@@ -65,8 +98,10 @@ public class Level {
 		return entityID.get(_eid);
 	}
 	
-	public void removeEntity(long _eid){
-		entities.remove(entityID.remove(_eid));
+	public Entity removeEntity(long _eid){
+		Entity e = entityID.remove(_eid);
+		entities.remove(e);
+		return e;
 	}
 	
 	/**
@@ -81,17 +116,17 @@ public class Level {
 	}
 	
 	/**
-	 * Returns whether the given bound intersects with any entity
-	 * that has the same value for Entity.isSolid() as the given
-	 * parameter. Returns false if null is given.
+	 * Returns whether the given Entity's bound intersects with any 
+	 * entity that has the same value for Entity.isSolid() as the 
+	 * given parameter. Returns false if null is given.
 	 * 
-	 * @param _b The bound to intersect with
+	 * @param _e The Entity whose bound to check collides
 	 * @param _solid Checking against solid or non-solid entities
 	 * @return Whether the given bound intersects
 	 */
-	public boolean collides(Bound _b, boolean _solid){
+	public boolean collision(Entity _e, boolean _solid){
 		for(Entity e : entities){
-			if(e.isSolid()==_solid && e.getBound().intersects(_b)){
+			if(_e!=e && e.isSolid()==_solid && e.getBound().intersects(_e.getBound())){
 				return true;
 			}
 		}
@@ -99,15 +134,42 @@ public class Level {
 	}
 	
 	/**
-	 * Returns one entity whose bound has intersected the given bounding
-	 * box. Returns null if no collision was detected. 
+	 * Returns whether the given Entity's bound intersects with any 
+	 * entity that has the same value for Entity.isSolid() as the 
+	 * given parameter. Returns false if null is given.
+	 * 
+	 * @param _e The Entity whose bound to check collides
+	 * @param _solid Checking against solid or non-solid entities
+	 * @return Whether the given bound intersects
+	 */
+	public Vec3 preCollision(MoveableEntity _e, boolean _solid){
+		boolean collisionDect = false;
+		Vec3 collisionNorm = Vec3.zero;
+		for(Entity e : entities){
+			if(_e!=e && e.isSolid()==_solid){
+				Vec3 col = e.getBound().intersectNorm(_e.getNextBound());
+				if(col!=null){
+					collisionNorm = collisionNorm.add(col);
+					collisionDect = true;
+				}
+			}
+		}
+		if(collisionDect){
+			return collisionNorm.unit();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns one entity whose bound has intersected the given entity's
+	 * bound. Returns null if no collision was detected. 
 	 * 
 	 * @param _b a Bounding volume to be checked against
 	 * @return A entity that collides with the given bound or null
 	 */
-	public Entity firstCollision(Bound _b){
+	public Entity firstCollision(Entity _e){
 		for(Entity e : entities){
-			if(e.getBound().intersects(_b)){
+			if(_e!=e && e.getBound().intersects(_e.getBound())){
 				return e;
 			}
 		}
