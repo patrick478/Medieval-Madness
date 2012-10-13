@@ -6,6 +6,11 @@ import java.util.Set;
 import initial3d.engine.Drawable;
 import initial3d.engine.Scene;
 
+/**
+ * A an extension of Pane that allows for making (modal) dialog boxes.
+ * 
+ * @author Ben Allen
+ */
 public class DialogPane extends Pane {
 
 	private final Pane parent;
@@ -54,7 +59,7 @@ public class DialogPane extends Pane {
 		if (children.contains(d)) return true;
 		return false;
 	}
-	
+
 	@Override
 	public Drawable focusOnRemove() {
 		return parent;

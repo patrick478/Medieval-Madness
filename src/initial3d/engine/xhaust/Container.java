@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Xhaust Component for holding other components.
+ * 
+ * @author Ben Allen
+ */
 public class Container extends Component {
 
 	private List<Component> children = new ArrayList<Component>();
@@ -39,14 +44,13 @@ public class Container extends Component {
 		}
 		return false;
 	}
-	
+
 	public void clear() {
 		for (Component c : new ArrayList<Component>(children)) {
 			remove(c);
 		}
 	}
 
-	@Override
 	public Iterable<Component> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
