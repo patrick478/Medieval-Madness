@@ -15,7 +15,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.util.Collections;
 
-public abstract class Component extends ActionSource implements Pane.PaneProvider {
+/**
+ * Xhaust base class for GUI elements.
+ * 
+ * @author Ben Allen
+ */
+public abstract class Component extends ActionSource {
 
 	private int width, height;
 	private volatile int x, y;
@@ -36,7 +41,6 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 		height = height_;
 	}
 
-	@Override
 	public Pane getPane() {
 		if (parent == null) return null;
 		return parent.getPane();
@@ -52,7 +56,7 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 		parent = c;
 	}
 
-	public final void remove() {
+	public void remove() {
 		if (parent != null) {
 			parent.remove(this);
 		}
@@ -95,6 +99,11 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 	}
 
 	/* package-private */
+	final boolean repaintRequired() {
+		return repaint_required;
+	}
+
+	/* package-private */
 	Component findByID(int id) {
 		if (drawid == id) {
 			return this;
@@ -102,17 +111,12 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 		return null;
 	}
 
-	public Iterable<Component> getChildren() {
-		return Collections.<Component> emptyList();
-	}
-
 	public int count() {
 		return 1;
 	}
 
 	/**
-	 * Invoke this to get this component (and anything else necessary)
-	 * repainted.
+	 * Invoke this to get this component (and anything else necessary) repainted.
 	 */
 	public final void repaint() {
 		// recurses up until opaque or null parent
@@ -155,7 +159,7 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 	public int getHeight() {
 		return height;
 	}
-	
+
 	public void setSize(int width_, int height_) {
 		width = width_;
 		height = height_;
@@ -215,6 +219,24 @@ public abstract class Component extends ActionSource implements Pane.PaneProvide
 
 	/** Override for custom processing of mouse events. */
 	protected void processMouseEvent(MouseEvent e) {
+
+	}
+
+	final void notifyLocalFocusGained() {
+		onLocalFocusGained();
+	}
+
+	final void notifyLocalFocusLost() {
+		onLocalFocusLost();
+	}
+
+	/** Override to handle gaining Pane-local focus. */
+	protected void onLocalFocusGained() {
+
+	}
+
+	/** Override to handle losing Pane-local focus. */
+	protected void onLocalFocusLost() {
 
 	}
 

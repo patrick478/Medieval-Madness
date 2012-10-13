@@ -13,7 +13,6 @@ import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Drawable;
 import initial3d.engine.MeshContext;
-import initial3d.engine.Scene;
 import initial3d.engine.SceneManager;
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
@@ -21,6 +20,11 @@ import initial3d.linearmath.Vector4D;
 
 import static initial3d.Initial3D.*;
 
+/**
+ * A Drawable (for Initial3D's SceneManager) that displays Xhaust GUI components.
+ * 
+ * @author Ben Allen
+ */
 public class Pane extends Drawable {
 
 	private static final double NEAR_CLIP = (SceneManager.NEAR_PLANE + MeshContext.DEFAULT_NEAR_CLIP) / 2;
@@ -45,12 +49,6 @@ public class Pane extends Drawable {
 
 	private final int zlevel;
 
-	public static interface PaneProvider {
-
-		public Pane getPane();
-
-	}
-
 	protected Pane(int width_, int height_, int zlevel_) {
 		width = width_;
 		height = height_;
@@ -68,6 +66,11 @@ public class Pane extends Drawable {
 			@Override
 			public Pane getPane() {
 				return Pane.this;
+			}
+
+			@Override
+			public void remove() {
+				throw new IllegalStateException("Root Container of a Pane cannot be removed.");
 			}
 		};
 
@@ -171,7 +174,7 @@ public class Pane extends Drawable {
 		i3d.disable(WRITE_COLOR | WRITE_Z);
 		Graphics g = bi.createGraphics();
 
-		if (!root.isOpaque()) {
+		if (!root.isOpaque() && root.repaintRequired()) {
 			// try to transparent-clear
 			Graphics2D g2d = (Graphics2D) g;
 			Composite ac_clear = AlphaComposite.getInstance(AlphaComposite.CLEAR);
@@ -236,7 +239,7 @@ public class Pane extends Drawable {
 
 		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
 			// allow mouse down to switch local focus
-			focused = target;
+			doFocusChange(target);
 		}
 
 		target.dispatchMouseEvent(e);
@@ -244,12 +247,18 @@ public class Pane extends Drawable {
 
 	public void requestLocalFocusFor(Component c) {
 		if (root.contains(c)) {
-			focused = c;
+			doFocusChange(c);
 		}
 	}
 
 	public Component getLocalFocused() {
 		return focused;
+	}
+	
+	private void doFocusChange(Component c) {
+		focused.notifyLocalFocusLost();
+		focused = c;
+		focused.notifyLocalFocusGained();
 	}
 
 }

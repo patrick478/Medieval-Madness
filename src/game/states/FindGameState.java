@@ -23,10 +23,23 @@ import game.net.NetworkingHost;
 
 /***
  * This state will display a list of games to join and allow a user to join a game
- * @author Ben
+ * @author Ben + Patrick
  *
  */
+
+
 public class FindGameState extends GameState {
+	
+	Label serverOne = new Label(300);
+	Label serverTwo = new Label(300);
+	Label serverThree = new Label(300);
+	Label serverFour = new Label(300);
+
+	Label playersOne = new Label(50);
+	Label playersTwo = new Label(50);
+	Label playersThree = new Label(50);
+	Label playersFour = new Label(50);
+	
 	public FindGameState() {
 	}
 	
@@ -45,6 +58,7 @@ public class FindGameState extends GameState {
 			throw new AssertionError(e);
 		}
 		target = new Input(200);
+		target.setNumericOnly(false);
 		target.setPosition(90, 460);
 		target.addActionListener(new ActionListener() {
 
@@ -69,7 +83,7 @@ public class FindGameState extends GameState {
 		});
 		
 		Button mainMenu = new Button("Return to main menu", 125);
-		mainMenu.setPosition(p.getRoot().getWidth()-mainMenu.getWidth(), p.getRoot().getHeight()-mainMenu.getHeight());
+		mainMenu.setPosition(p.getRoot().getWidth()-mainMenu.getWidth()-10, p.getRoot().getHeight()-mainMenu.getHeight()-10);
 		mainMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -94,17 +108,15 @@ public class FindGameState extends GameState {
 		
 		//Code for the sever select part of the screen
 		
-		Label serverOne = new Label(300);
-		Label serverTwo = new Label(300);
-		Label serverThree = new Label(300);
-		Label serverFour = new Label(300);
-
 		serverOne.setPosition(90, 200);
 		serverTwo.setPosition(90, 226);
 		serverThree.setPosition(90, 252);
 		serverFour.setPosition(90, 278);
 
-		
+		playersOne.setPosition(400, 200);
+		playersTwo.setPosition(400, 226);
+		playersThree.setPosition(400, 252);
+		playersFour.setPosition(400, 278);
 
 		
 		
@@ -120,6 +132,11 @@ public class FindGameState extends GameState {
 		p.getRoot().add(serverTwo);
 		p.getRoot().add(serverThree);
 		p.getRoot().add(serverFour);
+		
+		p.getRoot().add(playersOne);
+		p.getRoot().add(playersTwo);
+		p.getRoot().add(playersThree);
+		p.getRoot().add(playersFour);
 
 		target.requestLocalFocus();
 		
@@ -142,4 +159,19 @@ public class FindGameState extends GameState {
 	@Override
 	public void destroy() {		
 	}	
+	
+	public void setServerInfo(int position, String serverName, int numPlayers){
+		switch(position){
+			case 1: serverOne.setText(serverName);
+					playersOne.setText(String.valueOf(numPlayers));
+			case 2: serverTwo.setText(serverName);
+					playersTwo.setText(String.valueOf(numPlayers));
+			case 3: serverThree.setText(serverName);
+					playersThree.setText(String.valueOf(numPlayers));
+			case 4: serverFour.setText(serverName);
+					playersFour.setText(String.valueOf(numPlayers));
+			default: throw new IndexOutOfBoundsException();
+	}
+	}
+	
 }
