@@ -14,7 +14,7 @@ public class DialogPane extends Pane {
 	private Set<Pane> children = new HashSet<Pane>();
 
 	public DialogPane(int width_, int height_, Pane parent_, boolean modal_) {
-		super(width_, height_, 1);
+		super(width_, height_, parent_.getZLevel() + 1);
 		parent = parent_;
 		modal = modal_;
 		if (parent instanceof DialogPane) {
@@ -36,6 +36,7 @@ public class DialogPane extends Pane {
 		if (parent instanceof DialogPane) {
 			((DialogPane) parent).removeChild(this);
 		}
+		parent.requestFocus();
 	}
 
 	public boolean isModal() {
@@ -52,6 +53,11 @@ public class DialogPane extends Pane {
 		if (this.equals(d)) return true;
 		if (children.contains(d)) return true;
 		return false;
+	}
+	
+	@Override
+	public Drawable focusOnRemove() {
+		return parent;
 	}
 
 }

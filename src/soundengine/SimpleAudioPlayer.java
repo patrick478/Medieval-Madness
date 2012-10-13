@@ -60,7 +60,7 @@ public class SimpleAudioPlayer extends Thread
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			System.exit(1);
+			return;
 		}
 
 		//Get audio format from file

@@ -209,6 +209,14 @@ public abstract class Drawable extends ActionSource {
 	}
 
 	/**
+	 * Assuming that this Drawable currently has focus, determines what Drawable
+	 * should be given the focus when this is removed from the Scene.
+	 */
+	public Drawable focusOnRemove() {
+		return null;
+	}
+
+	/**
 	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled
 	 * by the SceneManager.
 	 * 

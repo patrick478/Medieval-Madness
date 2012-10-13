@@ -45,6 +45,12 @@ public class Pane extends Drawable {
 
 	private final int zlevel;
 
+	public static interface PaneProvider {
+
+		public Pane getPane();
+
+	}
+
 	protected Pane(int width_, int height_, int zlevel_) {
 		width = width_;
 		height = height_;
@@ -58,8 +64,13 @@ public class Pane extends Drawable {
 		requestInputEnabled(true);
 		requestVisible(false);
 
-		root = new Container(width, height);
-		root.setPane(this);
+		root = new Container(width, height) {
+			@Override
+			public Pane getPane() {
+				return Pane.this;
+			}
+		};
+
 		focused = root;
 
 		zlevel = zlevel_;
@@ -69,12 +80,6 @@ public class Pane extends Drawable {
 		this(width_, height_, 1);
 	}
 
-	@Override
-	protected void finalize() {
-		root.clear();
-		root.setPane(null);
-	}
-	
 	public int getWidth() {
 		return width;
 	}
@@ -112,14 +117,14 @@ public class Pane extends Drawable {
 	public Container getRoot() {
 		return root;
 	}
-	
+
 	@Override
 	protected void draw(Initial3D i3d, int framewidth, int frameheight) {
 
 		// TODO handle this properly
 		i3d.nearClip(NEAR_CLIP);
 		i3d.farCull(FAR_CULL);
-		double zview = (NEAR_CLIP + FAR_CULL * zlevel) / (zlevel + 1);
+		double zview = (NEAR_CLIP * zlevel + FAR_CULL) / (zlevel + 1);
 
 		vec0[0][0] = 0;
 		vec0[1][0] = 0;

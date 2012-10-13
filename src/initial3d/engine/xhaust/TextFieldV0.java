@@ -53,7 +53,7 @@ public class TextFieldV0 extends Component {
 		g.drawString(text, 1 - visible, 15);
 		g.setColor(Color.WHITE);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		if(this.carrot && this.isFocused())
+		if(this.carrot && this.hasLocalFocus())
 		{
 			g.setColor(new Color(120, 120, 120));		
 			g.drawRect(precarotPx + 1, 2, 1, getHeight() - 5);
