@@ -43,14 +43,14 @@ public class MainMenuState extends GameState {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("released")){
 				if(e.getSource().equals(joinArea)){
-					SimpleAudioPlayer.stopMusic();
-				SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
+//					SimpleAudioPlayer.stopMusic();
+//				SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
 					Game.getInstance().changeState(new FindGameState());
 				}
 				else if(e.getSource().equals(startArea)){
-					SimpleAudioPlayer.stopMusic();
+//					SimpleAudioPlayer.stopMusic();
 
-					SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
+//					SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
 					Game.getInstance().changeState(new CreateGameState());
 				}
 

@@ -30,6 +30,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	private Thread workerThread = null;
 	private ServerWorker worker = null;
 	
+	private boolean inGame = false;	
 	private int maxPlayers = -1;
 	private Map<Integer, ServerClient> clients = new HashMap<Integer, ServerClient>();
 	
@@ -100,7 +101,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				this.changes.clear();
 				
 				// wait for an socket event
-				this.selector.select(1000);
+				this.selector.select(100);
 				
 				Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
 				while(selectedKeys.hasNext())
@@ -118,12 +119,11 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						clientSocket.configureBlocking(false);
 						
 						// generate a correct server client
-						int index = this.clients.size();
 						int playerIndex = this.getFreePlayerIndex();
 						ServerClient client = new ServerClient(playerIndex, clientSocket);
-						this.clients.put(index,  client);
+						this.clients.put(playerIndex,  client);
 						
-						clientSocket.register(this.selector, SelectionKey.OP_READ, index);
+						clientSocket.register(this.selector, SelectionKey.OP_READ, playerIndex);
 						
 						// begin initial ping testing here
 						client.setSyncsRequired(5);
@@ -136,25 +136,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						this.send(clientSocket,  syncPacket.toData().getData());
 						client.sentSync();
 						
-						if(this.numPlayers() == this.maxPlayers)
-						{
-							// done accepting - close the accept socket.
-							this.serverChannel.close();
-							
-							// notify players of their player indexes and tell them to enter the game
-							for(ServerClient c : this.clients.values())
-							{
-								WelcomePacket wp = new WelcomePacket();
-								wp.isReply = false;
-								wp.playerIndex = c.getPlayerIndex();
-								wp.maxPlayers = this.maxPlayers;
-								this.send(c.getSocket(), wp.toData().getData());
-								
-								EnterGamePacket egp = new EnterGamePacket();
-								egp.isReply = false;
-								this.send(c.getSocket(), egp.toData().getData());
-							}
-						}
 					}
 					else if(key.isReadable())
 					{
@@ -197,7 +178,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 							while(!writes.isEmpty())
 							{
 								ByteBuffer buf = writes.poll();
-								sc.write(buf);
+								int tx = sc.write(buf);
 								if(buf.remaining() > 0)
 								{
 									// basically, this is bad - it means the socket has a full buffer. wait till its writable again, the continue.
@@ -216,6 +197,30 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			{
 				// FIXME: We need useful error printouts
 				ex.printStackTrace();
+			}
+			
+			if(this.numPlayers() >= this.maxPlayers && this.playersReady() && !inGame)
+			{
+				this.inGame = true;
+				
+				// done accepting - close the accept socket.
+//				this.serverChannel.close();
+				
+				// notify players of their player indexes and tell them to enter the game
+				for(ServerClient c : this.clients.values())
+				{
+					WelcomePacket wp = new WelcomePacket();
+					wp.isReply = false;
+					wp.playerIndex = c.getPlayerIndex();
+					wp.maxPlayers = this.maxPlayers;
+					this.send(c.getSocket(), wp.toData().getData());
+					
+					EnterGamePacket egp = new EnterGamePacket();
+					egp.isReply = false;
+					this.send(c.getSocket(), egp.toData().getData());
+					
+					System.out.printf("Told %d to enter the game\n", c.getPlayerIndex());
+				}
 			}
 		}
 	}
@@ -244,9 +249,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	private int getFreePlayerIndex()
 	{
 		for(int i = 0; i < this.maxPlayers; i++)
-		{
 			if(!this.clients.containsKey(i)) return i;
-		}
 		return -1;
 	}
 	
@@ -259,6 +262,15 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			msg = str + "\n";
 		}
 		System.err.printf("%s\nmsg%s\n",  line, msg, line);
+	}
+	
+	private boolean playersReady()
+	{
+		for(ServerClient sc : this.clients.values())
+		{
+			if(sc.needsSync()) return false;
+		}
+		return true;
 	}
 //
 //	public void updateOthersOnMovements(ServerClient client) {

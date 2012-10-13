@@ -41,7 +41,7 @@ public class PlayState extends GameState {
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
 
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().player);
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
@@ -65,11 +65,11 @@ public class PlayState extends GameState {
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, new Color(30, 30, 30), Vec3.create(0, 1, 1));
 		scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
+		Light l2 = new Light.SphericalPointLight(Game.getInstance().getPlayer(), Color.ORANGE, 0.25f);
 		scene.addLight(l2);
 		
-		Game.getInstance().player.getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	
-		SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
+		Game.getInstance().getPlayer().getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	
+//		SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 	}
 
 	@Override
@@ -148,12 +148,12 @@ public class PlayState extends GameState {
 		}
 		
 		// JOSH: shouldn't this take the velocity vector we just finished calculating into account? // FIXME
-		if(Game.getInstance().getLevel().collides(Game.getInstance().player.getNextBound(), true)){
-			Game.getInstance().player.fix();
+		if(Game.getInstance().getLevel().collides(Game.getInstance().getPlayer().getNextBound(), true)){
+			Game.getInstance().getPlayer().fix();
 		}
 		
 		//TODO also needs to be changed
-		Game.getInstance().player.updateMotion(Game.getInstance().player.getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
+		Game.getInstance().getPlayer().updateMotion(Game.getInstance().getPlayer().getPosition(), v, Quat.create(player_yaw, Vec3.j), Vec3.zero, System.currentTimeMillis());
 		
 		//other Ben's doing...
 		if(!v.equals(Vec3.zero))

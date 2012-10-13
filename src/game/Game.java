@@ -50,7 +50,6 @@ public class Game implements Runnable {
 	private long predictedLatency = 0;
 	private int maxPlayers = 1;
 
-	public PlayerEntity player = null;
 	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
 
 	private Game() {
@@ -205,11 +204,12 @@ public class Game implements Runnable {
 	public void setPlayerIndex(int pIndex) {
 		this.playerIndex = pIndex;
 
-		this.player = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.125, pIndex + 2), 0.125);
+		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.125, pIndex + 2), 0.125);
 
 		// This needs to add the main player
-		addPlayer(pIndex, player);
-
+		addPlayer(pIndex, pe);
+		
+		System.out.printf("I am player #%d\n", pIndex);
 	}
 
 	public void setMaxPlayers(short _maxPlayers) {
@@ -222,10 +222,16 @@ public class Game implements Runnable {
 		}
 
 		this.maxPlayers = _maxPlayers;
+		
+		System.out.printf("There are %d players\n", _maxPlayers);
 	}
 
 	public int getPlayerIndex() {
 		return this.playerIndex;
+	}
+	
+	public PlayerEntity getPlayer() {
+		return this.players.get(this.playerIndex);
 	}
 
 	public void addPlayer(int index, PlayerEntity e) {
@@ -241,8 +247,7 @@ public class Game implements Runnable {
 	}
 
 	public void transmitPlayerPosition() {
-		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.player.getPosition(),
-				this.player.getLinVelocity());
+		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.getPlayer().getPosition(), this.getPlayer().getLinVelocity());
 		this.getNetwork().send(mp.toData());
 	}
 

@@ -58,7 +58,6 @@ public class Content implements Runnable {
 			get().content.put(filename, get().load(filename));
 		
 		return (T)get().content.get(filename);
-			
 	}
 
 	@Override

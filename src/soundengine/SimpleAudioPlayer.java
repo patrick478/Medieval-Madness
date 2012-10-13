@@ -83,12 +83,12 @@ public class SimpleAudioPlayer extends Thread
 		catch (LineUnavailableException e1)
 		{
 			e1.printStackTrace();
-			System.exit(1);
+			return;
 		}
 		catch (Exception e2)
 		{
 			e2.printStackTrace();
-			System.exit(1);
+			return;
 		}
 	
 			//start the line playing

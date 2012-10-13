@@ -51,7 +51,7 @@ public class ServerWorker implements Runnable
 	}
 
 	private void processPacket(ServerClient client, DataPacket dp) {
-		switch(dp.getShort())
+		switch(dp.peekShort())
 		{
 			case PingPacket.ID:
 				long recvTime = System.currentTimeMillis();
