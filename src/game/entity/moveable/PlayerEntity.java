@@ -18,6 +18,9 @@ public class PlayerEntity extends MoveableEntity {
 	
 	private final double baseSpeed = 1;
 	
+	private int defaultDamage = 2;
+	private int defaultHealth = 100;
+	private int defaultEnergy = 100;
 	
 	private final double radius;
 	private int selfIndex = 0;

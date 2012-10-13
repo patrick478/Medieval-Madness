@@ -13,6 +13,7 @@ public class Color {
 	public static final Color BLUE = new Color(0f, 0f, 1f);
 	public static final Color YELLOW = new Color(1f, 1f, 0f);
 	public static final Color ORANGE = new Color(1f, 0.58f, 0f);
+	public static final Color DARK_RED = new Color(1f, 0.50f, 0.50f);
 
 	public final float r, g, b;
 	public final int rgb24;

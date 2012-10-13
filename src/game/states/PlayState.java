@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import soundengine.SimpleAudioPlayer;
 
 import initial3d.engine.*;
+import initial3d.engine.xhaust.Healthbar;
 import initial3d.engine.xhaust.InventoryHolder;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
@@ -53,6 +54,14 @@ public class PlayState extends GameState {
 		p.getRoot().setOpaque(false);
 		scene.addDrawable(p);
 		
+		Pane topPane = new Pane(500, 100);
+		Healthbar hp = new Healthbar();
+		topPane.getRoot().add(hp);
+		topPane.requestVisible(true);
+		topPane.getRoot().setOpaque(false);
+		topPane.setPosition(-100, 240);
+		scene.addDrawable(topPane);
+		
 		
 		Game.getInstance().getWindow().setMouseCapture(true);
 		
@@ -67,6 +76,11 @@ public class PlayState extends GameState {
 			lrf.setPosition(Vec3.create(0, 0.5, 0));
 			Light l2 = new Light.SphericalPointLight(lrf, Color.WHITE, 0.20f);
 			scene.addLight(l2);
+			
+			MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
+			elrf.setPosition(Vec3.create(0, -0.25, 0));
+			Light el = new Light.SphericalPointLight(lrf, Color.DARK_RED, 0.10f);
+			scene.addLight(el);
 		}
 		
 		Game.getInstance().getPlayer().getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	

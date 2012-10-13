@@ -134,7 +134,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				MovementPacket mp = new MovementPacket();
 				mp.fromData(dp);
 				
-				Game.getInstance().movePlayer(mp.playerIndex, mp.position, mp.velocity);
+				Game.getInstance().movePlayer(mp.playerIndex, mp.position, mp.velocity, mp.orientation);
 				break;
 		}
 	}

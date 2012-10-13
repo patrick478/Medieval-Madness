@@ -206,7 +206,7 @@ public class Game implements Runnable {
 	public void setPlayerIndex(int pIndex) {
 		this.playerIndex = pIndex;
 
-		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.125, pIndex + 2), 0.125, pIndex);
+		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
 
 		// This needs to add the main player
 		addPlayer(pIndex, pe);
@@ -219,7 +219,7 @@ public class Game implements Runnable {
 		for (int i = 0; i < _maxPlayers; i++) {
 			if (i == this.playerIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(0, Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
+			PlayerEntity p = new PlayerEntity(System.nanoTime(), Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
 			addPlayer(i, p);
 		}
 
@@ -240,16 +240,16 @@ public class Game implements Runnable {
 		this.players.put(index, e);
 	}
 
-	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity) {
+	public void movePlayer(int playerIndex, Vec3 position, Vec3 velocity, Quat orientation) {
 		PlayerEntity me = this.players.get(playerIndex);
 		if (me == null) return;
 
 		// TODO need to transmit orientation and angular velocity
-		me.updateMotion(position, velocity, Quat.one, Vec3.zero, this.getGameTime());
+		me.updateMotion(position, velocity, orientation, Vec3.zero, this.getGameTime());
 	}
 
 	public void transmitPlayerPosition() {
-		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.getPlayer().getPosition(), this.getPlayer().getLinVelocity());
+		MovementPacket mp = new MovementPacket(this.getPlayerIndex(), this.getPlayer().getPosition(), this.getPlayer().getLinVelocity(), this.getPlayer().getOrientation());
 		this.getNetwork().send(mp.toData());
 	}
 

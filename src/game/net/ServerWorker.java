@@ -76,6 +76,7 @@ public class ServerWorker implements Runnable
 				mp.fromData(dp);
 				client.setPosition(mp.position);
 				client.setVelocity(mp.velocity);
+				client.setOrientation(mp.orientation);
 				
 				this.server.updateOthersOnMovements(client);
 			break;

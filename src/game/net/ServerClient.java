@@ -1,5 +1,6 @@
 package game.net;
 
+import initial3d.engine.Quat;
 import initial3d.engine.Vec3;
 
 import java.nio.ByteBuffer;
@@ -13,6 +14,7 @@ public class ServerClient
 {	
 	private Vec3 position = Vec3.zero;
 	private Vec3 velocity = Vec3.zero;
+	private Quat orientation = Quat.one;
 	
 	private long predictedLatency = 0;
 	private int syncsLeft = 5;
@@ -23,6 +25,7 @@ public class ServerClient
 	private BufferQueue dq = new BufferQueue(8192);
 	private BlockingQueue<DataPacket> packets = new LinkedBlockingQueue<DataPacket>();
 	private short packetLength = -1;
+	private long updatePosTime = System.currentTimeMillis();
 	
 	private SocketChannel socket;
 
@@ -39,6 +42,7 @@ public class ServerClient
 
 	public void setPosition(Vec3 p)
 	{
+		this.updatePosTime = System.currentTimeMillis();
 		this.position = p;
 	}
 	
@@ -47,9 +51,17 @@ public class ServerClient
 		this.velocity = v;
 	}
 
+	public void setOrientation(Quat o)
+	{
+		this.orientation = o;
+	}
+
+	public Quat getOrientation() {
+		return this.orientation;
+	}
+
 	public Vec3 getPosition() {
-		// FIXME: Scaling via time etc - or something
-		return this.position;
+		return this.position.add(this.velocity.scale((System.currentTimeMillis() - this.updatePosTime) / 1000));
 	}
 	
 	public Vec3 getVelocity()

@@ -94,6 +94,8 @@ public class NetworkingHost extends NetworkMode implements Runnable
 					{
 						case ChangeRequest.CHANGEOPS:
 							SelectionKey key = change.socket.keyFor(this.selector);
+							if(!key.isValid())
+								continue;
 							key.interestOps(change.ops);
 						break;
 					}
@@ -285,7 +287,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 //	}
 
 	public void updateOthersOnMovements(ServerClient client) {
-		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
+		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity(), client.getOrientation());
 		for(ServerClient sc : this.clients.values())
 		{
 			if(sc.equals(client))

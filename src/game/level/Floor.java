@@ -35,12 +35,7 @@ public class Floor {
 	private static final Material floor_mtl;
 	
 	static {
-		BufferedImage bi = null;
-		try {
-			bi = ImageIO.read((File)Content.loadContent("resources/texturetiles.png"));
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
+		BufferedImage bi = Content.loadContent("resources/texturetiles.png");
 		floor_tex = Initial3D.createTexture(Texture.requiredSize(Math.max(bi.getHeight(), bi.getWidth())));
 		floor_tex.drawImage(bi);
 		floor_tex.useMipMaps(true);
