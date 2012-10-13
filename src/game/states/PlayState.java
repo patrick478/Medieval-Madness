@@ -61,11 +61,9 @@ public class PlayState extends GameState {
 		scene.setFogParams(255f * 1.5f, 512f * 1.5f);
 		scene.setFogEnabled(true);
 		
-		// Enable this for a sun like effect - ie more ambient light
-		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, new Color(30, 30, 30), Vec3.create(0, 1, 1));
-		scene.addLight(l);
-		
-		Light l2 = new Light.SphericalPointLight(Game.getInstance().getPlayer(), Color.ORANGE, 0.25f);
+		MovableReferenceFrame lrf = new MovableReferenceFrame(Game.getInstance().getPlayer());
+		lrf.setPosition(Vec3.create(0, 0.5, 0));
+		Light l2 = new Light.SphericalPointLight(lrf, Color.WHITE, 0.25f);
 		scene.addLight(l2);
 		
 		Game.getInstance().getPlayer().getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	

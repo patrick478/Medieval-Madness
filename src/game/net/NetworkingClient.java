@@ -116,7 +116,10 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				pp.fromData(dp);
 				if(pp.isReply) return;
 				
+				long offset = pp.time + pp.predictedLatency - System.currentTimeMillis();
 				Game.getInstance().setPredictedLatency(pp.predictedLatency);
+				Game.getInstance().setTimeOffset(offset);
+				
 				pp.isReply = true;
 				this.send(pp.toData());
 				break;

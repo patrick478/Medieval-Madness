@@ -48,6 +48,7 @@ public class Game implements Runnable {
 	private Level currentLevel = null;
 
 	private long predictedLatency = 0;
+	private long timeOffset = 0;
 	private int maxPlayers = 1;
 
 	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
@@ -204,7 +205,7 @@ public class Game implements Runnable {
 	public void setPlayerIndex(int pIndex) {
 		this.playerIndex = pIndex;
 
-		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.125, pIndex + 2), 0.125);
+		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.125, pIndex + 2), 0.125, pIndex);
 
 		// This needs to add the main player
 		addPlayer(pIndex, pe);
@@ -217,7 +218,7 @@ public class Game implements Runnable {
 		for (int i = 0; i < _maxPlayers; i++) {
 			if (i == this.playerIndex) continue;
 
-			PlayerEntity p = new PlayerEntity(0, Vec3.create(i + 2, 0.125, i + 2), 0.125);
+			PlayerEntity p = new PlayerEntity(0, Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
 			addPlayer(i, p);
 		}
 
@@ -277,10 +278,12 @@ public class Game implements Runnable {
 	}
 
 	public long getGameTime() {
-		// FIXME game time
-		
-		// need to calculate this based off a remote-time / local-time pair + latency
-		return System.currentTimeMillis();
+		return System.currentTimeMillis() + this.timeOffset;
+	}
+	
+
+	public void setTimeOffset(long offset) {
+		this.timeOffset = offset;
 	}
 
 	public void setPredictedLatency(long pl) {
