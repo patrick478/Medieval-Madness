@@ -20,23 +20,11 @@ public abstract class Item {
 		return description;
 	}
 	
-	/**
-	 * Sets the given Items parent to this item. Returns true
-	 * if the method was successful
-	 * 
-	 * @param _item The item to add
-	 * @return True
-	 */
-	public boolean addItem(Item _item){
-		_item.parent = this;
-		return true;
-	}
-	
-	/***
-	 * Returns the parent item of this item
-	 * @return Item of parent, or null if root level item
-	 */
 	public Item getParent(){
 		return this.parent;
+	}
+
+	public void setParent(Item _parent){
+		parent = _parent;
 	}
 }

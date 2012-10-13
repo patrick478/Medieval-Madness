@@ -12,7 +12,8 @@ public class RemoveEntityEvent extends AbstractEvent{
 	}
 	
 	@Override
-	protected void applyEvent(long _timeStamp, Entity _trigger) {
+	protected boolean applyEvent(long _timeStamp, Entity _trigger) {
 		Game.getInstance().removeEntity(target_id);
+		return true;
 	}
 }

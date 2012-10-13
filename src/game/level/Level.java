@@ -1,7 +1,6 @@
 package game.level;
 
 import game.Game;
-import game.bound.Bound;
 import game.entity.Entity;
 import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
@@ -18,29 +17,20 @@ import java.util.Map;
 public class Level {
 
 	private final Floor floor;
-	private final List<Entity> entities;
-	private final Map<Long, Entity> entityID;
+	private final List<Entity> entities = new ArrayList<Entity>();
+	private final Map<Long, Entity> entityID = new HashMap<Long, Entity>();
 	
-	private final List<TriggerEntity> triggers;
+	private final List<TriggerEntity> triggers = new ArrayList<TriggerEntity>();
+	private final List<MoveableEntity> moveable = new ArrayList<MoveableEntity>();
 	
 	public Level(Floor _floor, List<Entity> _entities){
 		floor = _floor;
-		entities = new ArrayList<Entity>(_entities);
-		entityID = new HashMap<Long, Entity>();
-		triggers = new ArrayList<TriggerEntity>();
 		
 		for(Entity e : floor.getWalls()){
-			entities.add(e);
+			this.addEntity(e);
 		}
 		for(PlayerEntity p : Game.getInstance().getPlayers()){
-			entities.add(p);
-		}
-		
-		for(Entity e : entities){
-			entityID.put(e.id, e);
-			if(e instanceof TriggerEntity){
-				triggers.add((TriggerEntity) e);
-			}
+			this.addEntity(p);
 		}
 	}
 	
@@ -86,11 +76,15 @@ public class Level {
 		}
 	}
 	
+	
 	public void addEntity(Entity _entity){
 		entities.add(_entity);
 		entityID.put(_entity.id, _entity);
 		if(_entity instanceof TriggerEntity){
 			triggers.add((TriggerEntity) _entity);
+		}
+		if(_entity instanceof MoveableEntity){
+			moveable.add((MoveableEntity) _entity);
 		}
 	}
 	
@@ -113,6 +107,10 @@ public class Level {
 	 */
 	public List<TriggerEntity> getTriggers(){
 		return new ArrayList<TriggerEntity>(triggers);
+	}
+	
+	public List<MoveableEntity> getMoveableEntities(){
+		return new ArrayList<MoveableEntity>(moveable);
 	}
 	
 	/**
@@ -158,6 +156,16 @@ public class Level {
 			return collisionNorm.unit();
 		}
 		return null;
+	}
+	
+	public List<Entity> collisions(Entity _e){
+		List<Entity> collisions = new ArrayList<Entity>();
+		for(Entity e : entities){
+			if(_e!=e && e.getBound().intersects(_e.getBound())){
+				collisions.add(e);
+			}
+		}
+		return collisions;
 	}
 	
 	/**

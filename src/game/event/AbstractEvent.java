@@ -27,12 +27,11 @@ public abstract class AbstractEvent {
 	 * @param _trigger the entity that triggered the event
 	 */
 	public void activate(long _timeStamp, Entity _trigger){
-		applyEvent(_timeStamp, _trigger);
-		if(nextEvent!=null){
+		if(applyEvent(_timeStamp, _trigger) && nextEvent!=null){
 			nextEvent.activate(_timeStamp, _trigger);
 		}
 	}
 	
 	
-	protected abstract void applyEvent(long _timeStamp, Entity _trigger);
+	protected abstract boolean applyEvent(long _timeStamp, Entity _trigger);
 }

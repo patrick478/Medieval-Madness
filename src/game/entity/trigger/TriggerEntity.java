@@ -23,6 +23,14 @@ public abstract class TriggerEntity extends Entity{
 		event = _event;
 	}
 	
+	public TriggerEntity( AbstractEvent _event) {
+		super();
+		if(_event == null){
+			throw new IllegalArgumentException("Event cannot be null when creating a TriggerEntity");
+		}
+		event = _event;
+	}
+	
 	@Override
 	public void poke() {}
 	

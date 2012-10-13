@@ -88,7 +88,8 @@ public class MainMenuState extends GameState {
 
 	@Override
 	public void initalise() {
-		SimpleAudioPlayer.play("resources/menumusic.wav", true);
+		//TODO uncoomment
+//		SimpleAudioPlayer.play("resources/menumusic.wav", true);
 		Pane p = new Pane(800, 600);
 
 		//stuff

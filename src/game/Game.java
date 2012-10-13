@@ -276,11 +276,15 @@ public class Game implements Runnable {
 				currentLevel.removeEntity(_eid).getMeshContexts());
 	}
 	
-	public void addItem(long _eid, Item _item){
-		//TODO
+	public void spawnItem(){
+		
 	}
 	
-	public void removeItem(long _eid, Item _item){
+	public void addItemToPlayer(long _eid, Item _item){
+		System.out.println("ADDED ITEM TO PLAYE ^_^");
+	}
+	
+	public void removeItemFromPlayer(long _eid, Item _item){
 		//TODO
 	}
 

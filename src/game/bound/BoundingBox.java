@@ -51,10 +51,9 @@ public class BoundingBox extends Bound{
 		//compile the vector together and check the distance
 		Vec3 collisionNorm = Vec3.create(result);
 		if(_b.getRadius() > collisionNorm.mag()){
-//			System.out.println("Collision Found ::");
-//			System.out.println("\tBox :: " + position + " :: Sphere :: " + _b.getPosition());
-//			System.out.println("\tcollisionNorm -> "+collisionNorm  +" :: Mag = " + collisionNorm.mag() +" :: sphere radius-> "+ _b.getRadius());
-//			System.out.println();
+			if(collisionNorm.mag()<0.0001){
+				collisionNorm = _b.getPosition().sub(position);
+			}
 			return collisionNorm.unit();
 		}
 		return null;

@@ -47,6 +47,9 @@ public class BoundingSphere extends Bound {
 		//compile the vector together and check the distance
 		Vec3 collisionNorm = Vec3.create(result);
 		if(this.radius > collisionNorm.mag()){
+			if(collisionNorm.mag()<0.0001){
+				collisionNorm = _b.getPosition().sub(position);
+			}
 			return collisionNorm.unit();
 		}
 		return null;

@@ -18,8 +18,9 @@ public class MoveEvent extends AbstractEvent{
 	}
 	
 	@Override
-	protected void applyEvent(long _timeStamp, Entity _trigger) {
+	protected boolean applyEvent(long _timeStamp, Entity _trigger) {
 		Game.getInstance().moveEntity(target_id, target_pos);
 		Game.getInstance().turnEntity(target_id, target_orient);
+		return true;
 	}
 }

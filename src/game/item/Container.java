@@ -2,6 +2,7 @@ package game.item;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Container extends Item{
@@ -14,6 +15,7 @@ public class Container extends Item{
 		capacity = _capacity;
 		items = new ArrayList<Item>(capacity);
 	}
+	
 	/**
 	 * If the Container has enough room adds the item to the list of 
 	 * items in this Container, sets the item's parent to this and 
@@ -24,9 +26,47 @@ public class Container extends Item{
 	 */
 	public boolean addItem(Item _item){
 		if(items.size()>=capacity){
+			for(Item i : items){
+				if(i instanceof Container){
+					if(((Container)i).addItem(_item)){
+						return true;
+					}
+				}
+			}
 			return false;
 		}
-		items.add(_item);
-		return super.addItem(_item);
+		_item.setParent(this);
+		return items.add(_item);
+	}
+	
+	public boolean containsItem(Item _item){
+		for(Item i : items){
+			if(i.equals(_item)){
+				return true;
+			} else if(i instanceof Container){
+				if(((Container)i).containsItem(_item)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean removeItem(Item _item){
+		Iterator<Item> iter = items.iterator();
+		
+		while(iter.hasNext()){
+			Item i = iter.next();
+			if(i.equals(_item)){
+				iter.remove();
+				return true;
+			} else if(i instanceof Container){
+				if(((Container)i).removeItem(_item)){
+					return true;
+				}
+			}
+			
+		}
+		return false;
 	}
 }

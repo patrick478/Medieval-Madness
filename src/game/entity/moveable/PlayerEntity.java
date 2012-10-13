@@ -1,8 +1,8 @@
 package game.entity.moveable;
 
-import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.item.Container;
 import game.modelloader.Content;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
@@ -10,7 +10,6 @@ import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
 import initial3d.engine.Vec3;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +20,8 @@ public class PlayerEntity extends MoveableEntity {
 	private int defaultDamage = 2;
 	private int defaultHealth = 100;
 	private int defaultEnergy = 100;
+	
+	private final Container inventory = new Container(null, "Inventory", 6);//FIXME?
 	
 	private final double radius;
 	private int selfIndex = 0;
@@ -52,6 +53,10 @@ public class PlayerEntity extends MoveableEntity {
 	
 	public double getSpeed(){
 		return baseSpeed;
+	}
+	
+	public Container inventory(){
+		return inventory;
 	}
 	
 	public Color getColor()

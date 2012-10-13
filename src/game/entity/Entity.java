@@ -3,6 +3,7 @@ package game.entity;
 import java.util.*;
 
 import game.bound.Bound;
+import game.level.Level;
 import initial3d.engine.*;
 
 public abstract class Entity implements ReferenceFrame {
@@ -106,6 +107,19 @@ public abstract class Entity implements ReferenceFrame {
 		{
 			s.addDrawable(m);
 		}
+	}
+	
+	/**
+	 * Adds all Drawable components that make up the 
+	 * graphical part of the entity to the given scene
+	 * 
+	 * @param s A non-null scene object
+	 */
+	public void addToLevel(Level l){
+		if(l==null){
+			throw new IllegalArgumentException("Paramter Level cannot be null");
+		}
+		l.addEntity(this);
 	}
 	
 	/**

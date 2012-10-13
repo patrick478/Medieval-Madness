@@ -1,6 +1,7 @@
 package game.states;
 
 import java.awt.event.KeyEvent;
+import java.security.Identity;
 
 import soundengine.SimpleAudioPlayer;
 
@@ -11,7 +12,12 @@ import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
+import game.entity.Entity;
+import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
+import game.entity.trigger.TriggerEntity;
+import game.item.Item;
+import game.modelloader.Content;
 
 /***
  * The game!
@@ -38,6 +44,25 @@ public class PlayState extends GameState {
 		{
 			pe.addToScene(scene);
 		}
+		
+		
+		System.out.println("Creating test object");
+		
+		Item it = new Item(null, null){};
+		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), 0.25, it);
+//		ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+		
+		Material mat = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
+		Mesh m = Content.loadContent("sphere.obj");
+		MeshContext mc = new MeshContext(m, mat, ie);
+		mc.setScale(0.25);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		ie.addMeshContext(mc);
+		
+		ie.addToLevel(Game.getInstance().getLevel());
+//		ie.addToScene(scene);
+		
+		System.out.println("Added Test object to level");
 		
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
@@ -180,6 +205,19 @@ public class PlayState extends GameState {
 		
 		//poke all players and set the velocity
 		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
+		
+		if(Game.getInstance().isHost()){
+			for(TriggerEntity t : Game.getInstance().getLevel().getTriggers()){
+				Entity e = Game.getInstance().getLevel().firstCollision(t);
+				if(e!=null){
+					System.out.println("trigger");
+					t.trigger(e);
+				}
+			}
+		}
+		
+		
+		
 		Game.getInstance().getLevel().pokeAll();
 		
 		if(!intent_vel.equals(Vec3.zero))
