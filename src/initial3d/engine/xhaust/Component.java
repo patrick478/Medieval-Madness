@@ -15,7 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.util.Collections;
 
-public abstract class Component extends ActionSource {
+public abstract class Component extends ActionSource implements Pane.PaneProvider {
 
 	private final int width, height;
 	private volatile int x, y;
@@ -27,34 +27,36 @@ public abstract class Component extends ActionSource {
 	private boolean repainted = false;
 	private int drawid;
 
-	private volatile Component parent = null;
-
-	private volatile Pane pane = null;
+	private volatile Container parent = null;
 
 	private final EventDispatcher dispatcher = new EventDispatcher();
 
 	public Component(int width_, int height_) {
 		width = width_;
 		height = height_;
-
 	}
 
-	/* package-private */
-	final void setPane(Pane p) {
-		pane = p;
-	}
-
+	@Override
 	public Pane getPane() {
-		return pane;
+		if (parent == null) return null;
+		return parent.getPane();
 	}
-	
-	public boolean isFocused() {
-		return this.equals(pane.getLocalFocused());
+
+	public boolean hasLocalFocus() {
+		if (getPane() == null) return false;
+		return this.equals(getPane().getLocalFocused());
 	}
 
 	/* package-private */
-	final void setParent(Component c) {
+	final void setParent(Container c) {
 		parent = c;
+	}
+
+	public final void remove() {
+		if (parent != null) {
+			parent.remove(this);
+		}
+		setParent(null);
 	}
 
 	/* package-private */
@@ -136,15 +138,14 @@ public abstract class Component extends ActionSource {
 	protected void paintBorder(Graphics g) {
 
 	}
-	
+
 	public boolean contains(Component c) {
-		 return this.equals(c);
+		return this.equals(c);
 	}
 
 	public final void requestLocalFocus() {
-		if(pane == null) throw new IllegalStateException("Add me to the pane, first!");
-		
-		pane.requestLocalFocusFor(this);
+		if (getPane() == null) throw new IllegalStateException("Add me to the pane, first!");
+		getPane().requestLocalFocusFor(this);
 	}
 
 	public int getWidth() {
@@ -183,11 +184,11 @@ public abstract class Component extends ActionSource {
 	public void setBackgroundColor(Color c) {
 		col_bg = c;
 	}
-	
+
 	public Color getForegroundColor() {
 		return col_fg;
 	}
-	
+
 	public void setForegroundColor(Color c) {
 		col_fg = c;
 	}
@@ -211,12 +212,12 @@ public abstract class Component extends ActionSource {
 	protected void processMouseEvent(MouseEvent e) {
 
 	}
-	
+
 	@Override
 	public final int hashCode() {
 		return super.hashCode();
 	}
-	
+
 	@Override
 	public final boolean equals(Object o) {
 		return super.equals(o);

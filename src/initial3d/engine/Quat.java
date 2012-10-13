@@ -34,8 +34,8 @@ public class Quat {
 	}
 
 	/**
-	 * Create a Quat from a vector in the direction of the rotation axis whose magnitude is equal to the angle to rotate
-	 * by.
+	 * Create a Quat from a vector in the direction of the rotation axis whose
+	 * magnitude is equal to the angle to rotate by.
 	 */
 	public static final Quat create(Vec3 rot) {
 		double angle = rot.mag();
@@ -56,7 +56,10 @@ public class Quat {
 		return Math.sqrt(w * w + x * x + y * y + z * z);
 	}
 
-	/** Create a new Quat from the components of this Quat scaled by a given factor. */
+	/**
+	 * Create a new Quat from the components of this Quat scaled by a given
+	 * factor.
+	 */
 	public Quat scale(double f) {
 		return create(w * f, x * f, y * f, z * f);
 	}
@@ -66,7 +69,10 @@ public class Quat {
 		return scale(1d / norm());
 	}
 
-	/** Get the conjugate of this Quat. If this Quat has norm == 1, then its conjugate is also its inverse. */
+	/**
+	 * Get the conjugate of this Quat. If this Quat has norm == 1, then its
+	 * conjugate is also its inverse.
+	 */
 	public Quat conj() {
 		return create(w, -x, -y, -z);
 	}
@@ -77,20 +83,30 @@ public class Quat {
 		return create(inorm2 * w, -inorm2 * x, -inorm2 * y, -inorm2 * z);
 	}
 
-	/** <b><i>Left-multiply</i></b> this Quat by <code>left</code>. Use this to compose rotations. */
+	/**
+	 * <b><i>Left-multiply</i></b> this Quat by <code>left</code>. Use this to
+	 * compose rotations, where <code>this</code> is rotated by
+	 * <code>left</code>.
+	 */
 	public Quat mul(Quat left) {
 		return create(left.w * w - left.x * x - left.y * y - left.z * z, left.w * x + left.x * w + left.y * z - left.z
 				* y, left.w * y - left.x * z + left.y * w + left.z * x, left.w * z + left.x * y - left.y * x + left.z
 				* w);
 	}
 
-	/** <b><i>Left-multiply</i></b> this Quat by the Quat described by <code>(w,x,y,z)</code>. */
+	/**
+	 * <b><i>Left-multiply</i></b> this Quat by the Quat described by
+	 * <code>(w,x,y,z)</code>.
+	 */
 	public Quat mul(double leftw, double leftx, double lefty, double leftz) {
 		return create(leftw * w - leftx * x - lefty * y - leftz * z, leftw * x + leftx * w + lefty * z - leftz * y,
 				leftw * y - leftx * z + lefty * w + leftz * x, leftw * z + leftx * y - lefty * x + leftz * w);
 	}
 
-	/** Rotate a Vec3 by the rotation described by this Quat. Assumes this Quat has norm == 1. */
+	/**
+	 * Rotate a Vec3 by the rotation described by this Quat. Assumes this Quat
+	 * has norm == 1.
+	 */
 	public Vec3 rot(Vec3 v) {
 		// this * v * this^(-1)
 		Quat q = conj().mul(0, v.x, v.y, v.z).mul(this);
@@ -113,6 +129,11 @@ public class Quat {
 
 	/** Probably not very useful. */
 	public Quat add(Quat q) {
+		throw new AssertionError("Quaternion addition doesn't do what you think it does. Also, read the javadoc.");
+	}
+
+	/** Probably not very useful. */
+	public Quat addAndYesIKnowWhatImDoing(Quat q) {
 		return create(w + q.w, x + q.x, y + q.y, z + q.z);
 	}
 
@@ -163,23 +184,15 @@ public class Quat {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		Quat other = (Quat) obj;
-		if (Double.doubleToLongBits(w) != Double.doubleToLongBits(other.w))
-			return false;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
-			return false;
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
-			return false;
-		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z))
-			return false;
+		if (Double.doubleToLongBits(w) != Double.doubleToLongBits(other.w)) return false;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) return false;
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) return false;
+		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z)) return false;
 		return true;
 	}
 
-	
 }

@@ -60,22 +60,24 @@ public abstract class Texture {
 	public void clear(int u, int v, int usize, int vsize) {
 		int umax = u + usize;
 		int vmax = v + vsize;
-		for (; u < umax; u++) {
-			for (; v < vmax; v++) {
+		for (; u < umax; u += usize > 0 ? 1 : -1) {
+			for (; v < vmax; v += vsize > 0 ? 1 : -1) {
 				setTexel(u, v, 0f, 0f, 0f, 0f);
 			}
+			v -= vsize;
 		}
 	}
 
 	public void clearNoWrap(int u, int v, int usize, int vsize) {
 		int umax = u + usize;
 		int vmax = v + vsize;
-		for (; u < umax; u++) {
+		for (; u < umax; u += usize > 0 ? 1 : -1) {
 			if (u < 0 || u >= size()) continue;
-			for (; v < vmax; v++) {
+			for (; v < vmax; v += vsize > 0 ? 1 : -1) {
 				if (v < 0 || v >= size()) continue;
 				setTexel(u, v, 0f, 0f, 0f, 0f);
 			}
+			v -= vsize;
 		}
 	}
 
@@ -102,7 +104,6 @@ public abstract class Texture {
 		int imgxmax = imgx + imgw;
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u++, imgx++) {
-			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v++, imgy++) {
 				int rgb = img.getRGB(imgx, imgy);
 				setTexel(u, v, Channel.BLUE, (rgb & 0xFF) * i255);
@@ -110,6 +111,8 @@ public abstract class Texture {
 				setTexel(u, v, Channel.RED, ((rgb >>>= 8) & 0xFF) * i255);
 				setTexel(u, v, Channel.ALPHA, ((rgb >>>= 8) & 0xFF) * i255);
 			}
+			imgy -= imgh;
+			v -= imgh;
 		}
 	}
 
@@ -137,7 +140,6 @@ public abstract class Texture {
 		int imgymax = imgy + imgh;
 		for (; imgx < imgxmax; u++, imgx++) {
 			if (u < 0 || u >= size()) continue;
-			imgy = imgymax - imgh;
 			for (; imgy < imgymax; v++, imgy++) {
 				if (v < 0 || v >= size()) continue;
 				int rgb = img.getRGB(imgx, imgy);
@@ -146,6 +148,8 @@ public abstract class Texture {
 				setTexel(u, v, Channel.RED, ((rgb >>>= 8) & 0xFF) * i255);
 				setTexel(u, v, Channel.ALPHA, ((rgb >>>= 8) & 0xFF) * i255);
 			}
+			imgy -= imgh;
+			v -= imgh;
 		}
 	}
 

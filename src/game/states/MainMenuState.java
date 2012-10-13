@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import soundengine.SimpleAudioPlayer;
+
 import game.Game;
 import game.GameState;
 
@@ -41,11 +43,14 @@ public class MainMenuState extends GameState {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("released")){
 				if(e.getSource().equals(joinArea)){
-				//SimpleAudioPlayer.stopMusic();
+//					SimpleAudioPlayer.stopMusic();
+//				SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
 					Game.getInstance().changeState(new FindGameState());
 				}
 				else if(e.getSource().equals(startArea)){
-					//SimpleAudioPlayer.stopMusic();
+//					SimpleAudioPlayer.stopMusic();
+
+//					SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
 					Game.getInstance().changeState(new CreateGameState());
 				}
 
@@ -83,7 +88,7 @@ public class MainMenuState extends GameState {
 
 	@Override
 	public void initalise() {
-		//SimpleAudioPlayer.play("resources/menumusic.wav");
+		SimpleAudioPlayer.play("resources/menumusic.wav", true);
 		Pane p = new Pane(800, 600);
 
 		//stuff

@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.ButtonV0;
 import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Pane;
 import initial3d.engine.xhaust.TextFieldV0;
 import initial3d.engine.xhaust.vision.Button;
@@ -111,10 +112,10 @@ public class TestUI {
 		newLabel.setPosition(20, 80);
 		newInput.setPosition(20, 120);
 
-		p.getRoot().add(c);
-		p.getRoot().add(c1);
-		p.getRoot().add(c2);
-		p.getRoot().add(ct);
+//		p.getRoot().add(c);
+//		p.getRoot().add(c1);
+//		p.getRoot().add(c2);
+//		p.getRoot().add(ct);
 		
 		p.getRoot().add(newButton);
 		p.getRoot().add(newLabel);
@@ -126,25 +127,17 @@ public class TestUI {
 
 		scene.addDrawable(p);
 		
-		Thread.sleep(2000);
+		Pane last = p;
 		
-//		final DialogPane dp = new DialogPane(200, 200, p, true);
+		for (int i = 0; i < 5; i++) {
+			DialogPane dp = new TestDialogPane(200, 200, last, true);
+			dp.setPosition(-20 * i, -20 * i);
+			dp.requestVisible(true);
+			scene.addDrawable(dp);
+			last = dp;
+		}
 		
-		final Component b = new ButtonV0(40, 20, "DIE");
-//		dp.getRoot().add(b);
 		
-		b.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-//				dp.requestRemoval();
-			}
-			
-		});
-		
-//		dp.requestVisible(true);
-		
-//		scene.addDrawable(dp);
 
 		MovableReferenceFrame camera_rf = new MovableReferenceFrame(null);
 		scene.getCamera().trackReferenceFrame(camera_rf);
@@ -158,6 +151,26 @@ public class TestUI {
 //			Thread.sleep(33);
 //		}
 
+	}
+	
+	private static class TestDialogPane extends DialogPane {
+
+		public TestDialogPane(int width_, int height_, Pane parent_, boolean modal_) {
+			super(width_, height_, parent_, modal_);
+			
+			final Component b = new ButtonV0(40, 20, "DIE");
+			getRoot().add(b);
+			
+			b.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TestDialogPane.this.requestRemoval();
+				}
+				
+			});
+		}
+		
 	}
 
 }

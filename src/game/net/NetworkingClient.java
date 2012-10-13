@@ -81,20 +81,22 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			byte[] actualData = Arrays.copyOf(data, rx);
 			this.bq.append(actualData);
 			
-			if(packetSize < 0 && this.bq.getCount() >= 2)
+			while(true)
 			{
-				byte[] lenData = new byte[2];
-				this.bq.read(lenData, 0, 2);
-				packetSize = peekShort(lenData);		
-			}
-			if(packetSize > 0 && this.bq.getCount() >= packetSize)
-			{
-				byte[] pData = new byte[packetSize];
-				this.bq.read(pData, 0, packetSize);
-				DataPacket dp = new DataPacket(pData, false);
-				processPacket(dp);
-				packetSize = -1;
-//				this.dataPackets.add(dp);
+				if(packetSize < 0 && this.bq.getCount() >= 2)
+				{
+					byte[] lenData = new byte[2];
+					this.bq.read(lenData, 0, 2);
+					packetSize = peekShort(lenData);		
+				}
+				if(packetSize > 0 && this.bq.getCount() >= packetSize)
+				{
+					byte[] pData = new byte[packetSize];
+					this.bq.read(pData, 0, packetSize);
+					DataPacket dp = new DataPacket(pData, false);
+					processPacket(dp);
+					packetSize = -1;
+				} else break;
 			}
 		}
 	}

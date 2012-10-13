@@ -13,6 +13,7 @@ import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Drawable;
 import initial3d.engine.MeshContext;
+import initial3d.engine.Scene;
 import initial3d.engine.SceneManager;
 import initial3d.linearmath.Matrix;
 import initial3d.linearmath.TransformationMatrix4D;
@@ -21,14 +22,15 @@ import initial3d.linearmath.Vector4D;
 import static initial3d.Initial3D.*;
 
 public class Pane extends Drawable {
-	
+
 	private static final double NEAR_CLIP = (SceneManager.NEAR_PLANE + MeshContext.DEFAULT_NEAR_CLIP) / 2;
 	private static final double FAR_CULL = MeshContext.DEFAULT_NEAR_CLIP;
-	
+
 	private volatile double rotation = 0;
 
 	private final BufferedImage bi;
 	private final Texture tex;
+	private final double tc_umax, tc_vmax;
 
 	private final int width, height;
 	private int x, y;
@@ -40,9 +42,15 @@ public class Pane extends Drawable {
 	private final double[][] xtemp = Matrix.createIdentity(4);
 
 	private Component focused;
-	
+
 	private final int zlevel;
-	
+
+	public static interface PaneProvider {
+
+		public Pane getPane();
+
+	}
+
 	protected Pane(int width_, int height_, int zlevel_) {
 		width = width_;
 		height = height_;
@@ -50,13 +58,21 @@ public class Pane extends Drawable {
 		bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		tex = Initial3D.createTexture(Texture.requiredSize(Math.max(width, height)));
 
+		tc_umax = width / (double) tex.size();
+		tc_vmax = height / (double) tex.size();
+
 		requestInputEnabled(true);
 		requestVisible(false);
 
-		root = new Container(width, height);
-		root.setPane(this);
+		root = new Container(width, height) {
+			@Override
+			public Pane getPane() {
+				return Pane.this;
+			}
+		};
+
 		focused = root;
-		
+
 		zlevel = zlevel_;
 	}
 
@@ -79,21 +95,21 @@ public class Pane extends Drawable {
 	public int getY() {
 		return y;
 	}
-	
+
 	/* package-private */
 	final int getZLevel() {
 		return zlevel;
 	}
-	
+
 	public void setPosition(int x_, int y_) {
 		x = x_;
 		y = y_;
 	}
-	
+
 	public double getRotation() {
 		return rotation;
 	}
-	
+
 	public void setRotation(double r) {
 		rotation = r;
 	}
@@ -108,7 +124,7 @@ public class Pane extends Drawable {
 		// TODO handle this properly
 		i3d.nearClip(NEAR_CLIP);
 		i3d.farCull(FAR_CULL);
-		double zview = (NEAR_CLIP + FAR_CULL * zlevel) / (zlevel + 1);
+		double zview = (NEAR_CLIP * zlevel + FAR_CULL) / (zlevel + 1);
 
 		vec0[0][0] = 0;
 		vec0[1][0] = 0;
@@ -146,9 +162,9 @@ public class Pane extends Drawable {
 
 		i3d.translateX(x);
 		i3d.translateY(y);
-		
+
 		i3d.rotateZ(rotation);
-		
+
 		i3d.translateX(width / 2);
 		i3d.translateY(height / 2);
 
@@ -170,7 +186,8 @@ public class Pane extends Drawable {
 		g.dispose();
 
 		if (root.repainted()) {
-			tex.drawImage(bi);
+			// tex.drawImage(bi);
+			tex.drawImage(0, 0, 0, 0, width, height, bi);
 		}
 
 		i3d.enable(WRITE_COLOR | WRITE_Z | TEXTURE_2D);
@@ -178,11 +195,11 @@ public class Pane extends Drawable {
 		i3d.texImage2D(FRONT, tex, null, null);
 
 		i3d.begin(POLYGON);
-		i3d.texCoord2d(0, 1);
+		i3d.texCoord2d(0, tc_vmax);
 		i3d.vertex3d(0, -height, zview);
-		i3d.texCoord2d(1, 1);
+		i3d.texCoord2d(tc_umax, tc_vmax);
 		i3d.vertex3d(-width, -height, zview);
-		i3d.texCoord2d(1, 0);
+		i3d.texCoord2d(tc_umax, 0);
 		i3d.vertex3d(-width, 0, zview);
 		i3d.texCoord2d(0, 0);
 		i3d.vertex3d(0, 0, zview);
@@ -224,13 +241,13 @@ public class Pane extends Drawable {
 
 		target.dispatchMouseEvent(e);
 	}
-	
+
 	public void requestLocalFocusFor(Component c) {
 		if (root.contains(c)) {
 			focused = c;
 		}
 	}
-	
+
 	public Component getLocalFocused() {
 		return focused;
 	}

@@ -73,6 +73,9 @@ public class Input extends Component {
 	@Override
 	protected void processKeyEvent(KeyEvent e)
 	{
+		
+		// BEN, this is still broken (think SHIFT + char)
+		
 		if(e.getID() == KeyEvent.KEY_RELEASED)
 		{
 			
@@ -97,6 +100,7 @@ public class Input extends Component {
 					break;
 				default:
 					this.text[0] += (this.isNumericInputbox && isNumber(e.getKeyChar()) ? e.getKeyChar() : "");
+					this.text[0] += (!this.isNumericInputbox ? e.getKeyChar() : "");
 				break;
 			}
 		}

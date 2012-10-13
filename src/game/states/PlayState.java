@@ -2,6 +2,8 @@ package game.states;
 
 import java.awt.event.KeyEvent;
 
+import soundengine.SimpleAudioPlayer;
+
 import initial3d.engine.*;
 import initial3d.engine.xhaust.InventoryHolder;
 import initial3d.engine.xhaust.Pane;
@@ -39,7 +41,7 @@ public class PlayState extends GameState {
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
 
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().player);
+		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		scene.getCamera().trackReferenceFrame(cameraRf);
 		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
@@ -63,9 +65,11 @@ public class PlayState extends GameState {
 		Light l = new Light.DirectionalLight(ReferenceFrame.SCENE_ROOT, new Color(30, 30, 30), Vec3.create(0, 1, 1));
 		scene.addLight(l);
 		
-		Light l2 = new Light.SphericalPointLight(Game.getInstance().player, Color.ORANGE, 0.25f);
+		Light l2 = new Light.SphericalPointLight(Game.getInstance().getPlayer(), Color.ORANGE, 0.25f);
 		scene.addLight(l2);
-			
+		
+		Game.getInstance().getPlayer().getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	
+//		SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 	}
 
 	@Override
@@ -143,10 +147,9 @@ public class PlayState extends GameState {
 		if (intent_vel.mag() > 0.0001) {
 			intent_vel = intent_vel.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
-		
-		
+				
 		//Retrieve the player and set the velocity
-		PlayerEntity player = Game.getInstance().player;
+		PlayerEntity player = Game.getInstance().getPlayer();
 		player.setIntVelocity(intent_vel);
 		
 		//get the collision normals (if any)

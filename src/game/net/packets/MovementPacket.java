@@ -8,7 +8,7 @@ public class MovementPacket extends Packet
 	public static final short ID = 3;
 	
 	public int playerIndex = -1;
-	public Vec3 position = Vec3.one;
+	public Vec3 position = Vec3.create(10, 10, 10);
 	public Vec3 velocity = Vec3.zero;
 	
 	public MovementPacket()

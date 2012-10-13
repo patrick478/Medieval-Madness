@@ -16,18 +16,15 @@ public class Container extends Component {
 	}
 
 	public void add(Component c) {
-		if (c.getPane() != null) {
-			throw new IllegalArgumentException("Cannot add a component to more than one pane.");
-		}
+		// avoid adding to multiple panes
+		c.remove();
 		children.add(c);
 		c.setParent(this);
-		c.setPane(getPane());
 	}
 
 	public boolean remove(Component c) {
 		if (children.remove(c)) {
-			c.setParent(null);
-			c.setPane(null);
+			c.remove();
 			return true;
 		}
 		return false;
@@ -41,6 +38,12 @@ public class Container extends Component {
 			}
 		}
 		return false;
+	}
+	
+	public void clear() {
+		for (Component c : new ArrayList<Component>(children)) {
+			remove(c);
+		}
 	}
 
 	@Override
