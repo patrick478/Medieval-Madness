@@ -473,7 +473,7 @@ class Initial3DImpl extends Initial3D {
 			putFloat(qLight + 96, v);
 			break;
 		case SPOT_CUTOFF:
-			putFloat(qLight + 100, v);
+			putFloat(qLight + 100, (float) Math.cos(v * 0.5));
 			break;
 		case SPOT_EXPONENT:
 			putFloat(qLight + 104, v);

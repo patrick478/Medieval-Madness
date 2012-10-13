@@ -74,7 +74,7 @@ public class PlayState extends GameState {
 		{
 			MovableReferenceFrame lrf = new MovableReferenceFrame(pe);
 			lrf.setPosition(Vec3.create(0, 0.5, 0));
-			Light l2 = new Light.SphericalPointLight(lrf, Color.WHITE, 0.20f);
+			Light l2 = new Light.SpotLight(pe, Color.WHITE, 4f, (float) Math.PI / 2, 10f);
 			scene.addLight(l2);
 			
 			MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
