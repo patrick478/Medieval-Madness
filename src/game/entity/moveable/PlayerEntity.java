@@ -2,6 +2,7 @@ package game.entity.moveable;
 
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.item.Item;
 import game.item.ItemContainer;
 import game.modelloader.Content;
 import initial3d.engine.Color;
@@ -23,6 +24,12 @@ public class PlayerEntity extends MoveableEntity {
 	
 
 	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
+	private final Item[] equippedItems = new Item[5];
+
+	public Item[] getEquippedItems() {
+		return equippedItems;
+	}
+
 	private int currentHealth = 50;
 
 	

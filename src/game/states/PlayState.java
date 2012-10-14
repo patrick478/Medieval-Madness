@@ -14,7 +14,7 @@ import soundengine.SimpleAudioPlayer;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Healthbar;
-import initial3d.engine.xhaust.InventoryHolder;
+import initial3d.engine.xhaust.EquippedInventoryContainer;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
@@ -108,25 +108,27 @@ public class PlayState extends GameState {
 		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-		
-		InventoryHolder i = new InventoryHolder();
+		EquippedInventoryContainer i = new EquippedInventoryContainer(Game.getInstance().getPlayer().getEquippedItems());
 		p.getRoot().add(i);
 		
 		
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
 		p.getRoot().setOpaque(false);
-		scene.addDrawable(p);
-		
+		//scene.addDrawable(p);
+		Game.getInstance().setInventoryHolder(p);
+
 		
 		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
-		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer().getInventory());
+		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer());
 		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
 		//invenPopUp.requestVisible(false);
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
+		scene.addDrawable(Game.getInstance().getInventoryHolder());
+
 		Pane topPane = new Pane(500, 100);
 		hp = new Healthbar();
 		topPane.getRoot().add(hp);

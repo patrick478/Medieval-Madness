@@ -18,7 +18,8 @@ import initial3d.*;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.Component;
 import initial3d.engine.xhaust.DialogPane;
-import initial3d.engine.xhaust.InventoryHolder;
+import initial3d.engine.xhaust.EquippedInventoryContainer;
+import initial3d.engine.xhaust.Pane;
 import game.net.*;
 import game.net.packets.MovementPacket;
 import game.states.*;
@@ -46,6 +47,7 @@ public class Game implements Runnable {
 	private final long optimalTime = 1000000000 / gameHz;
 
 	private DialogPane invenPopUp;
+	private Pane inventoryHolder;
 	private GameState currentGameState;
 	private GameState previousState = null; 
 	private Thread gameThread = null;
@@ -382,5 +384,13 @@ public class Game implements Runnable {
 	
 	public DialogPane getInvenPopUp() {
 		return invenPopUp;
+	}
+
+	public Pane getInventoryHolder() {
+		return inventoryHolder;
+	}
+
+	public void setInventoryHolder(Pane inventoryHolder) {
+		this.inventoryHolder = inventoryHolder;
 	}
 }
