@@ -2,7 +2,6 @@ package game.states;
 
 import initial3d.engine.xhaust.Pane;
 import initial3d.engine.xhaust.Picture;
-import initial3d.engine.xhaust.TextFieldV0;
 import initial3d.engine.xhaust.vision.ActionIDList;
 import initial3d.engine.xhaust.vision.Button;
 import initial3d.engine.xhaust.vision.Input;
@@ -13,13 +12,13 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import game.Game;
 import game.GameState;
 import game.net.NetworkingClient;
-import game.net.NetworkingHost;
 
 /***
  * This state will display a list of games to join and allow a user to join a game
@@ -40,6 +39,12 @@ public class FindGameState extends GameState {
 	Label playersThree = new Label(50);
 	Label playersFour = new Label(50);
 	
+	Button join1  = new Button("JOIN");
+	Button join2  = new Button("JOIN");
+	Button join3  = new Button("JOIN");
+	Button join4  = new Button("JOIN");
+
+	ArrayList<Button> joinButtons = new ArrayList<Button>();
 	public FindGameState() {
 	}
 	
@@ -104,6 +109,43 @@ public class FindGameState extends GameState {
 			}
 		});
 		
+		join1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
+				Game.getInstance().setNetwork(new NetworkingClient());
+				Game.getInstance().getNetwork().setRemoteTarget(serverOne.getText());
+				Game.getInstance().getNetwork().start();
+			}
+		});
+		
+		join2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
+				Game.getInstance().setNetwork(new NetworkingClient());
+				Game.getInstance().getNetwork().setRemoteTarget(serverTwo.getText());
+				Game.getInstance().getNetwork().start();
+			}
+		});
+		join3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
+				Game.getInstance().setNetwork(new NetworkingClient());
+				Game.getInstance().getNetwork().setRemoteTarget(serverThree.getText());
+				Game.getInstance().getNetwork().start();
+			}
+		});
+		join4.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
+				Game.getInstance().setNetwork(new NetworkingClient());
+				Game.getInstance().getNetwork().setRemoteTarget(serverFour.getText());
+				Game.getInstance().getNetwork().start();
+			}
+		});
 		
 		
 		//Code for the sever select part of the screen
@@ -118,7 +160,10 @@ public class FindGameState extends GameState {
 		playersThree.setPosition(400, 252);
 		playersFour.setPosition(400, 278);
 
-		
+		join1.setPosition(460, 200);
+		join2.setPosition(460, 226);
+		join3.setPosition(460, 252);
+		join4.setPosition(460, 278);
 		
 		
 		pic = new Picture(bg ,0,0, 800,600);
@@ -137,7 +182,20 @@ public class FindGameState extends GameState {
 		p.getRoot().add(playersTwo);
 		p.getRoot().add(playersThree);
 		p.getRoot().add(playersFour);
+		
+		joinButtons.add(join1);
+		joinButtons.add(join2);
+		joinButtons.add(join3);
+		joinButtons.add(join4);
 
+		for(Button b :joinButtons){
+			p.getRoot().add(b);
+		}
+		
+		
+		serverOne.setText("localhost");
+		
+		
 		target.requestLocalFocus();
 		
 		

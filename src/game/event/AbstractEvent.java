@@ -1,5 +1,7 @@
 package game.event;
 
+import java.util.List;
+
 import game.entity.Entity;
 
 public abstract class AbstractEvent {
@@ -26,12 +28,11 @@ public abstract class AbstractEvent {
 	 * @param _timeStamp the time in which the original event was triggered
 	 * @param _trigger the entity that triggered the event
 	 */
-	public void activate(long _timeStamp, Entity _trigger){
+	public void activate(long _timeStamp, List<Entity> _trigger){
 		if(applyEvent(_timeStamp, _trigger) && nextEvent!=null){
 			nextEvent.activate(_timeStamp, _trigger);
 		}
 	}
 	
-	
-	protected abstract boolean applyEvent(long _timeStamp, Entity _trigger);
+	protected abstract boolean applyEvent(long _timeStamp, List<Entity> _trigger);
 }
