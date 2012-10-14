@@ -1,13 +1,8 @@
 package initial3d.engine;
 
-public interface ReferenceFrame {
+public abstract class ReferenceFrame {
 
 	public static final ReferenceFrame SCENE_ROOT = new ReferenceFrame() {
-
-		@Override
-		public ReferenceFrame getParent() {
-			return SCENE_ROOT;
-		}
 
 		@Override
 		public Vec3 getPosition() {
@@ -21,10 +16,43 @@ public interface ReferenceFrame {
 
 	};
 
-	public ReferenceFrame getParent();
+	private final ReferenceFrame parent;
+	private Vec3 draw_position = Vec3.zero;
+	private Quat draw_orientation = Quat.one;
 
-	public Vec3 getPosition();
+	private ReferenceFrame() {
+		// this constructor only for SCENE_ROOT
+		parent = this;
+	}
+	
+	protected ReferenceFrame(ReferenceFrame parent_) {
+		if (parent_ == null) throw new IllegalArgumentException("ReferenceFrame cannot have null parent.");
+		parent = parent_;
+	}
 
-	public Quat getOrientation();
+	public final ReferenceFrame getParent() {
+		return parent;
+	}
+
+	public abstract Vec3 getPosition();
+
+	public abstract Quat getOrientation();
+
+	/* package-private */
+	final void lockForDraw() {
+		draw_position = getPosition();
+		draw_orientation = getOrientation();
+		if (parent != SCENE_ROOT) {
+			parent.lockForDraw();
+		}
+	}
+
+	public final Vec3 getDrawPosition() {
+		return draw_position;
+	}
+
+	public final Quat getDrawOrientation() {
+		return draw_orientation;
+	}
 
 }

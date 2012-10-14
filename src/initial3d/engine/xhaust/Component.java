@@ -32,6 +32,8 @@ public abstract class Component extends ActionSource {
 	private boolean repainted = false;
 	private int drawid;
 
+	private volatile boolean visible = true;
+
 	private volatile Container parent = null;
 
 	private final EventDispatcher dispatcher = new EventDispatcher();
@@ -84,8 +86,10 @@ public abstract class Component extends ActionSource {
 		if (repaint_required) {
 			repaint_required = false;
 			repainted = true;
-			paintComponent(g);
-			paintBorder(g);
+			if (visible) {
+				paintComponent(g);
+				paintBorder(g);
+			}
 		} else {
 			repainted = false;
 		}
@@ -132,6 +136,15 @@ public abstract class Component extends ActionSource {
 		repaint_required = true;
 	}
 
+	public void setVisible(boolean b) {
+		visible = b;
+		repaint();
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+	
 	protected void paintComponent(Graphics g) {
 		if (opaque) {
 			g.setColor(col_bg);

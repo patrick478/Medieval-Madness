@@ -31,6 +31,10 @@ public abstract class MoveableEntity extends Entity {
 	protected double updateDelta() {
 		return (Game.time() - lastUpdate) / 1000d;
 	}
+	
+	protected double updateDelta(long systime) {
+		return (Game.time(systime) - lastUpdate) / 1000d;
+	}
 
 	@Override
 	public void poke() {
@@ -41,12 +45,12 @@ public abstract class MoveableEntity extends Entity {
 	public Vec3 getPosition(){
 		return position.add(linVelocity.scale(updateDelta()));
 	}
-
+	
 	@Override
 	public Quat getOrientation() {
 		return orientation.mul(Quat.create(angVelocity.scale(updateDelta())));
 	}
-
+	
 	@Override
 	public void setPosition(Vec3 _pos) {
 		updateMotion(_pos, linVelocity, getOrientation(), angVelocity, Game.time());

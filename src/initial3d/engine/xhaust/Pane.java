@@ -122,6 +122,11 @@ public class Pane extends Drawable {
 	}
 
 	@Override
+	protected void lockForDraw() {
+		// nothing to do
+	}
+
+	@Override
 	protected void draw(Initial3D i3d, int framewidth, int frameheight) {
 
 		// TODO handle this properly
@@ -184,10 +189,8 @@ public class Pane extends Drawable {
 			g2d.fillRect(0, 0, width, height);
 			g2d.setComposite(ac_old);
 		}
-
 		root.doRepaint(g, i3d, getDrawIDStart(), zview);
 		g.dispose();
-
 		if (root.repainted()) {
 			// tex.drawImage(bi);
 			tex.drawImage(0, 0, 0, 0, width, height, bi);
@@ -254,7 +257,7 @@ public class Pane extends Drawable {
 	public Component getLocalFocused() {
 		return focused;
 	}
-	
+
 	private void doFocusChange(Component c) {
 		focused.notifyLocalFocusLost();
 		focused = c;

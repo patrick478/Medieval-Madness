@@ -6,7 +6,7 @@ import game.bound.Bound;
 import game.level.Level;
 import initial3d.engine.*;
 
-public abstract class Entity implements ReferenceFrame {
+public abstract class Entity extends ReferenceFrame {
 	
 	private static HashMap<Long, Entity> entityID = new HashMap<Long, Entity>();
 	private static long nextID = 0;
@@ -19,6 +19,7 @@ public abstract class Entity implements ReferenceFrame {
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
 	public Entity(long _id){
+		super(ReferenceFrame.SCENE_ROOT);
 		if(entityID.containsKey(_id)){
 			throw new IllegalArgumentException("Cannot create entity with existing ID");
 		}
@@ -27,6 +28,7 @@ public abstract class Entity implements ReferenceFrame {
 	}
 	
 	public Entity(){
+		super(ReferenceFrame.SCENE_ROOT);
 		while(entityID.containsKey(nextID)){
 			nextID++;
 		}
@@ -35,15 +37,10 @@ public abstract class Entity implements ReferenceFrame {
 	}
 	
 	@Override
-	public ReferenceFrame getParent() {
-		return SCENE_ROOT;
-	}
-
-	@Override
 	public Vec3 getPosition() {
 		return this.position;
 	}
-
+	
 	@Override
 	public Quat getOrientation() {
 		return this.orientation;

@@ -45,6 +45,10 @@ public class Game implements Runnable {
 	public static long time() {
 		return getInstance().getGameTime();
 	}
+	
+	public static long time(long systime) {
+		return getInstance().getGameTime(systime);
+	}
 
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
@@ -325,6 +329,9 @@ public class Game implements Runnable {
 		return System.currentTimeMillis() + this.timeOffset;
 	}
 	
+	public long getGameTime(long systime) {
+		return systime + this.timeOffset;
+	}
 
 	public void setTimeOffset(long offset) {
 		this.timeOffset = offset;

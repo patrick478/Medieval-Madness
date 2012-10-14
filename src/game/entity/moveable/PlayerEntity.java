@@ -118,7 +118,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		mtl_body = new Material(mtl_body, tex_body_kd, null, null);
 
 		MovableReferenceFrame mrf = new MovableReferenceFrame(this);
-		//mrf.setOrientation(Quat.create(Math.PI, Vec3.j));
+//		mrf.setOrientation(Quat.create(Math.PI, Vec3.j));
 
 		MeshContext mc_body = new MeshContext(m_body, mtl_body, mrf);
 
