@@ -26,7 +26,7 @@ public class Floor {
 
 	private final Space[][] data;
 	private final int size;
-	private final MeshContext mesh;
+	private final List<MeshContext> mesh = new ArrayList<MeshContext>();
 	private static final int detail = 4; 
 	
 	private List<WallEntity> walls = new ArrayList<WallEntity>();
@@ -64,15 +64,31 @@ public class Floor {
 			}
 		}
 		
-		mesh = buildMesh(_floor);
+		final int MAGIC_NUMBER = 10;
+		System.out.println(size);
+		
+		int split = ((size-1)/MAGIC_NUMBER)+1;
+		//TODO comment
+		for(int x=0; x < split; x++){
+			for(int z=0; z < split; z++){
+				int start_x = x * MAGIC_NUMBER;
+				int start_z = z * MAGIC_NUMBER;
+				int end_x = Math.min((x+1) * MAGIC_NUMBER, size-1);
+				int end_z = Math.min((z+1) * MAGIC_NUMBER, size-1);
+				System.out.println(start_x+" :: "+start_z+" :: "+ end_x+" :: "+ end_z);
+				mesh.add(buildMesh(start_x, start_z, end_x, end_z, _floor));
+			}
+		}
 	}
 	
-	private MeshContext buildMesh(Space[][] _floor){
-		int meshSize = size*detail+1;
+	private MeshContext buildMesh(int start_x, int start_z, int end_x, int end_z, Space[][] _floor){
+		int maxSize = Math.max(end_x - start_x + 1, end_z - start_z  +1);
+		
+		int meshSize = (maxSize * detail)+1;
 		int[][][] ver = new int[meshSize][detail*2+1][meshSize];
 		//TODO change the anmount of texture coords to be loaded AND LOAD THEM YOU FUCKWIT
 		MeshLOD meshlod = new MeshLOD(meshSize*meshSize*detail*2+1, 4, 
-				meshSize*meshSize*detail*2+1, 25, 6, 1);
+				meshSize*meshSize*detail*2+1, 25, 7, 1);
 		
 		
 		
@@ -84,6 +100,7 @@ public class Floor {
 		int pos_z = meshlod.addNormal(0, 0, 1);
 		int neg_z = meshlod.addNormal(0, 0, -1);
 		int pos_y = meshlod.addNormal(0, 1, 0);
+		int neg_y = meshlod.addNormal(0, -1, 0);
 
 		int[] pos_x_norm = new int[]{pos_x, pos_x, pos_x, pos_x};
 		Vec3[] pos_x_verPos = new Vec3[]{
@@ -109,6 +126,11 @@ public class Floor {
 		Vec3[] pos_y_verPos = new Vec3[]{
 				Vec3.create(0, 0, 0), Vec3.create(0, 0, 1),
 				Vec3.create(1, 0, 1), Vec3.create(1, 0, 0)};
+		
+		int[] neg_y_norm = new int[]{neg_y, neg_y, neg_y, neg_y};
+		Vec3[] neg_y_verPos = new Vec3[]{
+				Vec3.create(0, 0, 0), Vec3.create(1, 0, 0),
+				Vec3.create(1, 0, 1), Vec3.create(0, 0, 1)};
 
 		int[] wall_top_tex_coord = new int[]{
 				meshlod.addTexCoord(0, 0),
@@ -125,21 +147,17 @@ public class Floor {
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.5, 0.5),
 				meshlod.addTexCoord(0.5, 0.25)};
-		
-		/* This will probably be never used, keep only for completeness
-		 * Sets up the roof texture coordinators, for texturing a polygon on the roof/ceiling
 		int[] roof_tex_coord = new int[]{
 				meshlod.addTexCoord(0, 0.25),
 				meshlod.addTexCoord(0, 0.5),
 				meshlod.addTexCoord(0.25, 0.5),
 				meshlod.addTexCoord(0.25, 0.25)};
-		*/
 		
 		
 		
 		
-		for(int x=1; x <= size-1; x++){
-			for(int z=0; z < size; z++){
+		for(int x = start_x + 1; x <= end_x; x++){
+			for(int z = start_z; z <= end_z; z++){
 				Space s = _floor[x-1][z], r = _floor[x][z];
 
 				
@@ -160,10 +178,10 @@ public class Floor {
 						for(double vz=z; vz < z + 1; vz += 1d/detail){
 							//could span this out a bit TODO
 							int[] ver_final = new int[]{
-									verAt(x + vert[0].x/detail, vy + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
-									verAt(x + vert[1].x/detail, vy + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
-									verAt(x + vert[2].x/detail, vy + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
-									verAt(x + vert[3].x/detail, vy + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
+									verAt(start_x, start_z, x + vert[0].x/detail, vy + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
+									verAt(start_x, start_z, x + vert[1].x/detail, vy + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
+									verAt(start_x, start_z, x + vert[2].x/detail, vy + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
+									verAt(start_x, start_z, x + vert[3].x/detail, vy + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
 							meshlod.addPolygon(ver_final, wall_side_tex_coord, norm, null);
 						}
 					}
@@ -171,8 +189,8 @@ public class Floor {
 			}
 		}
 		
-		for(int x=0; x < size; x++){
-			for(int z=1; z <= size-1; z++){
+		for(int x = start_x; x <= end_x; x++){
+			for(int z = start_z + 1; z <= end_z; z++){
 				Space s = _floor[x][z-1], r = _floor[x][z];
 
 				
@@ -194,10 +212,10 @@ public class Floor {
 							//could span this out a bit TODO
 							//Off by one with the z here? TODO FIXME
 							int[] ver_final = new int[]{
-									verAt(vx + vert[0].x/detail, vy + vert[0].y/detail, z + vert[0].z/detail, ver, meshlod),
-									verAt(vx + vert[1].x/detail, vy + vert[1].y/detail, z + vert[0].z/detail, ver, meshlod),
-									verAt(vx + vert[2].x/detail, vy + vert[2].y/detail, z + vert[0].z/detail, ver, meshlod),
-									verAt(vx + vert[3].x/detail, vy + vert[3].y/detail, z + vert[0].z/detail, ver, meshlod)};
+									verAt(start_x, start_z, vx + vert[0].x/detail, vy + vert[0].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(start_x, start_z, vx + vert[1].x/detail, vy + vert[1].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(start_x, start_z, vx + vert[2].x/detail, vy + vert[2].y/detail, z + vert[0].z/detail, ver, meshlod),
+									verAt(start_x, start_z, vx + vert[3].x/detail, vy + vert[3].y/detail, z + vert[0].z/detail, ver, meshlod)};
 							meshlod.addPolygon(ver_final, wall_side_tex_coord, norm, null);
 						}
 					}
@@ -207,11 +225,11 @@ public class Floor {
 		
 		
 		//now we create the floor
-		for(int x=0; x < size; x++){
-			for(int z=0; z < size; z++){
+		for(int x=start_x; x <= end_x; x++){
+			for(int z=start_z; z <= end_z; z++){
 				Vec3[] vert = pos_y_verPos;
 				int[] text_coord;
-				int y;
+				double y;
 				if(_floor[x][z].type==Space.WALL){
 					y = 1;
 					text_coord = wall_top_tex_coord;
@@ -219,17 +237,26 @@ public class Floor {
 					y = 0;
 					text_coord = floor_tex_coord;
 				}
-				
+				//create the floor for this space
 				for(double vz=z; vz < z + 1; vz += 1d/detail){
 					for(double vx=x; vx < x + 1; vx += 1d/detail){
 						int[] ver_final = new int[]{
-								verAt(vx + vert[0].x/detail, y + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
-								verAt(vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
-								verAt(vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
-								verAt(vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
+								verAt(start_x, start_z, vx + vert[0].x/detail, y + vert[0].y/detail, vz + vert[0].z/detail, ver, meshlod),
+								verAt(start_x, start_z, vx + vert[1].x/detail, y + vert[1].y/detail, vz + vert[1].z/detail, ver, meshlod),
+								verAt(start_x, start_z, vx + vert[2].x/detail, y + vert[2].y/detail, vz + vert[2].z/detail, ver, meshlod),
+								verAt(start_x, start_z, vx + vert[3].x/detail, y + vert[3].y/detail, vz + vert[3].z/detail, ver, meshlod)};
 						meshlod.addPolygon(ver_final, text_coord, pos_y_norm, null);
 					}
 				}
+				vert = neg_y_verPos;
+				y = 1;
+				//create 
+				int[] ver_final = new int[]{
+						verAt(start_x, start_z, x + vert[0].x, y + vert[0].y, z + vert[0].z, ver, meshlod),
+						verAt(start_x, start_z, x + vert[1].x, y + vert[1].y, z + vert[1].z, ver, meshlod),
+						verAt(start_x, start_z, x + vert[2].x, y + vert[2].y, z + vert[2].z, ver, meshlod),
+						verAt(start_x, start_z, x + vert[3].x, y + vert[3].y, z + vert[3].z, ver, meshlod)};
+				meshlod.addPolygon(ver_final, roof_tex_coord, neg_y_norm, null);
 			}
 		}
 
@@ -245,10 +272,10 @@ public class Floor {
 		return mesh_con;
 	}
 	
-	private int verAt(double _x, double _y, double _z, int[][][]_ver, MeshLOD _meshlod){
-		int x = (int) Math.round(_x*detail);
+	private int verAt(int start_x, int start_z, double _x, double _y, double _z, int[][][]_ver, MeshLOD _meshlod){
+		int x = (int) Math.round(_x*detail) - (start_x * detail);
 		int y = (int) Math.round(_y*detail);
-		int z = (int) Math.round(_z*detail);
+		int z = (int) Math.round(_z*detail) - (start_z * detail);
 		if(_ver[x][y][z]==0){
 			_ver[x][y][z] = _meshlod.addVertex(_x, _y, _z);
 		}
@@ -267,13 +294,7 @@ public class Floor {
 		return walls;
 	}
 	
-	public void addToScene(Scene s)
-	{
-//		for(WallEntity w : walls)
-//		{
-//			w.addToScene(s);
-//		}
-		s.addDrawable(mesh);
-		
+	public void addToScene(Scene s){
+		s.addDrawables(mesh);
 	}
 }
