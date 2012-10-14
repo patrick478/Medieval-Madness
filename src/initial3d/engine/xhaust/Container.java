@@ -1,5 +1,6 @@
 package initial3d.engine.xhaust;
 
+import game.item.Item;
 import initial3d.Initial3D;
 
 import java.awt.Graphics;
@@ -113,5 +114,7 @@ public class Container extends Component {
 
 		return id;
 	}
+
+	
 
 }

@@ -1,8 +1,13 @@
 package game.states;
 
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.security.Identity;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import soundengine.SimpleAudioPlayer;
 
@@ -54,8 +59,15 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 		
 		System.out.println("Creating test object");
-		
-		Item it = new Item(null, null){};
+		BufferedImage battery = null;
+		try {
+			battery = ImageIO.read(new File("resources/inventory/battery.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Item it = new Item(battery, "Ball"){};
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 //		ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 		
@@ -91,14 +103,13 @@ public class PlayState extends GameState {
 		
 		
 		invenPopUp = new DialogPane(400, 200, p, false);
-		InventorySelector i2 = new InventorySelector(400, 200);
+		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer().getInventory());
 		invenPopUp.getRoot().add(i2);
 		i2.setOpaque(false);
 		//invenPopUp.requestVisible(false);
 		invenPopUp.setPosition(0, 0);
 		invenPopUp.getRoot().setOpaque(false);
 		scene.addDrawable(invenPopUp);
-		
 		Pane topPane = new Pane(500, 100);
 		Healthbar hp = new Healthbar();
 		topPane.getRoot().add(hp);
@@ -233,12 +244,12 @@ public class PlayState extends GameState {
 		Vec3 colNorm = Game.getInstance().getLevel().preCollision(player, true);
 		
 		//if there was a collision set the velocity appropriately
-		if(colNorm != null){
+		/*if(colNorm != null){
 			//vector magic
 			Vec3 intentUnit = intent_vel.unit();
 			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag();
 			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale);
-		}
+		}*/
 		
 		//poke all players and set the velocity
 		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());

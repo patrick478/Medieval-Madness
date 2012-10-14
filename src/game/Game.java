@@ -284,7 +284,12 @@ public class Game implements Runnable {
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){
-		
+		for(PlayerEntity p : getPlayers()){
+			if(p.id == _eid){
+				p.getInventory().addItem(_item);
+				break;
+			}
+		}
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){
