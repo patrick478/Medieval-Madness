@@ -385,7 +385,7 @@ public class Game implements Runnable {
 
 	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
 //		public ProjectileEntity(long _id, long _parid, int _delta, Vec3 _pos, Vec3 _vel)
-		ProjectileEntity pe = new ProjectileEntity(Game.getInstance().getPlayers()[creator].id, 20, position, velocity, orientation);		
+		ProjectileEntity pe = new ProjectileEntity(Game.getInstance().getPlayers()[creator].id, -5, position, velocity, orientation);		
 		pe.addToLevel(Game.getInstance().getLevel());
 		pe.addToScene(Game.getInstance().currentGameState.scene);
 		
