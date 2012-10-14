@@ -18,7 +18,7 @@ public abstract class MoveableEntity extends Entity {
 	protected Vec3 linVelocity = Vec3.zero;
 	protected Vec3 angVelocity = Vec3.zero;
 	protected Vec3 intVelocity = Vec3.zero;
-	protected long lastUpdate = 0;
+	protected long lastUpdate = Game.time();
 
 	public MoveableEntity(long _id) {
 		super(_id);

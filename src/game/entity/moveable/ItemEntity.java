@@ -20,9 +20,9 @@ public class ItemEntity extends MoveableEntity{
 		super(_id);
 		position = _position;
 		bound = new BoundingSphere(_position, ITEM_RADIUS);
-		trigger = new DynamicTriggerEntity(new PickupItemEvent(_item), this);
-		trigger.addEvent(new RemoveEntityEvent(this.id));
+		trigger = new DynamicTriggerEntity(new RemoveEntityEvent(this.id), this);
 		trigger.addEvent(new RemoveEntityEvent(trigger.id));
+		trigger.addEvent(new PickupItemEvent(_item));
 	}
 	
 	public ItemEntity(Vec3 _position, Item _item){

@@ -1,8 +1,11 @@
 package game.entity.moveable;
 
+import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
-import game.item.Container;
+import game.entity.Damageable;
+import game.item.Item;
+import game.item.ItemContainer;
 import game.modelloader.Content;
 import initial3d.Initial3D;
 import initial3d.Texture;
@@ -18,19 +21,27 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerEntity extends MoveableEntity {
-
+public class PlayerEntity extends MoveableEntity implements Damageable{
+	
 	private final double baseSpeed = 1;
 
 	private int defaultDamage = 2;
 	private int defaultHealth = 100;
 	private int defaultEnergy = 100;
 
-	private final Container inventory = new Container(null, "Inventory", 6);// FIXME?
+	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
+	private final Item[] equippedItems = new Item[5];
 
+	public Item[] getEquippedItems() {
+		return equippedItems;
+	}
+
+	private int currentHealth = 50;
+
+	
 	private final double radius;
 	private int selfIndex = 0;
-
+	
 	private static final Texture tex_body_kd;
 
 	static {
@@ -42,7 +53,9 @@ public class PlayerEntity extends MoveableEntity {
 
 	}
 
-	public PlayerEntity(long _id, Vec3 _pos, double _radius, int pindex) {
+	private boolean pregameReadyState = false;
+	
+	public PlayerEntity(long _id, Vec3 _pos, double _radius, int pindex){
 		super(_id);
 		position = _pos;
 		radius = _radius;
@@ -55,6 +68,8 @@ public class PlayerEntity extends MoveableEntity {
 		position = _pos;
 		radius = _radius;
 		this.addMeshContexts(this.getBall());
+		
+		this.currentHealth = this.defaultHealth;
 	}
 
 	@Override
@@ -70,8 +85,7 @@ public class PlayerEntity extends MoveableEntity {
 	public double getSpeed() {
 		return baseSpeed;
 	}
-
-	public Container inventory() {
+	public ItemContainer getInventory(){
 		return inventory;
 	}
 
@@ -133,4 +147,42 @@ public class PlayerEntity extends MoveableEntity {
 
 		return meshes;
 	}
+
+	public int getHealth() {
+		return this.currentHealth;
+	}
+
+	public void setHealth(int i) {
+		this.currentHealth = i;
+	}
+
+	
+	public boolean getPregameReadyState() {
+		return this.pregameReadyState;
+	}
+
+	public void setPregameReadyState(boolean b) {
+		this.pregameReadyState = b;
+		Game.getInstance().updatePregameScreen();
+	}
+	
+	@Override
+	public void applyHealthDelta(int _damage) {
+		currentHealth += _damage;
+	}
+
+	@Override
+	public int getTotalHealth() {
+		return defaultHealth;
+	}
+
+	@Override
+	public int getCurrentHealth() {
+		return currentHealth;
+	}
+
+	@Override
+	public void setCurrentHealth(int i) {
+		this.currentHealth = i;
+	}	
 }

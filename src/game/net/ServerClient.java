@@ -21,6 +21,8 @@ public class ServerClient
 	private long lastSync = System.currentTimeMillis();
 	
 	private int playerIndex = -1;
+	private boolean isReady = false;
+	private boolean isHost = false;
 	
 	private BufferQueue dq = new BufferQueue(8192);
 	private BlockingQueue<DataPacket> packets = new LinkedBlockingQueue<DataPacket>();
@@ -144,5 +146,21 @@ public class ServerClient
 
 	public SocketChannel getSocket() {
 		return this.socket;
+	}
+
+	public void setReady(boolean newReadyStatus) {
+		this.isReady = newReadyStatus;
+	}
+
+	public boolean getReadyState() {
+		return this.isReady;
+	}
+
+	public void setHost() {
+		this.isHost = true;
+	}
+	
+	public boolean isHost() {
+		return this.isHost;
 	}
 }

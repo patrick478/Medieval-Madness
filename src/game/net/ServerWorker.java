@@ -4,8 +4,12 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import common.DataPacket;
+import game.Game;
+import game.net.packets.ChangeAttributePacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.PingPacket;
+import game.net.packets.ProjectileLifePacket;
+import game.net.packets.SetReadyPacket;
 
 public class ServerWorker implements Runnable 
 {
@@ -80,6 +84,32 @@ public class ServerWorker implements Runnable
 				
 				this.server.updateOthersOnMovements(client);
 			break;
+			
+			case SetReadyPacket.ID:
+				SetReadyPacket srp = new SetReadyPacket();
+				srp.fromData(dp);
+				client.setReady(srp.newReadyStatus);
+				System.out.println("boo");
+				this.server.updateOthersOnReadyChange(client);
+				
+				this.server.checkReady();
+				break;
+				
+			case ProjectileLifePacket.ID:
+				ProjectileLifePacket plp = new ProjectileLifePacket();
+				plp.fromData(dp);
+//				if(plp.isCreateMode())
+//				{
+//					Game.getInstance().selfCreateProjectile(plp.eid, plp.pos, plp.vel, plp.ori, plp.creator, plp.createTime);
+					this.server.notifyAllClients(plp);
+//				}
+				break;
+				
+			case ChangeAttributePacket.ID:
+				ChangeAttributePacket cap = new ChangeAttributePacket();
+				cap.fromData(dp);
+				this.server.notifyAllClients(cap);
+				break;
 		}
 	}
 }

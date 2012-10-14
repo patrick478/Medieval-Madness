@@ -2,16 +2,29 @@ package game;
 
 import java.util.*;
 
+import game.entity.Damageable;
 import game.entity.Entity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
+import game.entity.moveable.ProjectileEntity;
+import game.entity.trigger.DynamicTriggerEntity;
+import game.event.AvoidEvent;
+import game.event.ContactEvent;
+import game.event.DeltaHealthEvent;
+import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.level.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
+import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.DialogPane;
+import initial3d.engine.xhaust.Pane;
 import game.net.*;
+import game.net.packets.ChangeAttributePacket;
 import game.net.packets.MovementPacket;
+import game.net.packets.ProjectileLifePacket;
+import game.net.packets.SetReadyPacket;
 import game.states.*;
 
 /***
@@ -36,6 +49,8 @@ public class Game implements Runnable {
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
 
+	private DialogPane invenPopUp;
+	private Pane inventoryHolder;
 	private GameState currentGameState;
 	private GameState previousState = null; 
 	private Thread gameThread = null;
@@ -48,6 +63,7 @@ public class Game implements Runnable {
 	private int playerIndex = -1;
 
 	private Level currentLevel = null;
+	private boolean isPregameReady = false;
 
 	private long predictedLatency = 0;
 	private long timeOffset = 0;
@@ -254,26 +270,26 @@ public class Game implements Runnable {
 		this.getNetwork().send(mp.toData());
 	}
 
-	// METHODS CALLED BY THE EVENT CLASSES
-	// TODO need to notify the clients about this
-
-	public void moveEntity(long _eid, Vec3 _pos) {
-		Entity e = currentLevel.getEntity(_eid);
-		e.setPosition(_pos);
+	public void addEntity(Entity _entity)
+	{
+		if(this.isHost())
+			selfAddEntity(_entity);
 	}
-
-	public void turnEntity(long _eid, Quat _orient) {
-		Entity e = currentLevel.getEntity(_eid);
-		e.setOrientation(_orient);
-	}
-
-	public void addEntity(Entity _entity) {
+	
+	public void selfAddEntity(Entity _entity)
+	{
 		currentLevel.addEntity(_entity);
 		_entity.addToScene(currentGameState.scene);
 	}
 
 	public void removeEntity(long _eid) {
-		Entity e = currentLevel.removeEntity(_eid);
+		if(this.isHost())
+			selfRemoveEntity(_eid);
+	}
+	
+
+	public void selfRemoveEntity(long eid) {
+		Entity e = currentLevel.removeEntity(eid);
 		if(e!=null){
 			currentGameState.scene.removeDrawables(e.getMeshContexts());
 		}
@@ -284,7 +300,17 @@ public class Game implements Runnable {
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){
-		
+		for(PlayerEntity p : getPlayers()){
+			if(p.id == _eid){
+				if(p.getInventory().containsItem(_item)){
+					break;
+				}
+				p.getInventory().addItem(_item);
+				invenPopUp.getRoot().repaint();
+				break;
+			}
+		}
+    	
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){
@@ -334,4 +360,117 @@ public class Game implements Runnable {
 
 		return ps;
 	}
+
+	public void createProjectile() {
+		long id = System.nanoTime();
+		Vec3 pos = this.getPlayer().getPosition();
+		Vec3 vel = this.currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(4);
+		Quat orientation = this.getPlayer().getOrientation();
+		short creator = (short) this.getPlayerIndex();
+		long createTime = System.currentTimeMillis();
+		
+		ProjectileLifePacket pl = new ProjectileLifePacket();
+		pl.eid = id;
+		pl.pos = pos;
+		pl.vel = vel;
+		pl.ori = orientation;
+		pl.creator = creator;
+		pl.createTime = createTime;
+		pl.setCreateMode();
+		
+		this.getNetwork().send(pl.toData());
+		
+		System.out.println("Sent projectile request");
+	}
+
+	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
+//		public ProjectileEntity(long _id, long _parid, int _delta, Vec3 _pos, Vec3 _vel)
+		ProjectileEntity pe = new ProjectileEntity(Game.getInstance().getPlayers()[creator].id, -5, position, velocity, orientation);		
+		pe.addToLevel(Game.getInstance().getLevel());
+		pe.addToScene(Game.getInstance().currentGameState.scene);
+		
+		System.out.println("created projectile!");
+	}
+
+	public void setSelfPregameReady(boolean b) {
+		Game.getInstance().getPlayer().setPregameReadyState(b);
+		SetReadyPacket srp = new SetReadyPacket();
+		srp.newReadyStatus = Game.getInstance().getPlayer().getPregameReadyState();
+		srp.pIndex = this.getPlayerIndex();
+		byte[] data = srp.toData().getData();
+		for(int i = 0; i < data.length; i++)
+			System.out.printf("0x%02X ", data[i]);
+		System.out.println();
+		this.getNetwork().send(srp.toData());
+	}
+	
+	public void setPregameReady(int pIndex, boolean b)
+	{
+		Game.getInstance().getPlayers()[pIndex].setPregameReadyState(b);
+	}
+
+	public boolean isPregameReady() {
+		return this.isPregameReady;
+	}
+	
+	public void setInvenPopUp(DialogPane invenPopUp) {
+		this.invenPopUp = invenPopUp;
+	}
+	
+	public DialogPane getInvenPopUp() {
+		return invenPopUp;
+	}
+
+	public Pane getInventoryHolder() {
+		return inventoryHolder;
+	}
+
+	public void setInventoryHolder(Pane inventoryHolder) {
+		this.inventoryHolder = inventoryHolder;
+	}
+
+	public void updatePregameScreen() {
+		if(this.currentGameState instanceof PregameState)
+		{
+			((PregameState)this.currentGameState).updatePregameScreen();
+		}
+	}
+
+	public void setGameStarting() {
+		if(this.currentGameState instanceof PregameState)
+		{
+			((PregameState)this.currentGameState).setGameStarting();
+		}
+	}
+
+	public void requestStart() {
+		if(this.isHost())
+			this.getHost().requestStart();
+	}
+
+	public void setLobbyCurrentPlayers(int nPlayers) {
+		if(this.currentGameState instanceof LobbyState)
+		{
+			((LobbyState)this.currentGameState).setNumPlayers(nPlayers);
+		}
+	}
+
+	public void setEntityHealth(long id, int delta)
+	{
+		ChangeAttributePacket cap = new ChangeAttributePacket();
+		cap.setHealth();
+		cap.eid = id;
+		cap.newVal = delta;
+		this.nhost.notifyAllClients(cap);
+	}
+	
+	
+	public void selfSetEntityHealth(long id, int i)
+	{
+		System.out.printf("Changing eid=%d to hp=%d\n", id, i);
+		Damageable d = (Damageable) this.currentLevel.getEntity(id);
+		if(d == null) return;
+		d.setCurrentHealth(i);
+	}
+
 }
