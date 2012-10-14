@@ -126,7 +126,16 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				
 			case EnterGamePacket.ID:
 				dp.getShort();
+				Game.getInstance().setGameStarting();
 				Game.getInstance().changeState(new LoadingGameState());
+				break;
+				
+			case EnterPrePostPacket.ID:
+				EnterPrePostPacket epp = new EnterPrePostPacket();
+				epp.fromData(dp);
+				if(epp.isPre())
+					Game.getInstance().changeState(new PregameState());
+				
 				break;
 			
 			case MovementPacket.ID:
@@ -135,6 +144,32 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				mp.fromData(dp);
 				
 				Game.getInstance().movePlayer(mp.playerIndex, mp.position, mp.velocity, mp.orientation);
+				break;
+				
+			case SetReadyPacket.ID:
+				SetReadyPacket srp = new SetReadyPacket();
+				srp.fromData(dp);
+				Game.getInstance().setPregameReady(srp.pIndex, srp.newReadyStatus);
+				break;
+				
+			case NotifyPlayerJoinedPacket.ID:
+				NotifyPlayerJoinedPacket np = new NotifyPlayerJoinedPacket();
+				np.fromData(dp);
+				System.out.println("here, also!");
+				Game.getInstance().setLobbyCurrentPlayers(np.nPlayers);
+				break;
+			
+			case ProjectileLifePacket.ID:
+				ProjectileLifePacket plp = new ProjectileLifePacket();
+				plp.fromData(dp);
+				Game.getInstance().selfCreateProjectile(plp.eid, plp.pos, plp.vel, plp.ori, plp.creator, plp.createTime);
+				break;
+				
+			case ChangeAttributePacket.ID:
+				ChangeAttributePacket cap = new ChangeAttributePacket();
+				cap.fromData(dp);
+				if(cap.isHealth())
+					Game.getInstance().selfSetPEHealth(cap.pindex, cap.newVal);
 				break;
 		}
 	}

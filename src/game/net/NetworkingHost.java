@@ -2,9 +2,15 @@ package game.net;
 
 import game.Game;
 import game.net.packets.EnterGamePacket;
+import game.net.packets.EnterPrePostPacket;
 import game.net.packets.MovementPacket;
+import game.net.packets.Packet;
 import game.net.packets.PingPacket;
+import game.net.packets.ProjectileLifePacket;
+import game.net.packets.SetReadyPacket;
 import game.net.packets.WelcomePacket;
+
+import initial3d.engine.Vec3;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -121,9 +127,16 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						SocketChannel clientSocket = ssc.accept();
 						clientSocket.configureBlocking(false);
 						
+						System.out.printf("Connection accepted from %s\n", clientSocket.socket().getRemoteSocketAddress().toString());
+
+						
 						// generate a correct server client
 						int playerIndex = this.getFreePlayerIndex();
 						ServerClient client = new ServerClient(playerIndex, clientSocket);
+						if(clientSocket.socket().getRemoteSocketAddress().toString().startsWith("/127.0.0.1"))
+						{
+							client.setHost();
+						}
 						this.clients.put(playerIndex,  client);
 						
 						clientSocket.register(this.selector, SelectionKey.OP_READ, playerIndex);
@@ -138,6 +151,14 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						client.setLastSyncSent(syncPacket.time);
 						this.send(clientSocket,  syncPacket.toData().getData());
 						client.sentSync();
+						
+						WelcomePacket wp = new WelcomePacket();
+						wp.isReply = false;
+						wp.playerIndex = client.getPlayerIndex();
+						wp.maxPlayers = this.maxPlayers;
+						this.send(client.getSocket(), wp.toData().getData());
+						
+						this.notifyPlayerJoined();
 						
 					}
 					else if(key.isReadable())
@@ -202,33 +223,19 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				ex.printStackTrace();
 			}
 			
-			if(this.numPlayers() >= this.maxPlayers && this.playersReady() && !inGame)
-			{
-				this.inGame = true;
-				
-				// done accepting - close the accept socket.
-//				this.serverChannel.close();
-				
-				// notify players of their player indexes and tell them to enter the game
-				for(ServerClient c : this.clients.values())
-				{
-					WelcomePacket wp = new WelcomePacket();
-					wp.isReply = false;
-					wp.playerIndex = c.getPlayerIndex();
-					wp.maxPlayers = this.maxPlayers;
-					this.send(c.getSocket(), wp.toData().getData());
-					
-					EnterGamePacket egp = new EnterGamePacket();
-					egp.isReply = false;
-//					egp.position = Game.getInstance().getLevel().getSpawnLocation(c.getPlayerIndex());
-					this.send(c.getSocket(), egp.toData().getData());
-					
-					System.out.printf("Told %d to enter the game\n", c.getPlayerIndex());
-				}
-			}
 		}
 	}
 	
+	private void notifyPlayerJoined() {
+		NotifyPlayerJoinedPacket npjp = new NotifyPlayerJoinedPacket();
+		npjp.nPlayers = this.numPlayers();
+		for(ServerClient sc : this.clients.values())
+		{			
+			System.out.printf("telling %d that there are now %d players\n", sc.getPlayerIndex(), this.numPlayers());
+			this.send(sc.getSocket(), npjp.toData().getData());
+		}
+	}
+
 	public void send(SocketChannel socket, byte[] data)
 	{
 		this.changes.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
@@ -297,6 +304,72 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			
 			
 			this.send(sc.getSocket(), packet.toData().getData());
+		}
+	}
+
+	public void updateOthersOnReadyChange(ServerClient client) {
+		SetReadyPacket erp = new SetReadyPacket();
+		erp.pIndex = client.getPlayerIndex();
+		erp.newReadyStatus = client.getReadyState();
+		
+		for(ServerClient sc : this.clients.values())
+		{	
+			System.out.printf("Telling everyone that %d is now %b\n", client.getPlayerIndex(), client.getReadyState());
+			this.send(sc.getSocket(), erp.toData().getData());
+		}
+	}
+
+	public void checkReady() {
+		for(ServerClient sc : this.clients.values())
+		{
+			if(!sc.getReadyState()) return;
+		}
+		
+		for(ServerClient c : this.clients.values())
+		{			
+			EnterGamePacket egp = new EnterGamePacket();
+			//egp.position = Vec3.one;
+		
+			this.send(c.getSocket(), egp.toData().getData());
+			
+			System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
+		}
+	}
+
+	public void requestStart() {
+		if(this.numPlayers() >= this.maxPlayers && this.playersReady() && !inGame)
+		{
+			this.inGame = true;
+			
+			// done accepting - close the accept socket.
+//			this.serverChannel.close();
+			
+			// notify players of their player indexes and tell them to enter the game
+			for(ServerClient c : this.clients.values())
+			{		
+				EnterPrePostPacket epp = new EnterPrePostPacket();
+				epp.setPre();				
+				this.send(c.getSocket(), epp.toData().getData());
+				
+				System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
+			}
+		}
+	}
+
+	public void notifyAllNonHost(Packet pl)
+	{
+		for(ServerClient c : this.clients.values())
+		{			
+			if(c.isHost()) continue;
+			
+			this.send(c.getSocket(), pl.toData().getData());
+		}
+	}
+
+	public void notifyAllClients(Packet pl) {
+		for(ServerClient c : this.clients.values())
+		{						
+			this.send(c.getSocket(), pl.toData().getData());
 		}
 	}
 

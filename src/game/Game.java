@@ -17,7 +17,10 @@ import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
 import game.net.*;
+import game.net.packets.ChangeAttributePacket;
 import game.net.packets.MovementPacket;
+import game.net.packets.ProjectileLifePacket;
+import game.net.packets.SetReadyPacket;
 import game.states.*;
 
 /***
@@ -54,6 +57,7 @@ public class Game implements Runnable {
 	private int playerIndex = -1;
 
 	private Level currentLevel = null;
+	private boolean isPregameReady = false;
 
 	private long predictedLatency = 0;
 	private long timeOffset = 0;
@@ -273,13 +277,28 @@ public class Game implements Runnable {
 		e.setOrientation(_orient);
 	}
 
-	public void addEntity(Entity _entity) {
+	public void addEntity(Entity _entity)
+	{
+		if(this.isHost())
+			selfAddEntity(_entity);
+		
+		// 
+	}
+	
+	public void selfAddEntity(Entity _entity)
+	{
 		currentLevel.addEntity(_entity);
+		
 		_entity.addToScene(currentGameState.scene);
 	}
 
 	public void removeEntity(long _eid) {
-		Entity e = currentLevel.removeEntity(_eid);
+
+	}
+	
+
+	public void selfRemoveEntity(long eid) {
+		Entity e = currentLevel.removeEntity(eid);
 		if(e!=null){
 			currentGameState.scene.removeDrawables(e.getMeshContexts());
 		}
@@ -341,15 +360,45 @@ public class Game implements Runnable {
 		return ps;
 	}
 
-	public void deltaEntityHealth(PlayerEntity e, int i) {
-		e.setHealth(e.getHealth() + i);
+	public void setHealth(int i) {
+		ChangeAttributePacket cap = new ChangeAttributePacket();
+		cap.setHealth();
+		cap.newVal = i;
+		this.network.send(cap.toData());
+	}
+	
+	public void selfSetPEHealth(int pindex, int i)
+	{
+		PlayerEntity pe = this.players.get(pindex);
+		pe.setHealth(i);
 	}
 
 	public void createProjectile() {
-		Vec3 pos = Game.getInstance().getPlayer().getPosition().add(Vec3.create(0, 0, 0));
-		ProjectileEntity pe = new ProjectileEntity(System.nanoTime(), pos);
-		pe.updateMotion(pe.getPosition(), Game.getInstance().currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(1), Game.getInstance().getPlayer().getOrientation(), pe.getAngVelocity(), Game.time());
-		DynamicTriggerEntity ste = new DynamicTriggerEntity(new AvoidEvent(Game.getInstance().getPlayer().id), pe);
+		long id = System.nanoTime();
+		Vec3 pos = this.getPlayer().getPosition();
+		Vec3 vel = this.currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(4);
+		Quat orientation = this.getPlayer().getOrientation();
+		short creator = (short) this.getPlayerIndex();
+		long createTime = System.currentTimeMillis();
+		
+		ProjectileLifePacket pl = new ProjectileLifePacket();
+		pl.eid = id;
+		pl.pos = pos;
+		pl.vel = vel;
+		pl.ori = orientation;
+		pl.creator = creator;
+		pl.createTime = createTime;
+		pl.setCreateMode();
+		
+		this.getNetwork().send(pl.toData());
+		
+		System.out.println("Sent projectile request");
+	}
+
+	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
+		ProjectileEntity pe = new ProjectileEntity(System.nanoTime(), position);
+		pe.updateMotion(pe.getPosition(), velocity, orientation, pe.getAngVelocity(), createTime);
+		DynamicTriggerEntity ste = new DynamicTriggerEntity(new AvoidEvent(Game.getInstance().getPlayers()[creator].id), pe);
 		ste.addEvent(new ContactEvent());
 		ste.addEvent(new RemoveEntityEvent(pe.id));
 		ste.addEvent(new RemoveEntityEvent(ste.id));
@@ -358,5 +407,55 @@ public class Game implements Runnable {
 		pe.addToLevel(Game.getInstance().getLevel());
 		ste.addToScene(Game.getInstance().currentGameState.scene);
 		pe.addToScene(Game.getInstance().currentGameState.scene);
+		
+		System.out.println("created projectile!");
 	}
+
+	public void setSelfPregameReady(boolean b) {
+		Game.getInstance().getPlayer().setPregameReadyState(b);
+		SetReadyPacket srp = new SetReadyPacket();
+		srp.newReadyStatus = Game.getInstance().getPlayer().getPregameReadyState();
+		srp.pIndex = this.getPlayerIndex();
+		byte[] data = srp.toData().getData();
+		for(int i = 0; i < data.length; i++)
+			System.out.printf("0x%02X ", data[i]);
+		System.out.println();
+		this.getNetwork().send(srp.toData());
+	}
+	
+	public void setPregameReady(int pIndex, boolean b)
+	{
+		Game.getInstance().getPlayers()[pIndex].setPregameReadyState(b);
+	}
+
+	public boolean isPregameReady() {
+		return this.isPregameReady;
+	}
+
+	public void updatePregameScreen() {
+		if(this.currentGameState instanceof PregameState)
+		{
+			((PregameState)this.currentGameState).updatePregameScreen();
+		}
+	}
+
+	public void setGameStarting() {
+		if(this.currentGameState instanceof PregameState)
+		{
+			((PregameState)this.currentGameState).setGameStarting();
+		}
+	}
+
+	public void requestStart() {
+		if(this.isHost())
+			this.getHost().requestStart();
+	}
+
+	public void setLobbyCurrentPlayers(int nPlayers) {
+		if(this.currentGameState instanceof LobbyState)
+		{
+			((LobbyState)this.currentGameState).setNumPlayers(nPlayers);
+		}
+	}
+
 }

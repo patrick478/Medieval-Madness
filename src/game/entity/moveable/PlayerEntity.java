@@ -1,5 +1,6 @@
 package game.entity.moveable;
 
+import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
 import game.item.Container;
@@ -27,6 +28,8 @@ public class PlayerEntity extends MoveableEntity {
 	
 	private final double radius;
 	private int selfIndex = 0;
+
+	private boolean pregameReadyState = false;
 	
 	public PlayerEntity(long _id, Vec3 _pos, double _radius, int pindex){
 		super(_id);
@@ -98,5 +101,14 @@ public class PlayerEntity extends MoveableEntity {
 
 	public void setHealth(int i) {
 		this.currentHealth = i;
+	}
+
+	public boolean getPregameReadyState() {
+		return this.pregameReadyState;
+	}
+
+	public void setPregameReadyState(boolean b) {
+		this.pregameReadyState = b;
+		Game.getInstance().updatePregameScreen();
 	}	
 }

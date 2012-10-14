@@ -155,5 +155,4 @@ public abstract class Entity implements ReferenceFrame {
 	 * @return The bounding volume for this entity at given location
 	 */
 	protected abstract Bound getBound(Vec3 position);
-	
 }

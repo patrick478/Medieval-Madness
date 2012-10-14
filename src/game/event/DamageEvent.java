@@ -19,7 +19,7 @@ public class DamageEvent extends AbstractEvent {
 		{
 			if(e instanceof PlayerEntity)
 			{
-				Game.getInstance().deltaEntityHealth((PlayerEntity) e, -25);
+				Game.getInstance().setHealth(((PlayerEntity) e).getHealth() - 25);
 			}
 		}
 		return true;
