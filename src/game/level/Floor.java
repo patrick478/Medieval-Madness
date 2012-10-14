@@ -229,7 +229,7 @@ public class Floor {
 			for(int z=start_z; z <= end_z; z++){
 				Vec3[] vert = pos_y_verPos;
 				int[] text_coord;
-				int y;
+				double y;
 				if(_floor[x][z].type==Space.WALL){
 					y = 1;
 					text_coord = wall_top_tex_coord;
