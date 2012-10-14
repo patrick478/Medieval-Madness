@@ -22,7 +22,6 @@ public class Level {
 	private final Map<Long, Entity> entityID = new HashMap<Long, Entity>();
 	
 	private final List<TriggerEntity> triggers = new ArrayList<TriggerEntity>();
-	private final List<MoveableEntity> moveable = new ArrayList<MoveableEntity>();
 	
 	public Level(Floor _floor, List<Entity> _entities){
 		floor = _floor;
@@ -40,8 +39,10 @@ public class Level {
 	 * and call Entity.poke() on them.
 	 */
 	public void pokeAll(){
-		for(Entity e : entities){
-			e.poke();
+		synchronized(entities){
+			for(Entity e : entities){
+				e.poke();
+			}
 		}
 	}
 	
@@ -72,20 +73,21 @@ public class Level {
 	public void addToScene(Scene _scene){
 		if(_scene == null)return;
 		floor.addToScene(_scene);
-		for(Entity e : entities){
-			e.addToScene(_scene);
+		synchronized(entities){
+			for(Entity e : entities){
+				e.addToScene(_scene);
+			}
 		}
 	}
 	
 	
 	public void addEntity(Entity _entity){
-		entities.add(_entity);
-		entityID.put(_entity.id, _entity);
-		if(_entity instanceof TriggerEntity){
-			triggers.add((TriggerEntity) _entity);
-		}
-		if(_entity instanceof MoveableEntity){
-			moveable.add((MoveableEntity) _entity);
+		synchronized(entities){
+			entities.add(_entity);
+			entityID.put(_entity.id, _entity);
+			if(_entity instanceof TriggerEntity){
+				triggers.add((TriggerEntity) _entity);
+			}
 		}
 	}
 	
@@ -94,9 +96,11 @@ public class Level {
 	}
 	
 	public Entity removeEntity(long _eid){
-		Entity e = entityID.remove(_eid);
-		entities.remove(e);
-		return e;
+		synchronized(entities){
+			Entity e = entityID.remove(_eid);
+			entities.remove(e);
+			return e;
+		}
 	}
 	
 	/**
@@ -110,10 +114,6 @@ public class Level {
 		return new ArrayList<TriggerEntity>(triggers);
 	}
 	
-	public List<MoveableEntity> getMoveableEntities(){
-		return new ArrayList<MoveableEntity>(moveable);
-	}
-	
 	/**
 	 * Returns whether the given Entity's bound intersects with any 
 	 * entity that has the same value for Entity.isSolid() as the 
@@ -124,12 +124,14 @@ public class Level {
 	 * @return Whether the given bound intersects
 	 */
 	public boolean collision(Entity _e, boolean _solid){
-		for(Entity e : entities){
-			if(_e!=e && e.isSolid()==_solid && e.getBound().intersects(_e.getBound())){
-				return true;
+		synchronized(entities){
+			for(Entity e : entities){
+				if(_e!=e && e.isSolid()==_solid && e.getBound().intersects(_e.getBound())){
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 	
 	/**
@@ -142,28 +144,32 @@ public class Level {
 	 * @return Whether the given bound intersects
 	 */
 	public Vec3 preCollision(MoveableEntity _e, boolean _solid){
-		boolean collisionDect = false;
-		Vec3 collisionNorm = Vec3.zero;
-		for(Entity e : entities){
-			if(_e!=e && e.isSolid()==_solid){
-				Vec3 col = e.getBound().intersectNorm(_e.getNextBound());
-				if(col!=null){
-					collisionNorm = collisionNorm.add(col);
-					collisionDect = true;
+		synchronized(entities){
+			boolean collisionDect = false;
+			Vec3 collisionNorm = Vec3.zero;
+			for(Entity e : entities){
+				if(_e!=e && e.isSolid()==_solid){
+					Vec3 col = e.getBound().intersectNorm(_e.getNextBound());
+					if(col!=null){
+						collisionNorm = collisionNorm.add(col);
+						collisionDect = true;
+					}
 				}
 			}
-		}
-		if(collisionDect){
-			return collisionNorm.unit();
+			if(collisionDect){
+				return collisionNorm.unit();
+			}
 		}
 		return null;
 	}
 	
 	public List<Entity> collisions(Entity _e){
 		List<Entity> collisions = new ArrayList<Entity>();
-		for(Entity e : entities){
-			if(_e!=e && e.getBound().intersects(_e.getBound())){
-				collisions.add(e);
+		synchronized(entities){
+			for(Entity e : entities){
+				if(_e!=e && e.getBound().intersects(_e.getBound())){
+					collisions.add(e);
+				}
 			}
 		}
 		return collisions;
@@ -177,9 +183,11 @@ public class Level {
 	 * @return A entity that collides with the given bound or null
 	 */
 	public Entity firstCollision(Entity _e){
-		for(Entity e : entities){
-			if(_e!=e && e.getBound().intersects(_e.getBound())){
-				return e;
+		synchronized(entities){
+			for(Entity e : entities){
+				if(_e!=e && e.getBound().intersects(_e.getBound())){
+					return e;
+				}
 			}
 		}
 		return null;

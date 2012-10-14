@@ -1,5 +1,6 @@
 package game.event;
 
+import java.util.Iterator;
 import java.util.List;
 
 import game.entity.Entity;
@@ -10,10 +11,14 @@ public class ContactEvent extends AbstractEvent {
 	
 	@Override
 	protected boolean applyEvent(long _timeStamp, List<Entity> _trigger) {
-		for(Entity e : _trigger){
-			if(e.isSolid()) return true;
+		Iterator<Entity> i = _trigger.iterator();
+		while(i.hasNext()){
+			Entity e = i.next();
+			if(!e.isSolid()){
+				i.remove();
+			}
 		}
-		return false;
+		return !_trigger.isEmpty();
 	}
 
 }
