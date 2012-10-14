@@ -23,7 +23,7 @@ public class PickupItemEvent extends AbstractEvent{
 		for(Entity e : _trigger){
 			if(e instanceof PlayerEntity){
 				PlayerEntity p = (PlayerEntity)e;
-				if(!p.inventory().isFull()){
+				if(!p.getInventory().isFull()){
 					Game.getInstance().addItemToPlayer(e.id, item);
 					return true;
 				}

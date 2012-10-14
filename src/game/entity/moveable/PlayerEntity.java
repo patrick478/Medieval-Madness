@@ -3,7 +3,9 @@ package game.entity.moveable;
 import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
-import game.item.Container;
+import game.entity.Damageable;
+import game.item.Item;
+import game.item.ItemContainer;
 import game.modelloader.Content;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
@@ -14,7 +16,7 @@ import initial3d.engine.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerEntity extends MoveableEntity {
+public class PlayerEntity extends MoveableEntity implements Damageable{
 	
 	private final double baseSpeed = 1;
 	
@@ -22,9 +24,16 @@ public class PlayerEntity extends MoveableEntity {
 	private int defaultHealth = 100;
 	private int defaultEnergy = 100;
 	
+
+	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
+	private final Item[] equippedItems = new Item[5];
+
+	public Item[] getEquippedItems() {
+		return equippedItems;
+	}
+
 	private int currentHealth = 50;
-	
-	private final Container inventory = new Container(null, "Inventory", 6);//FIXME?
+
 	
 	private final double radius;
 	private int selfIndex = 0;
@@ -62,7 +71,7 @@ public class PlayerEntity extends MoveableEntity {
 		return baseSpeed;
 	}
 	
-	public Container inventory(){
+	public ItemContainer getInventory(){
 		return inventory;
 	}
 	
@@ -103,6 +112,7 @@ public class PlayerEntity extends MoveableEntity {
 		this.currentHealth = i;
 	}
 
+	
 	public boolean getPregameReadyState() {
 		return this.pregameReadyState;
 	}
@@ -110,5 +120,25 @@ public class PlayerEntity extends MoveableEntity {
 	public void setPregameReadyState(boolean b) {
 		this.pregameReadyState = b;
 		Game.getInstance().updatePregameScreen();
+	}
+	
+	@Override
+	public void applyHealthDelta(int _damage) {
+		currentHealth += _damage;
+	}
+
+	@Override
+	public int getTotalHealth() {
+		return defaultHealth;
+	}
+
+	@Override
+	public int getCurrentHealth() {
+		return currentHealth;
+	}
+
+	@Override
+	public void setCurrentHealth(int i) {
+		this.currentHealth = i;
 	}	
 }

@@ -1,15 +1,19 @@
 package game.states;
 
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.security.Identity;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import soundengine.SimpleAudioPlayer;
 
 import initial3d.engine.*;
 import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Healthbar;
-import initial3d.engine.xhaust.InventoryHolder;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
@@ -17,15 +21,17 @@ import game.GameState;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
+import game.entity.moveable.EnemyEntity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
+import game.entity.moveable.SpikeBall;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.AvoidEvent;
 import game.event.ContactEvent;
-import game.event.DamageEvent;
+import game.event.DeltaHealthEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.modelloader.Content;
@@ -65,8 +71,15 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 		
 		System.out.println("Creating test object");
-		
-		Item it = new Item(null, null){};
+		BufferedImage battery = null;
+		try {
+			battery = ImageIO.read(new File("resources/inventory/battery.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Item it = new Item(battery, "Ball"){};
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 //		ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 		
@@ -82,11 +95,27 @@ public class PlayState extends GameState {
 		
 		System.out.println("Added Test object to level");
 		
-		DynamicTriggerEntity ste = new DynamicTriggerEntity(new DamageEvent(), ie);
-/*		MeshContext testball = new MeshContext(m, mat, ste);
-		ste.addMeshContext(testball);*/
-		ste.addToLevel(Game.getInstance().getLevel());
-		ste.addToScene(scene);
+		
+//		EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
+//		Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
+//		Mesh m1 = Content.loadContent("sphere.obj");
+//		MeshContext mc1 = new MeshContext(m1, mat1, e);
+//		mc1.setScale(0.1);
+//		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		
+//		e.addMeshContext(mc1);
+//		e.addToLevel(Game.getInstance().getLevel());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
@@ -96,26 +125,27 @@ public class PlayState extends GameState {
 		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
 //		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-		
-		InventoryHolder i = new InventoryHolder();
-		p.getRoot().add(i);
+//		EquippedInventoryContainer i = new EquippedInventoryContainer(Game.getInstance().getPlayer().getEquippedItems());
+//		p.getRoot().add(i);
 		
 		
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
 		p.getRoot().setOpaque(false);
-		scene.addDrawable(p);
+		//scene.addDrawable(p);
+		Game.getInstance().setInventoryHolder(p);
+
 		
-		
-		invenPopUp = new DialogPane(400, 200, p, false);
-		InventorySelector i2 = new InventorySelector(400, 200);
-		invenPopUp.getRoot().add(i2);
+		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
+		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer());
+		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
 		//invenPopUp.requestVisible(false);
-		invenPopUp.setPosition(0, 0);
-		invenPopUp.getRoot().setOpaque(false);
-		scene.addDrawable(invenPopUp);
-		
+		Game.getInstance().getInvenPopUp().setPosition(0, 0);
+		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
+		scene.addDrawable(Game.getInstance().getInvenPopUp());
+		scene.addDrawable(Game.getInstance().getInventoryHolder());
+
 		Pane topPane = new Pane(500, 100);
 		hp = new Healthbar();
 		topPane.getRoot().add(hp);
@@ -192,16 +222,16 @@ public class PlayState extends GameState {
 			intent_vel = intent_vel.add(cside.neg());
 		}
 		if (rwin.pollKey(KeyEvent.VK_E)) {
-			if(invenPopUp.isVisible()==false){
-				invenPopUp.requestVisible(true);
+			if(Game.getInstance().getInvenPopUp().isVisible()==false){
+				Game.getInstance().getInvenPopUp().requestVisible(true);
 				rwin.setMouseCapture(false);
 				rwin.setCursorVisible(true);
 				rwin.setCrosshairVisible(false);
 
 
 			}
-			else if(invenPopUp.isVisible()==true){
-				invenPopUp.requestVisible(false);
+			else if(Game.getInstance().getInvenPopUp().isVisible()==true){
+				Game.getInstance().getInvenPopUp().requestVisible(false);
 				rwin.setMouseCapture(true);
 				rwin.setCursorVisible(false);
 				rwin.setCrosshairVisible(true);
@@ -254,12 +284,13 @@ public class PlayState extends GameState {
 		Vec3 colNorm = Game.getInstance().getLevel().preCollision(player, true);
 		
 		//if there was a collision set the velocity appropriately
-		if(colNorm != null){
+		/*if(colNorm != null){
 			//vector magic
+			colNorm = colNorm.flattenY();
 			Vec3 intentUnit = intent_vel.unit();
 			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag();
 			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale);
-		}
+		}*/
 		
 		//poke all players and set the velocity
 		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());

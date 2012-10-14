@@ -108,7 +108,6 @@ public class ServerWorker implements Runnable
 			case ChangeAttributePacket.ID:
 				ChangeAttributePacket cap = new ChangeAttributePacket();
 				cap.fromData(dp);
-				cap.pindex = client.getPlayerIndex();
 				this.server.notifyAllClients(cap);
 				break;
 		}

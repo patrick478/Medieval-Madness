@@ -169,7 +169,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				ChangeAttributePacket cap = new ChangeAttributePacket();
 				cap.fromData(dp);
 				if(cap.isHealth())
-					Game.getInstance().selfSetPEHealth(cap.pindex, cap.newVal);
+					Game.getInstance().selfSetEntityHealth(cap.eid, cap.newVal);
 				break;
 		}
 	}

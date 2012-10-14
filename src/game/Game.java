@@ -2,6 +2,7 @@ package game;
 
 import java.util.*;
 
+import game.entity.Damageable;
 import game.entity.Entity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
@@ -9,13 +10,16 @@ import game.entity.moveable.ProjectileEntity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.event.AvoidEvent;
 import game.event.ContactEvent;
-import game.event.DamageEvent;
+import game.event.DeltaHealthEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.level.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
+import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.DialogPane;
+import initial3d.engine.xhaust.Pane;
 import game.net.*;
 import game.net.packets.ChangeAttributePacket;
 import game.net.packets.MovementPacket;
@@ -45,6 +49,8 @@ public class Game implements Runnable {
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
 
+	private DialogPane invenPopUp;
+	private Pane inventoryHolder;
 	private GameState currentGameState;
 	private GameState previousState = null; 
 	private Thread gameThread = null;
@@ -264,36 +270,21 @@ public class Game implements Runnable {
 		this.getNetwork().send(mp.toData());
 	}
 
-	// METHODS CALLED BY THE EVENT CLASSES
-	// TODO need to notify the clients about this
-
-	public void moveEntity(long _eid, Vec3 _pos) {
-		Entity e = currentLevel.getEntity(_eid);
-		e.setPosition(_pos);
-	}
-
-	public void turnEntity(long _eid, Quat _orient) {
-		Entity e = currentLevel.getEntity(_eid);
-		e.setOrientation(_orient);
-	}
-
 	public void addEntity(Entity _entity)
 	{
 		if(this.isHost())
 			selfAddEntity(_entity);
-		
-		// 
 	}
 	
 	public void selfAddEntity(Entity _entity)
 	{
 		currentLevel.addEntity(_entity);
-		
 		_entity.addToScene(currentGameState.scene);
 	}
 
 	public void removeEntity(long _eid) {
-
+		if(this.isHost())
+			selfRemoveEntity(_eid);
 	}
 	
 
@@ -309,7 +300,17 @@ public class Game implements Runnable {
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){
-		
+		for(PlayerEntity p : getPlayers()){
+			if(p.id == _eid){
+				if(p.getInventory().containsItem(_item)){
+					break;
+				}
+				p.getInventory().addItem(_item);
+				invenPopUp.getRoot().repaint();
+				break;
+			}
+		}
+    	
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){
@@ -360,19 +361,6 @@ public class Game implements Runnable {
 		return ps;
 	}
 
-	public void setHealth(int i) {
-		ChangeAttributePacket cap = new ChangeAttributePacket();
-		cap.setHealth();
-		cap.newVal = i;
-		this.network.send(cap.toData());
-	}
-	
-	public void selfSetPEHealth(int pindex, int i)
-	{
-		PlayerEntity pe = this.players.get(pindex);
-		pe.setHealth(i);
-	}
-
 	public void createProjectile() {
 		long id = System.nanoTime();
 		Vec3 pos = this.getPlayer().getPosition();
@@ -396,16 +384,9 @@ public class Game implements Runnable {
 	}
 
 	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
-		ProjectileEntity pe = new ProjectileEntity(System.nanoTime(), position);
-		pe.updateMotion(pe.getPosition(), velocity, orientation, pe.getAngVelocity(), createTime);
-		DynamicTriggerEntity ste = new DynamicTriggerEntity(new AvoidEvent(Game.getInstance().getPlayers()[creator].id), pe);
-		ste.addEvent(new ContactEvent());
-		ste.addEvent(new RemoveEntityEvent(pe.id));
-		ste.addEvent(new RemoveEntityEvent(ste.id));
-		ste.addEvent(new DamageEvent());
-		ste.addToLevel(Game.getInstance().getLevel());
+//		public ProjectileEntity(long _id, long _parid, int _delta, Vec3 _pos, Vec3 _vel)
+		ProjectileEntity pe = new ProjectileEntity(Game.getInstance().getPlayers()[creator].id, 20, position, velocity, orientation);		
 		pe.addToLevel(Game.getInstance().getLevel());
-		ste.addToScene(Game.getInstance().currentGameState.scene);
 		pe.addToScene(Game.getInstance().currentGameState.scene);
 		
 		System.out.println("created projectile!");
@@ -430,6 +411,22 @@ public class Game implements Runnable {
 
 	public boolean isPregameReady() {
 		return this.isPregameReady;
+	}
+	
+	public void setInvenPopUp(DialogPane invenPopUp) {
+		this.invenPopUp = invenPopUp;
+	}
+	
+	public DialogPane getInvenPopUp() {
+		return invenPopUp;
+	}
+
+	public Pane getInventoryHolder() {
+		return inventoryHolder;
+	}
+
+	public void setInventoryHolder(Pane inventoryHolder) {
+		this.inventoryHolder = inventoryHolder;
 	}
 
 	public void updatePregameScreen() {
@@ -456,6 +453,24 @@ public class Game implements Runnable {
 		{
 			((LobbyState)this.currentGameState).setNumPlayers(nPlayers);
 		}
+	}
+
+	public void setEntityHealth(long id, int delta)
+	{
+		ChangeAttributePacket cap = new ChangeAttributePacket();
+		cap.setHealth();
+		cap.eid = id;
+		cap.newVal = delta;
+		this.nhost.notifyAllClients(cap);
+	}
+	
+	
+	public void selfSetEntityHealth(long id, int i)
+	{
+		System.out.printf("Changing eid=%d to hp=%d\n", id, i);
+		Damageable d = (Damageable) this.currentLevel.getEntity(id);
+		if(d == null) return;
+		d.setCurrentHealth(i);
 	}
 
 }

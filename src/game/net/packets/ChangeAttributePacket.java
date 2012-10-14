@@ -11,7 +11,7 @@ public class ChangeAttributePacket extends Packet {
 		super(ID);
 	}
 	
-	public int pindex = 0;
+	public long eid = 0;
 	private int attribute = 0;
 	public int newVal = 0;
 
@@ -20,7 +20,7 @@ public class ChangeAttributePacket extends Packet {
 		if(packet.getShort() != ID)
 			return;
 		
-		this.pindex = packet.getShort();
+		this.eid = packet.getLong();
 		this.attribute = packet.getShort();
 		this.newVal = packet.getShort();
 	}
@@ -29,7 +29,7 @@ public class ChangeAttributePacket extends Packet {
 	public DataPacket toData() {
 		DataPacket pk = new DataPacket();
 		pk.addShort(ID);
-		pk.addShort(pindex);
+		pk.addLong(eid);
 		pk.addShort(attribute);
 		pk.addShort(newVal);
 		return pk;

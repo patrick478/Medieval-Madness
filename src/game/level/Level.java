@@ -1,6 +1,7 @@
 package game.level;
 
 import game.Game;
+import game.bound.Bound;
 import game.entity.Entity;
 import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
