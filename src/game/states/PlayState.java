@@ -90,21 +90,22 @@ public class PlayState extends GameState {
 		
 		Game.getInstance().getWindow().setMouseCapture(true);
 		
-		scene.setAmbient(new Color(0.1f, 0.1f, 0.1f));
+		scene.setAmbient(new Color(0.05f, 0.05f, 0.05f));
 		scene.setFogColor(Color.BLACK);
-		scene.setFogParams(255f * 1.5f, 512f * 1.5f);
+		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
 		scene.setFogEnabled(true);
 		
 		for(PlayerEntity pe : Game.getInstance().getPlayers())
 		{
 			MovableReferenceFrame lrf = new MovableReferenceFrame(pe);
-			lrf.setPosition(Vec3.create(0, 0.5, 0));
-			Light l2 = new Light.SpotLight(pe, Color.WHITE, 4f, (float) Math.PI / 2, 10f);
+			lrf.setPosition(Vec3.create(0, 0, 0.25));
+			//lrf.setOrientation(Quat.create(Math.PI / 12, Vec3.i));
+			Light l2 = new Light.SpotLight(lrf, Color.WHITE, 3f, (float) (Math.PI / 4), 10f);
 			scene.addLight(l2);
 			
 			MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
-			elrf.setPosition(Vec3.create(0, -0.25, 0));
-			Light el = new Light.SphericalPointLight(lrf, Color.DARK_RED, 0.10f);
+			elrf.setPosition(Vec3.create(0, 0.5, 0));
+			Light el = new Light.SphericalPointLight(elrf, Color.DARK_RED, 0.10f);
 			scene.addLight(el);
 		}
 		
