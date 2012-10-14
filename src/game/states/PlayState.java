@@ -119,14 +119,14 @@ public class PlayState extends GameState {
 		scene.addDrawable(p);
 		
 		
-		invenPopUp = new DialogPane(400, 200, p, false);
+		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
 		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer().getInventory());
-		invenPopUp.getRoot().add(i2);
+		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
 		//invenPopUp.requestVisible(false);
-		invenPopUp.setPosition(0, 0);
-		invenPopUp.getRoot().setOpaque(false);
-		scene.addDrawable(invenPopUp);
+		Game.getInstance().getInvenPopUp().setPosition(0, 0);
+		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
+		scene.addDrawable(Game.getInstance().getInvenPopUp());
 		Pane topPane = new Pane(500, 100);
 		hp = new Healthbar();
 		topPane.getRoot().add(hp);
@@ -203,16 +203,16 @@ public class PlayState extends GameState {
 			intent_vel = intent_vel.add(cside.neg());
 		}
 		if (rwin.pollKey(KeyEvent.VK_E)) {
-			if(invenPopUp.isVisible()==false){
-				invenPopUp.requestVisible(true);
+			if(Game.getInstance().getInvenPopUp().isVisible()==false){
+				Game.getInstance().getInvenPopUp().requestVisible(true);
 				rwin.setMouseCapture(false);
 				rwin.setCursorVisible(true);
 				rwin.setCrosshairVisible(false);
 
 
 			}
-			else if(invenPopUp.isVisible()==true){
-				invenPopUp.requestVisible(false);
+			else if(Game.getInstance().getInvenPopUp().isVisible()==true){
+				Game.getInstance().getInvenPopUp().requestVisible(false);
 				rwin.setMouseCapture(true);
 				rwin.setCursorVisible(false);
 				rwin.setCrosshairVisible(true);
