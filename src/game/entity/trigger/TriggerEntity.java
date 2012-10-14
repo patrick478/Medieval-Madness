@@ -19,17 +19,11 @@ public abstract class TriggerEntity extends Entity{
 	
 	public TriggerEntity(long _id, AbstractEvent _event) {
 		super(_id);
-		if(_event == null){
-			throw new IllegalArgumentException("Event cannot be null when creating a TriggerEntity");
-		}
 		event = _event;
 	}
 	
 	public TriggerEntity( AbstractEvent _event) {
 		super();
-		if(_event == null){
-			throw new IllegalArgumentException("Event cannot be null when creating a TriggerEntity");
-		}
 		event = _event;
 	}
 	
@@ -47,7 +41,9 @@ public abstract class TriggerEntity extends Entity{
 	 * @param _trigger the list of entities that triggered the event. Cannot be null but may be empty
 	 */
 	public void trigger(List<Entity> _trigger){
-		event.activate(System.currentTimeMillis(), _trigger);
+		if(event!=null){
+			event.activate(System.currentTimeMillis(), _trigger);
+		}
 	}
 	
 	/**

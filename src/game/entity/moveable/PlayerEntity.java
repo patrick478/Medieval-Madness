@@ -2,6 +2,7 @@ package game.entity.moveable;
 
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.entity.Damageable;
 import game.item.Container;
 import game.modelloader.Content;
 import initial3d.engine.Color;
@@ -13,7 +14,7 @@ import initial3d.engine.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerEntity extends MoveableEntity {
+public class PlayerEntity extends MoveableEntity implements Damageable{
 	
 	private final double baseSpeed = 1;
 	
@@ -98,5 +99,20 @@ public class PlayerEntity extends MoveableEntity {
 
 	public void setHealth(int i) {
 		this.currentHealth = i;
+	}
+
+	@Override
+	public void applyHealthDelta(int _damage) {
+		currentHealth += _damage;
+	}
+
+	@Override
+	public int getTotalHealth() {
+		return defaultHealth;
+	}
+
+	@Override
+	public int getCurrentHealth() {
+		return currentHealth;
 	}	
 }

@@ -1,12 +1,11 @@
 package game.entity.moveable;
 
-import game.bound.Bound;
-import initial3d.engine.Vec3;
+import java.util.List;
 
-public class EnemyEntity extends MoveableEntity {
+import game.entity.Damageable;
 
+public abstract class EnemyEntity extends MoveableEntity implements Damageable{
 	
-	//TODO implement
 	public EnemyEntity(long _id) {
 		super(_id);
 	}
@@ -14,10 +13,10 @@ public class EnemyEntity extends MoveableEntity {
 	public EnemyEntity() {
 		super();
 	}
-
+	
 	@Override
-	protected Bound getBound(Vec3 position) {
-		return null;
+	public void poke() {
+		super.poke();
 	}
 
 	@Override

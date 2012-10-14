@@ -17,15 +17,17 @@ import game.GameState;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
+import game.entity.moveable.EnemyEntity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
+import game.entity.moveable.SpikeBall;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.AvoidEvent;
 import game.event.ContactEvent;
-import game.event.DamageEvent;
+import game.event.DeltaHealthEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.modelloader.Content;
@@ -82,11 +84,29 @@ public class PlayState extends GameState {
 		
 		System.out.println("Added Test object to level");
 		
-		DynamicTriggerEntity ste = new DynamicTriggerEntity(new DamageEvent(), ie);
-/*		MeshContext testball = new MeshContext(m, mat, ste);
-		ste.addMeshContext(testball);*/
-		ste.addToLevel(Game.getInstance().getLevel());
-		ste.addToScene(scene);
+		
+		EnemyEntity e = new SpikeBall(100, 1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
+		
+		Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
+		Mesh m1 = Content.loadContent("sphere.obj");
+		MeshContext mc1 = new MeshContext(m1, mat1, e);
+		mc1.setScale(0.1);
+		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		e.addMeshContext(mc1);
+		
+		e.addToLevel(Game.getInstance().getLevel());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
@@ -221,7 +241,9 @@ public class PlayState extends GameState {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		} else if(rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 1000)
 		{
-			Game.getInstance().createProjectile();
+			Game.getInstance().addEntity(new ProjectileEntity(
+					Game.getInstance().getPlayer().id, -25, Game.getInstance().getPlayer().getPosition(), 
+					this.scene.getCamera().getNormal().flattenY().unit().scale(3).add(Game.getInstance().getPlayer().getLinVelocity())));
 			this.lastShot = System.currentTimeMillis();
 		}
 		
@@ -256,6 +278,7 @@ public class PlayState extends GameState {
 		//if there was a collision set the velocity appropriately
 		if(colNorm != null){
 			//vector magic
+			colNorm = colNorm.flattenY();
 			Vec3 intentUnit = intent_vel.unit();
 			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag();
 			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale);
