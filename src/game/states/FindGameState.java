@@ -84,6 +84,8 @@ public class FindGameState extends GameState {
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().setRemoteTarget(target.getText());
 				Game.getInstance().getNetwork().start();
+				Game.getInstance().changeState(new LobbyState());
+
 			}
 		});
 		
@@ -116,6 +118,8 @@ public class FindGameState extends GameState {
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().setRemoteTarget(serverOne.getText());
 				Game.getInstance().getNetwork().start();
+				Game.getInstance().changeState(new LobbyState());
+
 			}
 		});
 		
@@ -126,6 +130,8 @@ public class FindGameState extends GameState {
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().setRemoteTarget(serverTwo.getText());
 				Game.getInstance().getNetwork().start();
+				Game.getInstance().changeState(new LobbyState());
+
 			}
 		});
 		join3.addActionListener(new ActionListener() {
@@ -135,6 +141,8 @@ public class FindGameState extends GameState {
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().setRemoteTarget(serverThree.getText());
 				Game.getInstance().getNetwork().start();
+				Game.getInstance().changeState(new LobbyState());
+
 			}
 		});
 		join4.addActionListener(new ActionListener() {
@@ -144,6 +152,8 @@ public class FindGameState extends GameState {
 				Game.getInstance().setNetwork(new NetworkingClient());
 				Game.getInstance().getNetwork().setRemoteTarget(serverFour.getText());
 				Game.getInstance().getNetwork().start();
+				Game.getInstance().changeState(new LobbyState());
+
 			}
 		});
 		
