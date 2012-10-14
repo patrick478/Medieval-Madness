@@ -316,7 +316,7 @@ public class Game implements Runnable {
 	}
 
 	public int getCurrentLevelNumber() {
-		return 0;
+		return 5;
 	}
 
 	public NetworkingHost getHost() {
