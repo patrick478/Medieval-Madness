@@ -3,13 +3,13 @@ package game.states;
 import game.GameState;
 
 /*** 
- * The state used while waiting for the correct number of players.
+ * The state before and after each of the levels
  *
  * @author Ben
  *
  */
-public class LobbyState extends GameState {
-	public LobbyState() {
+public class PregameState extends GameState {
+	public PregameState() {
 	}
 
 	@Override

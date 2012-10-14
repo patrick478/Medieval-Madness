@@ -13,10 +13,18 @@ import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
+import game.bound.BoundingSphere;
 import game.entity.Entity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
+import game.entity.moveable.ProjectileEntity;
+import game.entity.trigger.DynamicTriggerEntity;
+import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
+import game.event.AvoidEvent;
+import game.event.ContactEvent;
+import game.event.DamageEvent;
+import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.modelloader.Content;
 
@@ -38,6 +46,9 @@ public class PlayState extends GameState {
 	private double player_yaw = 0;
 	
 	private double targetFov = -1;
+	private long lastShot = System.currentTimeMillis();
+	
+	private Healthbar hp = null;
 
 	@Override
 	public void initalise() {
@@ -65,6 +76,12 @@ public class PlayState extends GameState {
 		
 		System.out.println("Added Test object to level");
 		
+		DynamicTriggerEntity ste = new DynamicTriggerEntity(new DamageEvent(), ie);
+/*		MeshContext testball = new MeshContext(m, mat, ste);
+		ste.addMeshContext(testball);*/
+		ste.addToLevel(Game.getInstance().getLevel());
+		ste.addToScene(scene);
+		
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
 
@@ -81,7 +98,7 @@ public class PlayState extends GameState {
 		scene.addDrawable(p);
 		
 		Pane topPane = new Pane(500, 100);
-		Healthbar hp = new Healthbar();
+		hp = new Healthbar();
 		topPane.getRoot().add(hp);
 		topPane.requestVisible(true);
 		topPane.getRoot().setOpaque(false);
@@ -166,6 +183,10 @@ public class PlayState extends GameState {
 		if(rwin.getKey(KeyEvent.VK_ESCAPE))
 		{
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
+		} else if(rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 1000)
+		{
+			Game.getInstance().createProjectile();
+			this.lastShot = System.currentTimeMillis();
 		}
 		
 		//sprinting
@@ -230,6 +251,9 @@ public class PlayState extends GameState {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
+		
+		// update the game UI
+		this.hp.update(Game.getInstance().getPlayer().getHealth());
 	}
 
 	@Override

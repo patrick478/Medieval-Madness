@@ -21,6 +21,8 @@ public class PlayerEntity extends MoveableEntity {
 	private int defaultHealth = 100;
 	private int defaultEnergy = 100;
 	
+	private int currentHealth = 50;
+	
 	private final Container inventory = new Container(null, "Inventory", 6);//FIXME?
 	
 	private final double radius;
@@ -39,6 +41,8 @@ public class PlayerEntity extends MoveableEntity {
 		position = _pos;
 		radius = _radius;
 		this.addMeshContexts(this.getBall());
+		
+		this.currentHealth = this.defaultHealth;
 	}
 	
 	@Override
@@ -86,5 +90,13 @@ public class PlayerEntity extends MoveableEntity {
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 		return meshes;
+	}
+
+	public int getHealth() {
+		return this.currentHealth;
+	}
+
+	public void setHealth(int i) {
+		this.currentHealth = i;
 	}	
 }

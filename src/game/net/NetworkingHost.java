@@ -1,5 +1,6 @@
 package game.net;
 
+import game.Game;
 import game.net.packets.EnterGamePacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.PingPacket;
@@ -219,6 +220,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 					
 					EnterGamePacket egp = new EnterGamePacket();
 					egp.isReply = false;
+//					egp.position = Game.getInstance().getLevel().getSpawnLocation(c.getPlayerIndex());
 					this.send(c.getSocket(), egp.toData().getData());
 					
 					System.out.printf("Told %d to enter the game\n", c.getPlayerIndex());
