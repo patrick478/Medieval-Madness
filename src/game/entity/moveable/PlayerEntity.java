@@ -3,7 +3,8 @@ package game.entity.moveable;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
 import game.entity.Damageable;
-import game.item.Container;
+import game.item.Item;
+import game.item.ItemContainer;
 import game.modelloader.Content;
 import initial3d.engine.Color;
 import initial3d.engine.Material;
@@ -22,9 +23,16 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 	private int defaultHealth = 100;
 	private int defaultEnergy = 100;
 	
+
+	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
+	private final Item[] equippedItems = new Item[5];
+
+	public Item[] getEquippedItems() {
+		return equippedItems;
+	}
+
 	private int currentHealth = 50;
-	
-	private final Container inventory = new Container(null, "Inventory", 6);//FIXME?
+
 	
 	private final double radius;
 	private int selfIndex = 0;
@@ -60,7 +68,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		return baseSpeed;
 	}
 	
-	public Container inventory(){
+	public ItemContainer getInventory(){
 		return inventory;
 	}
 	

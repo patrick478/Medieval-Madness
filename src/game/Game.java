@@ -16,6 +16,9 @@ import game.level.Level;
 import game.net.NetworkingClient;
 import initial3d.*;
 import initial3d.engine.*;
+import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.DialogPane;
+import initial3d.engine.xhaust.Pane;
 import game.net.*;
 import game.net.packets.MovementPacket;
 import game.states.*;
@@ -42,6 +45,8 @@ public class Game implements Runnable {
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
 
+	private DialogPane invenPopUp;
+	private Pane inventoryHolder;
 	private GameState currentGameState;
 	private GameState previousState = null; 
 	private Thread gameThread = null;
@@ -290,7 +295,17 @@ public class Game implements Runnable {
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){
-		
+		for(PlayerEntity p : getPlayers()){
+			if(p.id == _eid){
+				if(p.getInventory().containsItem(_item)){
+					break;
+				}
+				p.getInventory().addItem(_item);
+				invenPopUp.getRoot().repaint();
+				break;
+			}
+		}
+    	
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){
@@ -343,5 +358,38 @@ public class Game implements Runnable {
 
 	public void deltaEntityHealth(PlayerEntity e, int i) {
 		e.setHealth(e.getHealth() + i);
+	}
+
+//	public void createProjectile() {
+//		Vec3 pos = Game.getInstance().getPlayer().getPosition().add(Vec3.create(0, 0, 0));
+//		ProjectileEntity pe = new ProjectileEntity(System.nanoTime(), pos);
+//		pe.updateMotion(pe.getPosition(), Game.getInstance().currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(1), Game.getInstance().getPlayer().getOrientation(), pe.getAngVelocity(), Game.time());
+//		DynamicTriggerEntity ste = new DynamicTriggerEntity(new AvoidEvent(Game.getInstance().getPlayer().id), pe);
+//		ste.addEvent(new ContactEvent());
+//		ste.addEvent(new RemoveEntityEvent(pe.id));
+//		ste.addEvent(new RemoveEntityEvent(ste.id));
+//		ste.addEvent(new DamageEvent());
+//		ste.addToLevel(Game.getInstance().getLevel());
+//		pe.addToLevel(Game.getInstance().getLevel());
+//		ste.addToScene(Game.getInstance().currentGameState.scene);
+//		pe.addToScene(Game.getInstance().currentGameState.scene);
+//	}
+
+	
+
+	public void setInvenPopUp(DialogPane invenPopUp) {
+		this.invenPopUp = invenPopUp;
+	}
+	
+	public DialogPane getInvenPopUp() {
+		return invenPopUp;
+	}
+
+	public Pane getInventoryHolder() {
+		return inventoryHolder;
+	}
+
+	public void setInventoryHolder(Pane inventoryHolder) {
+		this.inventoryHolder = inventoryHolder;
 	}
 }
