@@ -96,15 +96,15 @@ public class PlayState extends GameState {
 		System.out.println("Added Test object to level");
 		
 		
-//		EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
-//		Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
-//		Mesh m1 = Content.loadContent("sphere.obj");
-//		MeshContext mc1 = new MeshContext(m1, mat1, e);
-//		mc1.setScale(0.1);
-//		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		
-//		e.addMeshContext(mc1);
-//		e.addToLevel(Game.getInstance().getLevel());
+		EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
+		Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
+		Mesh m1 = Content.loadContent("sphere.obj");
+		MeshContext mc1 = new MeshContext(m1, mat1, e);
+		mc1.setScale(0.1);
+		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		e.addMeshContext(mc1);
+		e.addToLevel(Game.getInstance().getLevel());
 		
 		
 		

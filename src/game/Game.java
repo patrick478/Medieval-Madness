@@ -290,7 +290,6 @@ public class Game implements Runnable {
 
 	public void selfRemoveEntity(long eid) {
 		Entity e = currentLevel.removeEntity(eid);
-		System.out.println(e==null);
 		if(e!=null){
 			currentGameState.scene.removeDrawables(e.getMeshContexts());
 		}

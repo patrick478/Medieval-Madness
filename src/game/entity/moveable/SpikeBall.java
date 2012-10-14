@@ -37,7 +37,6 @@ public class SpikeBall extends EnemyEntity{
 		speed = _speed;
 		
 		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
-//		trigger.addEvent(new RemoveEntityEvent(trigger));
 		trigger.addEvent(new DeltaHealthEvent(damage));
 	}
 	
@@ -52,7 +51,6 @@ public class SpikeBall extends EnemyEntity{
 		speed = _speed;
 		
 		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
-//		trigger.addEvent(new RemoveEntityEvent(trigger));
 		trigger.addEvent(new DeltaHealthEvent(damage));
 	}
 	
@@ -77,8 +75,11 @@ public class SpikeBall extends EnemyEntity{
 	@Override
 	public void applyHealthDelta(int _deltaHealth) {
 		currentHealth += _deltaHealth;
+		System.out.println("spike health :: "+currentHealth);
 		if (currentHealth <=0 ){
+			System.out.println("removing spikeball???");
 			Game.getInstance().removeEntity(id);
+			Game.getInstance().removeEntity(trigger.id);
 		}
 	}
 

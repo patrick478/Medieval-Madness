@@ -46,6 +46,10 @@ public abstract class TriggerEntity extends Entity{
 		}
 	}
 	
+	public AbstractEvent getEvent(){
+		return event;
+	}
+	
 	/**
 	 * Adds to the end of the  list of events that are called when this
 	 * TriggerEntity is triggered. If event is null, does nothing.
