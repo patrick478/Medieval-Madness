@@ -397,7 +397,7 @@ public class Game implements Runnable {
 		ProjectileEntity pe = new ProjectileEntity(id, getPlayers()[creator].id, -5, position, velocity, orientation);		
 		pe.addToLevel(Game.getInstance().getLevel());
 		pe.addToScene(Game.getInstance().currentGameState.scene);
-		
+		getPlayers()[creator].muzzleFlash(true);
 		System.out.println("created projectile!");
 	}
 

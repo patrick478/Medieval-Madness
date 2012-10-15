@@ -62,8 +62,6 @@ public class PlayState extends GameState {
 
 	MovableReferenceFrame cameraRf_3, cameraRf_1;
 
-	private boolean muzzle_flash_started = false;
-
 	@Override
 	public void initalise() {
 		for (PlayerEntity pe : Game.getInstance().getPlayers()) {
@@ -194,6 +192,9 @@ public class PlayState extends GameState {
 
 	@Override
 	public void update(double delta) {
+		
+		Game.getInstance().getLevel().pokeAll();
+
 		RenderWindow rwin = Game.getInstance().getWindow();
 		if (targetFov < 0) targetFov = scene.getCamera().getFOV();
 
@@ -269,16 +270,10 @@ public class PlayState extends GameState {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		}
 
-		if (rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 50) {
+		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 50) {
 			Game.getInstance().createProjectile();
 			this.lastShot = System.currentTimeMillis();
-			muzzle_flash_started = true;
 			Game.getInstance().getPlayer().muzzleFlash(true);
-		}
-
-		if (System.currentTimeMillis() - lastShot > 10 && muzzle_flash_started) {
-			muzzle_flash_started = false;
-			Game.getInstance().getPlayer().muzzleFlash(false);
 		}
 
 		// sprinting
@@ -327,8 +322,6 @@ public class PlayState extends GameState {
 				}
 			}
 		}
-
-		Game.getInstance().getLevel().pokeAll();
 
 		if (!intent_vel.equals(Vec3.zero)) {
 			Game.getInstance().transmitPlayerPosition();
