@@ -72,15 +72,7 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 
 		System.out.println("Creating test object");
-		BufferedImage battery = null;
-		try {
-			battery = ImageIO.read(new File("resources/inventory/battery.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Item it = new Item(battery, "Battery") {
+		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {
 		};
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
@@ -125,8 +117,16 @@ public class PlayState extends GameState {
 		m = Content.loadContent("resources/models/doorbars/doorbars.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		ie.setPosition(Vec3.create(3, 0, 3));
 		
-		ie.setPosition(Vec3.create(3, 0, 3));
+		// gunpart
+		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
+		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+		mc = new MeshContext(m, mat, ie);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		mc.setScale(0.25);
+		
+		
 
 		ie.addMeshContext(mc);
 
