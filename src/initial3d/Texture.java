@@ -25,7 +25,7 @@ public abstract class Texture {
 		}
 		return size;
 	}
-
+	
 	/** Get the size, in texels, of one dimension of the texture. */
 	public abstract int size();
 

@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 
 import soundengine.SimpleAudioPlayer;
 
+import initial3d.Initial3D;
+import initial3d.Texture;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Pane;
@@ -59,9 +61,9 @@ public class PlayState extends GameState {
 	private Pane invenPopUp;
 
 	MovableReferenceFrame cameraRf_3, cameraRf_1;
-	
+
 	private boolean muzzle_flash_started = false;
-	
+
 	@Override
 	public void initalise() {
 		for (PlayerEntity pe : Game.getInstance().getPlayers()) {
@@ -80,15 +82,21 @@ public class PlayState extends GameState {
 			e.printStackTrace();
 		}
 
-		Item it = new Item(battery, "Ball") {
+		Item it = new Item(battery, "Battery") {
 		};
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 
-		Material mat = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);
-		Mesh m = Content.loadContent("sphere.obj");
+		Material mat = new Material(Color.GRAY, Color.GRAY, Color.GRAY, Color.BLACK, 20f, 1f);
+		Texture tex_kd = Initial3D.createTexture(Content
+				.<BufferedImage> loadContent("resources/models/battery/battery_kd.png"));
+		Texture tex_ke = Initial3D.createTexture(Content
+				.<BufferedImage> loadContent("resources/models/battery/battery_ke.png"));
+		mat = new Material(mat, tex_kd, null, tex_ke);
+
+		Mesh m = Content.loadContent("resources/models/battery/battery.obj");
 		MeshContext mc = new MeshContext(m, mat, ie);
-		mc.setScale(0.25);
+		mc.setScale(4);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		ie.addMeshContext(mc);
 
@@ -114,11 +122,10 @@ public class PlayState extends GameState {
 		cameraRf_3 = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		scene.getCamera().trackReferenceFrame(cameraRf_3);
 		cameraRf_3.setPosition(Vec3.create(0, 0.5, -0.8));
-		
+
 		cameraRf_1 = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		cameraRf_1.setPosition(Vec3.create(0, 0.15, 0));
-		
-		
+
 		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
 		// EquippedInventoryContainer i = new
@@ -232,14 +239,14 @@ public class PlayState extends GameState {
 			}
 
 		}
-		
+
 		if (rwin.pollKey(KeyEvent.VK_F1)) {
 			cam.trackReferenceFrame(cameraRf_1);
 		}
 		if (rwin.pollKey(KeyEvent.VK_F3)) {
 			cam.trackReferenceFrame(cameraRf_3);
 		}
-		
+
 		// temp
 		// if(rwin.getKey(KeyEvent.VK_O)) {
 		// this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
@@ -257,7 +264,7 @@ public class PlayState extends GameState {
 			muzzle_flash_started = true;
 			Game.getInstance().getPlayer().muzzleFlash(true);
 		}
-		
+
 		if (System.currentTimeMillis() - lastShot > 10 && muzzle_flash_started) {
 			muzzle_flash_started = false;
 			Game.getInstance().getPlayer().muzzleFlash(false);
