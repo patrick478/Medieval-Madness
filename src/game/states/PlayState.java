@@ -105,6 +105,11 @@ public class PlayState extends GameState {
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		mc.setScale(4);
 		
+		// spikeball
+		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f, 0.3f), 1f, 1f);
+		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
+		mc = new MeshContext(m, mat, ie);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 		
 		ie.addMeshContext(mc);
