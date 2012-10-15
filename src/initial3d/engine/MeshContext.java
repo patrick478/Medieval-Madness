@@ -19,6 +19,8 @@ public class MeshContext extends Drawable {
 	private Material mtl;
 	private ReferenceFrame rf;
 	private double scale = 1;
+	
+	private ReferenceFrame draw_rf;
 
 	private double near_clip = DEFAULT_NEAR_CLIP;
 	private double far_cull = DEFAULT_FAR_CULL;
@@ -31,6 +33,7 @@ public class MeshContext extends Drawable {
 		mesh = mesh_;
 		mtl = mtl_;
 		trackReferenceFrame(rf_);
+		draw_rf = rf;
 	}
 
 	public final Mesh getMesh() {
@@ -95,6 +98,12 @@ public class MeshContext extends Drawable {
 	public final ReferenceFrame getReferenceFrame() {
 		return rf;
 	}
+	
+	@Override
+	protected final void lockForDraw() {
+		draw_rf = rf;
+		draw_rf.lockForDraw();
+	}
 
 	@Override
 	protected final void draw(Initial3D i3d, int framewidth, int frameheight) {
@@ -146,10 +155,10 @@ public class MeshContext extends Drawable {
 	protected void loadTransform(Initial3D i3d) {
 
 		// load the transforms back to the scene root (world space)
-		for (ReferenceFrame r = rf; r != ReferenceFrame.SCENE_ROOT; r = r.getParent()) {
-			r.getOrientation().toOrientationMatrix(xformtemp);
+		for (ReferenceFrame r = draw_rf; r != ReferenceFrame.SCENE_ROOT; r = r.getParent()) {
+			r.getDrawOrientation().toOrientationMatrix(xformtemp);
 			i3d.multMatrix(xformtemp);
-			r.getPosition().toTranslationMatrix(xformtemp);
+			r.getDrawPosition().toTranslationMatrix(xformtemp);
 			i3d.multMatrix(xformtemp);
 		}
 

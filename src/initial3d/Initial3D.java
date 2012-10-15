@@ -31,6 +31,14 @@ public abstract class Initial3D {
 	public static final Texture createTexture(int size) {
 		return Initial3DFactory.createTexture(size);
 	}
+	
+	public static Texture createTexture(BufferedImage bi) {
+		Texture t = Initial3D.createTexture(Texture.requiredSize(Math.max(bi.getWidth(), bi.getHeight())));
+		t.drawImage(bi);
+		t.composeMipMaps();
+		t.useMipMaps(true);
+		return t;
+	}
 
 	// shared
 	public static final int ZERO = 0;

@@ -54,14 +54,12 @@ public class ProjectileEntity extends MoveableEntity {
 	}
 	
 	private List<MeshContext> getBall(){
-		Material mat = new Material(Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW, 20f, 1f);		
-		Mesh m = Content.loadContent("sphere.obj");
+		Material mat = new Material(Color.BLACK, Color.GRAY, Color.BLACK, new Color(0.5f, 0.5f, 0f), 1f, 1f);		
+		Mesh m = Content.loadContent("resources/models/bullet/bullet.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
-		mc.setScale(0.05);
+		// mc.setScale(0.025);
 		List<MeshContext> meshes = new ArrayList<MeshContext>();
 		meshes.add(mc);
-		
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 		return meshes;
 	}
@@ -77,7 +75,7 @@ public class ProjectileEntity extends MoveableEntity {
 
 	@Override
 	protected Bound getBound(Vec3 position) {
-		return new BoundingSphere(this.getPosition(), 0.1);
+		return new BoundingSphere(this.getPosition(), 0.05);
 	}
 
 	@Override

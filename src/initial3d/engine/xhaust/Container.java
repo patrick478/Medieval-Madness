@@ -1,12 +1,12 @@
 package initial3d.engine.xhaust;
 
-import game.item.Item;
 import initial3d.Initial3D;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Xhaust Component for holding other components.
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Container extends Component {
 
-	private List<Component> children = new ArrayList<Component>();
+	private List<Component> children = new CopyOnWriteArrayList<Component>();
 
 	public Container(int width_, int height_) {
 		super(width_, height_);

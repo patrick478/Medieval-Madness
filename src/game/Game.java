@@ -45,6 +45,10 @@ public class Game implements Runnable {
 	public static long time() {
 		return getInstance().getGameTime();
 	}
+	
+	public static long time(long systime) {
+		return getInstance().getGameTime(systime);
+	}
 
 	private final int gameHz = 30;
 	private final long optimalTime = 1000000000 / gameHz;
@@ -324,6 +328,9 @@ public class Game implements Runnable {
 		return System.currentTimeMillis() + this.timeOffset;
 	}
 	
+	public long getGameTime(long systime) {
+		return systime + this.timeOffset;
+	}
 
 	public void setTimeOffset(long offset) {
 		this.timeOffset = offset;
@@ -363,8 +370,9 @@ public class Game implements Runnable {
 
 	public void createProjectile() {
 		long id = System.nanoTime();
-		Vec3 pos = this.getPlayer().getPosition();
-		Vec3 vel = this.currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(4);
+		Vec3 norm = this.currentGameState.scene.getCamera().getNormal().flattenY().unit();
+		Vec3 vel = this.getPlayer().getLinVelocity().add(norm.scale(8));
+		Vec3 pos = this.getPlayer().getPosition().add(norm.scale(0.4));
 		Quat orientation = this.getPlayer().getOrientation();
 		short creator = (short) this.getPlayerIndex();
 		long createTime = System.currentTimeMillis();
@@ -388,7 +396,7 @@ public class Game implements Runnable {
 		ProjectileEntity pe = new ProjectileEntity(id, getPlayers()[creator].id, -5, position, velocity, orientation);		
 		pe.addToLevel(Game.getInstance().getLevel());
 		pe.addToScene(Game.getInstance().currentGameState.scene);
-		
+		getPlayers()[creator].muzzleFlash(true);
 		System.out.println("created projectile!");
 	}
 

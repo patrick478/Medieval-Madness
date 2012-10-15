@@ -1,6 +1,9 @@
-package initial3d.engine.xhaust;
+package game;
 
 import game.modelloader.Content;
+
+import initial3d.engine.xhaust.Component;
+import initial3d.engine.xhaust.Picture;
 
 import java.awt.Color;
 import java.awt.Graphics;

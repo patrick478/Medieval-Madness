@@ -208,7 +208,7 @@ final class LightingEquations {
 
 			// spotlights
 			float spot_cutoff = unsafe.getFloat(pLight + 100);
-			if (spot_cutoff > -0.999) {
+			if (spot_cutoff > 0.001) {
 				float LdotS = -1f
 						* (unsafe.getFloat(pLight + 64) * Lx + unsafe.getFloat(pLight + 68) * Ly + unsafe
 								.getFloat(pLight + 72) * Lz);

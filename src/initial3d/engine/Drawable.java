@@ -215,6 +215,8 @@ public abstract class Drawable extends ActionSource {
 	public Drawable focusOnRemove() {
 		return null;
 	}
+	
+	protected abstract void lockForDraw();
 
 	/**
 	 * Override this to draw stuff. Enabling and disabling WRITE_ID is handled

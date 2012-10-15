@@ -8,6 +8,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -79,7 +81,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 		private double display_ar = 0;
 		private double camera_fov = 0;
 		private Initial3D i3d;
-
+		
 		public SceneManagerWorker() {
 			setDaemon(true);
 			display_ar = width / (double) height;
@@ -101,7 +103,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
 			i3d.shadeModel(SHADEMODEL_FLAT);
 			i3d.enable(MIPMAPS);
-
+			
 			float[] coltemp = new float[3];
 			
 			// temp light
@@ -185,6 +187,11 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 								i3d.clear(ID_BUFFER_BIT);
 							}
 
+							// lock draw locations / orientations
+							for (Drawable d : scene.getDrawables()) {
+								d.lockForDraw();
+							}
+							
 							// draw stuff as appropriate
 							profiler.startSection("I3D-sceneman_draw");
 							for (Drawable d : scene.getDrawables()) {
@@ -249,7 +256,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 							i3d.enable(DEPTH_TEST | WRITE_COLOR | WRITE_Z);
 							i3d.finish();
 							profiler.endSection("I3D-sceneman_draw");
-
+							
 							// push frame to output
 							if (dtarget != null) {
 								profiler.startSection("I3D-sceneman_display");
