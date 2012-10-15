@@ -27,7 +27,7 @@ import game.entity.moveable.EnemyEntity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
-import game.entity.moveable.SpikeBall;
+import game.entity.moveable.SpikeBallEntity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;

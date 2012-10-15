@@ -5,13 +5,13 @@ import game.level.Floor;
 import game.level.Level;
 import game.level.Space;
 
-public class PuzzleLevel extends AbstractLevelPlanner{
+public class DefualtLevel extends AbstractLevelPlanner{
 	
 	public static final int DOOR_FLAG = 1;
 	public static final int DEAD_END = 2;
 	public static final int INTERSECTION = 3;
 
-	public PuzzleLevel(long _seed) {
+	public DefualtLevel(long _seed) {
 		super(_seed);
 		// TODO Auto-generated constructor stub
 	}
@@ -70,8 +70,8 @@ public class PuzzleLevel extends AbstractLevelPlanner{
 		public Spot(int _x, int _z){
 			x = _x; z = _z;
 		}
-		private PuzzleLevel getOuterType() {
-			return PuzzleLevel.this;
+		private DefualtLevel getOuterType() {
+			return DefualtLevel.this;
 		}
 		
 		@Override

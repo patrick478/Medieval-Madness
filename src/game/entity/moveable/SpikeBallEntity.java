@@ -8,61 +8,78 @@ import game.entity.trigger.TriggerEntity;
 import game.event.DeltaHealthEvent;
 import game.event.PlayerOnlyEvent;
 import game.level.Level;
+import game.modelloader.Content;
+import initial3d.engine.Color;
+import initial3d.engine.Material;
+import initial3d.engine.Mesh;
+import initial3d.engine.MeshContext;
 import initial3d.engine.Vec3;
 
-public class SpikeBall extends EnemyEntity{
+public class SpikeBallEntity extends EnemyEntity{
 
 	private static final double radius = 0.25;
-	
-	private final Vec3 start;
-	private final Vec3 goal;
-	private boolean outgoing = false;
-	
+
 	private final double speed;
-	
 	private final int damage;
 	private final int maxHealth;
 	private int currentHealth;
 	
+	private static final long updateTime = 500;
+	private long attachTime;
+	
 	private TriggerEntity trigger;
 	
-	public SpikeBall(long _id, int _health, int _damage, Vec3 _start, Vec3 _goal,  double _speed){
+	public SpikeBallEntity(long _id, int _health, int _damage, Vec3 _pos, double _speed){
 		super(_id);
 		maxHealth = _health;
 		currentHealth = _health;
 		damage = _damage;
-		position = _start;
-		start = _start;
-		goal = _goal;
+		position = _pos;
 		speed = _speed;
 		
 		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
 		trigger.addEvent(new DeltaHealthEvent(damage));
+		
+		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
+				0.3f), 1f, 1f);
+		Mesh m = Content.loadContent("resources/models/spikeball/spikeball.obj");
+		MeshContext mc = new MeshContext(m, mat, this);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		this.addMeshContext(mc);
 	}
 	
-	public SpikeBall(int _health, int _damage, Vec3 _start, Vec3 _goal, double _speed){
+	public SpikeBallEntity(int _health, int _damage, Vec3 _pos, double _speed){
 		super();
 		maxHealth = _health;
 		currentHealth = _health;
 		damage = _damage;
-		position = _start;
-		start = _start;
-		goal = _goal;
+		position = _pos;
 		speed = _speed;
 		
 		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
 		trigger.addEvent(new DeltaHealthEvent(damage));
+		
+		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
+				0.3f), 1f, 1f);
+		Mesh m = Content.loadContent("resources/models/spikeball/spikeball.obj");
+		MeshContext mc = new MeshContext(m, mat, this);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		this.addMeshContext(mc);
 	}
 	
 	@Override
 	public void poke(){
 		super.poke();
-		if(outgoing && getPosition().sub(goal).mag()<radius){
-			updateMotion(getPosition(), start.sub(goal).unit().scale(speed), getOrientation(), getAngVelocity(), Game.time());
-			outgoing = false;
-		}else if(!outgoing && getPosition().sub(start).mag()<radius){
-			updateMotion(getPosition(), goal.sub(start).unit().scale(speed), getOrientation(), getAngVelocity(), Game.time());
-			outgoing = true;
+		if(Game.time() > attachTime + updateTime){
+			attachTime = Game.time();
+			double distance = Double.MAX_VALUE;
+			Vec3 target = Vec3.zero;
+			for(PlayerEntity p : Game.getInstance().getPlayers()){
+				if(p.getPosition().sub(this.getPosition()).mag()<distance){
+					target = p.getPosition();
+				}
+			}
+			this.updateMotion(getPosition(), getPosition().sub(target), getOrientation(), getAngVelocity(), attachTime);
 		}
 	}
 	
