@@ -114,17 +114,17 @@ public class PlayState extends GameState {
 		
 		// doorbars
 		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-		m = Content.loadContent("resources/models/doorbars/doorbars.obj");
+		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		ie.setPosition(Vec3.create(3, 0, 3));
+		ie.setPosition(Vec3.create(3, 0, 3));
 		
 		// gunpart
-		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
-		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
-		mc = new MeshContext(m, mat, ie);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		mc.setScale(0.25);
+//		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
+//		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		mc.setScale(0.25);
 		
 		
 
