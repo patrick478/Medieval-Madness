@@ -119,6 +119,14 @@ public class PlayState extends GameState {
 		m = Content.loadContent("resources/models/box/box.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		// doorbars
+		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
+		m = Content.loadContent("resources/models/doorbars/doorbars.obj");
+		mc = new MeshContext(m, mat, ie);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		ie.setPosition(Vec3.create(3, 0, 3));
 
 		ie.addMeshContext(mc);
 
