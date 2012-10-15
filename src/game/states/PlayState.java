@@ -98,19 +98,28 @@ public class PlayState extends GameState {
 		mc.setScale(4);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		// key
-		mat = new Material (Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(0.2f, 0.2f, 0f), 1f, 1f);
+		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
+				0.2f, 0.2f, 0f), 1f, 1f);
 		m = Content.loadContent("resources/models/key/key.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		mc.setScale(4);
-		
+
 		// spikeball
-		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f, 0.3f), 1f, 1f);
+		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
+				0.3f), 1f, 1f);
 		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		
-		
+
+		// box
+		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
+		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
+		mat = new Material(mat, tex_kd, null, null);
+		m = Content.loadContent("resources/models/box/box.obj");
+		mc = new MeshContext(m, mat, ie);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+
 		ie.addMeshContext(mc);
 
 		ie.addToLevel(Game.getInstance().getLevel());
@@ -196,7 +205,7 @@ public class PlayState extends GameState {
 
 	@Override
 	public void update(double delta) {
-		
+
 		Game.getInstance().getLevel().pokeAll();
 
 		RenderWindow rwin = Game.getInstance().getWindow();
@@ -274,7 +283,8 @@ public class PlayState extends GameState {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		}
 
-		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 50) {
+		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1)
+				&& (System.currentTimeMillis() - lastShot) > 50) {
 			Game.getInstance().createProjectile();
 			this.lastShot = System.currentTimeMillis();
 			Game.getInstance().getPlayer().muzzleFlash(true);
