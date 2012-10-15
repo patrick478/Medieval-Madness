@@ -87,6 +87,7 @@ public class PlayState extends GameState {
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
 		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 
+		// battery
 		Material mat = new Material(Color.GRAY, Color.GRAY, Color.GRAY, Color.BLACK, 20f, 1f);
 		Texture tex_kd = Initial3D.createTexture(Content
 				.<BufferedImage> loadContent("resources/models/battery/battery_kd.png"));
@@ -98,6 +99,16 @@ public class PlayState extends GameState {
 		MeshContext mc = new MeshContext(m, mat, ie);
 		mc.setScale(4);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
+		// key
+		mat = new Material (Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(0.2f, 0.2f, 0f), 1f, 1f);
+		m = Content.loadContent("resources/models/key/key.obj");
+		mc = new MeshContext(m, mat, ie);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		mc.setScale(4);
+		
+		
+		
 		ie.addMeshContext(mc);
 
 		ie.addToLevel(Game.getInstance().getLevel());
