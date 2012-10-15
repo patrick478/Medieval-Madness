@@ -139,7 +139,7 @@ public class TestUI {
 		
 		
 
-		MovableReferenceFrame camera_rf = new MovableReferenceFrame(null);
+		MovableReferenceFrame camera_rf = new MovableReferenceFrame(ReferenceFrame.SCENE_ROOT);
 		scene.getCamera().trackReferenceFrame(camera_rf);
 		camera_rf.setPosition(Vec3.create(-3, 3, -3));
 		camera_rf.setOrientation(Quat.create(Math.PI / 16, Vec3.i));

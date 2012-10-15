@@ -10,11 +10,14 @@ import game.modelloader.Content;
 import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.Color;
+import initial3d.engine.Light;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
 import initial3d.engine.MovableReferenceFrame;
 import initial3d.engine.Quat;
+import initial3d.engine.ReferenceFrame;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 import java.awt.image.BufferedImage;
@@ -22,6 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerEntity extends MoveableEntity implements Damageable{
+	
+	private static final Texture tex_body_kd;
+	private static final Texture tex_body_ke;
+	
+	static {
+
+		BufferedImage bi_kd = Content.loadContent("resources/models/character/char2_kd.png");
+		tex_body_kd = Initial3D.createTexture(Texture.requiredSize(Math.max(bi_kd.getWidth(), bi_kd.getHeight())));
+		tex_body_kd.drawImage(bi_kd);
+		tex_body_kd.composeMipMaps();
+		tex_body_kd.useMipMaps(true);
+		
+		BufferedImage bi_ke = Content.loadContent("resources/models/character/char2_ke.png");
+		tex_body_ke = Initial3D.createTexture(Texture.requiredSize(Math.max(bi_ke.getWidth(), bi_ke.getHeight())));
+		tex_body_ke.drawImage(bi_ke);
+		tex_body_ke.composeMipMaps();
+		tex_body_ke.useMipMaps(true);
+
+	}
 	
 	private final double baseSpeed = 1;
 
@@ -42,18 +64,12 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 	private final double radius;
 	private int selfIndex = 0;
 	
-	private static final Texture tex_body_kd;
-
-	static {
-
-		BufferedImage bi = Content.loadContent("resources/models/character/char2_test.png");
-		tex_body_kd = Initial3D.createTexture(Texture.requiredSize(Math.max(bi.getWidth(), bi.getHeight())));
-
-		tex_body_kd.drawImage(bi);
-
-	}
-
 	private boolean pregameReadyState = false;
+	
+	private MovableReferenceFrame spotlight_rf;
+	private Light.SpotLight spotlight;
+	private MovableReferenceFrame baselight_rf;
+	private Light.SpotLight baselight;
 	
 	public PlayerEntity(long _id, Vec3 _pos, double _radius, int pindex){
 		super(_id);
@@ -61,6 +77,9 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		radius = _radius;
 		this.selfIndex = pindex;
 		this.addMeshContexts(this.getBall());
+		
+		
+		init();
 	}
 
 	public PlayerEntity(Vec3 _pos, double _radius) {
@@ -70,6 +89,34 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		this.addMeshContexts(this.getBall());
 		
 		this.currentHealth = this.defaultHealth;
+		
+		init();
+	}
+	
+	private void init() {
+		// lights
+		spotlight_rf = new MovableReferenceFrame(this);
+		spotlight_rf.setPosition(Vec3.create(0, 0, 0.25));
+		spotlight = new Light.SpotLight(spotlight_rf, Color.WHITE, 3f, (float) (Math.PI / 4), 10f);
+		spotlight.setEffectRadius(6f);
+		
+		baselight_rf = new MovableReferenceFrame(this);
+		baselight_rf.setOrientation(Quat.create(Math.PI / 2, Vec3.i));
+		baselight = new Light.SpotLight(baselight_rf, Color.RED, 0.3f, (float) Math.PI / 4, 1f);
+		baselight.setEffectRadius(1f);
+		
+	}
+	
+	public void muzzleFlash(boolean on) {
+		if (on) {
+			spotlight.setColor(Color.YELLOW);
+			spotlight.setRadius(8f);
+			spotlight.setSpotExponent(2f);
+		} else {
+			spotlight.setColor(Color.WHITE);
+			spotlight.setRadius(3f);
+			spotlight.setSpotExponent(10f);
+		}
 	}
 
 	@Override
@@ -115,7 +162,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		// body
 		Mesh m_body = Content.loadContent("resources/models/character/char2_body.obj");
 		Material mtl_body = new Material(getColor(), getColor(), new Color(0.5f, 0.5f, 0.5f), Color.BLACK, 20f, 1f);
-		mtl_body = new Material(mtl_body, tex_body_kd, null, null);
+		mtl_body = new Material(mtl_body, tex_body_kd, null, tex_body_ke);
 
 		MovableReferenceFrame mrf = new MovableReferenceFrame(this);
 //		mrf.setOrientation(Quat.create(Math.PI, Vec3.j));
@@ -127,7 +174,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		// arms
 		Mesh m_arm_l = Content.loadContent("resources/models/character/char2_arm_l.obj");
 		Mesh m_arm_r = Content.loadContent("resources/models/character/char2_arm_r.obj");
-		Material mtl_arm = new Material(Color.WHITE, new Color(0.2f, 0.2f, 0.2f), new Color(0.7f, 0.7f, 0.7f),
+		Material mtl_arm = new Material(Color.GRAY, new Color(0.2f, 0.2f, 0.2f), new Color(0.7f, 0.7f, 0.7f),
 				Color.BLACK, 64f, 1f);
 		MeshContext mc_arm_l = new MeshContext(m_arm_l, mtl_arm, mrf);
 		MeshContext mc_arm_r = new MeshContext(m_arm_r, mtl_arm, mrf);
@@ -144,7 +191,10 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 		meshes.add(mc_gun);
 
 		mc_body.setHint(MeshContext.HINT_SMOOTH_SHADING);
-
+		mc_arm_l.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		mc_arm_r.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		mc_gun.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		
 		return meshes;
 	}
 
@@ -185,4 +235,13 @@ public class PlayerEntity extends MoveableEntity implements Damageable{
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
 	}	
+	
+	@Override
+	public void addToScene(Scene s) {
+		super.addToScene(s);
+		
+		// add lights
+		s.addLight(spotlight);
+		s.addLight(baselight);
+	}
 }

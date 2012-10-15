@@ -54,14 +54,12 @@ public class ProjectileEntity extends MoveableEntity {
 	}
 	
 	private List<MeshContext> getBall(){
-		Material mat = new Material(Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW, 20f, 1f);		
+		Material mat = new Material(Color.BLACK, Color.BLACK, Color.BLACK, Color.YELLOW, 1f, 1f);		
 		Mesh m = Content.loadContent("sphere.obj");
 		MeshContext mc = new MeshContext(m, mat, this);
-		mc.setScale(0.05);
+		mc.setScale(0.025);
 		List<MeshContext> meshes = new ArrayList<MeshContext>();
 		meshes.add(mc);
-		
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
 		return meshes;
 	}

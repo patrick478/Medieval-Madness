@@ -371,8 +371,9 @@ public class Game implements Runnable {
 
 	public void createProjectile() {
 		long id = System.nanoTime();
-		Vec3 pos = this.getPlayer().getPosition();
-		Vec3 vel = this.currentGameState.scene.getCamera().getNormal().flattenY().unit().scale(4);
+		Vec3 norm = this.currentGameState.scene.getCamera().getNormal().flattenY().unit();
+		Vec3 vel = this.getPlayer().getLinVelocity().add(norm.scale(8));
+		Vec3 pos = this.getPlayer().getPosition().add(norm.scale(0.35));
 		Quat orientation = this.getPlayer().getOrientation();
 		short creator = (short) this.getPlayerIndex();
 		long createTime = System.currentTimeMillis();

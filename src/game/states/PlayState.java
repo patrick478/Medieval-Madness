@@ -13,11 +13,11 @@ import soundengine.SimpleAudioPlayer;
 
 import initial3d.engine.*;
 import initial3d.engine.xhaust.DialogPane;
-import initial3d.engine.xhaust.Healthbar;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
+import game.Healthbar;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
@@ -46,30 +46,31 @@ public class PlayState extends GameState {
 	public PlayState() {
 	}
 
-	MovableReferenceFrame cameraRf = null;
-	
 	private boolean transmittedStop = false;
 
 	private double cam_pitch = 0;
 	private double player_yaw = 0;
-	
+
 	private double targetFov = -1;
 	private long lastShot = System.currentTimeMillis();
-	
+
 	private Healthbar hp = null;
 
 	private Pane invenPopUp;
+
+	MovableReferenceFrame cameraRf_3, cameraRf_1;
+	
+	private boolean muzzle_flash_started = false;
 	
 	@Override
 	public void initalise() {
-		for(PlayerEntity pe : Game.getInstance().getPlayers())
-		{
+		for (PlayerEntity pe : Game.getInstance().getPlayers()) {
 			pe.addToScene(scene);
 		}
-		RenderWindow rwin  =Game.getInstance().getWindow();
+		RenderWindow rwin = Game.getInstance().getWindow();
 		rwin.setCrosshairVisible(true);
 		rwin.setCursorVisible(false);
-		
+
 		System.out.println("Creating test object");
 		BufferedImage battery = null;
 		try {
@@ -79,68 +80,62 @@ public class PlayState extends GameState {
 			e.printStackTrace();
 		}
 
-		Item it = new Item(battery, "Ball"){};
+		Item it = new Item(battery, "Ball") {
+		};
 		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
-//		ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
-		
-		Material mat = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
+		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+
+		Material mat = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);
 		Mesh m = Content.loadContent("sphere.obj");
 		MeshContext mc = new MeshContext(m, mat, ie);
 		mc.setScale(0.25);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		ie.addMeshContext(mc);
-		
+
 		ie.addToLevel(Game.getInstance().getLevel());
-//		ie.addToScene(scene);
-		
+		// ie.addToScene(scene);
+
 		System.out.println("Added Test object to level");
-		
-		
-//		EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
-//		Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f, 1f);		
-//		Mesh m1 = Content.loadContent("sphere.obj");
-//		MeshContext mc1 = new MeshContext(m1, mat1, e);
-//		mc1.setScale(0.1);
-//		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		
-//		e.addMeshContext(mc1);
-//		e.addToLevel(Game.getInstance().getLevel());
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		// EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
+		// Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f,
+		// 1f);
+		// Mesh m1 = Content.loadContent("sphere.obj");
+		// MeshContext mc1 = new MeshContext(m1, mat1, e);
+		// mc1.setScale(0.1);
+		// mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		//
+		// e.addMeshContext(mc1);
+		// e.addToLevel(Game.getInstance().getLevel());
+
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().addToScene(scene);
 
-		MovableReferenceFrame cameraRf = new MovableReferenceFrame(Game.getInstance().getPlayer());
-		scene.getCamera().trackReferenceFrame(cameraRf);
-		cameraRf.setPosition(Vec3.create(0, 0.5, -0.8));
-//		cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
+		cameraRf_3 = new MovableReferenceFrame(Game.getInstance().getPlayer());
+		scene.getCamera().trackReferenceFrame(cameraRf_3);
+		cameraRf_3.setPosition(Vec3.create(0, 0.5, -0.8));
+		
+		cameraRf_1 = new MovableReferenceFrame(Game.getInstance().getPlayer());
+		cameraRf_1.setPosition(Vec3.create(0, 0.15, 0));
+		
+		
+		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-//		EquippedInventoryContainer i = new EquippedInventoryContainer(Game.getInstance().getPlayer().getEquippedItems());
-//		p.getRoot().add(i);
-		
-		
+		// EquippedInventoryContainer i = new
+		// EquippedInventoryContainer(Game.getInstance().getPlayer().getEquippedItems());
+		// p.getRoot().add(i);
+
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
 		p.getRoot().setOpaque(false);
-		//scene.addDrawable(p);
+		// scene.addDrawable(p);
 		Game.getInstance().setInventoryHolder(p);
 
-		
 		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
 		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer());
 		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
-		//invenPopUp.requestVisible(false);
+		// invenPopUp.requestVisible(false);
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
@@ -153,37 +148,36 @@ public class PlayState extends GameState {
 		topPane.getRoot().setOpaque(false);
 		topPane.setPosition(-100, 240);
 		scene.addDrawable(topPane);
-		
-		
+
 		Game.getInstance().getWindow().setMouseCapture(true);
-		
-		scene.setAmbient(new Color(0.05f, 0.05f, 0.05f));
+
+		scene.setAmbient(new Color(0.1f, 0.1f, 0.1f));
 		scene.setFogColor(Color.BLACK);
 		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
 		scene.setFogEnabled(true);
-		
-		for(PlayerEntity pe : Game.getInstance().getPlayers())
-		{
-			MovableReferenceFrame lrf = new MovableReferenceFrame(pe);
-			lrf.setPosition(Vec3.create(0, 0, 0.25));
-			//lrf.setOrientation(Quat.create(Math.PI / 12, Vec3.i));
-			Light l2 = new Light.SpotLight(lrf, Color.WHITE, 3f, (float) (Math.PI / 4), 10f);
-			scene.addLight(l2);
-			
-			MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
-			elrf.setPosition(Vec3.create(0, 0.5, 0));
-			Light el = new Light.SphericalPointLight(elrf, Color.DARK_RED, 0.10f);
-			scene.addLight(el);
-		}
-		
-		Game.getInstance().getPlayer().getMeshContexts().get(0).setHint(MeshContext.HINT_SMOOTH_SHADING);	
-//		SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
+
+		// for(PlayerEntity pe : Game.getInstance().getPlayers())
+		// {
+		// MovableReferenceFrame lrf = new MovableReferenceFrame(pe);
+		// lrf.setPosition(Vec3.create(0, 0, 0.25));
+		// //lrf.setOrientation(Quat.create(Math.PI / 12, Vec3.i));
+		// Light l2 = new Light.SpotLight(lrf, Color.WHITE, 3f, (float) (Math.PI / 4), 10f);
+		// scene.addLight(l2);
+		//
+		// MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
+		// elrf.setPosition(Vec3.create(0, 0.5, 0));
+		// Light el = new Light.SphericalPointLight(elrf, Color.DARK_RED, 0.10f);
+		// scene.addLight(el);
+		// }
+		//
+
+		// SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 	}
 
 	@Override
 	public void update(double delta) {
 		RenderWindow rwin = Game.getInstance().getWindow();
-		if(targetFov < 0) targetFov = scene.getCamera().getFOV();
+		if (targetFov < 0) targetFov = scene.getCamera().getFOV();
 
 		double speed = 1;
 		double sprintMulti = 1.5f;
@@ -204,7 +198,7 @@ public class PlayState extends GameState {
 
 		MovableReferenceFrame rf = (MovableReferenceFrame) cam.getTrackedReferenceFrame();
 		rf.setOrientation(Quat.create(cam_pitch, Vec3.i));
-		
+
 		Vec3 cnorm = cam.getNormal().flattenY().unit();
 		Vec3 cside = Vec3.j.cross(cnorm);
 
@@ -223,103 +217,109 @@ public class PlayState extends GameState {
 			intent_vel = intent_vel.add(cside.neg());
 		}
 		if (rwin.pollKey(KeyEvent.VK_E)) {
-			if(Game.getInstance().getInvenPopUp().isVisible()==false){
+			if (Game.getInstance().getInvenPopUp().isVisible() == false) {
 				Game.getInstance().getInvenPopUp().requestVisible(true);
 				rwin.setMouseCapture(false);
 				rwin.setCursorVisible(true);
 				rwin.setCrosshairVisible(false);
 
-
-			}
-			else if(Game.getInstance().getInvenPopUp().isVisible()==true){
+			} else if (Game.getInstance().getInvenPopUp().isVisible() == true) {
 				Game.getInstance().getInvenPopUp().requestVisible(false);
 				rwin.setMouseCapture(true);
 				rwin.setCursorVisible(false);
 				rwin.setCrosshairVisible(true);
 
 			}
-			
+
 		}
-		// temp
-//		if(rwin.getKey(KeyEvent.VK_O)) {
-//			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
-//		} else if(rwin.getKey(KeyEvent.VK_P)) {
-//			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
-//		}
 		
-		if(rwin.getKey(KeyEvent.VK_ESCAPE))
-		{
+		if (rwin.pollKey(KeyEvent.VK_F1)) {
+			cam.trackReferenceFrame(cameraRf_1);
+		}
+		if (rwin.pollKey(KeyEvent.VK_F3)) {
+			cam.trackReferenceFrame(cameraRf_3);
+		}
+		
+		// temp
+		// if(rwin.getKey(KeyEvent.VK_O)) {
+		// this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
+		// } else if(rwin.getKey(KeyEvent.VK_P)) {
+		// this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
+		// }
+
+		if (rwin.getKey(KeyEvent.VK_ESCAPE)) {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
-		} else if(rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 1000)
-		{
+		}
+
+		if (rwin.getMouseButton(1) && (System.currentTimeMillis() - lastShot) > 50) {
 			Game.getInstance().createProjectile();
 			this.lastShot = System.currentTimeMillis();
+			muzzle_flash_started = true;
+			Game.getInstance().getPlayer().muzzleFlash(true);
 		}
 		
-		//sprinting
+		if (System.currentTimeMillis() - lastShot > 10 && muzzle_flash_started) {
+			muzzle_flash_started = false;
+			Game.getInstance().getPlayer().muzzleFlash(false);
+		}
+
+		// sprinting
 		double maxDelta = 0.01;
 		boolean sprinting = rwin.getKey(KeyEvent.VK_SHIFT);
-		if(sprinting) targetFov = Math.PI / 2.2;
-		else targetFov = Math.PI / 3;
-		
+		if (sprinting)
+			targetFov = Math.PI / 2.2;
+		else
+			targetFov = Math.PI / 3;
+
 		double dta = this.scene.getCamera().getFOV() - targetFov;
-		if(Math.abs(dta) > 0.1)
-		{
-			if(dta > maxDelta)
+		if (Math.abs(dta) > 0.1) {
+			if (dta > maxDelta)
 				dta = maxDelta;
-			else if(dta < -maxDelta)
-				dta = -maxDelta;
-			
+			else if (dta < -maxDelta) dta = -maxDelta;
+
 			this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - dta);
 		}
-		
+
 		if (intent_vel.mag() > 0.0001) {
 			intent_vel = intent_vel.unit().scale(speed * (sprinting ? sprintMulti : 1));
 		}
-				
-		//Retrieve the player and set the velocity
+
+		// Retrieve the player and set the velocity
 		PlayerEntity player = Game.getInstance().getPlayer();
 		player.setIntVelocity(intent_vel);
-		
-		//get the collision normals (if any)
+
+		// get the collision normals (if any)
 		Vec3 colNorm = Game.getInstance().getLevel().preCollision(player, true);
-		
-		//if there was a collision set the velocity appropriately
-		/*if(colNorm != null){
-			//vector magic
-			colNorm = colNorm.flattenY();
-			Vec3 intentUnit = intent_vel.unit();
-			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag();
-			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale);
-		}*/
-		
-		//poke all players and set the velocity
+
+		// if there was a collision set the velocity appropriately
+		/*
+		 * if(colNorm != null){ //vector magic colNorm = colNorm.flattenY(); Vec3 intentUnit = intent_vel.unit(); double
+		 * scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); intent_vel =
+		 * ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); }
+		 */
+
+		// poke all players and set the velocity
 		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
-		
-		if(Game.getInstance().isHost()){
-			for(TriggerEntity t : Game.getInstance().getLevel().getTriggers()){
+
+		if (Game.getInstance().isHost()) {
+			for (TriggerEntity t : Game.getInstance().getLevel().getTriggers()) {
 				List<Entity> le = Game.getInstance().getLevel().collisions(t);
-				if(!le.isEmpty()){
+				if (!le.isEmpty()) {
 					t.trigger(le);
 				}
 			}
 		}
-		
-		
-		
+
 		Game.getInstance().getLevel().pokeAll();
-		
-		if(!intent_vel.equals(Vec3.zero))
-		{
+
+		if (!intent_vel.equals(Vec3.zero)) {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = false;
-		}
-		else if(!transmittedStop)
-		{
+		} else if (!transmittedStop) {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
-		
+
 		// update the game UI
 		this.hp.update(Game.getInstance().getPlayer().getHealth());
 	}

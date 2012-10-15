@@ -96,7 +96,8 @@ public abstract class Light {
 			lightpos[1] = n.y;
 			lightpos[2] = n.z;
 		}
-
+		
+		
 	}
 
 	public static class SphericalPointLight extends Light {
@@ -124,6 +125,10 @@ public abstract class Light {
 		protected void update() {
 			atten_lin = 1f / radius;
 			atten_quad = 1f / (4 * radius * radius);
+		}
+		
+		public void setEffectRadius(float r) {
+			effect_radius = r;
 		}
 
 	}

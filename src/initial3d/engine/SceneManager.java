@@ -103,7 +103,7 @@ public class SceneManager implements KeyListener, MouseListener, MouseMotionList
 			i3d.polygonMode(FRONT_AND_BACK, POLY_FILL);
 			i3d.shadeModel(SHADEMODEL_FLAT);
 			i3d.enable(MIPMAPS);
-
+			
 			float[] coltemp = new float[3];
 			
 			// temp light
