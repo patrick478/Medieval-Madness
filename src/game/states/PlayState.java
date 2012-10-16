@@ -71,25 +71,15 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 
 
-		if (Game.getInstance().isHost()) {
-			Game.getInstance().spawnItem(new Battery(Vec3.create(6, 0.125, 5)));
-			Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
-			door.addToLevel(Game.getInstance().getLevel());
-
-			Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
-			spike.addToLevel(Game.getInstance().getLevel());
-		}
-
-		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
-				new Color(0.2f, 0.2f, 0f), 2f, 1f);
-		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");
-		MovableReferenceFrame mrf = new MovableReferenceFrame(null);
-		mrf.setPosition(Vec3.create(3, 0, 3));
-		MeshContext mc1 = new MeshContext(m1, mat1, mrf);
-		// mc1.setScale(0.1);
-		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		scene.addDrawable(mc1);
-
+//		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
+//				new Color(0.2f, 0.2f, 0f), 2f, 1f);
+//		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");
+//		MovableReferenceFrame mrf = new MovableReferenceFrame(null);
+//		mrf.setPosition(Vec3.create(3, 0, 3));
+//		MeshContext mc1 = new MeshContext(m1, mat1, mrf);
+//		// mc1.setScale(0.1);
+//		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		scene.addDrawable(mc1);
 
 		Game.getInstance().getLevel().init(scene);
 
@@ -289,11 +279,17 @@ public class PlayState extends GameState {
 		Vec3 colNorm = Game.getInstance().getLevel().preCollisionNorm(player, true);
 
 		// if there was a collision set the velocity appropriately (if also not dead)
-		if(colNorm != null && !Game.getInstance().getPlayer().isDead()){ //vector magic 
-			colNorm = colNorm.flattenY(); 
-			Vec3 intentUnit = intent_vel.unit(); 
-			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); 
-			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); 
+		 if(colNorm != null && !Game.getInstance().getPlayer().isDead()){ //vector magic 
+			 colNorm = colNorm.unit().flattenY();
+			 if(!intent_vel.equals(Vec3.zero)){
+				 colNorm = colNorm.unit().flattenY();
+				 Vec3 intentUnit = intent_vel.unit();
+				 if(intentUnit.dot(colNorm)<0){
+					 double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); 
+					 intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).unit().scale(scale); 
+				 }
+				 
+			 }
 		}
 
 		// poke all players and set the velocity

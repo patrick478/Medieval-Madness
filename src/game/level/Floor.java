@@ -50,8 +50,7 @@ public class Floor {
 		size = _floor.length;
 		//add the walls
 		
-		//TODO FIXME stuff
-		long i = 125l;
+		long i = 125l*size;
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				if(_floor[x][z].type==Space.WALL){
@@ -62,8 +61,8 @@ public class Floor {
 		
 		final int MAGIC_NUMBER = 10;
 		
+		//sorks out which segemnts need to be drawn into which mesh context
 		int split = ((size-1)/MAGIC_NUMBER)+1;
-		//TODO comment
 		for(int x=0; x < split; x++){
 			for(int z=0; z < split; z++){
 				int start_x = x * MAGIC_NUMBER;

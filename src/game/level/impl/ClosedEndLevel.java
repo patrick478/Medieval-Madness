@@ -51,10 +51,11 @@ public class ClosedEndLevel extends AbstractLevelPlanner{
 			Vec3 position = Vec3.create(xPos, 0.15, zPos);
 			items.add(d.generatekey(position));
 		}
-		
-		for(int i = 0; i<(size-5)/3; i++){
+		System.out.println(size);
+		System.out.println((size-5)/3);
+		for(int i = 0; i<((size-5)/3); i++){
 			Vec3 pos = Vec3.create(((size-5)*rand.nextDouble()+5), 0.25, (size-5)*rand.nextDouble()+5);
-			entities.add(new SpikeBallEntity(Entity.freeID(), size*5, -size+8, pos, (double)size/30));
+			entities.add(new SpikeBallEntity(Entity.freeID(), size*5, -size+8, pos, (double)size/50));
 		}
 		
 		new Level(_floor, entities, items);
