@@ -76,7 +76,20 @@ public class CreateGameState extends GameState {
 		
 		pic = new Picture(bg, 0, 0, 800, 600);
 		
+		Button mainMenu = new Button("Return to main menu", 125);
+		mainMenu.setPosition(p.getRoot().getWidth()-mainMenu.getWidth()-10, p.getRoot().getHeight()-mainMenu.getHeight()-10);
+		mainMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getID() != ActionIDList.CLICKED) return;
+				Game.getInstance().revertState();
+			}
+		});
+		
+		
 		p.getRoot().add(pic);
+		p.getRoot().add(mainMenu);
+
 		p.getRoot().add(numPlayersLabel);
 		p.getRoot().add(numPlayers);
 		p.getRoot().add(createGameButton);
