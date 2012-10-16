@@ -2,6 +2,7 @@ package game.entity.moveable;
 
 import game.bound.Bound;
 import game.bound.BoundingBox;
+import game.entity.Entity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.AbstractEvent;
@@ -27,23 +28,10 @@ public class DoorEntity extends MoveableEntity{
 	public DoorEntity(long _id, Vec3 _pos){
 		super(_id);
 		position = _pos;
-		doorTrigger = new StaticTriggerEntity(new PlayerOnlyEvent(), new BoundingBox(position, radius.scale(2)));
+		doorTrigger = new StaticTriggerEntity(Entity.freeID(), new PlayerOnlyEvent(), new BoundingBox(position, radius.scale(2)));
 		doorTrigger.addEvent(new RemoveEntityEvent(id));
 		doorTrigger.addEvent(new RemoveEntityEvent(doorTrigger.id));
 		
-		
-		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-		Mesh m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
-		MeshContext mc = new MeshContext(m, mat, this);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		addMeshContext(mc);
-	}
-	
-	public DoorEntity(Vec3 _pos){
-		position = _pos;
-		doorTrigger = new StaticTriggerEntity(new PlayerOnlyEvent(), new BoundingBox(position, radius.scale(2)));
-		doorTrigger.addEvent(new RemoveEntityEvent(id));
-		doorTrigger.addEvent(new RemoveEntityEvent(doorTrigger.id));
 		
 		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
 		Mesh m = Content.loadContent("resources/models/doorbars/doorbars2.obj");

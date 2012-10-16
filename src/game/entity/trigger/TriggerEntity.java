@@ -22,11 +22,6 @@ public abstract class TriggerEntity extends Entity{
 		event = _event;
 	}
 	
-	public TriggerEntity( AbstractEvent _event) {
-		super();
-		event = _event;
-	}
-	
 	@Override
 	public void poke() {}
 	

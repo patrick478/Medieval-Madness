@@ -18,21 +18,20 @@ public abstract class Entity extends ReferenceFrame {
 	
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
+	public static synchronized long freeID(){
+		long id = System.nanoTime();
+		while(entityID.containsKey(id)){
+			id = System.nanoTime();
+		}
+		return id;
+	}
+	
 	public Entity(long _id){
 		super(ReferenceFrame.SCENE_ROOT);
 		if(entityID.containsKey(_id)){
 			throw new IllegalArgumentException("Cannot create entity with existing ID");
 		}
 		id = _id;
-		entityID.put(id, this);
-	}
-	
-	public Entity(){
-		super(ReferenceFrame.SCENE_ROOT);
-		while(entityID.containsKey(nextID)){
-			nextID++;
-		}
-		id = nextID++;
 		entityID.put(id, this);
 	}
 	

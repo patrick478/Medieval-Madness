@@ -23,10 +23,6 @@ public abstract class MoveableEntity extends Entity {
 	public MoveableEntity(long _id) {
 		super(_id);
 	}
-	
-	public MoveableEntity() {
-		super(System.nanoTime());
-	}
 
 	protected double updateDelta() {
 		return (Game.time() - lastUpdate) / 1000d;

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import common.DataPacket;
 import game.ItemType;
 import game.ItemType;
+import game.item.Battery;
 import game.item.Item;
 import game.item.Key;
 import game.modelloader.Content;

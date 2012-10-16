@@ -38,9 +38,9 @@ import game.event.AvoidEvent;
 import game.event.ContactEvent;
 import game.event.DeltaHealthEvent;
 import game.event.RemoveEntityEvent;
+import game.item.Battery;
 import game.item.Item;
 import game.modelloader.Content;
-import game.net.packets.Battery;
 
 /***
  * The game!
@@ -203,11 +203,11 @@ public class PlayState extends GameState {
 //		// ie.addToScene(scene);
 
 		
-		Entity door = new DoorEntity(Vec3.create(5, 0, 5));
+		Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
 		door.addToLevel(Game.getInstance().getLevel());
 		
 		
-		Entity spike = new SpikeBallEntity(100, -1, Vec3.create(5, 0.5, 7), 0.5);
+		Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
 //		spike.addToLevel(Game.getInstance().getLevel());
 		
 		System.out.println("Added Test object to level");

@@ -3,6 +3,7 @@ package game.entity.moveable;
 import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.entity.Entity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.DeltaHealthEvent;
@@ -39,27 +40,7 @@ public class SpikeBallEntity extends EnemyEntity{
 		position = _pos;
 		speed = _speed;
 		
-		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
-		trigger.addEvent(new DeltaHealthEvent(damage));
-		
-		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
-				0.3f), 1f, 1f);
-		Mesh m = Content.loadContent("resources/models/spikeball/spikeball.obj");
-		MeshContext mc = new MeshContext(m, mat, this);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		this.addMeshContext(mc);
-	}
-	
-	public SpikeBallEntity(int _health, int _damage, Vec3 _pos, double _speed){
-		super();
-		maxHealth = _health;
-		currentHealth = _health;
-		damage = _damage;
-		origin = _pos;
-		position = _pos;
-		speed = _speed;
-		
-		trigger = new DynamicTriggerEntity(new PlayerOnlyEvent(), this);
+		trigger = new DynamicTriggerEntity(Entity.freeID(), new PlayerOnlyEvent(), this);
 		trigger.addEvent(new DeltaHealthEvent(damage));
 		
 		Material mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,

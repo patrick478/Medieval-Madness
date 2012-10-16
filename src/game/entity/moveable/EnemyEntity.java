@@ -10,10 +10,6 @@ public abstract class EnemyEntity extends MoveableEntity implements Damageable{
 		super(_id);
 	}
 	
-	public EnemyEntity() {
-		super();
-	}
-	
 	@Override
 	public void poke() {
 		super.poke();

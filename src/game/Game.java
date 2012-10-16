@@ -277,7 +277,7 @@ public class Game implements Runnable {
 
 	public void addEntity(Entity _entity)
 	{
-		currentLevel.addEntity(_entity);
+		_entity.addToLevel(currentLevel);
 		_entity.addToScene(currentGameState.scene);
 	}
 

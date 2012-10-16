@@ -1,4 +1,4 @@
-package game.net.packets;
+package game.item;
 
 import initial3d.Initial3D;
 import initial3d.Texture;
@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 
 import game.ItemType;
 import game.entity.moveable.ItemEntity;
-import game.item.Item;
 import game.level.Level;
 import game.modelloader.Content;
 
@@ -41,7 +40,7 @@ public class Battery extends Item {
 	}
 	
 	public void addToScene(Scene scene) {
-		
+		this.getItemEntity().addToScene(scene);
 		
 		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
 
