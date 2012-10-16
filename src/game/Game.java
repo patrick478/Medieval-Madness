@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import game.entity.*;
 
 /***
  * Main game class
@@ -173,9 +172,7 @@ public class Game implements Runnable {
 		if (this.sceneManager != null) this.sceneManager.attachToScene(this.currentGameState.scene);
 		p.endSection("ChangeState-AttachToScene()");
 
-		// This is used to figure out how long stuff is going.. disabled most of
-		// the time!
-		// p.reset();
+		
 	}
 	
 	public void revertState() {
@@ -186,9 +183,7 @@ public class Game implements Runnable {
 		if (this.sceneManager != null) this.sceneManager.attachToScene(this.currentGameState.scene);
 
 
-		// This is used to figure out how long stuff is going.. disabled most of
-		// the time!
-		// p.reset();
+	
 	}
 
 	/***
@@ -246,7 +241,6 @@ public class Game implements Runnable {
 
 		PlayerEntity pe = new PlayerEntity(-pIndex - 10, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
 
-		// This needs to add the main player
 		addPlayer(pIndex, pe);
 		
 		System.out.printf("I am player #%d\n", pIndex);
@@ -282,7 +276,6 @@ public class Game implements Runnable {
 		PlayerEntity me = this.players.get(playerIndex);
 		if (me == null) return;
 
-		// TODO need to transmit orientation and angular velocity
 		me.updateMotion(position, velocity, orientation, Vec3.zero, this.getGameTime());
 	}
 

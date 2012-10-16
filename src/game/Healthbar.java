@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 public class Healthbar extends Component {
 	public Healthbar() {
 		super(500, 30);
-		//setOpaque(false);
 	}
 	
 	private int currentHp = 0;

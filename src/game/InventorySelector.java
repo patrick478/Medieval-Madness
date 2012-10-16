@@ -217,14 +217,10 @@ public class InventorySelector extends Container {
 			Item item = inventory.getItem(i);
 			if(item==null)
 				g.drawImage(blankBI, x, y, null);
-			//	allPos[i] = new Picture(blankBI, 0, 0, 50, 50);
 
 			else 
 				g.drawImage(inventory.getItem(i).getIcon(), x, y, null);
 
-			//	allPos[i].setPosition(x, y);
-			//	allPos[i].setOpaque(false);
-			//	add(allPos[i]);
 			x+=50;
 			if(x>280){
 				x = 100;
