@@ -17,8 +17,9 @@ import initial3d.engine.Vec3;
 
 public class SpikeBallEntity extends EnemyEntity{
 
-	private static final double radius = 0.25;
+	private static final double radius = 0.45;
 
+	private final Vec3 origin;
 	private final double speed;
 	private final int damage;
 	private final int maxHealth;
@@ -34,6 +35,7 @@ public class SpikeBallEntity extends EnemyEntity{
 		maxHealth = _health;
 		currentHealth = _health;
 		damage = _damage;
+		origin = _pos;
 		position = _pos;
 		speed = _speed;
 		
@@ -53,6 +55,7 @@ public class SpikeBallEntity extends EnemyEntity{
 		maxHealth = _health;
 		currentHealth = _health;
 		damage = _damage;
+		origin = _pos;
 		position = _pos;
 		speed = _speed;
 		
@@ -79,7 +82,8 @@ public class SpikeBallEntity extends EnemyEntity{
 					target = p.getPosition();
 				}
 			}
-			this.updateMotion(getPosition(), getPosition().sub(target), getOrientation(), getAngVelocity(), attachTime);
+			//TODO network issues?
+			this.updateMotion(getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation(), getAngVelocity(), attachTime);
 		}
 	}
 	

@@ -20,6 +20,7 @@ public class ItemEntity extends MoveableEntity{
 		super(_id);
 		position = _position;
 		bound = new BoundingSphere(_position, ITEM_RADIUS);
+		angVelocity = Vec3.create(0, 1.5, 0);
 		trigger = new DynamicTriggerEntity(new RemoveEntityEvent(this.id), this);
 		trigger.addEvent(new RemoveEntityEvent(trigger.id));
 		trigger.addEvent(new PickupItemEvent(_item));
@@ -29,6 +30,7 @@ public class ItemEntity extends MoveableEntity{
 		super();
 		position = _position;
 		bound = new BoundingSphere(_position, ITEM_RADIUS);
+		angVelocity = Vec3.create(0, 1.5, 0);
 		trigger = new DynamicTriggerEntity(new PickupItemEvent(_item), this);
 		trigger.addEvent(new RemoveEntityEvent(this.id));
 		trigger.addEvent(new RemoveEntityEvent(trigger.id));

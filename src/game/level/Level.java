@@ -135,15 +135,13 @@ public class Level {
 	}
 	
 	/**
-	 * Returns whether the given Entity's bound intersects with any 
-	 * entity that has the same value for Entity.isSolid() as the 
-	 * given parameter. Returns false if null is given.
+	 * TODO
 	 * 
 	 * @param _e The Entity whose bound to check collides
 	 * @param _solid Checking against solid or non-solid entities
 	 * @return Whether the given bound intersects
 	 */
-	public Vec3 preCollision(MoveableEntity _e, boolean _solid){
+	public Vec3 preCollisionNorm(MoveableEntity _e, boolean _solid){
 		synchronized(entities){
 			boolean collisionDect = false;
 			Vec3 collisionNorm = Vec3.zero;
