@@ -401,7 +401,7 @@ public class PlayState extends GameState {
 		}
 
 		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1)
-				&& (System.currentTimeMillis() - lastShot) > 100) {
+				&& (System.currentTimeMillis() - lastShot) > 100 && !Game.getInstance().getPlayer().isDead()) {
 			Game.getInstance().createProjectile();
 			this.lastShot = System.currentTimeMillis();
 			Game.getInstance().getPlayer().muzzleFlash(true);
