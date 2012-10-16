@@ -156,4 +156,8 @@ public abstract class Entity extends ReferenceFrame {
 	public void kill() {
 		this.dead = true;
 	}
+	
+	public boolean isDead() {
+		return dead;
+	}
 }
