@@ -30,7 +30,6 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	private static final Texture tex_body_ke;
 
 	static {
-
 		BufferedImage bi_kd = Content.loadContent("resources/models/character/char2_kd.png");
 		tex_body_kd = Initial3D.createTexture(Texture.requiredSize(Math.max(bi_kd.getWidth(), bi_kd.getHeight())));
 		tex_body_kd.drawImage(bi_kd);
@@ -42,7 +41,6 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 		tex_body_ke.drawImage(bi_ke);
 		tex_body_ke.composeMipMaps();
 		tex_body_ke.useMipMaps(true);
-
 	}
 
 	private final double baseSpeed = 1;
@@ -54,11 +52,15 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
 	private final Item[] equippedItems = new Item[5];
 
+	public ItemContainer getInventory() {
+		return inventory;
+	}
+	
 	public Item[] getEquippedItems() {
 		return equippedItems;
 	}
 
-	private int currentHealth = 50;
+	private int currentHealth = 170;
 
 	private final double radius;
 	private int selfIndex = 0;
@@ -134,10 +136,6 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 
 	public double getSpeed() {
 		return baseSpeed;
-	}
-
-	public ItemContainer getInventory() {
-		return inventory;
 	}
 
 	public Color getColor() {

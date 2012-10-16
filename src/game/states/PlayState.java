@@ -208,7 +208,7 @@ public class PlayState extends GameState {
 		
 		
 		Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
-//		spike.addToLevel(Game.getInstance().getLevel());
+		spike.addToLevel(Game.getInstance().getLevel());
 		
 		System.out.println("Added Test object to level");
 

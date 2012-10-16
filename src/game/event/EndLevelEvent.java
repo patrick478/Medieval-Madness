@@ -18,7 +18,14 @@ public class EndLevelEvent extends AbstractEvent{
 			}
 		}
 		//TODO call endLevel here
-		return true;
+		throw new UnsupportedFaggotException("need another method here");
+//		return true;
+	}
+	
+	private class UnsupportedFaggotException extends RuntimeException{
+		public UnsupportedFaggotException(String s){
+			super(s);
+		}
 	}
 
 }
