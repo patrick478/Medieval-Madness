@@ -11,13 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import soundengine.SimpleAudioPlayer;
 
 import game.Game;
 import game.GameState;
 
 /***
- * This is the main menu state, on steriods. It will have a GUI
+ * This is the main menu state, on steriods. It uses a GUI to get input from the user
  * 
  * From this state, the user chooses to create a game, or join an existing game. It should switch to the corrosponding state.
  * @author Ben and Patrick
@@ -41,23 +40,22 @@ public class MainMenuState extends GameState {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
+			//sets up actions for when an option is clicked
 			if(e.getActionCommand().equals("released")){
 				if(e.getSource().equals(joinArea)){
-//					SimpleAudioPlayer.stopMusic();
-//				SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
+		
 					Game.getInstance().changeState(new FindGameState());
 				}
 				else if(e.getSource().equals(startArea)){
-//					SimpleAudioPlayer.stopMusic();
-
-//					SimpleAudioPlayer.play("resources/music/menuSelect.wav", false);
+			
 					Game.getInstance().changeState(new CreateGameState());
 				}
 
 			}
+			//sets up display of blue arrows
 			else if(e.getActionCommand().equals("mouseover")){
 				if(e.getSource().equals(joinArea)){
-				//	pic.setPicture(joinmenu);
 					leftTop.setVisible();
 					rightTop.setVisible();
 					leftBottom.setHidden();
@@ -97,6 +95,7 @@ public class MainMenuState extends GameState {
 
 
 		try {
+			//add all the components
 			mainmenu = ImageIO.read(new File("resources/mainmenu.png"));
 			//joinmenu = ImageIO.read(new File("resources/mainmenujoin.png"));
 			//startmenu = ImageIO.read(new File("resources/mainmenustart.png"));
@@ -112,7 +111,7 @@ public class MainMenuState extends GameState {
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		
+		//show no arrows
 		leftTop.setHidden();
 		rightTop.setHidden();
 		leftBottom.setHidden();
@@ -121,6 +120,8 @@ public class MainMenuState extends GameState {
 		p.getRoot().add(pic);
 		//input from user
 
+		
+		//add everything to the pane
 		joinArea.addActionListener(l);
 		p.getRoot().add(joinArea);
 		startArea.addActionListener(l);

@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import soundengine.SimpleAudioPlayer;
 
 import initial3d.Initial3D;
 import initial3d.Texture;
@@ -63,7 +62,7 @@ public class PlayState extends GameState {
 
 	private int selectedInvenPos = 0;
 	private EquippedInventoryContainer equippedIC;
-	private InventorySelector i2;
+	private InventorySelector invenSelector;
 
 	private Healthbar hp = null;
 
@@ -119,34 +118,29 @@ public class PlayState extends GameState {
 		cameraRf_1.setPosition(Vec3.create(0, 0.15, 0));
 
 		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
-		Pane p = new Pane(250, 50);
+		
+		//set up the inventory selector stuff
+		Pane invenEquippedPane = new Pane(250, 50);
 		equippedIC = new EquippedInventoryContainer(Game.getInstance().getPlayer());
-		p.getRoot().add(equippedIC);
+		invenEquippedPane.getRoot().add(equippedIC);
 
-		p.requestVisible(true);
-		p.setPosition(-275, -275);
-		p.getRoot().setOpaque(false);
-		scene.addDrawable(p);
-		Game.getInstance().setInventoryHolder(p);
-
-		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
-		i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
-		Game.getInstance().getInvenPopUp().getRoot().add(i2);
-		i2.setOpaque(false);
-		// invenPopUp.requestVisible(false);
+		invenEquippedPane.requestVisible(true);
+		invenEquippedPane.setPosition(-275, -275);
+		invenEquippedPane.getRoot().setOpaque(false);
+		scene.addDrawable(invenEquippedPane);
+		Game.getInstance().setInventoryHolder(invenEquippedPane);
+		//sets up the popup inventory stuff
+		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, invenEquippedPane, false));
+		invenSelector = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
+		Game.getInstance().getInvenPopUp().getRoot().add(invenSelector);
+		invenSelector.setOpaque(false);
+		
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
-		// Pane topPane = new Pane(500, 30);
-		// hp = new Healthbar();
-		// topPane.getRoot().add(hp);
-		// topPane.requestVisible(true);
-		// //topPane.getRoot().setOpaque(false);
-		// topPane.setPosition(-100, 240);
-		// scene.addDrawable(topPane);
-
+		
 		// stats
 		Pane statpane = new StatPane();
 		statpane.setPosition(-100, 240);
@@ -166,7 +160,6 @@ public class PlayState extends GameState {
 		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
 		scene.setFogEnabled(true);
 
-		// SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 
 		Game.getInstance().startTimer();
 	}
@@ -217,31 +210,31 @@ public class PlayState extends GameState {
 			intent_vel = intent_vel.add(cside.neg());
 		}
 		if (rwin.pollKey(KeyEvent.VK_1)) {
-			i2.setSelectedPos(0);
+			invenSelector.setSelectedPos(0);
 			this.selectedInvenPos = 0;
 			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_2)) {
-			i2.setSelectedPos(1);
+			invenSelector.setSelectedPos(1);
 			this.selectedInvenPos = 1;
 			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_3)) {
-			i2.setSelectedPos(2);
+			invenSelector.setSelectedPos(2);
 			this.selectedInvenPos = 2;
 			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_4)) {
-			i2.setSelectedPos(3);
+			invenSelector.setSelectedPos(3);
 			this.selectedInvenPos = 3;
 			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_5)) {
-			i2.setSelectedPos(4);
+			invenSelector.setSelectedPos(4);
 			this.selectedInvenPos = 4;
 			System.out.println("Selected pos: " + selectedInvenPos);
 
