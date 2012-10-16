@@ -55,7 +55,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	public ItemContainer getInventory() {
 		return inventory;
 	}
-	
+
 	public Item[] getEquippedItems() {
 		return equippedItems;
 	}
@@ -227,24 +227,24 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	public int getCurrentHealth() {
 		return currentHealth;
 	}
-	
+
 	public int getTotalEnergy() {
 		return defaultEnergy;
 	}
-	
+
 	public int getCurrentEnergy() {
 		return currentEnergy;
 	}
-	
+
 	public void applyEnergyDelta(int e) {
 		currentEnergy += e;
+		currentEnergy = currentEnergy > defaultEnergy ? defaultEnergy : currentEnergy < 0 ? 0 : currentEnergy;
 	}
 
 	@Override
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
-		if(this.currentHealth <= 0)
-		{
+		if (this.currentHealth <= 0) {
 			Game.getInstance().removeEntity(this.id);
 			Game.getInstance().getLevel().getEntity(this.id).kill();
 		}

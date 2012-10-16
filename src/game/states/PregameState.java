@@ -2,8 +2,14 @@ package game.states;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import initial3d.engine.xhaust.Pane;
+import initial3d.engine.xhaust.Picture;
 import initial3d.engine.xhaust.vision.ActionIDList;
 import initial3d.engine.xhaust.vision.Button;
 import initial3d.engine.xhaust.vision.Label;
@@ -27,11 +33,20 @@ public class PregameState extends GameState {
 
 	@Override
 	public void initalise() {
-		final Pane p = new Pane(600, 400);
+		final Pane p = new Pane(800, 600);
+		BufferedImage bg;
+		try {
+			bg = ImageIO.read(new File("resources/lobbypage.png"));	
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		Picture pic = new Picture(bg, 0, 0, 800, 600);
+
+		p.getRoot().add(pic);
 		statusLabel = new Label("Waiting for ready!");
 		readyButton = new Button("Ready");		
 		Label nextLevelLabel = new Label(String.format("Level %d - %dms remaining\n", Game.getInstance().getCurrentLevelNumber(), Game.getInstance().getRemainingMs()));
-		nextLevelLabel.setPosition(0, 100);
+		nextLevelLabel.setPosition(100, 180);
 		p.getRoot().add(nextLevelLabel);
 		readyButton.addActionListener(new ActionListener() {
 			@Override
@@ -48,8 +63,8 @@ public class PregameState extends GameState {
 				}
 			}
 		});
-		statusLabel.setPosition(0, 0);
-		readyButton.setPosition(0, 40);
+		statusLabel.setPosition(100, 80);
+		readyButton.setPosition(100, 110);
 		p.getRoot().add(readyButton);		
 		p.getRoot().add(statusLabel);
 		
@@ -57,7 +72,7 @@ public class PregameState extends GameState {
 		for(PlayerEntity pe : Game.getInstance().getPlayers())
 		{
 			Label nLabel = new Label(String.format("Player %d: %s\n", index, pe.getPregameReadyState() ? "Ready!" : "Not ready. :("));
-			nLabel.setPosition(200, (index * 30) - 30);
+			nLabel.setPosition(500, 55 + (index * 30));
 			p.getRoot().add(nLabel);
 			readyLabels[index-1] = nLabel;
 			index++;

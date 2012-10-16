@@ -70,7 +70,7 @@ public class PlayState extends GameState {
 	private Pane invenPopUp;
 
 	private MovableReferenceFrame cameraRf_3, cameraRf_1;
-	
+
 	private MapPane mappane;
 
 	@Override
@@ -82,20 +82,31 @@ public class PlayState extends GameState {
 		rwin.setCrosshairVisible(true);
 		rwin.setCursorVisible(false);
 
-//		// box
-//		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
-//		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
-//		mat = new Material(mat, tex_kd, null, null);
-//		m = Content.loadContent("resources/models/box/box.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 
-//		// gunpart
-//		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
-//		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		mc.setScale(0.25);
+		if (Game.getInstance().isHost()) {
+			Game.getInstance().spawnItem(new Battery(Vec3.create(6, 0.125, 5)));
+			Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
+			door.addToLevel(Game.getInstance().getLevel());
+
+			Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
+			spike.addToLevel(Game.getInstance().getLevel());
+		}
+		
+		// // box
+		// mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
+		// tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
+		// mat = new Material(mat, tex_kd, null, null);
+		// m = Content.loadContent("resources/models/box/box.obj");
+		// mc = new MeshContext(m, mat, ie);
+		// mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+
+		// // gunpart
+		// // mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f,
+		// 0.69f), Color.BLACK, 1f, 1f);
+		// // m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+		// // mc = new MeshContext(m, mat, ie);
+		// // mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		// // mc.setScale(0.25);
 
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().init(scene);
@@ -109,7 +120,7 @@ public class PlayState extends GameState {
 
 		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-		equippedIC = new	EquippedInventoryContainer(Game.getInstance().getPlayer());
+		equippedIC = new EquippedInventoryContainer(Game.getInstance().getPlayer());
 		p.getRoot().add(equippedIC);
 
 		p.requestVisible(true);
@@ -122,26 +133,26 @@ public class PlayState extends GameState {
 		i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
 		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
-		//invenPopUp.requestVisible(false);
+		// invenPopUp.requestVisible(false);
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
-//		Pane topPane = new Pane(500, 30);
-//		hp = new Healthbar();
-//		topPane.getRoot().add(hp);
-//		topPane.requestVisible(true);
-//		//topPane.getRoot().setOpaque(false);
-//		topPane.setPosition(-100, 240);
-//		scene.addDrawable(topPane);
-		
+		// Pane topPane = new Pane(500, 30);
+		// hp = new Healthbar();
+		// topPane.getRoot().add(hp);
+		// topPane.requestVisible(true);
+		// //topPane.getRoot().setOpaque(false);
+		// topPane.setPosition(-100, 240);
+		// scene.addDrawable(topPane);
+
 		// stats
 		Pane statpane = new StatPane();
 		statpane.setPosition(-100, 240);
 		statpane.requestVisible(true);
 		scene.addDrawable(statpane);
-		
+
 		// minimap
 		mappane = new MapPane();
 		mappane.setPosition(300, 200);
@@ -156,7 +167,7 @@ public class PlayState extends GameState {
 		scene.setFogEnabled(true);
 
 		// SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
-		
+
 		Game.getInstance().startTimer();
 	}
 
@@ -211,7 +222,7 @@ public class PlayState extends GameState {
 			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
-		if (rwin.pollKey(KeyEvent.VK_2)){ 
+		if (rwin.pollKey(KeyEvent.VK_2)) {
 			i2.setSelectedPos(1);
 			this.selectedInvenPos = 1;
 			System.out.println("Selected pos: " + selectedInvenPos);
@@ -276,9 +287,14 @@ public class PlayState extends GameState {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
 		}
 
-		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1)
-				&& (System.currentTimeMillis() - lastShot) > 100 && !Game.getInstance().getPlayer().isDead()) {
+		// fire gun
+		if (!Game.getInstance().getInvenPopUp().isVisible()
+				&& rwin.getMouseButton(1)
+				&& (System.currentTimeMillis() - lastShot) > ((PlayerEntity.defaultEnergy - Game.getInstance()
+						.getPlayer().getCurrentEnergy()) / 4 + 100) && !Game.getInstance().getPlayer().isDead()
+				&& Game.getInstance().getPlayer().getCurrentEnergy() > 0) {
 			Game.getInstance().createProjectile();
+			Game.getInstance().getPlayer().applyEnergyDelta(-4);
 			this.lastShot = System.currentTimeMillis();
 			Game.getInstance().getPlayer().muzzleFlash(true);
 		}
@@ -340,7 +356,7 @@ public class PlayState extends GameState {
 		}
 
 		// update the game UI
-		//this.hp.update(Game.getInstance().getPlayer().getHealth());
+		// this.hp.update(Game.getInstance().getPlayer().getHealth());
 	}
 
 	@Override
