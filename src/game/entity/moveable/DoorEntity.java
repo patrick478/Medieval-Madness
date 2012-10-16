@@ -68,11 +68,13 @@ public class DoorEntity extends MoveableEntity{
 		return new BoundingBox(position, radius);
 	}
 	
-	public Item generatekey(){
-		Item key = new Key(null, "A key that unlocks a door somewhere...");//TODO change later
-		AbstractEvent ae = doorTrigger.getEvent();
-		doorTrigger = new StaticTriggerEntity(new ContainsItemEvent(key), new BoundingBox(position, radius.scale(2)));
-		doorTrigger.addEvent(ae);
-		return key;
-	}
+//	public Item generatekey(){
+////		Item key = new Key(null, "A key that unlocks a door somewhere...");//TODO change later
+////		AbstractEvent ae = doorTrigger.getEvent();
+////		doorTrigger = new StaticTriggerEntity(new ContainsItemEvent(key), new BoundingBox(position, radius.scale(2)));
+////		doorTrigger.addEvent(ae);
+////		return key;
+//		
+//		// BEN ANDERSON COMMENTED THIS OUT - IT NEEDS REDOING
+//	}
 }
