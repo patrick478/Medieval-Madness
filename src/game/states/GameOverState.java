@@ -1,6 +1,7 @@
-package game;
+package game.states;
 
-import game.states.MainMenuState;
+import game.Game;
+import game.GameState;
 import initial3d.engine.xhaust.Pane;
 import initial3d.engine.xhaust.Picture;
 import initial3d.engine.xhaust.vision.ActionIDList;

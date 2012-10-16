@@ -43,7 +43,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		{
 			this.clientThread = new Thread(this);
 			this.clientThread.start();
-			System.out.println("Connected!");
 		}	
 	}
 
@@ -155,7 +154,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			case NotifyPlayerJoinedPacket.ID:
 				NotifyPlayerJoinedPacket np = new NotifyPlayerJoinedPacket();
 				np.fromData(dp);
-				System.out.println("here, also!");
 				Game.getInstance().setLobbyCurrentPlayers(np.nPlayers);
 				break;
 			

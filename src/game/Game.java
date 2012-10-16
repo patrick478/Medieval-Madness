@@ -19,6 +19,7 @@ import game.net.packets.MoveMobPacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
 import game.net.packets.SetReadyPacket;
+import game.states.GameOverState;
 import game.states.LobbyState;
 import game.states.PregameState;
 import game.states.PreloadGameState;
@@ -242,8 +243,6 @@ public class Game implements Runnable {
 		PlayerEntity pe = new PlayerEntity(-pIndex - 10, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
 
 		addPlayer(pIndex, pe);
-		
-		System.out.printf("I am player #%d\n", pIndex);
 	}
 
 	public void setMaxPlayers(short _maxPlayers) {
@@ -256,8 +255,6 @@ public class Game implements Runnable {
 		}
 
 		this.maxPlayers = _maxPlayers;
-		
-		System.out.printf("There are %d players\n", _maxPlayers);
 	}
 
 	public int getPlayerIndex() {
@@ -311,11 +308,9 @@ public class Game implements Runnable {
 		ilp.itemID = _item.id;
 		ilp.position = _item.getPosition();
 		ilp.setCreate();
-		System.out.println("Creating item, targetID = ");
 		if(this.isHost())
 		{
 			this.getHost().notifyAllClients(ilp);
-			System.out.println("Transmitted create item packet\n");
 			selfSpawnItem(_item);
 			this.itemInWorld.add(_item);
 		}
@@ -339,7 +334,6 @@ public class Game implements Runnable {
 		}
 		
 		if(cItem == null) {
-			System.out.println("Yo' momma's so fat, that the item can't be found!");
 			return;
 		}
 	

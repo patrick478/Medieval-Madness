@@ -89,7 +89,6 @@ public class ServerWorker implements Runnable
 				SetReadyPacket srp = new SetReadyPacket();
 				srp.fromData(dp);
 				client.setReady(srp.newReadyStatus);
-				System.out.println("boo");
 				this.server.updateOthersOnReadyChange(client);
 				
 				this.server.checkReady();

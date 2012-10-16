@@ -340,8 +340,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				EnterPrePostPacket epp = new EnterPrePostPacket(Game.getInstance().getStartTime());
 				epp.setPre();				
 				this.send(c.getSocket(), epp.toData().getData());
-				
-				System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
 			}
 		}
 		Game.getInstance().startTimer();
@@ -349,11 +347,9 @@ public class NetworkingHost extends NetworkMode implements Runnable
 
 	public void notifyAllNonHost(Packet pl)
 	{
-		System.out.println("baha!");
 		for(ServerClient c : this.clients.values())
 		{			
 			if(c.isHost()) continue;
-			System.out.println("transmit!");
 			this.send(c.getSocket(), pl.toData().getData());
 		}
 	}

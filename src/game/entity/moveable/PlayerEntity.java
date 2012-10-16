@@ -247,9 +247,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 		this.currentHealth = i;
 		if (this.currentHealth <= 0) {
 			Entity e = Game.getInstance().getLevel().getEntity(this.id);
-			if(e != null) e.kill();
-			else System.out.printf("null killable\n");
-			
+			if(e != null) e.kill();			
 			Game.getInstance().removeEntity(this.id);
 		}
 	}

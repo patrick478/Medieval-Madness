@@ -73,7 +73,6 @@ public class ServerClient
 	
 	public void setPredictedLatency(long pl) {
 		this.predictedLatency = pl;
-		System.out.printf("Connection latency to player %d has been changed to %dms\n", this.getPlayerIndex(), pl);
 	}
 
 	public long getPredictedLatency() {

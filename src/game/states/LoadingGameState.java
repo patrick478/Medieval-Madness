@@ -117,7 +117,6 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		if(this.waitingOn.size() == 0 && hasLoadedModels)
 		{
 			Game.getInstance().changeState(new PlayState());
-			System.out.println("Finished waiting for content");
 		}
 //		else
 //			System.out.printf("Loading %.2f complete..\n", loadProgress);
@@ -137,6 +136,5 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	public void loadComplete(String filename) {
 		this.waitingOn.remove(filename);
 		this.hasLoadedModels = true;
-		System.out.printf("loading %s\n", filename);
 	}	
 }
