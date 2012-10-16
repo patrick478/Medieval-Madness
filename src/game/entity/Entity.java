@@ -16,6 +16,7 @@ public abstract class Entity extends ReferenceFrame {
 	protected Vec3 position = Vec3.zero;
 	protected Quat orientation = Quat.one;
 	
+	private boolean dead = false;
 	private List<MeshContext> meshes = new ArrayList<MeshContext>();
 	
 	public static synchronized long freeID(){
@@ -151,4 +152,8 @@ public abstract class Entity extends ReferenceFrame {
 	 * @return The bounding volume for this entity at given location
 	 */
 	protected abstract Bound getBound(Vec3 position);
+
+	public void kill() {
+		this.dead = true;
+	}
 }

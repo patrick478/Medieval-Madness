@@ -8,6 +8,7 @@ import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.DeltaHealthEvent;
 import game.event.PlayerOnlyEvent;
+import game.event.RemoveEntityEvent;
 import game.level.Level;
 import game.modelloader.Content;
 import initial3d.engine.Color;
@@ -80,17 +81,6 @@ public class SpikeBallEntity extends EnemyEntity{
 		_level.addEntity(this);
 		_level.addEntity(trigger);
 	}
-	
-	@Override
-	public void applyHealthDelta(int _deltaHealth) {
-		currentHealth += _deltaHealth;
-		System.out.println("spike health :: "+currentHealth);
-		if (currentHealth <=0 ){
-			System.out.println("removing spikeball???");
-			Game.getInstance().removeEntity(id);
-			Game.getInstance().removeEntity(trigger.id);
-		}
-	}
 
 	@Override
 	public int getTotalHealth() {
@@ -110,5 +100,8 @@ public class SpikeBallEntity extends EnemyEntity{
 	@Override
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
+		if(i<=0){
+			Game.getInstance().removeEntity(id);
+		}
 	}
 }
