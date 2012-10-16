@@ -20,6 +20,7 @@ import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
 import game.Healthbar;
+import game.ItemType;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
@@ -38,6 +39,7 @@ import game.event.DeltaHealthEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.modelloader.Content;
+import game.net.packets.Battery;
 
 /***
  * The game!
@@ -71,76 +73,61 @@ public class PlayState extends GameState {
 		RenderWindow rwin = Game.getInstance().getWindow();
 		rwin.setCrosshairVisible(true);
 		rwin.setCursorVisible(false);
-
-		System.out.println("Creating test object");
-		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {
-		};
-		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
-		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
-
-		// battery
-		Material mat = new Material(Color.GRAY, Color.GRAY, Color.GRAY, Color.BLACK, 20f, 1f);
-		Texture tex_kd = Initial3D.createTexture(Content
-				.<BufferedImage> loadContent("resources/models/battery/battery_kd.png"));
-		Texture tex_ke = Initial3D.createTexture(Content
-				.<BufferedImage> loadContent("resources/models/battery/battery_ke.png"));
-		mat = new Material(mat, tex_kd, null, tex_ke);
-
-		Mesh m = Content.loadContent("resources/models/battery/battery.obj");
-		MeshContext mc = new MeshContext(m, mat, ie);
-		mc.setScale(4);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		// key
-		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
-				0.2f, 0.2f, 0f), 1f, 1f);
-		m = Content.loadContent("resources/models/key/key.obj");
-		mc = new MeshContext(m, mat, ie);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		mc.setScale(4);
-
-		// spikeball
-		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
-				0.3f), 1f, 1f);
-		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
-		mc = new MeshContext(m, mat, ie);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-
-		// box
-		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
-		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
-		mat = new Material(mat, tex_kd, null, null);
-		m = Content.loadContent("resources/models/box/box.obj");
-		mc = new MeshContext(m, mat, ie);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		
+		if(Game.getInstance().isHost())
+			Game.getInstance().spawnItem(new Battery(Vec3.create(3, 0.125, 3)));
 		
-		///temp TODO REMOVE
-		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
-		mc = new MeshContext(m, mat, i);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		i.addMeshContext(mc);
-		
-		
-		// doorbars
-		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
-		mc = new MeshContext(m, mat, ie);
-		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		ie.setPosition(Vec3.create(3, 0, 3));
-		
-		// gunpart
-//		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
-//		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+//		// key
+//		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
+//				0.2f, 0.2f, 0f), 1f, 1f);
+//		m = Content.loadContent("resources/models/key/key.obj");
 //		mc = new MeshContext(m, mat, ie);
 //		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		mc.setScale(0.25);
-		
-		
-
-		ie.addMeshContext(mc);
-
-		ie.addToLevel(Game.getInstance().getLevel());
-		// ie.addToScene(scene);
+//		mc.setScale(4);
+//
+//		// spikeball
+//		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
+//				0.3f), 1f, 1f);
+//		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//
+//		// box
+//		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
+//		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
+//		mat = new Material(mat, tex_kd, null, null);
+//		m = Content.loadContent("resources/models/box/box.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		
+//		
+//		///temp TODO REMOVE
+//		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
+//		mc = new MeshContext(m, mat, i);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		i.addMeshContext(mc);
+//		
+//		
+//		// doorbars
+//		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
+//		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		ie.setPosition(Vec3.create(3, 0, 3));
+//		
+//		// gunpart
+////		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
+////		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+////		mc = new MeshContext(m, mat, ie);
+////		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+////		mc.setScale(0.25);
+//		
+//		
+//
+//		ie.addMeshContext(mc);
+//
+//		ie.addToLevel(Game.getInstance().getLevel());
+//		// ie.addToScene(scene);
 
 		
 		Entity door = new DoorEntity(Vec3.create(5, 0, 5));
@@ -148,7 +135,7 @@ public class PlayState extends GameState {
 		
 		
 		Entity spike = new SpikeBallEntity(100, -1, Vec3.create(5, 0.5, 7), 0.5);
-		spike.addToLevel(Game.getInstance().getLevel());
+//		spike.addToLevel(Game.getInstance().getLevel());
 		
 		System.out.println("Added Test object to level");
 

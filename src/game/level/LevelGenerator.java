@@ -14,8 +14,8 @@ public class LevelGenerator {
 	public LevelGenerator(long _seed){
 		seed = _seed;
 		floorGen = new FloorGenerator(_seed);
-//		levelPlan = new EmptyLevel(_seed);
-		levelPlan = new DefualtLevel(_seed);
+		levelPlan = new EmptyLevel(_seed);
+//		levelPlan = new DefualtLevel(_seed);
 	}
 	
 	public Level getLevel(int _level){

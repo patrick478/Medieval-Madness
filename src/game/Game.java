@@ -22,6 +22,7 @@ import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Pane;
 import game.net.*;
 import game.net.packets.ChangeAttributePacket;
+import game.net.packets.ItemLifePacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
 import game.net.packets.SetReadyPacket;
@@ -227,7 +228,7 @@ public class Game implements Runnable {
 	public void setPlayerIndex(int pIndex) {
 		this.playerIndex = pIndex;
 
-		PlayerEntity pe = new PlayerEntity(0, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
+		PlayerEntity pe = new PlayerEntity(-pIndex - 10, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
 
 		// This needs to add the main player
 		addPlayer(pIndex, pe);
@@ -240,7 +241,7 @@ public class Game implements Runnable {
 		for (int i = 0; i < _maxPlayers; i++) {
 			if (i == this.playerIndex) continue;
 			
-			PlayerEntity p = new PlayerEntity(System.nanoTime(), Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
+			PlayerEntity p = new PlayerEntity(-i - 10, Vec3.create(i + 2, 0.125, i + 2), 0.125, i);
 			addPlayer(i, p);
 		}
 
@@ -276,31 +277,35 @@ public class Game implements Runnable {
 
 	public void addEntity(Entity _entity)
 	{
-		if(this.isHost())
-			selfAddEntity(_entity);
-	}
-	
-	public void selfAddEntity(Entity _entity)
-	{
 		currentLevel.addEntity(_entity);
 		_entity.addToScene(currentGameState.scene);
 	}
 
 	public void removeEntity(long _eid) {
-		if(this.isHost())
-			selfRemoveEntity(_eid);
-	}
-	
-
-	public void selfRemoveEntity(long eid) {
-		Entity e = currentLevel.removeEntity(eid);
+		Entity e = currentLevel.removeEntity(_eid);
 		if(e!=null){
 			currentGameState.scene.removeDrawables(e.getMeshContexts());
 		}
 	}
 	
-	public void spawnItem(Item _item, Vec3 _position){
-		addEntity(new ItemEntity(_position, _item));
+	public void spawnItem(Item _item)
+	{
+		ItemLifePacket ilp = new ItemLifePacket();
+		ilp.itemType = _item.type;
+		ilp.itemID = _item.id;
+		ilp.position = _item.getPosition();
+		ilp.setCreate();
+		System.out.println("Creating item.");
+		if(this.isHost())
+		{
+			this.getHost().notifyAllClients(ilp);
+			System.out.println("Transmitted create item packet\n");
+//			selfSpawnItem(_item);
+		}
+	}
+	
+	public void selfSpawnItem(Item _item){
+		addEntity(_item.getItemEntity());
 	}
 	
 	public void addItemToPlayer(long _eid, Item _item){

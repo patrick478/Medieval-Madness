@@ -1,5 +1,9 @@
 package game.item;
 
+import game.ItemType;
+
+import initial3d.engine.Vec3;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +15,7 @@ public class ItemContainer extends Item{
 	private final List<Item> items;
 
 	public ItemContainer(BufferedImage _icon, String _descript, int _capacity) {
-		super(_icon, _descript);
+		super(System.nanoTime(), _icon, _descript, ItemType.Container, Vec3.zero);
 		if(_capacity >8 || _capacity <1){
 			throw new IllegalArgumentException();
 		}

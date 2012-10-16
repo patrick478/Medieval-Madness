@@ -171,6 +171,14 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				if(cap.isHealth())
 					Game.getInstance().selfSetEntityHealth(cap.eid, cap.newVal);
 				break;
+				
+			case ItemLifePacket.ID:
+				ItemLifePacket ilp = new ItemLifePacket();
+				ilp.fromData(dp);
+				System.out.println("Recieved create item packet");
+				if(ilp.isCreate())
+					Game.getInstance().selfSpawnItem(ilp.getItem());
+				break;
 		}
 	}
 
