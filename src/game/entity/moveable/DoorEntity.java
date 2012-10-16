@@ -69,7 +69,7 @@ public class DoorEntity extends MoveableEntity{
 	}
 	
 	public Item generatekey(){
-		Item key = new Key(null, "A key that unlocks a door somewhere...");//TODO change later
+//		Item key = new Key(null, "A key that unlocks a door somewhere...");//TODO change later
 		AbstractEvent ae = doorTrigger.getEvent();
 		doorTrigger = new StaticTriggerEntity(new ContainsItemEvent(key), new BoundingBox(position, radius.scale(2)));
 		doorTrigger.addEvent(ae);

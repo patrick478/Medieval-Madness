@@ -59,6 +59,10 @@ public class PlayState extends GameState {
 	private double targetFov = -1;
 	private long lastShot = System.currentTimeMillis();
 
+	private int selectedInvenPos = 0;
+	private EquippedInventoryContainer equippedIC;
+	private InventorySelector i2;
+
 	private Healthbar hp = null;
 
 	private Pane invenPopUp;
@@ -76,6 +80,74 @@ public class PlayState extends GameState {
 		
 		if(Game.getInstance().isHost())
 			Game.getInstance().spawnItem(new Battery(Vec3.create(3, 0.125, 3)));
+//
+//		System.out.println("Creating test object");
+//		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {
+//		};
+//		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
+//		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
+//
+//		// battery
+//		Material mat = new Material(Color.GRAY, Color.GRAY, Color.GRAY, Color.BLACK, 20f, 1f);
+//		Texture tex_kd = Initial3D.createTexture(Content
+////				.<BufferedImage> loadContent("resources/models/battery/battery_kd.png"));
+////		Texture tex_ke = Initial3D.createTexture(Content
+//				.<BufferedImage> loadContent("resources/models/battery/battery_ke.png"));
+//		mat = new Material(mat, tex_kd, null, tex_ke);
+//
+//		Mesh m = Content.loadContent("resources/models/battery/battery.obj");
+//		MeshContext mc = new MeshContext(m, mat, ie);
+//		mc.setScale(4);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		// key
+//		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
+//				0.2f, 0.2f, 0f), 1f, 1f);
+//		m = Content.loadContent("resources/models/key/key.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		mc.setScale(4);
+//
+//		// spikeball
+//		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
+//				0.3f), 1f, 1f);
+//		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//
+//		// box
+//		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
+//		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
+//		mat = new Material(mat, tex_kd, null, null);
+//		m = Content.loadContent("resources/models/box/box.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//
+//		
+//		///temp TODO REMOVE
+//		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
+//		mc = new MeshContext(m, mat, i);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		i.addMeshContext(mc);
+//		
+//		
+//		// doorbars
+//		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
+//		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+
+		//		ie.setPosition(Vec3.create(3, 0, 3));
+
+//		// gunpart
+//		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
+//		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		mc.setScale(0.25);
+//
+//
+//
+//		ie.setPosition(Vec3.create(3, 0, 3));
 		
 //		// key
 //		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
@@ -162,21 +234,20 @@ public class PlayState extends GameState {
 
 		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-		// EquippedInventoryContainer i = new
-		// EquippedInventoryContainer(Game.getInstance().getPlayer().getEquippedItems());
-		// p.getRoot().add(i);
+		equippedIC = new	EquippedInventoryContainer(Game.getInstance().getPlayer());
+		p.getRoot().add(equippedIC);
 
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
 		p.getRoot().setOpaque(false);
-		// scene.addDrawable(p);
+		scene.addDrawable(p);
 		Game.getInstance().setInventoryHolder(p);
 
 		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
-		InventorySelector i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer());
+		i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
 		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
-		// invenPopUp.requestVisible(false);
+		//invenPopUp.requestVisible(false);
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
@@ -259,6 +330,36 @@ public class PlayState extends GameState {
 		}
 		if (rwin.getKey(KeyEvent.VK_D)) {
 			intent_vel = intent_vel.add(cside.neg());
+		}
+		if (rwin.pollKey(KeyEvent.VK_1)) {
+			i2.setSelectedPos(0);
+			this.selectedInvenPos = 0;
+			System.out.println("Selected pos: " + selectedInvenPos);
+
+		}
+		if (rwin.pollKey(KeyEvent.VK_2)){ 
+			i2.setSelectedPos(1);
+			this.selectedInvenPos = 1;
+			System.out.println("Selected pos: " + selectedInvenPos);
+
+		}
+		if (rwin.pollKey(KeyEvent.VK_3)) {
+			i2.setSelectedPos(2);
+			this.selectedInvenPos = 2;
+			System.out.println("Selected pos: " + selectedInvenPos);
+
+		}
+		if (rwin.pollKey(KeyEvent.VK_4)) {
+			i2.setSelectedPos(3);
+			this.selectedInvenPos = 3;
+			System.out.println("Selected pos: " + selectedInvenPos);
+
+		}
+		if (rwin.pollKey(KeyEvent.VK_5)) {
+			i2.setSelectedPos(4);
+			this.selectedInvenPos = 4;
+			System.out.println("Selected pos: " + selectedInvenPos);
+
 		}
 		if (rwin.pollKey(KeyEvent.VK_E)) {
 			if (Game.getInstance().getInvenPopUp().isVisible() == false) {
