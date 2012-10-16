@@ -13,11 +13,6 @@ public class StaticTriggerEntity extends TriggerEntity{
 		bound = _bound;
 	}
 	
-	public StaticTriggerEntity(AbstractEvent _event, Bound _bound) {
-		super( _event);
-		bound = _bound;
-	}
-
 	@Override
 	protected Bound getBound(Vec3 position) {
 		return bound;

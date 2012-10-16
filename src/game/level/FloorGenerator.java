@@ -23,6 +23,13 @@ public class FloorGenerator {
 		
 	}
 	
+	/**
+	 * Returns a floor generated for the given level. The size of the
+	 * floor is 10 + 2 (level) squared.
+	 * 
+	 * @param level Integer value of the level to generate
+	 * @return the Floor for that level.
+	 */
 	public Floor getFloor(int level){
 		if(level<0){
 			throw new IllegalArgumentException();

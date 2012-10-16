@@ -358,10 +358,11 @@ public class NetworkingHost extends NetworkMode implements Runnable
 
 	public void notifyAllNonHost(Packet pl)
 	{
+		System.out.println("baha!");
 		for(ServerClient c : this.clients.values())
 		{			
 			if(c.isHost()) continue;
-			
+			System.out.println("transmit!");
 			this.send(c.getSocket(), pl.toData().getData());
 		}
 	}

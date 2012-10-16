@@ -2,9 +2,11 @@ package game.entity.moveable;
 
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.entity.Entity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.PickupItemEvent;
+import game.event.PlayerOnlyEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.level.Level;
@@ -20,18 +22,11 @@ public class ItemEntity extends MoveableEntity{
 		super(_id);
 		position = _position;
 		bound = new BoundingSphere(_position, ITEM_RADIUS);
-		trigger = new DynamicTriggerEntity(new RemoveEntityEvent(this.id), this);
-		trigger.addEvent(new RemoveEntityEvent(trigger.id));
-		trigger.addEvent(new PickupItemEvent(_item));
-	}
-	
-	public ItemEntity(Vec3 _position, Item _item){
-		super();
-		position = _position;
-		bound = new BoundingSphere(_position, ITEM_RADIUS);
-		trigger = new DynamicTriggerEntity(new PickupItemEvent(_item), this);
+		angVelocity = Vec3.create(0, 1.5, 0);
+		trigger = new DynamicTriggerEntity(Entity.freeID(), new PlayerOnlyEvent(), this);
 		trigger.addEvent(new RemoveEntityEvent(this.id));
 		trigger.addEvent(new RemoveEntityEvent(trigger.id));
+		trigger.addEvent(new PickupItemEvent(_item));
 	}
 	
 	@Override

@@ -83,17 +83,6 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 		init();
 	}
 
-	public PlayerEntity(Vec3 _pos, double _radius) {
-		super();
-		position = _pos;
-		radius = _radius;
-		this.addMeshContexts(this.getBall());
-
-		this.currentHealth = this.defaultHealth;
-
-		init();
-	}
-
 	private void init() {
 		// lights
 		spotlight_rf = new MovableReferenceFrame(this);

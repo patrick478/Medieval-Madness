@@ -6,6 +6,7 @@ import java.util.List;
 import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
+import game.entity.Entity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.AvoidEvent;
@@ -30,21 +31,7 @@ public class ProjectileEntity extends MoveableEntity {
 		position = _pos;
 		linVelocity = _vel;
 		orientation = _ori;
-		trigger = new DynamicTriggerEntity(new AvoidEvent(_parid), this);
-		trigger.addEvent(new ContactEvent());
-		trigger.addEvent(new RemoveEntityEvent(this.id));
-		trigger.addEvent(new RemoveEntityEvent(trigger.id));
-		trigger.addEvent(new DeltaHealthEvent(_delta));
-		
-		this.addMeshContexts(this.getBall());
-	}
-	
-	public ProjectileEntity(long _parid, int _delta, Vec3 _pos, Vec3 _vel, Quat _ori){
-		super();
-		position = _pos;
-		linVelocity = _vel;
-		orientation = _ori;
-		trigger = new DynamicTriggerEntity(new AvoidEvent(_parid), this);
+		trigger = new DynamicTriggerEntity(Entity.freeID(), new AvoidEvent(_parid), this);
 		trigger.addEvent(new ContactEvent());
 		trigger.addEvent(new RemoveEntityEvent(this.id));
 		trigger.addEvent(new RemoveEntityEvent(trigger.id));
