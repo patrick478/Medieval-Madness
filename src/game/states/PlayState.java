@@ -371,6 +371,9 @@ public class PlayState extends GameState {
 		
 		if(Game.getInstance().getRemainingMs() <= 0)
 			Game.getInstance().gameOver();
+		
+		if(Game.getInstance().alivePlayers() <= 0)
+			Game.getInstance().gameOver();
 
 		// update the game UI
 		// this.hp.update(Game.getInstance().getPlayer().getHealth());

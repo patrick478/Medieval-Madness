@@ -587,4 +587,12 @@ public class Game implements Runnable {
 	public void gameOver() {
 		Game.getInstance().changeState(new GameOverState());
 	}
+
+	public int alivePlayers() {
+		int alive = 0;
+		for(PlayerEntity pe : this.players.values())
+			if(!pe.isDead()) alive++;
+		
+		return alive;
+	}
 }
