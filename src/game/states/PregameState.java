@@ -33,6 +33,10 @@ public class PregameState extends GameState {
 
 	@Override
 	public void initalise() {
+		Game.getInstance().getWindow().setMouseCapture(false);
+		Game.getInstance().getWindow().setCursorVisible(true);
+		Game.getInstance().getWindow().setCrosshairVisible(false);
+		
 		final Pane p = new Pane(800, 600);
 		BufferedImage bg;
 		try {
@@ -42,7 +46,7 @@ public class PregameState extends GameState {
 		}
 		Picture pic = new Picture(bg, 0, 0, 800, 600);
 
-		p.getRoot().add(pic);
+		p.getRoot().add(pic); 
 		statusLabel = new Label("Waiting for ready!");
 		readyButton = new Button("Ready");		
 		Label nextLevelLabel = new Label(String.format("Level %d - %dms remaining\n", Game.getInstance().getCurrentLevelNumber(), Game.getInstance().getRemainingMs()));

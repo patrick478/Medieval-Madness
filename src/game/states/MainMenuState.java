@@ -91,7 +91,9 @@ public class MainMenuState extends GameState {
 		Pane p = new Pane(800, 600);
 
 		//stuff
-		
+		Game.getInstance().getWindow().setMouseCapture(false);
+		Game.getInstance().getWindow().setCursorVisible(true);
+		Game.getInstance().getWindow().setCrosshairVisible(false);
 
 
 		try {

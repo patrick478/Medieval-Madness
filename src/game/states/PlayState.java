@@ -347,6 +347,9 @@ public class PlayState extends GameState {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
+		
+		if(Game.getInstance().getRemainingMs() <= 0)
+			Game.getInstance().gameOver();
 
 		// update the game UI
 		// this.hp.update(Game.getInstance().getPlayer().getHealth());
