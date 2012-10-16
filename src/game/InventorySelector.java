@@ -18,7 +18,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
+/**
+ * The popup pane for showing what items are currently being held by the player, and used to equip items. Shown when user presses 'E'
+ * 
+ * @author Patrick
+ *
+ */
 public class InventorySelector extends Container {
 
 	final int width = 400;
@@ -32,6 +37,7 @@ public class InventorySelector extends Container {
 
 	private int selectedPos;
 
+	//used to get mouse input from each different 'slot'
 	MouseArea pos0 = new MouseArea(100, 60, 50, 50);
 	MouseArea pos1 = new MouseArea(150, 60, 50, 50);
 	MouseArea pos2 = new MouseArea(200, 60, 50, 50);
@@ -82,6 +88,9 @@ public class InventorySelector extends Container {
 		// TODO Auto-generated constructor stub
 	}
 
+	/*
+	 * Used to interpret mouse actions from the user, and do things accordingly.
+	 */
 	private final ActionListener l = new ActionListener() {
 
 		@Override

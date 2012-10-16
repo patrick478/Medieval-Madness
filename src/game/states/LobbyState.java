@@ -64,7 +64,7 @@ public class LobbyState extends GameState {
 		
 		
 		statusLabel.setPosition(100, 80);
-		startButton.setPosition(100, 120);
+		startButton.setPosition(100, 110);
 		p.getRoot().add(statusLabel);
 		scene.addDrawable(p);
 		p.requestFocus();

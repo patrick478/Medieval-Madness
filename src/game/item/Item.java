@@ -2,8 +2,10 @@ package game.item;
 
 import game.ItemType;
 import game.entity.moveable.ItemEntity;
+import game.level.Level;
 
 import initial3d.engine.ReferenceFrame;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 import java.awt.image.BufferedImage;
@@ -68,8 +70,15 @@ public abstract class Item {
 	public Vec3 getPosition() {
 		return this.ie.getPosition();
 	}
-	
 
+	public void addToScene(Scene scene) {
+		this.getItemEntity().addToScene(scene);
+	}
+
+	public void addToLevel(Level level) {
+		this.getItemEntity().addToLevel(level);
+	}
+	
 	public ItemEntity getItemEntity() {
 		return this.ie;
 	}

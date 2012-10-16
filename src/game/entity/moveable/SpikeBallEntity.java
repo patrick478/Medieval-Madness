@@ -20,6 +20,7 @@ import initial3d.engine.Vec3;
 public class SpikeBallEntity extends EnemyEntity{
 
 	private static final double radius = 0.45;
+	private static final double sight = 6;
 
 	private final Vec3 origin;
 	private final double speed;
@@ -68,8 +69,9 @@ public class SpikeBallEntity extends EnemyEntity{
 						distance = p.getPosition().sub(this.getPosition()).mag();
 					}
 				}
-				//TODO network issues?
-				System.out.println(Game.time());
+				if(distance > sight){
+					target = origin;
+				}
 				Game.getInstance().moveMob(this.id, getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation());
 			}
 			

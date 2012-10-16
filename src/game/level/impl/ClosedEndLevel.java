@@ -4,9 +4,12 @@ import initial3d.engine.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import game.entity.Entity;
 import game.entity.moveable.DoorEntity;
+import game.entity.moveable.SpikeBallEntity;
+import game.item.Item;
 import game.level.AbstractLevelPlanner;
 import game.level.Floor;
 import game.level.Level;
@@ -21,22 +24,40 @@ public class ClosedEndLevel extends AbstractLevelPlanner{
 	@Override
 	public void designLevel(Floor _floor) {
 		List<DoorEntity> doors = new ArrayList<DoorEntity>();
-		System.out.println("creating doors");
 		Space[][] floor = _floor.getData();
 		int size = _floor.getSize();
-		for(int i=0; i<4; i++){
-			if(floor[size-5][size-5+i].type==Space.EMPTY){
-				doors.add(new DoorEntity(Entity.freeID(), Vec3.create(size-5, 0, size-5+i)));
+		Random rand = new Random(size *getSeed());
+		
+		for(int i=0; i<3; i++){
+			if(floor[size-4][size-4+i].type==Space.EMPTY){
+				doors.add(new DoorEntity(Entity.freeID(), Vec3.create(size-4, 0, size-4+i)));
 			}
-			if(floor[size-5+i][size-5].type==Space.EMPTY){
-				doors.add(new DoorEntity(Entity.freeID(), Vec3.create(size-5, 0, size-5+i)));
+			if(floor[size-4+i][size-4].type==Space.EMPTY){
+				doors.add(new DoorEntity(Entity.freeID(), Vec3.create(size-4+i, 0, size-4)));
 			}
 		}
 		
-		
 		List<Entity> entities = new ArrayList<Entity>(doors);
-		System.out.println("creating levels");
-		new Level(_floor, entities);
+		List<Item> items = new ArrayList<Item>();
+		
+		for(DoorEntity d : doors){
+			int xPos = 1;
+			int zPos = 1;
+			
+			do{
+				xPos = (int) ((size-5)*rand.nextDouble()+2);
+				zPos = (int) ((size-5)*rand.nextDouble()+2);
+			}while(floor[xPos][zPos].type!=Space.EMPTY);
+			Vec3 position = Vec3.create(xPos, 0.15, zPos);
+			items.add(d.generatekey(position));
+		}
+		
+		for(int i = 0; i<(size-5)/3; i++){
+			Vec3 pos = Vec3.create(((size-5)*rand.nextDouble()+5), 0.25, (size-5)*rand.nextDouble()+5);
+			entities.add(new SpikeBallEntity(Entity.freeID(), size*5, -size+8, pos, (double)size/30));
+		}
+		
+		new Level(_floor, entities, items);
 	}
 
 }
