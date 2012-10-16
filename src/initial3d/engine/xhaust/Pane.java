@@ -129,7 +129,8 @@ public class Pane extends Drawable {
 	@Override
 	protected void draw(Initial3D i3d, int framewidth, int frameheight) {
 
-		// TODO handle this properly
+		prepareDraw();
+		
 		i3d.nearClip(NEAR_CLIP);
 		i3d.farCull(FAR_CULL);
 		double zview = (NEAR_CLIP * zlevel + FAR_CULL) / (zlevel + 1);
@@ -219,6 +220,10 @@ public class Pane extends Drawable {
 
 	}
 
+	protected void prepareDraw() {
+		
+	}
+	
 	@Override
 	protected int getRequestedIDCount() {
 		return root.count();

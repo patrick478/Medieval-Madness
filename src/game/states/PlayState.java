@@ -20,6 +20,7 @@ import initial3d.renderer.Util;
 import game.Game;
 import game.GameState;
 import game.Healthbar;
+import game.MapPane;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
@@ -60,7 +61,9 @@ public class PlayState extends GameState {
 
 	private Pane invenPopUp;
 
-	MovableReferenceFrame cameraRf_3, cameraRf_1;
+	private MovableReferenceFrame cameraRf_3, cameraRf_1;
+	
+	private MapPane mappane;
 
 	@Override
 	public void initalise() {
@@ -185,6 +188,12 @@ public class PlayState extends GameState {
 		topPane.getRoot().setOpaque(false);
 		topPane.setPosition(-100, 240);
 		scene.addDrawable(topPane);
+		
+		// minimap
+		mappane = new MapPane();
+		mappane.setPosition(300, 200);
+		mappane.requestVisible(true);
+		scene.addDrawable(mappane);
 
 		Game.getInstance().getWindow().setMouseCapture(true);
 
@@ -192,21 +201,6 @@ public class PlayState extends GameState {
 		scene.setFogColor(Color.BLACK);
 		scene.setFogParams(255f * 1.5f, 1024f * 1.5f);
 		scene.setFogEnabled(true);
-
-		// for(PlayerEntity pe : Game.getInstance().getPlayers())
-		// {
-		// MovableReferenceFrame lrf = new MovableReferenceFrame(pe);
-		// lrf.setPosition(Vec3.create(0, 0, 0.25));
-		// //lrf.setOrientation(Quat.create(Math.PI / 12, Vec3.i));
-		// Light l2 = new Light.SpotLight(lrf, Color.WHITE, 3f, (float) (Math.PI / 4), 10f);
-		// scene.addLight(l2);
-		//
-		// MovableReferenceFrame elrf = new MovableReferenceFrame(pe);
-		// elrf.setPosition(Vec3.create(0, 0.5, 0));
-		// Light el = new Light.SphericalPointLight(elrf, Color.DARK_RED, 0.10f);
-		// scene.addLight(el);
-		// }
-		//
 
 		// SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
 	}
@@ -278,6 +272,12 @@ public class PlayState extends GameState {
 		}
 		if (rwin.pollKey(KeyEvent.VK_F3)) {
 			cam.trackReferenceFrame(cameraRf_3);
+		}
+		if (rwin.pollKey(KeyEvent.VK_R)) {
+			mappane.incScale();
+		}
+		if (rwin.pollKey(KeyEvent.VK_F)) {
+			mappane.decScale();
 		}
 
 		// temp

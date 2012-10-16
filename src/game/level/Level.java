@@ -34,6 +34,10 @@ public class Level {
 		}
 	}
 	
+	public Floor getFloor() {
+		return floor;
+	}
+	
 	/**
 	 * Iterates through the list of all entities on this level
 	 * and call Entity.poke() on them.
