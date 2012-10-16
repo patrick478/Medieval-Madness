@@ -32,7 +32,7 @@ public class GameOverState extends GameState {
 			p.getRoot().add(pic);
 			
 			Button mainMenu = new Button("Return to main menu", 125);
-			mainMenu.setPosition(p.getRoot().getWidth()-mainMenu.getWidth()-10, p.getRoot().getHeight()-mainMenu.getHeight()-10);
+			mainMenu.setPosition(p.getRoot().getWidth()/2-mainMenu.getWidth()/2, p.getRoot().getHeight()/2-mainMenu.getHeight()/2);
 			mainMenu.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
