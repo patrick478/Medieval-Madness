@@ -32,12 +32,43 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	
 	private List<String> waitingOn = new ArrayList<String>();
 	private String[] toLoad = new String[] {
-			"cube.obj",
-			"sphere.obj",
-			"human.obj",
-			"plane.obj",
-			"trumpet.obj",
-			"resources/texturetiles.png"
+			"leftarrow.png",
+			"mainmenu.png",
+			"mainmenujoin.png",
+			"mainmenustart.png",
+			"rightarrow.png",
+			"serverpage.png",
+			"testuretiles.png",
+			"texturetiles.png",
+			"tower.jpg",
+			"toweroriginal.jpg",
+			"./inventory/battery.png",
+			"./inventory/blank.png",
+			"./inventory/box.png",
+			"./inventory/gun.png",
+			"./inventory/inventoryselect.png",
+			"./inventory/key.png",
+			"./inventory/selected.png",
+			"./models/battery/battery.obj",
+			"./models/battery/battery_kd.png",
+			"./models/battery/battery_ke.png",
+			"./models/battery/battery_outline.png",
+			"./models/box/box.obj",
+			"./models/box/box_kd.png",
+			"./models/bullet/bullet.obj",
+			"./models/character/char2_arm_l.obj",
+			"./models/character/char2_arm_r.obj",
+			"./models/character/char2_body.obj",
+			"./models/character/char2_gun.obj",
+			"./models/character/char2_kd.png",
+			"./models/character/char2_ke.png",
+			"./models/character/char2_outline.png",
+			"./models/doorbars/doorbars.obj",
+			"./models/doorbars/doorbars2.obj",
+			"./models/gunpart/gunpart.obj",
+			"./models/key/key.obj",
+			"./models/spikeball/spikeball.obj",
+			"./ui/health.png"
 	};
 
 	@Override
@@ -105,5 +136,6 @@ public class LoadingGameState extends GameState implements ContentRequest {
 	public void loadComplete(String filename) {
 		this.waitingOn.remove(filename);
 		this.hasLoadedModels = true;
+		System.out.printf("loading %s\n", filename);
 	}	
 }

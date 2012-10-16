@@ -1,33 +1,35 @@
 package game;
 
-import java.util.*;
-
 import game.entity.Damageable;
 import game.entity.Entity;
-import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
-import game.entity.trigger.DynamicTriggerEntity;
-import game.event.AvoidEvent;
-import game.event.ContactEvent;
-import game.event.DeltaHealthEvent;
-import game.event.RemoveEntityEvent;
 import game.item.Item;
 import game.level.Level;
 import game.net.NetworkingClient;
-import initial3d.*;
-import initial3d.engine.*;
-import initial3d.engine.xhaust.Component;
-import initial3d.engine.xhaust.DialogPane;
-import initial3d.engine.xhaust.Pane;
-import game.net.*;
+import game.net.NetworkingHost;
 import game.net.packets.ChangeAttributePacket;
 import game.net.packets.EntityDestroyPacket;
+import game.net.packets.GiveItemPacket;
 import game.net.packets.ItemLifePacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
 import game.net.packets.SetReadyPacket;
-import game.states.*;
+import game.states.LobbyState;
+import game.states.PregameState;
+import game.states.PreloadGameState;
+import initial3d.Profiler;
+import initial3d.engine.Quat;
+import initial3d.engine.RenderWindow;
+import initial3d.engine.SceneManager;
+import initial3d.engine.Vec3;
+import initial3d.engine.xhaust.DialogPane;
+import initial3d.engine.xhaust.Pane;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /***
  * Main game class
@@ -344,6 +346,15 @@ public class Game implements Runnable {
 				}
 				p.getInventory().addItem(cItem);
 				invenPopUp.getRoot().repaint();
+				
+				if(this.isHost())
+				{
+					GiveItemPacket gip = new GiveItemPacket();
+					gip.eid = p.id;
+					gip.itemID = cItem.id;
+					this.getHost().notifyAllClients(gip);
+				}
+				
 				break;
 			}
 		}

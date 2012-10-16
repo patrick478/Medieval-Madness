@@ -189,6 +189,16 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 					Game.getInstance().removeEntity(edp.eid);
 				}
 				break;
+				
+			case GiveItemPacket.ID:
+				GiveItemPacket gip = new GiveItemPacket();
+				gip.fromData(dp);
+				if(!Game.getInstance().isHost())
+				{
+					Game.getInstance().addItemToPlayer(gip.eid, gip.itemID);
+					System.out.printf("supposdly giving item %d to %d\n", gip.itemID, gip.eid);
+				}				
+				break;
 		}
 	}
 
