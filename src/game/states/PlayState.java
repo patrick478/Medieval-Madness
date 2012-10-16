@@ -80,7 +80,7 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 		
 		if(Game.getInstance().isHost())
-			Game.getInstance().spawnItem(new Battery(Vec3.create(3, 0.125, 3)));
+			Game.getInstance().spawnItem(new Battery(Vec3.create(6, 0.125, 5)));
 //
 //		System.out.println("Creating test object");
 //		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {

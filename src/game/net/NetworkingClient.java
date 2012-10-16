@@ -179,6 +179,16 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				if(ilp.isCreate() && !Game.getInstance().isHost())
 					Game.getInstance().selfSpawnItem(ilp.getItem());
 				break;
+				
+			case EntityDestroyPacket.ID:
+				EntityDestroyPacket edp = new EntityDestroyPacket();
+				edp.fromData(dp);
+				if(!Game.getInstance().isHost())
+				{
+					System.out.printf("Told to destroy entity #%d\n", edp.eid);
+					Game.getInstance().removeEntity(edp.eid);
+				}
+				break;
 		}
 	}
 

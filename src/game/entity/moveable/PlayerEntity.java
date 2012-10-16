@@ -47,9 +47,9 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 
 	private final double baseSpeed = 1;
 
-	private int defaultDamage = 2;
-	private int defaultHealth = 100;
-	private int defaultEnergy = 100;
+	public static int defaultDamage = 2;
+	public static int defaultHealth = 1024;
+	public static int defaultEnergy = 1024;
 
 	private final ItemContainer inventory = new ItemContainer(null, "Inventory", 8);
 	private final Item[] equippedItems = new Item[5];
@@ -58,7 +58,7 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 		return equippedItems;
 	}
 
-	private int currentHealth = 50;
+	private int currentHealth = this.defaultDamage;
 
 	private final double radius;
 	private int selfIndex = 0;
