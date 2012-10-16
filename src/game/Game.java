@@ -19,6 +19,7 @@ import game.net.packets.MoveMobPacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
 import game.net.packets.SetReadyPacket;
+import game.states.GameOverState;
 import game.states.LobbyState;
 import game.states.PregameState;
 import game.states.PreloadGameState;
@@ -242,8 +243,6 @@ public class Game implements Runnable {
 		PlayerEntity pe = new PlayerEntity(-pIndex - 10, Vec3.create(pIndex + 2, 0.220, pIndex + 2), 0.125, pIndex);
 
 		addPlayer(pIndex, pe);
-		
-		System.out.printf("I am player #%d\n", pIndex);
 	}
 
 	public void setMaxPlayers(short _maxPlayers) {
@@ -256,8 +255,6 @@ public class Game implements Runnable {
 		}
 
 		this.maxPlayers = _maxPlayers;
-		
-		System.out.printf("There are %d players\n", _maxPlayers);
 	}
 
 	public int getPlayerIndex() {
@@ -311,11 +308,9 @@ public class Game implements Runnable {
 		ilp.itemID = _item.id;
 		ilp.position = _item.getPosition();
 		ilp.setCreate();
-		System.out.println("Creating item, targetID = ");
 		if(this.isHost())
 		{
 			this.getHost().notifyAllClients(ilp);
-			System.out.println("Transmitted create item packet\n");
 			selfSpawnItem(_item);
 			this.itemInWorld.add(_item);
 		}
@@ -339,7 +334,6 @@ public class Game implements Runnable {
 		}
 		
 		if(cItem == null) {
-			System.out.println("Yo' momma's so fat, that the item can't be found!");
 			return;
 		}
 	
@@ -435,8 +429,6 @@ public class Game implements Runnable {
 		pl.setCreateMode();
 		
 		this.getNetwork().send(pl.toData());
-		
-		System.out.println("Sent projectile request");
 	}
 
 	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
@@ -445,7 +437,6 @@ public class Game implements Runnable {
 		pe.addToLevel(Game.getInstance().getLevel());
 		pe.addToScene(Game.getInstance().currentGameState.scene);
 		getPlayers()[creator].muzzleFlash(true);
-		System.out.println("created projectile!");
 	}
 
 	public void setSelfPregameReady(boolean b) {
@@ -454,9 +445,6 @@ public class Game implements Runnable {
 		srp.newReadyStatus = Game.getInstance().getPlayer().getPregameReadyState();
 		srp.pIndex = this.getPlayerIndex();
 		byte[] data = srp.toData().getData();
-		for(int i = 0; i < data.length; i++)
-			System.out.printf("0x%02X ", data[i]);
-		System.out.println();
 		this.getNetwork().send(srp.toData());
 	}
 	
@@ -523,7 +511,6 @@ public class Game implements Runnable {
 	
 	public void selfSetEntityHealth(long id, int i)
 	{
-		System.out.printf("Changing eid=%d to hp=%d\n", id, i);
 		Damageable d = (Damageable) this.currentLevel.getEntity(id);
 		if(d == null) return;
 		d.setCurrentHealth(i);
@@ -561,7 +548,6 @@ public class Game implements Runnable {
 			me = new SpikeBallEntity(eid, 100, -1, pos, 0.5);
 			me.addToLevel(Game.getInstance().getLevel());
 			me.addToScene(Game.getInstance().currentGameState.scene);
-			System.out.println("Creating dat mob");
 		}
 		if(this.isHost())
 		{
@@ -571,13 +557,20 @@ public class Game implements Runnable {
 			mmb.vel = vel;
 			mmb.ori = ori;
 			this.getHost().notifyAllClients(mmb);
-			System.out.printf("Transmitting move of eid=%d\n", eid);
 		}
-		System.out.printf("Actually moving eid=%d\n", eid);
 		me.updateMotion(pos, vel, ori, Vec3.zero, Game.time());
 	}
-
 	public void gameOver() {
 		Game.getInstance().changeState(new GameOverState());
+		Game.getInstance().getHost().shutdown();
+		Game.getInstance().getNetwork().shutdown();
+	}
+
+	public int alivePlayers() {
+		int alive = 0;
+		for(PlayerEntity pe : this.players.values())
+			if(!pe.isDead()) alive++;
+		
+		return alive;
 	}
 }

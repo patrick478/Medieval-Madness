@@ -79,10 +79,6 @@ public class PlayState extends GameState {
 			Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
 			spike.addToLevel(Game.getInstance().getLevel());
 		}
-		
-
-		
-		System.out.println("Added Test object to level");
 
 		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
 				new Color(0.2f, 0.2f, 0f), 2f, 1f);
@@ -94,7 +90,7 @@ public class PlayState extends GameState {
 		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		scene.addDrawable(mc1);
 
-		
+
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().init(scene);
 
@@ -105,7 +101,7 @@ public class PlayState extends GameState {
 		cameraRf_1 = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		cameraRf_1.setPosition(Vec3.create(0, 0.15, 0));
 
-		
+
 		//set up the inventory selector stuff
 		Pane invenEquippedPane = new Pane(250, 50);
 		equippedIC = new EquippedInventoryContainer(Game.getInstance().getPlayer());
@@ -121,13 +117,13 @@ public class PlayState extends GameState {
 		invenSelector = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
 		Game.getInstance().getInvenPopUp().getRoot().add(invenSelector);
 		invenSelector.setOpaque(false);
-		
+
 		Game.getInstance().getInvenPopUp().setPosition(0, 0);
 		Game.getInstance().getInvenPopUp().getRoot().setOpaque(false);
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
-		
+
 		// stats
 		Pane statpane = new StatPane();
 		statpane.setPosition(-100, 240);
@@ -203,17 +199,14 @@ public class PlayState extends GameState {
 		if (rwin.pollKey(KeyEvent.VK_2)) {
 			invenSelector.setSelectedPos(1);
 			this.selectedInvenPos = 1;
-
 		}
 		if (rwin.pollKey(KeyEvent.VK_3)) {
 			invenSelector.setSelectedPos(2);
 			this.selectedInvenPos = 2;
-
 		}
 		if (rwin.pollKey(KeyEvent.VK_4)) {
 			invenSelector.setSelectedPos(3);
 			this.selectedInvenPos = 3;
-
 		}
 		if (rwin.pollKey(KeyEvent.VK_5)) {
 			invenSelector.setSelectedPos(4);
@@ -250,7 +243,7 @@ public class PlayState extends GameState {
 			mappane.decScale();
 		}
 
-		
+
 
 		if (rwin.getKey(KeyEvent.VK_ESCAPE)) {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
@@ -261,7 +254,7 @@ public class PlayState extends GameState {
 				&& rwin.getMouseButton(1)
 				&& (System.currentTimeMillis() - lastShot) > ((PlayerEntity.defaultEnergy - Game.getInstance()
 						.getPlayer().getCurrentEnergy()) / 4 + 100) && !Game.getInstance().getPlayer().isDead()
-				&& Game.getInstance().getPlayer().getCurrentEnergy() > 0) {
+						&& Game.getInstance().getPlayer().getCurrentEnergy() > 0) {
 			Game.getInstance().createProjectile();
 			Game.getInstance().getPlayer().applyEnergyDelta(-4);
 			this.lastShot = System.currentTimeMillis();
@@ -295,13 +288,13 @@ public class PlayState extends GameState {
 
 		// get the collision normals (if any)
 		Vec3 colNorm = Game.getInstance().getLevel().preCollisionNorm(player, true);
-		
+
 		// if there was a collision set the velocity appropriately (if also not dead)
-		 if(colNorm != null && !Game.getInstance().getPlayer().isDead()){ //vector magic 
-			 colNorm = colNorm.flattenY(); 
-			 Vec3 intentUnit = intent_vel.unit(); 
-			 double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); 
-			 intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); 
+		if(colNorm != null && !Game.getInstance().getPlayer().isDead()){ //vector magic 
+			colNorm = colNorm.flattenY(); 
+			Vec3 intentUnit = intent_vel.unit(); 
+			double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); 
+			intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); 
 		}
 
 		// poke all players and set the velocity
@@ -323,12 +316,16 @@ public class PlayState extends GameState {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
-		
+
 		if(Game.getInstance().getRemainingMs() <= 0)
 			Game.getInstance().gameOver();
 
-	
+		if(Game.getInstance().alivePlayers() <= 0)
+			Game.getInstance().gameOver();
+
+
 	}
+
 
 	@Override
 	public void destroy() {

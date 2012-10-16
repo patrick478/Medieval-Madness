@@ -72,7 +72,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			} catch(EOFException e) {
 				break;
 			} catch (IOException e) {
-				e.printStackTrace();
+				return;
 			}
 			
 			if(rx < 0) break;
@@ -227,5 +227,15 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 
 	public void setRemoteTarget(String text) {
 		this.remoteHost = text;
+	}
+
+	public void shutdown() {
+		try {
+			this.clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.clientThread.interrupt();
 	}
 }
