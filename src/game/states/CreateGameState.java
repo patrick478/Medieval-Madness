@@ -59,8 +59,12 @@ public class CreateGameState extends GameState {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getID() != ActionIDList.CLICKED) return;
+				int numP;
+				try{numP = Integer.parseInt(numPlayers.getText());
+					if(numP>4 || numP <1)return;}
+				catch(NumberFormatException err){return;}
 				Game.getInstance().setHost(new NetworkingHost());
-				Game.getInstance().getHost().setNumPlayers(Integer.parseInt(numPlayers.getText()));
+				Game.getInstance().getHost().setNumPlayers(numP);
 				Game.getInstance().getHost().start();
 				
 				Game.getInstance().setNetwork(new NetworkingClient());
