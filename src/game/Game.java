@@ -78,7 +78,9 @@ public class Game implements Runnable {
 	private long timeOffset = 0;
 	private int maxPlayers = 1;
 	
-	private long startGameTime = System.currentTimeMillis();
+	private long startGameTime;
+	private long endGameTime = 0;
+	private long timeLeft = 0;
 
 	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
 	private List<Item> itemInWorld = new ArrayList<Item>();
@@ -91,6 +93,7 @@ public class Game implements Runnable {
 	 */
 	public void start() {
 		this.changeState(new PreloadGameState());
+		startGameTime = Game.time();
 		this.gameRunning = true;
 		this.gameThread = new Thread(this);
 		this.gameThread.start();
@@ -529,6 +532,7 @@ public class Game implements Runnable {
 	
 	public void finishLevel()
 	{
+		timeLeft = endGameTime - Game.time();
 		EnterPrePostPacket erp = new EnterPrePostPacket(this.startGameTime);
 		erp.setPre();
 		if(this.isHost())
@@ -538,7 +542,8 @@ public class Game implements Runnable {
 	}
 
 	public void startTimer() {
-		this.startGameTime = System.currentTimeMillis();
+		this.startGameTime = Game.time();
+		this.endGameTime = this.startGameTime + 300000 + timeLeft;
 	}
 
 	public long getStartTime() {
@@ -546,6 +551,6 @@ public class Game implements Runnable {
 	}
 
 	public long getRemainingMs() {
-		return System.currentTimeMillis() - this.startGameTime;
+		return this.endGameTime - Game.time();
 	}
 }
