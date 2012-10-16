@@ -176,7 +176,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				ItemLifePacket ilp = new ItemLifePacket();
 				ilp.fromData(dp);
 				System.out.println("Recieved create item packet");
-				if(ilp.isCreate())
+				if(ilp.isCreate() && !Game.getInstance().isHost())
 					Game.getInstance().selfSpawnItem(ilp.getItem());
 				break;
 		}
@@ -194,8 +194,12 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 		try {
 			this.out.write(data.getData());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				this.clientSocket.close();
+				Game.getInstance().changeState(new MainMenuState());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 

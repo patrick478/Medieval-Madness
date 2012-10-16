@@ -24,7 +24,7 @@ public abstract class Item {
 		description = _descript;
 		this.type = _type;
 		this.pos = _pos;
-		this.ie = new ItemEntity(_pos, this);
+		this.ie = new ItemEntity(id, _pos, this);
 	}
 	
 	public BufferedImage getIcon() {

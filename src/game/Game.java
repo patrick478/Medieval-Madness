@@ -295,12 +295,12 @@ public class Game implements Runnable {
 		ilp.itemID = _item.id;
 		ilp.position = _item.getPosition();
 		ilp.setCreate();
-		System.out.println("Creating item.");
+		System.out.println("Creating item, targetID = ");
 		if(this.isHost())
 		{
 			this.getHost().notifyAllClients(ilp);
 			System.out.println("Transmitted create item packet\n");
-//			selfSpawnItem(_item);
+			selfSpawnItem(_item);
 		}
 	}
 	

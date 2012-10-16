@@ -72,6 +72,7 @@ public class ItemLifePacket extends Packet {
 	
 	public Item getItem()
 	{
+		System.out.printf("Creating item with id=%d\n", this.itemID);
 		switch(this.itemType)
 		{
 			case Key:
