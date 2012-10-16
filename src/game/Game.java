@@ -22,6 +22,7 @@ import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.Pane;
 import game.net.*;
 import game.net.packets.ChangeAttributePacket;
+import game.net.packets.EntityDestroyPacket;
 import game.net.packets.ItemLifePacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
@@ -75,6 +76,7 @@ public class Game implements Runnable {
 	private int maxPlayers = 1;
 
 	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
+	private List<Item> itemInWorld = new ArrayList<Item>();
 
 	private Game() {
 	}
@@ -282,6 +284,13 @@ public class Game implements Runnable {
 	}
 
 	public void removeEntity(long _eid) {
+		if(this.isHost())
+		{
+			EntityDestroyPacket edp = new EntityDestroyPacket();
+			edp.eid = _eid;
+			this.getHost().notifyAllClients(edp);			
+		}
+		
 		Entity e = currentLevel.removeEntity(_eid);
 		if(e!=null){
 			currentGameState.scene.removeDrawables(e.getMeshContexts());
@@ -301,25 +310,43 @@ public class Game implements Runnable {
 			this.getHost().notifyAllClients(ilp);
 			System.out.println("Transmitted create item packet\n");
 			selfSpawnItem(_item);
+			this.itemInWorld.add(_item);
 		}
 	}
 	
-	public void selfSpawnItem(Item _item){
+	public void selfSpawnItem(Item _item) {
 		addEntity(_item.getItemEntity());
+		this.itemInWorld.add(_item);
 	}
 	
-	public void addItemToPlayer(long _eid, Item _item){
+	public void addItemToPlayer(long _eid, long itemid) {
+		// find hte item
+		Item cItem = null;
+		for(Item i : this.itemInWorld)
+		{
+			if(i.id == itemid)
+			{
+				cItem = i;
+				break;
+			}
+		}
+		
+		if(cItem == null) {
+			System.out.println("Yo' momma's so fat, that the item can't be found!");
+			return;
+		}
+	
+		
 		for(PlayerEntity p : getPlayers()){
 			if(p.id == _eid){
-				if(p.getInventory().containsItem(_item)){
+				if(p.getInventory().containsItem(cItem)){
 					break;
 				}
-				p.getInventory().addItem(_item);
+				p.getInventory().addItem(cItem);
 				invenPopUp.getRoot().repaint();
 				break;
 			}
 		}
-    	
 	}
 	
 	public void removeItemFromPlayer(long _eid, Item _item){

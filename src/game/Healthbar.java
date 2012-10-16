@@ -1,5 +1,6 @@
 package game;
 
+import game.entity.moveable.PlayerEntity;
 import game.modelloader.Content;
 
 import initial3d.engine.xhaust.Component;
@@ -21,7 +22,7 @@ public class Healthbar extends Component {
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.RED);
-		g.fillRect(200,  0, currentHp * 3, 30);
+		g.fillRect(200,  0, currentHp * PlayerEntity.defaultHealth, 30);
 		BufferedImage bi = Content.loadContent("resources/ui/health.png");
 		g.drawImage(bi, 200, 0, 300, 30, null);
 	}
