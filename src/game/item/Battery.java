@@ -38,20 +38,4 @@ public class Battery extends Item {
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		this.getItemEntity().addMeshContext(mc);
 	}
-	
-	public void addToScene(Scene scene) {
-		this.getItemEntity().addToScene(scene);
-		
-		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
-
-		// battery
-
-	}
-
-	public void addToLevel(Level level) {
-		this.getItemEntity().addToLevel(level);
-	}
-
-	
-
 }

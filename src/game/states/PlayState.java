@@ -81,51 +81,7 @@ public class PlayState extends GameState {
 		RenderWindow rwin = Game.getInstance().getWindow();
 		rwin.setCrosshairVisible(true);
 		rwin.setCursorVisible(false);
-		
-		if(Game.getInstance().isHost())
-		{
-			Game.getInstance().spawnItem(new Battery(Vec3.create(6, 0.125, 5)));
-			Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
-			door.addToLevel(Game.getInstance().getLevel());
-			
-			
-			Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
-			spike.addToLevel(Game.getInstance().getLevel());
-		}
-//
-//		System.out.println("Creating test object");
-//		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {
-//		};
-//		ItemEntity ie = new ItemEntity(Vec3.create(3, 0.125, 3), it);
-//		// ie.updateMotion(Vec3.create(3, 0.125, 3), Vec3.zero, Quat.one, Vec3.zero, System.currentTimeMillis());
-//
-//		// battery
-//		Material mat = new Material(Color.GRAY, Color.GRAY, Color.GRAY, Color.BLACK, 20f, 1f);
-//		Texture tex_kd = Initial3D.createTexture(Content
-////				.<BufferedImage> loadContent("resources/models/battery/battery_kd.png"));
-////		Texture tex_ke = Initial3D.createTexture(Content
-//				.<BufferedImage> loadContent("resources/models/battery/battery_ke.png"));
-//		mat = new Material(mat, tex_kd, null, tex_ke);
-//
-//		Mesh m = Content.loadContent("resources/models/battery/battery.obj");
-//		MeshContext mc = new MeshContext(m, mat, ie);
-//		mc.setScale(4);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		// key
-//		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
-//				0.2f, 0.2f, 0f), 1f, 1f);
-//		m = Content.loadContent("resources/models/key/key.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		mc.setScale(4);
-//
-//		// spikeball
-//		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
-//				0.3f), 1f, 1f);
-//		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//
+
 //		// box
 //		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
 //		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
@@ -133,22 +89,6 @@ public class PlayState extends GameState {
 //		m = Content.loadContent("resources/models/box/box.obj");
 //		mc = new MeshContext(m, mat, ie);
 //		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//
-//		
-//		///temp TODO REMOVE
-//		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
-//		mc = new MeshContext(m, mat, i);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		i.addMeshContext(mc);
-//		
-//		
-//		// doorbars
-//		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-//		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-
-		//		ie.setPosition(Vec3.create(3, 0, 3));
 
 //		// gunpart
 //		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
@@ -156,73 +96,9 @@ public class PlayState extends GameState {
 //		mc = new MeshContext(m, mat, ie);
 //		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 //		mc.setScale(0.25);
-//
-//
-//
-//		ie.setPosition(Vec3.create(3, 0, 3));
-		
-//		// key
-//		mat = new Material(Color.GRAY, new Color(0.081f, 0.064f, 0.036f), new Color(0.81f, 0.72f, 0.54f), new Color(
-//				0.2f, 0.2f, 0f), 1f, 1f);
-//		m = Content.loadContent("resources/models/key/key.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		mc.setScale(4);
-//
-//		// spikeball
-//		mat = new Material(Color.GRAY, new Color(0.3f, 0.25f, 0.3f), new Color(0.65f, 0.2f, 0.65f), new Color(0.3f, 0f,
-//				0.3f), 1f, 1f);
-//		m = Content.loadContent("resources/models/spikeball/spikeball.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//
-//		// box
-//		mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
-//		tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
-//		mat = new Material(mat, tex_kd, null, null);
-//		m = Content.loadContent("resources/models/box/box.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		
-//		// doorbars
-//		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-//		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
-//		mc = new MeshContext(m, mat, ie);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		ie.setPosition(Vec3.create(3, 0, 3));
-//		
-//		// gunpart
-////		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
-////		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
-////		mc = new MeshContext(m, mat, ie);
-////		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-////		mc.setScale(0.25);
-//		
-//		
-//
-//		ie.addMeshContext(mc);
-//
-//		ie.addToLevel(Game.getInstance().getLevel());
-//		// ie.addToScene(scene);
-
-		
-
-		
-		System.out.println("Added Test object to level");
-
-		// EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
-		// Material mat1 = new Material(Color.RED, Color.RED, new Color(0.5f, 0.5f, 0.5f), new Color(0f, 0f, 0f), 20f,
-		// 1f);
-		// Mesh m1 = Content.loadContent("sphere.obj");
-		// MeshContext mc1 = new MeshContext(m1, mat1, e);
-		// mc1.setScale(0.1);
-		// mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		//
-		// e.addMeshContext(mc1);
-		// e.addToLevel(Game.getInstance().getLevel());
 
 		System.out.println(Game.getInstance().getLevel());
-		Game.getInstance().getLevel().addToScene(scene);
+		Game.getInstance().getLevel().init(scene);
 
 		cameraRf_3 = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		scene.getCamera().trackReferenceFrame(cameraRf_3);
@@ -435,12 +311,13 @@ public class PlayState extends GameState {
 		// get the collision normals (if any)
 		Vec3 colNorm = Game.getInstance().getLevel().preCollisionNorm(player, true);
 		
-		// if there was a collision set the velocity appropriately
-		/*
-		 * if(colNorm != null){ //vector magic colNorm = colNorm.flattenY(); Vec3 intentUnit = intent_vel.unit(); double
-		 * scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); intent_vel =
-		 * ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); }
-		 */
+		// if there was a collision set the velocity appropriately (if also not dead)
+		 if(colNorm != null && !Game.getInstance().getPlayer().isDead()){ //vector magic 
+			 colNorm = colNorm.flattenY(); 
+			 Vec3 intentUnit = intent_vel.unit(); 
+			 double scale = -1 * (colNorm.dot(intentUnit)) * intent_vel.mag(); 
+			 intent_vel = ((colNorm.cross(intentUnit)).cross(colNorm)).scale(scale); 
+		}
 
 		// poke all players and set the velocity
 		player.updateMotion(player.getPosition(), intent_vel, Quat.create(player_yaw, Vec3.j), Vec3.zero, Game.time());
