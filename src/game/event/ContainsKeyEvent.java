@@ -2,7 +2,6 @@ package game.event;
 
 import game.entity.Entity;
 import game.entity.moveable.PlayerEntity;
-import game.item.Item;
 import game.item.Key;
 
 import java.util.List;

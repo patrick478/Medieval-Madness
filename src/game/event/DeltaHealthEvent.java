@@ -3,8 +3,6 @@ package game.event;
 import game.Game;
 import game.entity.Damageable;
 import game.entity.Entity;
-import game.entity.moveable.*;
-
 import java.util.List;
 
 public class DeltaHealthEvent extends AbstractEvent {

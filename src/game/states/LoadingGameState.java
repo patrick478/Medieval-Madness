@@ -118,7 +118,6 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		{
 			Game.getInstance().changeState(new PlayState());
 		}
-
 	}
 
 	@Override

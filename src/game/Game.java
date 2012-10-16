@@ -80,7 +80,6 @@ public class Game implements Runnable {
 	private int currentLevelNumber = 1;
 	private boolean isPregameReady = false;
 
-	private long predictedLatency = 0;
 	private long timeOffset = 0;
 	private int maxPlayers = 1;
 	
@@ -379,7 +378,6 @@ public class Game implements Runnable {
 	}
 
 	public void setPredictedLatency(long pl) {
-		this.predictedLatency = pl;
 	}
 
 	public Level getLevel() {
