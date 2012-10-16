@@ -27,6 +27,12 @@ public class Label extends Component {
 		super(i, defaultHeight);
 	}
 	
+	public Label(String format, int width) {
+		super(width, defaultHeight);
+		this.text = format;
+	}
+
+
 	public void setText(String text){
 		this.text = text;
 		this.repaint();
