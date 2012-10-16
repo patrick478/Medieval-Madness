@@ -17,7 +17,6 @@ public class DeltaHealthEvent extends AbstractEvent {
 	
 	@Override
 	protected boolean applyEvent(long _timeStamp, List<Entity> _trigger) {
-		System.out.println("damage entity");
 		for(Entity e : _trigger){
 			if(e instanceof Damageable){
 				Game.getInstance().setEntityHealth(e.id, ((Damageable)e).getCurrentHealth() + delta);
