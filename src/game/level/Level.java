@@ -1,7 +1,6 @@
 package game.level;
 
 import game.Game;
-import game.bound.Bound;
 import game.bound.BoundingSphere;
 import game.entity.Entity;
 import game.entity.moveable.MoveableEntity;

@@ -4,7 +4,6 @@ import game.ItemType;
 import game.entity.moveable.ItemEntity;
 import game.level.Level;
 
-import initial3d.engine.ReferenceFrame;
 import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
@@ -14,7 +13,6 @@ public abstract class Item {
 	private final BufferedImage icon;
 	private final String description;
 	private Item parent = null;
-	private final Vec3 pos;
 	private final ItemEntity ie;
 	
 	public final long id;
@@ -25,7 +23,6 @@ public abstract class Item {
 		icon = _icon;
 		description = _descript;
 		this.type = _type;
-		this.pos = _pos;
 		this.ie = new ItemEntity(id, _pos, this);
 	}
 	

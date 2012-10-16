@@ -1,7 +1,6 @@
 package game.level;
 
 import game.level.impl.ClosedEndLevel;
-import game.level.impl.EmptyLevel;
 
 public class LevelGenerator {
 

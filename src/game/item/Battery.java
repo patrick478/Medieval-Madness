@@ -6,15 +6,11 @@ import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
-import initial3d.engine.ReferenceFrame;
-import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 import java.awt.image.BufferedImage;
 
 import game.ItemType;
-import game.entity.moveable.ItemEntity;
-import game.level.Level;
 import game.modelloader.Content;
 
 public class Battery extends Item {	

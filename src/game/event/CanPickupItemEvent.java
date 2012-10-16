@@ -1,6 +1,5 @@
 package game.event;
 
-import game.Game;
 import game.entity.Entity;
 import game.entity.moveable.PlayerEntity;
 import game.item.Item;

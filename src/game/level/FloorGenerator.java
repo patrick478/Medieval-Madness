@@ -1,11 +1,8 @@
 package game.level;
 
-import game.level.impl.OpenFloor;
 import game.level.impl.RandomFloor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class FloorGenerator {
 
