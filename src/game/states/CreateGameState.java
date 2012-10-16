@@ -22,7 +22,7 @@ import game.net.NetworkingHost;
 
 /***
  * The create-a-game state, should show all the options then when "next" is pressed, goto the LobbyState.
- * @author Ben
+ * @author Ben + Patrick
  *
  */
 public class CreateGameState extends GameState {
