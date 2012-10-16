@@ -54,17 +54,24 @@ public class SpikeBallEntity extends EnemyEntity{
 	@Override
 	public void poke(){
 		super.poke();
-		if(Game.time() > attachTime + updateTime){
-			attachTime = Game.time();
-			double distance = Double.MAX_VALUE;
-			Vec3 target = Vec3.zero;
-			for(PlayerEntity p : Game.getInstance().getPlayers()){
-				if(p.getPosition().sub(this.getPosition()).mag()<distance){
-					target = p.getPosition();
+		if(Game.getInstance().isHost())
+		{
+			Vec3 target = null;
+			if(Game.time() > attachTime + updateTime){
+				attachTime = Game.time();
+				double distance = Double.MAX_VALUE;
+				target = Vec3.zero;
+				for(PlayerEntity p : Game.getInstance().getPlayers()){
+					if(p.getPosition().sub(this.getPosition()).mag()<distance){
+						target = p.getPosition();
+						distance = p.getPosition().sub(this.getPosition()).mag();
+					}
 				}
+				//TODO network issues?
+				System.out.println(Game.time());
+				Game.getInstance().moveMob(this.id, getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation());
 			}
-			//TODO network issues?
-			this.updateMotion(getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation(), getAngVelocity(), attachTime);
+			
 		}
 	}
 	
