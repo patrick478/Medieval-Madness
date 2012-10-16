@@ -6,7 +6,7 @@ public class MovableReferenceFrame extends ReferenceFrame {
 	private volatile Quat orientation = Quat.one;
 
 	public MovableReferenceFrame(ReferenceFrame parent_) {
-		super(parent_);
+		super(parent_ == null ? SCENE_ROOT : parent_);
 	}
 
 	@Override
