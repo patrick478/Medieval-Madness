@@ -15,6 +15,7 @@ import initial3d.Initial3D;
 import initial3d.Texture;
 import initial3d.engine.*;
 import initial3d.engine.xhaust.DialogPane;
+import initial3d.engine.xhaust.EquippedInventoryContainer;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
 import game.Game;
