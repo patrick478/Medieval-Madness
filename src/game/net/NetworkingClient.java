@@ -131,7 +131,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				break;
 				
 			case EnterPrePostPacket.ID:
-				EnterPrePostPacket epp = new EnterPrePostPacket();
+				EnterPrePostPacket epp = new EnterPrePostPacket(Game.getInstance().getStartTime());
 				epp.fromData(dp);
 				if(epp.isPre())
 					Game.getInstance().changeState(new PregameState());

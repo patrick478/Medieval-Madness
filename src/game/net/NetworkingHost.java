@@ -347,13 +347,14 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			// notify players of their player indexes and tell them to enter the game
 			for(ServerClient c : this.clients.values())
 			{		
-				EnterPrePostPacket epp = new EnterPrePostPacket();
+				EnterPrePostPacket epp = new EnterPrePostPacket(Game.getInstance().getStartTime());
 				epp.setPre();				
 				this.send(c.getSocket(), epp.toData().getData());
 				
 				System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
 			}
 		}
+		Game.getInstance().startTimer();
 	}
 
 	public void notifyAllNonHost(Packet pl)
