@@ -15,7 +15,7 @@ public class LevelFinishEvent extends AbstractEvent {
 				return false;
 			}
 		}
-		//TODO the thing
+		Game.getInstance().finishLevel();
 		return true;
 	}
 }
