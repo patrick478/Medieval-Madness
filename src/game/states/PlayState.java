@@ -175,14 +175,6 @@ public class PlayState extends GameState {
 //		mc = new MeshContext(m, mat, ie);
 //		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 //		
-//		
-//		///temp TODO REMOVE
-//		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
-//		mc = new MeshContext(m, mat, i);
-//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		i.addMeshContext(mc);
-//		
-//		
 //		// doorbars
 //		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
 //		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
