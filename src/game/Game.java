@@ -77,7 +77,7 @@ public class Game implements Runnable {
 	private int playerIndex = -1;
 
 	private Level currentLevel = null;
-	private int currentLevelNumber = 1;
+	private int currentLevelNumber = 10;
 	private boolean isPregameReady = false;
 
 	private long predictedLatency = 0;
@@ -582,5 +582,9 @@ public class Game implements Runnable {
 		}
 		System.out.printf("Actually moving eid=%d\n", eid);
 		me.updateMotion(pos, vel, ori, Vec3.zero, Game.time());
+	}
+
+	public void gameOver() {
+		Game.getInstance().changeState(new GameOverState());
 	}
 }
