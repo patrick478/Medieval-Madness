@@ -35,7 +35,6 @@ public class WavefrontLoader extends AbstractContentLoader {
 		try {
 			return Load(new FileInputStream(filename));
 		} catch (FileNotFoundException e) {
-			System.out.println("Waaa! Pomf =3. What are we going to do on stderr?");
 		}
 		
 		return null;

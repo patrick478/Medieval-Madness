@@ -77,7 +77,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	}
 	
 	public void setNumPlayers(int n) {
-//		System.out.printf("Number of players changed to %d\n", n);
 		this.maxPlayers = n;
 	}
 	
@@ -127,7 +126,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						SocketChannel clientSocket = ssc.accept();
 						clientSocket.configureBlocking(false);
 						
-						System.out.printf("Connection accepted from %s\n", clientSocket.socket().getRemoteSocketAddress().toString());
 
 						
 						// generate a correct server client
@@ -232,7 +230,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		npjp.nPlayers = this.numPlayers();
 		for(ServerClient sc : this.clients.values())
 		{			
-			System.out.printf("telling %d that there are now %d players\n", sc.getPlayerIndex(), this.numPlayers());
 			this.send(sc.getSocket(), npjp.toData().getData());
 		}
 	}
@@ -304,7 +301,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		
 		for(ServerClient sc : this.clients.values())
 		{	
-			System.out.printf("Telling everyone that %d is now %b\n", client.getPlayerIndex(), client.getReadyState());
 			this.send(sc.getSocket(), erp.toData().getData());
 		}
 	}
@@ -322,7 +318,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		
 			this.send(c.getSocket(), egp.toData().getData());
 			
-			System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
 		}
 	}
 
@@ -342,7 +337,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				epp.setPre();				
 				this.send(c.getSocket(), epp.toData().getData());
 				
-				System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
 			}
 		}
 		Game.getInstance().startTimer();
@@ -350,11 +344,9 @@ public class NetworkingHost extends NetworkMode implements Runnable
 
 	public void notifyAllNonHost(Packet pl)
 	{
-		System.out.println("baha!");
 		for(ServerClient c : this.clients.values())
 		{			
 			if(c.isHost()) continue;
-			System.out.println("transmit!");
 			this.send(c.getSocket(), pl.toData().getData());
 		}
 	}

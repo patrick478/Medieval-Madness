@@ -198,31 +198,26 @@ public class PlayState extends GameState {
 		if (rwin.pollKey(KeyEvent.VK_1)) {
 			invenSelector.setSelectedPos(0);
 			this.selectedInvenPos = 0;
-			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_2)) {
 			invenSelector.setSelectedPos(1);
 			this.selectedInvenPos = 1;
-			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_3)) {
 			invenSelector.setSelectedPos(2);
 			this.selectedInvenPos = 2;
-			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_4)) {
 			invenSelector.setSelectedPos(3);
 			this.selectedInvenPos = 3;
-			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_5)) {
 			invenSelector.setSelectedPos(4);
 			this.selectedInvenPos = 4;
-			System.out.println("Selected pos: " + selectedInvenPos);
 
 		}
 		if (rwin.pollKey(KeyEvent.VK_E)) {
