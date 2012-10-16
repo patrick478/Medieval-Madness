@@ -13,47 +13,55 @@ public class StatPane extends Pane {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(Color.RED);
-			
+
 			double h = Game.getInstance().getPlayer().getCurrentHealth()
 					/ (double) Game.getInstance().getPlayer().getTotalHealth();
 
 			g.fillRect((int) ((1 - h) * 200), 0, 200, 30);
-			
+
 			g.setColor(Color.WHITE);
 			g.drawString("" + Game.getInstance().getPlayer().getCurrentHealth(), 160, 20);
 		}
 
 	};
-	
+
 	private Component eg = new Component(200, 30) {
 
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(Color.GREEN);
-			
+
 			double h = Game.getInstance().getPlayer().getCurrentEnergy()
 					/ (double) Game.getInstance().getPlayer().getTotalEnergy();
 
 			g.fillRect((int) ((1 - h) * 200), 0, 200, 30);
-			
+
 			g.setColor(Color.WHITE);
 			g.drawString("" + Game.getInstance().getPlayer().getCurrentEnergy(), 160, 20);
 		}
 
 	};
-	
+
 	private Component t = new Component(100, 30) {
-		
+
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			
-			// TODO draw time remaining here
-			g.setColor(Color.WHITE);
-			g.drawString("00:00", 5, 20);
+
+			long ms = Game.getInstance().getRemainingMs();
+			long hs = (ms % 1000l) / 10;
+			long s = ms / 1000;
+
+			if (ms < 10000) {
+				g.setColor(Color.RED);
+			} else {
+				g.setColor(Color.WHITE);
+			}
+			g.drawString(String.format("%d:%02d", s, hs), 5, 20);
+
 		}
-		
+
 	};
-	
+
 	private long last_repaint = 0;
 
 	public StatPane() {
@@ -69,7 +77,7 @@ public class StatPane extends Pane {
 		t.setOpaque(false);
 		getRoot().add(t);
 	}
-	
+
 	@Override
 	protected void prepareDraw() {
 		if (System.currentTimeMillis() - last_repaint > 100) {
