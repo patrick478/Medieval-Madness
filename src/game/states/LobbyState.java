@@ -60,6 +60,9 @@ public class LobbyState extends GameState {
 
 		p.getRoot().add(pic);
 
+		
+		
+		
 		statusLabel.setPosition(100, 80);
 		startButton.setPosition(100, 120);
 		p.getRoot().add(statusLabel);
