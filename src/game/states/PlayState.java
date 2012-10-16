@@ -1,46 +1,30 @@
 package game.states;
 
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.security.Identity;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-
-import initial3d.Initial3D;
-import initial3d.Texture;
-import initial3d.engine.*;
+import game.Game;
+import game.GameState;
+import game.Healthbar;
+import game.InventorySelector;
+import game.MapPane;
+import game.StatPane;
+import game.entity.Entity;
+import game.entity.moveable.DoorEntity;
+import game.entity.moveable.PlayerEntity;
+import game.entity.moveable.SpikeBallEntity;
+import game.entity.trigger.TriggerEntity;
+import game.item.Battery;
+import initial3d.engine.Camera;
+import initial3d.engine.Color;
+import initial3d.engine.MovableReferenceFrame;
+import initial3d.engine.Quat;
+import initial3d.engine.RenderWindow;
+import initial3d.engine.Vec3;
 import initial3d.engine.xhaust.DialogPane;
 import initial3d.engine.xhaust.EquippedInventoryContainer;
 import initial3d.engine.xhaust.Pane;
 import initial3d.renderer.Util;
-import game.Game;
-import game.GameState;
-import game.Healthbar;
-import game.MapPane;
-import game.StatPane;
-import game.bound.BoundingSphere;
-import game.InventorySelector;
-import game.entity.Entity;
-import game.entity.moveable.DoorEntity;
-import game.entity.moveable.EnemyEntity;
-import game.entity.moveable.ItemEntity;
-import game.entity.moveable.PlayerEntity;
-import game.entity.moveable.ProjectileEntity;
-import game.entity.moveable.SpikeBallEntity;
-import game.entity.trigger.DynamicTriggerEntity;
-import game.entity.trigger.StaticTriggerEntity;
-import game.entity.trigger.TriggerEntity;
-import game.event.AvoidEvent;
-import game.event.ContactEvent;
-import game.event.DeltaHealthEvent;
-import game.event.RemoveEntityEvent;
-import game.item.Battery;
-import game.item.Item;
-import game.modelloader.Content;
+
+import java.awt.event.KeyEvent;
+import java.util.List;
 
 /***
  * The game!
@@ -91,21 +75,6 @@ public class PlayState extends GameState {
 			spike.addToLevel(Game.getInstance().getLevel());
 		}
 		
-		// // box
-		// mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
-		// tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
-		// mat = new Material(mat, tex_kd, null, null);
-		// m = Content.loadContent("resources/models/box/box.obj");
-		// mc = new MeshContext(m, mat, ie);
-		// mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-
-		// // gunpart
-		// // mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f,
-		// 0.69f), Color.BLACK, 1f, 1f);
-		// // m = Content.loadContent("resources/models/gunpart/gunpart.obj");
-		// // mc = new MeshContext(m, mat, ie);
-		// // mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
-		// // mc.setScale(0.25);
 
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().init(scene);
@@ -117,7 +86,6 @@ public class PlayState extends GameState {
 		cameraRf_1 = new MovableReferenceFrame(Game.getInstance().getPlayer());
 		cameraRf_1.setPosition(Vec3.create(0, 0.15, 0));
 
-		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		
 		//set up the inventory selector stuff
 		Pane invenEquippedPane = new Pane(250, 50);
@@ -141,11 +109,11 @@ public class PlayState extends GameState {
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
 		
-		// stats
+	/*	// stats
 		Pane statpane = new StatPane();
 		statpane.setPosition(-100, 240);
 		statpane.requestVisible(true);
-		scene.addDrawable(statpane);
+		scene.addDrawable(statpane);*/
 
 		// minimap
 		mappane = new MapPane();
@@ -180,7 +148,6 @@ public class PlayState extends GameState {
 
 		// 200px == pi / 4 ??
 
-		// these are confusing names, aren't they?
 		double rotx = mx / 800d * Math.PI;
 		double roty = my / 800d * Math.PI;
 
@@ -269,12 +236,7 @@ public class PlayState extends GameState {
 			mappane.decScale();
 		}
 
-		// temp
-		// if(rwin.getKey(KeyEvent.VK_O)) {
-		// this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() + 0.01);
-		// } else if(rwin.getKey(KeyEvent.VK_P)) {
-		// this.scene.getCamera().setFOV(this.scene.getCamera().getFOV() - 0.01);
-		// }
+		
 
 		if (rwin.getKey(KeyEvent.VK_ESCAPE)) {
 			rwin.setMouseCapture(!rwin.isMouseCaptured());
@@ -348,8 +310,7 @@ public class PlayState extends GameState {
 			transmittedStop = true;
 		}
 
-		// update the game UI
-		// this.hp.update(Game.getInstance().getPlayer().getHealth());
+	
 	}
 
 	@Override
