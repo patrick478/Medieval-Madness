@@ -442,8 +442,6 @@ public class Game implements Runnable {
 		pl.setCreateMode();
 		
 		this.getNetwork().send(pl.toData());
-		
-		System.out.println("Sent projectile request");
 	}
 
 	public void selfCreateProjectile(long id, Vec3 position, Vec3 velocity, Quat orientation, short creator, long createTime) {
@@ -452,7 +450,6 @@ public class Game implements Runnable {
 		pe.addToLevel(Game.getInstance().getLevel());
 		pe.addToScene(Game.getInstance().currentGameState.scene);
 		getPlayers()[creator].muzzleFlash(true);
-		System.out.println("created projectile!");
 	}
 
 	public void setSelfPregameReady(boolean b) {
@@ -461,9 +458,6 @@ public class Game implements Runnable {
 		srp.newReadyStatus = Game.getInstance().getPlayer().getPregameReadyState();
 		srp.pIndex = this.getPlayerIndex();
 		byte[] data = srp.toData().getData();
-		for(int i = 0; i < data.length; i++)
-			System.out.printf("0x%02X ", data[i]);
-		System.out.println();
 		this.getNetwork().send(srp.toData());
 	}
 	
@@ -530,7 +524,6 @@ public class Game implements Runnable {
 	
 	public void selfSetEntityHealth(long id, int i)
 	{
-		System.out.printf("Changing eid=%d to hp=%d\n", id, i);
 		Damageable d = (Damageable) this.currentLevel.getEntity(id);
 		if(d == null) return;
 		d.setCurrentHealth(i);
@@ -568,7 +561,6 @@ public class Game implements Runnable {
 			me = new SpikeBallEntity(eid, 100, -1, pos, 0.5);
 			me.addToLevel(Game.getInstance().getLevel());
 			me.addToScene(Game.getInstance().currentGameState.scene);
-			System.out.println("Creating dat mob");
 		}
 		if(this.isHost())
 		{
@@ -578,14 +570,13 @@ public class Game implements Runnable {
 			mmb.vel = vel;
 			mmb.ori = ori;
 			this.getHost().notifyAllClients(mmb);
-			System.out.printf("Transmitting move of eid=%d\n", eid);
 		}
-		System.out.printf("Actually moving eid=%d\n", eid);
 		me.updateMotion(pos, vel, ori, Vec3.zero, Game.time());
 	}
-
 	public void gameOver() {
 		Game.getInstance().changeState(new GameOverState());
+		Game.getInstance().getHost().shutdown();
+		Game.getInstance().getNetwork().shutdown();
 	}
 
 	public int alivePlayers() {

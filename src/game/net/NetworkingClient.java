@@ -73,7 +73,7 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			} catch(EOFException e) {
 				break;
 			} catch (IOException e) {
-				e.printStackTrace();
+				return;
 			}
 			
 			if(rx < 0) break;
@@ -175,7 +175,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 			case ItemLifePacket.ID:
 				ItemLifePacket ilp = new ItemLifePacket();
 				ilp.fromData(dp);
-				System.out.println("Recieved create item packet");
 				if(ilp.isCreate() && !Game.getInstance().isHost())
 					Game.getInstance().selfSpawnItem(ilp.getItem());
 				break;
@@ -185,7 +184,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				edp.fromData(dp);
 				if(!Game.getInstance().isHost())
 				{
-					System.out.printf("Told to destroy entity #%d\n", edp.eid);
 					Game.getInstance().removeEntity(edp.eid);
 				}
 				break;
@@ -196,7 +194,6 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 				if(!Game.getInstance().isHost())
 				{
 					Game.getInstance().addItemToPlayer(gip.eid, gip.itemID);
-					System.out.printf("supposdly giving item %d to %d\n", gip.itemID, gip.eid);
 				}				
 				break;
 				
@@ -232,5 +229,15 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 
 	public void setRemoteTarget(String text) {
 		this.remoteHost = text;
+	}
+
+	public void shutdown() {
+		try {
+			this.clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.clientThread.interrupt();
 	}
 }

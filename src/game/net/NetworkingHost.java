@@ -110,9 +110,15 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				this.changes.clear();
 				
 				// wait for an socket event
-				this.selector.select(100);
+				Iterator<SelectionKey> selectedKeys = null;
+				try {
+					this.selector.select(100);
+					selectedKeys = this.selector.selectedKeys().iterator();
+				} catch(Exception e)
+				{
+					return;
+				}
 				
-				Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
 				while(selectedKeys.hasNext())
 				{
 					SelectionKey key = selectedKeys.next();
@@ -126,10 +132,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
 						SocketChannel clientSocket = ssc.accept();
 						clientSocket.configureBlocking(false);
-						
-						System.out.printf("Connection accepted from %s\n", clientSocket.socket().getRemoteSocketAddress().toString());
-
-						
+												
 						// generate a correct server client
 						int playerIndex = this.getFreePlayerIndex();
 						ServerClient client = new ServerClient(playerIndex, clientSocket);
@@ -232,7 +235,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		npjp.nPlayers = this.numPlayers();
 		for(ServerClient sc : this.clients.values())
 		{			
-			System.out.printf("telling %d that there are now %d players\n", sc.getPlayerIndex(), this.numPlayers());
 			this.send(sc.getSocket(), npjp.toData().getData());
 		}
 	}
@@ -304,7 +306,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		
 		for(ServerClient sc : this.clients.values())
 		{	
-			System.out.printf("Telling everyone that %d is now %b\n", client.getPlayerIndex(), client.getReadyState());
 			this.send(sc.getSocket(), erp.toData().getData());
 		}
 	}
@@ -321,8 +322,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			//egp.position = Vec3.one;
 		
 			this.send(c.getSocket(), egp.toData().getData());
-			
-			System.out.printf("Told %d to enter the pregame\n", c.getPlayerIndex());
 		}
 	}
 
@@ -363,6 +362,16 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		for(ServerClient c : this.clients.values())
 		{						
 			this.send(c.getSocket(), pl.toData().getData());
+		}
+	}
+
+	public void shutdown()
+	{
+		
+		try {
+			this.selector.close();
+			this.serverChannel.close();
+		} catch (IOException e) {
 		}
 	}
 

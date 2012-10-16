@@ -115,8 +115,6 @@ public class PlayState extends GameState {
 		// ie.addToLevel(Game.getInstance().getLevel());
 		// // ie.addToScene(scene);
 
-		System.out.println("Added Test object to level");
-
 		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
 				new Color(0.2f, 0.2f, 0f), 2f, 1f);
 		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");

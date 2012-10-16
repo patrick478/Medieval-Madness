@@ -4,6 +4,7 @@ import game.Game;
 import game.bound.Bound;
 import game.bound.BoundingSphere;
 import game.entity.Damageable;
+import game.entity.Entity;
 import game.item.Item;
 import game.item.ItemContainer;
 import game.modelloader.Content;
@@ -245,8 +246,11 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
 		if (this.currentHealth <= 0) {
+			Entity e = Game.getInstance().getLevel().getEntity(this.id);
+			if(e != null) e.kill();
+			else System.out.printf("null killable\n");
+			
 			Game.getInstance().removeEntity(this.id);
-			Game.getInstance().getLevel().getEntity(this.id).kill();
 		}
 	}
 
