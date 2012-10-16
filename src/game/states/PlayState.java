@@ -3,7 +3,11 @@ package game.states;
 import game.Game;
 import game.GameState;
 import game.Healthbar;
+<<<<<<< HEAD
 import game.InventorySelector;
+=======
+import game.ItemType;
+>>>>>>> f513d529e22a7a530688381e0a66d7a07841f258
 import game.MapPane;
 import game.StatPane;
 import game.entity.Entity;
@@ -75,7 +79,46 @@ public class PlayState extends GameState {
 			spike.addToLevel(Game.getInstance().getLevel());
 		}
 		
+<<<<<<< HEAD
 
+=======
+		// // box
+		// mat = new Material(Color.GRAY, Color.WHITE, Color.BLACK, Color.BLACK, 1f, 1f);
+		// tex_kd = Initial3D.createTexture(Content.<BufferedImage> loadContent("resources/models/box/box_kd.png"));
+		// mat = new Material(mat, tex_kd, null, null);
+		// m = Content.loadContent("resources/models/box/box.obj");
+		// mc = new MeshContext(m, mat, ie);
+		// mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+
+		// // gunpart
+		// // mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f,
+		// 0.69f), Color.BLACK, 1f, 1f);
+		// // m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+		// // mc = new MeshContext(m, mat, ie);
+		// // mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		// // mc.setScale(0.25);
+		//
+		//
+		//
+		// ie.addMeshContext(mc);
+		//
+		// ie.addToLevel(Game.getInstance().getLevel());
+		// // ie.addToScene(scene);
+
+		System.out.println("Added Test object to level");
+
+		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
+				new Color(0.2f, 0.2f, 0f), 2f, 1f);
+		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");
+		MovableReferenceFrame mrf = new MovableReferenceFrame(null);
+		mrf.setPosition(Vec3.create(3, 0, 3));
+		MeshContext mc1 = new MeshContext(m1, mat1, mrf);
+		// mc1.setScale(0.1);
+		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		scene.addDrawable(mc1);
+
+		// non-fucking-around code
+>>>>>>> f513d529e22a7a530688381e0a66d7a07841f258
 		System.out.println(Game.getInstance().getLevel());
 		Game.getInstance().getLevel().init(scene);
 
@@ -309,6 +352,9 @@ public class PlayState extends GameState {
 			Game.getInstance().transmitPlayerPosition();
 			transmittedStop = true;
 		}
+		
+		if(Game.getInstance().getRemainingMs() <= 0)
+			Game.getInstance().gameOver();
 
 	
 	}

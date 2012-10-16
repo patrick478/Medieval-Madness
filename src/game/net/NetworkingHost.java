@@ -226,7 +226,8 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		}
 	}
 	
-	private void notifyPlayerJoined() {
+	private void notifyPlayerJoined()
+	{
 		NotifyPlayerJoinedPacket npjp = new NotifyPlayerJoinedPacket();
 		npjp.nPlayers = this.numPlayers();
 		for(ServerClient sc : this.clients.values())
@@ -283,17 +284,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 		}
 		return true;
 	}
-//
-//	public void updateOthersOnMovements(ServerClient client) {
-//		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity());
-//		for(ServerClient sc : this.clients)
-//		{
-//			if(sc.equals(client))
-//				continue;
-//			
-//			sc.send(packet.toData());
-//		}
-//	}
 
 	public void updateOthersOnMovements(ServerClient client) {
 		MovementPacket packet = new MovementPacket(client.getPlayerIndex(), client.getPosition(), client.getVelocity(), client.getOrientation());
@@ -346,7 +336,8 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			
 			// notify players of their player indexes and tell them to enter the game
 			for(ServerClient c : this.clients.values())
-			{		
+			{
+//				c.setReady(false);
 				EnterPrePostPacket epp = new EnterPrePostPacket(Game.getInstance().getStartTime());
 				epp.setPre();				
 				this.send(c.getSocket(), epp.toData().getData());

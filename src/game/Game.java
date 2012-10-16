@@ -576,4 +576,8 @@ public class Game implements Runnable {
 		System.out.printf("Actually moving eid=%d\n", eid);
 		me.updateMotion(pos, vel, ori, Vec3.zero, Game.time());
 	}
+
+	public void gameOver() {
+		Game.getInstance().changeState(new GameOverState());
+	}
 }

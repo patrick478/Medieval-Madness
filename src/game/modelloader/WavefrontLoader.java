@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
  */
 public class WavefrontLoader extends AbstractContentLoader {
 	public static final int maxPolys = 12000;
-	public static final int maxPolyVerts = 200;
+	public static final int maxPolyVerts = 50;
 	public static final int maxVerts = 12000;
 	public static final int maxTexCoords = 12000;
 	public static final int maxNormals = 12000;
