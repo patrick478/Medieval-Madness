@@ -24,13 +24,15 @@ public class Level {
 	private final List<TriggerEntity> triggers = new ArrayList<TriggerEntity>();
 	
 	public Level(Floor _floor, List<Entity> _entities){
+		Game.getInstance().setLevel(this);
 		floor = _floor;
-		
+		if(Game.getInstance().isHost()){
+			for(Entity e : _entities){
+				Game.getInstance().addEntity(e);
+			}
+		}
 		for(Entity e : floor.getWalls()){
 			this.addEntity(e);
-		}
-		for(Entity e : _entities){
-			Game.getInstance().addEntity(e);
 		}
 		for(PlayerEntity p : Game.getInstance().getPlayers()){
 			this.addEntity(p);
