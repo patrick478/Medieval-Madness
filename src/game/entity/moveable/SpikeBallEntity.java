@@ -15,6 +15,7 @@ import initial3d.engine.Color;
 import initial3d.engine.Material;
 import initial3d.engine.Mesh;
 import initial3d.engine.MeshContext;
+import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
 public class SpikeBallEntity extends EnemyEntity{
@@ -51,6 +52,7 @@ public class SpikeBallEntity extends EnemyEntity{
 		MeshContext mc = new MeshContext(m, mat, this);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 		this.addMeshContext(mc);
+		
 	}
 	
 	@Override
@@ -83,7 +85,7 @@ public class SpikeBallEntity extends EnemyEntity{
 		_level.addEntity(this);
 		_level.addEntity(trigger);
 	}
-
+	
 	@Override
 	public int getTotalHealth() {
 		return maxHealth;

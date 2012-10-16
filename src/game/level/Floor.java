@@ -55,7 +55,7 @@ public class Floor {
 		//add the walls
 		
 		//TODO FIXME stuff
-		long i = 125l;
+		long i = 125l*size;
 		for(int x=0; x < size; x++){
 			for(int z=0; z < size; z++){
 				if(_floor[x][z].type==Space.WALL){
