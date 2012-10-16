@@ -29,6 +29,9 @@ public class Level {
 		for(Entity e : floor.getWalls()){
 			this.addEntity(e);
 		}
+		for(Entity e : _entities){
+			Game.getInstance().addEntity(e);
+		}
 		for(PlayerEntity p : Game.getInstance().getPlayers()){
 			this.addEntity(p);
 		}
