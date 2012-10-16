@@ -77,7 +77,6 @@ public class NetworkingHost extends NetworkMode implements Runnable
 	}
 	
 	public void setNumPlayers(int n) {
-//		System.out.printf("Number of players changed to %d\n", n);
 		this.maxPlayers = n;
 	}
 	
@@ -132,7 +131,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 						ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
 						SocketChannel clientSocket = ssc.accept();
 						clientSocket.configureBlocking(false);
-												
+
 						// generate a correct server client
 						int playerIndex = this.getFreePlayerIndex();
 						ServerClient client = new ServerClient(playerIndex, clientSocket);
@@ -322,6 +321,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 			//egp.position = Vec3.one;
 		
 			this.send(c.getSocket(), egp.toData().getData());
+
 		}
 	}
 
@@ -340,6 +340,7 @@ public class NetworkingHost extends NetworkMode implements Runnable
 				EnterPrePostPacket epp = new EnterPrePostPacket(Game.getInstance().getStartTime());
 				epp.setPre();				
 				this.send(c.getSocket(), epp.toData().getData());
+
 			}
 		}
 		Game.getInstance().startTimer();

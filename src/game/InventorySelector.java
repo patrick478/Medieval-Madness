@@ -101,36 +101,30 @@ public class InventorySelector extends Container {
 					for(Item item : equipped){
 						if(inventory.getItem(0)==null) return;
 						if(inventory.getItem(0).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(0);
-					System.out.println("Equipping 0 to "+ selectedPos);
 					invenCont.repaint();
 				}
 				else if (e.getSource().equals(pos1)){
 					for(Item item : equipped){
 						if(inventory.getItem(1)==null) return;
 						if(inventory.getItem(1).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(1);
-					System.out.println("Equipping 1");
 					invenCont.repaint();	
 				}
 				else if (e.getSource().equals(pos2)){
 					for(Item item : equipped){
 						if(inventory.getItem(2)==null) return;
 						if(inventory.getItem(2).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(2);
-					System.out.println("Equipping 2");
 					invenCont.repaint();	
 				}
 				else if (e.getSource().equals(pos3)){
@@ -138,24 +132,20 @@ public class InventorySelector extends Container {
 					for(Item item : equipped){
 						if(inventory.getItem(3)==null) return;
 						if(inventory.getItem(3).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(3);
-					System.out.println("Equipping 3");
 					invenCont.repaint();	
 				}
 				else if (e.getSource().equals(pos4)){
 					for(Item item : equipped){
 						if(inventory.getItem(4)==null) return;
 						if(inventory.getItem(4).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(4);
-					System.out.println("Equipping 4");
 					invenCont.repaint();	
 				}
 				
@@ -163,36 +153,30 @@ public class InventorySelector extends Container {
 					for(Item item : equipped){
 						if(inventory.getItem(5)==null) return;
 					if(inventory.getItem(5).equals(item)) {
-						System.out.println("Item already equipped");
 						return;
 					}
 					}
 					equipped[selectedPos] = inventory.getItem(5);
-					System.out.println("Equipping 5");
 					invenCont.repaint();	
 				}
 				else if (e.getSource().equals(pos6)){
 					for(Item item : equipped){
 						if(inventory.getItem(6)==null) return;
 						if(inventory.getItem(6).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(6);
-					System.out.println("Equipping 6");
 					invenCont.repaint();	
 				}
 				else if (e.getSource().equals(pos7)){
 					for(Item item : equipped){
 						if(inventory.getItem(7)==null) return;
 						if(inventory.getItem(7).equals(item)) {
-							System.out.println("Item already equipped");
 							return;
 						}
 					}
 					equipped[selectedPos] = inventory.getItem(7);
-					System.out.println("Equipping 7");
 					invenCont.repaint();	
 				}
 			}

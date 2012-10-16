@@ -61,7 +61,6 @@ public class Floor {
 		}
 		
 		final int MAGIC_NUMBER = 10;
-		System.out.println(size);
 		
 		int split = ((size-1)/MAGIC_NUMBER)+1;
 		//TODO comment
@@ -71,7 +70,6 @@ public class Floor {
 				int start_z = z * MAGIC_NUMBER;
 				int end_x = Math.min((x+1) * MAGIC_NUMBER, size-1);
 				int end_z = Math.min((z+1) * MAGIC_NUMBER, size-1);
-				System.out.println(start_x+" :: "+start_z+" :: "+ end_x+" :: "+ end_z);
 				mesh.add(buildMesh(start_x, start_z, end_x, end_z, _floor));
 			}
 		}
