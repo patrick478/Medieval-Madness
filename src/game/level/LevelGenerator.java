@@ -18,10 +18,9 @@ public class LevelGenerator {
 //		levelPlan = new DefualtLevel(_seed);
 	}
 	
-	public Level getLevel(int _level){
+	public void loadLevel(int _level){
 		Floor floor = floorGen.getFloor(_level);
-		Level level = levelPlan.designLevel(floor);
-		return level;
+		levelPlan.designLevel(floor);
 	}
 	
 	public long getSeed()

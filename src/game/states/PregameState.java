@@ -30,6 +30,9 @@ public class PregameState extends GameState {
 		final Pane p = new Pane(600, 400);
 		statusLabel = new Label("Waiting for ready!");
 		readyButton = new Button("Ready");		
+		Label nextLevelLabel = new Label(String.format("Level %d - %dms remaining\n", Game.getInstance().getCurrentLevelNumber(), Game.getInstance().getRemainingMs()));
+		nextLevelLabel.setPosition(0, 100);
+		p.getRoot().add(nextLevelLabel);
 		readyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

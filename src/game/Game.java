@@ -9,6 +9,7 @@ import game.level.Level;
 import game.net.NetworkingClient;
 import game.net.NetworkingHost;
 import game.net.packets.ChangeAttributePacket;
+import game.net.packets.EnterPrePostPacket;
 import game.net.packets.EntityDestroyPacket;
 import game.net.packets.GiveItemPacket;
 import game.net.packets.ItemLifePacket;
@@ -76,6 +77,8 @@ public class Game implements Runnable {
 	private long predictedLatency = 0;
 	private long timeOffset = 0;
 	private int maxPlayers = 1;
+	
+	private long startGameTime = System.currentTimeMillis();
 
 	private Map<Integer, PlayerEntity> players = new HashMap<Integer, PlayerEntity>();
 	private List<Item> itemInWorld = new ArrayList<Item>();
@@ -523,5 +526,26 @@ public class Game implements Runnable {
 		if(d == null) return;
 		d.setCurrentHealth(i);
 	}
+	
+	public void finishLevel()
+	{
+		EnterPrePostPacket erp = new EnterPrePostPacket(this.startGameTime);
+		erp.setPre();
+		if(this.isHost())
+		{
+			this.getHost().notifyAllClients(erp);
+		}
+	}
 
+	public void startTimer() {
+		this.startGameTime = System.currentTimeMillis();
+	}
+
+	public long getStartTime() {
+		return this.startGameTime;
+	}
+
+	public long getRemainingMs() {
+		return System.currentTimeMillis() - this.startGameTime;
+	}
 }
