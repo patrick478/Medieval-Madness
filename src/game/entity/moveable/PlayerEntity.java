@@ -60,7 +60,8 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 		return equippedItems;
 	}
 
-	private int currentHealth = this.defaultHealth;
+	private int currentHealth = defaultHealth;
+	private int currentEnergy = defaultEnergy;
 
 	private final double radius;
 	private int selfIndex = 0;
@@ -230,6 +231,18 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	@Override
 	public int getCurrentHealth() {
 		return currentHealth;
+	}
+	
+	public int getTotalEnergy() {
+		return defaultEnergy;
+	}
+	
+	public int getCurrentEnergy() {
+		return currentEnergy;
+	}
+	
+	public void applyEnergyDelta(int e) {
+		currentEnergy += e;
 	}
 
 	@Override

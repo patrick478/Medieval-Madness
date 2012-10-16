@@ -2,10 +2,13 @@ package game.level;
 
 import game.Game;
 import game.bound.Bound;
+import game.bound.BoundingSphere;
 import game.entity.Entity;
 import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
+import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
+import game.event.LevelFinishEvent;
 
 import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
@@ -24,17 +27,24 @@ public class Level {
 	private final List<TriggerEntity> triggers = new ArrayList<TriggerEntity>();
 	
 	public Level(Floor _floor, List<Entity> _entities){
+		Game.getInstance().setLevel(this);
 		floor = _floor;
-		
+		if(Game.getInstance().isHost()){
+			for(Entity e : _entities){
+				Game.getInstance().addEntity(e);
+			}
+		}
 		for(Entity e : floor.getWalls()){
 			this.addEntity(e);
-		}
-		for(Entity e : _entities){
-			Game.getInstance().addEntity(e);
 		}
 		for(PlayerEntity p : Game.getInstance().getPlayers()){
 			this.addEntity(p);
 		}
+		this.addEntity(
+				new StaticTriggerEntity(Entity.freeID(), 
+				new LevelFinishEvent(), 
+				new BoundingSphere(Vec3.create(_floor.getSize()-1, 0, _floor.getSize()-1), 2))//TODO chnage radius maybe?
+		);
 	}
 	
 	public Floor getFloor() {

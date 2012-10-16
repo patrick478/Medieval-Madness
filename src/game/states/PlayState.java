@@ -22,6 +22,7 @@ import game.Game;
 import game.GameState;
 import game.Healthbar;
 import game.MapPane;
+import game.StatPane;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
@@ -251,13 +252,19 @@ public class PlayState extends GameState {
 		scene.addDrawable(Game.getInstance().getInvenPopUp());
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
-		Pane topPane = new Pane(500, 100);
-		hp = new Healthbar();
-		topPane.getRoot().add(hp);
-		topPane.requestVisible(true);
-		topPane.getRoot().setOpaque(false);
-		topPane.setPosition(-100, 240);
-		scene.addDrawable(topPane);
+//		Pane topPane = new Pane(500, 30);
+//		hp = new Healthbar();
+//		topPane.getRoot().add(hp);
+//		topPane.requestVisible(true);
+//		//topPane.getRoot().setOpaque(false);
+//		topPane.setPosition(-100, 240);
+//		scene.addDrawable(topPane);
+		
+		// stats
+		Pane statpane = new StatPane();
+		statpane.setPosition(-100, 240);
+		statpane.requestVisible(true);
+		scene.addDrawable(statpane);
 		
 		// minimap
 		mappane = new MapPane();
@@ -454,7 +461,7 @@ public class PlayState extends GameState {
 		}
 
 		// update the game UI
-		this.hp.update(Game.getInstance().getPlayer().getHealth());
+		//this.hp.update(Game.getInstance().getPlayer().getHealth());
 	}
 
 	@Override

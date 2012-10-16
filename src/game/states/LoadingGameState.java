@@ -91,7 +91,7 @@ public class LoadingGameState extends GameState implements ContentRequest {
 
 		p.requestVisible(true);
 				
-		Game.getInstance().setLevel(levelGen.getLevel(Game.getInstance().getCurrentLevelNumber()));
+		levelGen.loadLevel(Game.getInstance().getCurrentLevelNumber());
 		
 		loadModels();
 	}

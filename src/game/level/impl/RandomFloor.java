@@ -50,6 +50,25 @@ public class RandomFloor extends AbstractFloorPlanner{
 //			}
 		}
 		
+		for(int i=0; i<size/2; i++){
+			int x = (int) ((size-2)*rand.nextDouble()+1);
+			int z = (int) ((size-2)*rand.nextDouble()+1);
+			
+			if(floor[x][z].type==Space.WALL){
+				floor[x][z].type = Space.EMPTY;
+			}else{
+				i--;
+			}
+		}
+		
+		for(int u=-1; u<=1; u++){
+			for(int v=-1; v<=1; v++){
+				floor[2+u][2+v].type = Space.EMPTY;
+				floor[size-3+u][size-3+v].type = Space.EMPTY;
+			}
+		}
+		
+		
 		return floor;
 	}
 	
