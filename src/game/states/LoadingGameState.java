@@ -90,7 +90,8 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		scene.addDrawable(p);
 
 		p.requestVisible(true);
-				
+		
+		//load level here and let itself add to the game
 		levelGen.loadLevel(Game.getInstance().getCurrentLevelNumber());
 		
 		loadModels();

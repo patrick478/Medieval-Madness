@@ -9,6 +9,7 @@ import game.entity.moveable.PlayerEntity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.LevelFinishEvent;
+import game.item.Item;
 
 import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
@@ -21,30 +22,52 @@ import java.util.Map;
 public class Level {
 
 	private final Floor floor;
+	private final List<Entity> entitesToLoad = new ArrayList<Entity>();
+	private final List<Item> itemsToLoad = new ArrayList<Item>();
 	private final List<Entity> entities = new ArrayList<Entity>();
 	private final Map<Long, Entity> entityID = new HashMap<Long, Entity>();
 	
 	private final List<TriggerEntity> triggers = new ArrayList<TriggerEntity>();
 	
-	public Level(Floor _floor, List<Entity> _entities){
+	public Level(Floor _floor, List<Entity> _entities, List<Item> items){
 		Game.getInstance().setLevel(this);
 		floor = _floor;
-		if(Game.getInstance().isHost()){
-			for(Entity e : _entities){
-				Game.getInstance().addEntity(e);
-			}
-		}
 		for(Entity e : floor.getWalls()){
-			this.addEntity(e);
+			entitesToLoad.add(e);
+		}
+		for(Entity e : _entities){
+			entitesToLoad.add(e);
 		}
 		for(PlayerEntity p : Game.getInstance().getPlayers()){
-			this.addEntity(p);
+			entitesToLoad.add(p);
 		}
+		for(Item i : items){
+			itemsToLoad.add(i);
+		}
+		
+		//set up the end level scenario
 		this.addEntity(
 				new StaticTriggerEntity(Entity.freeID(), 
 				new LevelFinishEvent(), 
-				new BoundingSphere(Vec3.create(_floor.getSize()-1, 0, _floor.getSize()-1), 2))//TODO chnage radius maybe?
+				new BoundingSphere(Vec3.create(_floor.getSize()-2, 0, _floor.getSize()-2), 2))//TODO chnage radius maybe?
 		);
+	}
+	
+	/**
+	 * Adds all the entities into the game via the Game.getInstance().addEntity(...) Method
+	 */
+	public void init(Scene _scene){
+		floor.addToScene(_scene);
+		if(Game.getInstance().isHost()){
+			synchronized(entities){
+				for(Entity e : entitesToLoad){
+					Game.getInstance().addEntity(e);
+				}
+				for(Item i : itemsToLoad){
+					Game.getInstance().spawnItem(i);
+				}
+			}
+		}
 	}
 	
 	public Floor getFloor() {
@@ -81,20 +104,12 @@ public class Level {
 		return Vec3.zero;
 	}
 	
-	/**
-	 * Adds all the entities contained on this level to the given scene.
-	 * Does nothing if the Scene is null;
-	 * 
-	 * @param _scene The scene to add entities to
-	 */
-	public void addToScene(Scene _scene){
-		if(_scene == null)return;
-		floor.addToScene(_scene);
-	}
-	
 	
 	public void addEntity(Entity _entity){
 		synchronized(entities){
+			if(entityID.containsKey(_entity.id)){
+				return;
+			}
 			entities.add(_entity);
 			entityID.put(_entity.id, _entity);
 			if(_entity instanceof TriggerEntity){
