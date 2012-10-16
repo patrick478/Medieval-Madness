@@ -192,7 +192,7 @@ public class InventorySelector extends Container {
 		int y = 60;
 
 		g.drawImage(background, 0, 0, null);
-		g.drawString("Selected Position" + selectedPos, 20, 20);
+		//g.drawString("Selected Position" + selectedPos, 20, 20);
 		for(int i = 0; i<8; i++){
 			Item item = inventory.getItem(i);
 			if(item==null)
