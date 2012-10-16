@@ -280,6 +280,8 @@ public class PlayState extends GameState {
 		scene.setFogEnabled(true);
 
 		// SimpleAudioPlayer.play("resources/music/levelMusic.wav", true);
+		
+		Game.getInstance().startTimer();
 	}
 
 	@Override
@@ -399,7 +401,7 @@ public class PlayState extends GameState {
 		}
 
 		if (!Game.getInstance().getInvenPopUp().isVisible() && rwin.getMouseButton(1)
-				&& (System.currentTimeMillis() - lastShot) > 50) {
+				&& (System.currentTimeMillis() - lastShot) > 100) {
 			Game.getInstance().createProjectile();
 			this.lastShot = System.currentTimeMillis();
 			Game.getInstance().getPlayer().muzzleFlash(true);

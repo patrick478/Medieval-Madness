@@ -49,14 +49,15 @@ public class StatPane extends Pane {
 
 			long ms = Game.getInstance().getRemainingMs();
 			long hs = (ms % 1000l) / 10;
-			long s = ms / 1000;
+			long s = (ms / 1000) % 60;
+			long m = (ms / 60000);
 
 			if (ms < 10000) {
 				g.setColor(Color.RED);
 			} else {
 				g.setColor(Color.WHITE);
 			}
-			g.drawString(String.format("%d:%02d", s, hs), 5, 20);
+			g.drawString(String.format("%d:%02d:%02d", m, s, hs), 5, 20);
 
 		}
 
