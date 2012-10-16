@@ -42,19 +42,19 @@ public class CreateGameState extends GameState {
 	
 		Pane p = new Pane(800, 600);
 		try {
-			bg = ImageIO.read(new File("resources/tower.jpg"));	
+			bg = ImageIO.read(new File("resources/createpage.png"));	
 		} catch (IOException e) {
 			throw new AssertionError(e);
 		}
 		
 		numPlayersLabel = new Label("Max players: ");
-		numPlayersLabel.setPosition(20,  100);
+		numPlayersLabel.setPosition(340,  300);
 		numPlayers = new Input(30);
 		numPlayers.setNumericOnly(true);
-		numPlayers.setPosition(110, 100);
+		numPlayers.setPosition(430, 300);
 		
 		createGameButton = new Button("Create Game");
-		createGameButton.setPosition(300, 200);
+		createGameButton.setPosition(355, 340);
 		createGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
