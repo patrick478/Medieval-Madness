@@ -90,11 +90,6 @@ public class Level {
 	public void addToScene(Scene _scene){
 		if(_scene == null)return;
 		floor.addToScene(_scene);
-		synchronized(entities){
-			for(Entity e : entities){
-				e.addToScene(_scene);
-			}
-		}
 	}
 	
 	

@@ -219,11 +219,6 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	}
 
 	@Override
-	public void applyHealthDelta(int _damage) {
-		currentHealth += _damage;
-	}
-
-	@Override
 	public int getTotalHealth() {
 		return defaultHealth;
 	}
@@ -248,6 +243,11 @@ public class PlayerEntity extends MoveableEntity implements Damageable {
 	@Override
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
+		if(this.currentHealth <= 0)
+		{
+			Game.getInstance().removeEntity(this.id);
+			Game.getInstance().getLevel().getEntity(this.id).kill();
+		}
 	}
 
 	@Override

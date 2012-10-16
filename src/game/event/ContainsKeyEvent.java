@@ -3,15 +3,16 @@ package game.event;
 import game.entity.Entity;
 import game.entity.moveable.PlayerEntity;
 import game.item.Item;
+import game.item.Key;
 
 import java.util.List;
 
-public class ContainsItemEvent extends AbstractEvent{
+public class ContainsKeyEvent extends AbstractEvent{
 
-	private final Item keyItem;
+	private final Key keyItem;
 	
-	public ContainsItemEvent(Item _item){
-		keyItem = _item;
+	public ContainsKeyEvent(Key _key){
+		keyItem = _key;
 	}
 	
 	@Override

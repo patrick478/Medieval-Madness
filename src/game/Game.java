@@ -2,8 +2,10 @@ package game;
 
 import game.entity.Damageable;
 import game.entity.Entity;
+import game.entity.moveable.MoveableEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
+import game.entity.moveable.SpikeBallEntity;
 import game.item.Item;
 import game.level.Level;
 import game.net.NetworkingClient;
@@ -13,6 +15,7 @@ import game.net.packets.EnterPrePostPacket;
 import game.net.packets.EntityDestroyPacket;
 import game.net.packets.GiveItemPacket;
 import game.net.packets.ItemLifePacket;
+import game.net.packets.MoveMobPacket;
 import game.net.packets.MovementPacket;
 import game.net.packets.ProjectileLifePacket;
 import game.net.packets.SetReadyPacket;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import game.entity.*;
 
 /***
  * Main game class
@@ -72,6 +77,7 @@ public class Game implements Runnable {
 	private int playerIndex = -1;
 
 	private Level currentLevel = null;
+	private int currentLevelNumber = 1;
 	private boolean isPregameReady = false;
 
 	private long predictedLatency = 0;
@@ -398,7 +404,7 @@ public class Game implements Runnable {
 	}
 
 	public int getCurrentLevelNumber() {
-		return 10;
+		return this.currentLevelNumber;
 	}
 
 	public NetworkingHost getHost() {
@@ -532,6 +538,7 @@ public class Game implements Runnable {
 	
 	public void finishLevel()
 	{
+		this.currentLevelNumber++;
 		timeLeft = endGameTime - Game.time();
 		EnterPrePostPacket erp = new EnterPrePostPacket(this.startGameTime);
 		erp.setPre();
@@ -552,5 +559,28 @@ public class Game implements Runnable {
 
 	public long getRemainingMs() {
 		return this.endGameTime - Game.time();
+	}
+	
+	public void moveMob(long eid, Vec3 pos, Vec3 vel, Quat ori)
+	{
+		MoveableEntity me = (MoveableEntity)Game.getInstance().getLevel().getEntity(eid);
+		if(me == null) {
+			me = new SpikeBallEntity(eid, 100, -1, pos, 0.5);
+			me.addToLevel(Game.getInstance().getLevel());
+			me.addToScene(Game.getInstance().currentGameState.scene);
+			System.out.println("Creating dat mob");
+		}
+		if(this.isHost())
+		{
+			MoveMobPacket mmb = new MoveMobPacket();
+			mmb.eid = eid;
+			mmb.pos = pos;
+			mmb.vel = vel;
+			mmb.ori = ori;
+			this.getHost().notifyAllClients(mmb);
+			System.out.printf("Transmitting move of eid=%d\n", eid);
+		}
+		System.out.printf("Actually moving eid=%d\n", eid);
+		me.updateMotion(pos, vel, ori, Vec3.zero, Game.time());
 	}
 }

@@ -199,6 +199,13 @@ public class NetworkingClient extends NetworkMode implements Runnable {
 					System.out.printf("supposdly giving item %d to %d\n", gip.itemID, gip.eid);
 				}				
 				break;
+				
+			case MoveMobPacket.ID:
+				MoveMobPacket mmb = new MoveMobPacket();
+				mmb.fromData(dp);
+				if(!Game.getInstance().isHost())
+					Game.getInstance().moveMob(mmb.eid, mmb.pos, mmb.vel, mmb.ori);
+				break;
 		}
 	}
 

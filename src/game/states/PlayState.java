@@ -83,7 +83,15 @@ public class PlayState extends GameState {
 		rwin.setCursorVisible(false);
 		
 		if(Game.getInstance().isHost())
+		{
 			Game.getInstance().spawnItem(new Battery(Vec3.create(6, 0.125, 5)));
+			Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
+			door.addToLevel(Game.getInstance().getLevel());
+			
+			
+			Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
+			spike.addToLevel(Game.getInstance().getLevel());
+		}
 //
 //		System.out.println("Creating test object");
 //		Item it = new Item(Content.<BufferedImage> loadContent("resources/inventory/battery.png"), "Battery") {
@@ -198,12 +206,7 @@ public class PlayState extends GameState {
 //		// ie.addToScene(scene);
 
 		
-		Entity door = new DoorEntity(Entity.freeID(), Vec3.create(5, 0, 5));
-		door.addToLevel(Game.getInstance().getLevel());
-		
-		
-		Entity spike = new SpikeBallEntity(Entity.freeID(), 100, -1, Vec3.create(5, 0.5, 7), 0.5);
-		spike.addToLevel(Game.getInstance().getLevel());
+
 		
 		System.out.println("Added Test object to level");
 

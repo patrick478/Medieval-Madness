@@ -67,8 +67,6 @@ public class RandomFloor extends AbstractFloorPlanner{
 				floor[size-3+u][size-3+v].type = Space.EMPTY;
 			}
 		}
-		
-		
 		return floor;
 	}
 	

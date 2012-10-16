@@ -8,6 +8,7 @@ import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.DeltaHealthEvent;
 import game.event.PlayerOnlyEvent;
+import game.event.RemoveEntityEvent;
 import game.level.Level;
 import game.modelloader.Content;
 import initial3d.engine.Color;
@@ -54,17 +55,24 @@ public class SpikeBallEntity extends EnemyEntity{
 	@Override
 	public void poke(){
 		super.poke();
-		if(Game.time() > attachTime + updateTime){
-			attachTime = Game.time();
-			double distance = Double.MAX_VALUE;
-			Vec3 target = Vec3.zero;
-			for(PlayerEntity p : Game.getInstance().getPlayers()){
-				if(p.getPosition().sub(this.getPosition()).mag()<distance){
-					target = p.getPosition();
+		if(Game.getInstance().isHost())
+		{
+			Vec3 target = null;
+			if(Game.time() > attachTime + updateTime){
+				attachTime = Game.time();
+				double distance = Double.MAX_VALUE;
+				target = Vec3.zero;
+				for(PlayerEntity p : Game.getInstance().getPlayers()){
+					if(p.getPosition().sub(this.getPosition()).mag()<distance){
+						target = p.getPosition();
+						distance = p.getPosition().sub(this.getPosition()).mag();
+					}
 				}
+				//TODO network issues?
+				System.out.println(Game.time());
+				Game.getInstance().moveMob(this.id, getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation());
 			}
-			//TODO network issues?
-			this.updateMotion(getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation(), getAngVelocity(), attachTime);
+			
 		}
 	}
 	
@@ -72,17 +80,6 @@ public class SpikeBallEntity extends EnemyEntity{
 	public void addToLevel(Level _level){
 		_level.addEntity(this);
 		_level.addEntity(trigger);
-	}
-	
-	@Override
-	public void applyHealthDelta(int _deltaHealth) {
-		currentHealth += _deltaHealth;
-		System.out.println("spike health :: "+currentHealth);
-		if (currentHealth <=0 ){
-			System.out.println("removing spikeball???");
-			Game.getInstance().removeEntity(id);
-			Game.getInstance().removeEntity(trigger.id);
-		}
 	}
 
 	@Override
@@ -103,5 +100,8 @@ public class SpikeBallEntity extends EnemyEntity{
 	@Override
 	public void setCurrentHealth(int i) {
 		this.currentHealth = i;
+		if(i<=0){
+			Game.getInstance().removeEntity(id);
+		}
 	}
 }
