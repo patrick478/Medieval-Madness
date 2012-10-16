@@ -24,11 +24,12 @@ import game.Healthbar;
 import game.bound.BoundingSphere;
 import game.InventorySelector;
 import game.entity.Entity;
+import game.entity.moveable.DoorEntity;
 import game.entity.moveable.EnemyEntity;
 import game.entity.moveable.ItemEntity;
 import game.entity.moveable.PlayerEntity;
 import game.entity.moveable.ProjectileEntity;
-import game.entity.moveable.SpikeBall;
+import game.entity.moveable.SpikeBallEntity;
 import game.entity.trigger.DynamicTriggerEntity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
@@ -58,7 +59,7 @@ public class PlayState extends GameState {
 	private long lastShot = System.currentTimeMillis();
 
 	private int selectedInvenPos = 0;
-	private EquippedInventoryContainer i;
+	private EquippedInventoryContainer equippedIC;
 	private InventorySelector i2;
 
 	private Healthbar hp = null;
@@ -117,11 +118,20 @@ public class PlayState extends GameState {
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
 
+		
+		///temp TODO REMOVE
+		Entity i = new ItemEntity(Vec3.create(3, 0.25, 10), it);
+		mc = new MeshContext(m, mat, i);
+		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		i.addMeshContext(mc);
+		
+		
 		// doorbars
 		mat = new Material(Color.GRAY, new Color(0.3f, 0.3f, 0.3f), new Color(0.65f, 0.65f, 0.65f), Color.BLACK, 1f, 1f);
-		m = Content.loadContent("resources/models/doorbars/doorbars.obj");
+		m = Content.loadContent("resources/models/doorbars/doorbars2.obj");
 		mc = new MeshContext(m, mat, ie);
 		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+
 		//		ie.setPosition(Vec3.create(3, 0, 3));
 
 		// gunpart
@@ -133,11 +143,30 @@ public class PlayState extends GameState {
 
 
 
+		ie.setPosition(Vec3.create(3, 0, 3));
+		
+		// gunpart
+//		mat = new Material(new Color(0.2f, 0.2f, 0.6f), new Color(0.25f, 0.25f, 0.3f), new Color(0.12f, 0.22f, 0.69f), Color.BLACK, 1f, 1f);
+//		m = Content.loadContent("resources/models/gunpart/gunpart.obj");
+//		mc = new MeshContext(m, mat, ie);
+//		mc.setHint(MeshContext.HINT_SMOOTH_SHADING);
+//		mc.setScale(0.25);
+		
+		
+
 		ie.addMeshContext(mc);
 
 		ie.addToLevel(Game.getInstance().getLevel());
 		// ie.addToScene(scene);
 
+		
+		Entity door = new DoorEntity(Vec3.create(5, 0, 5));
+		door.addToLevel(Game.getInstance().getLevel());
+		
+		
+		Entity spike = new SpikeBallEntity(100, -1, Vec3.create(5, 0.5, 7), 0.5);
+		spike.addToLevel(Game.getInstance().getLevel());
+		
 		System.out.println("Added Test object to level");
 
 		// EnemyEntity e = new SpikeBall(100, -1, Vec3.create(3, 0.125, 3), Vec3.create(5, 0.125, 5), 0.15);
@@ -163,9 +192,8 @@ public class PlayState extends GameState {
 
 		// cameraRf.setOrientation(Quat.create(Math.PI / 3.6f, Vec3.i));
 		Pane p = new Pane(250, 50);
-		i = new
-				EquippedInventoryContainer(Game.getInstance().getPlayer());
-		p.getRoot().add(i);
+		equippedIC = new	EquippedInventoryContainer(Game.getInstance().getPlayer());
+		p.getRoot().add(equippedIC);
 
 		p.requestVisible(true);
 		p.setPosition(-275, -275);
@@ -174,7 +202,7 @@ public class PlayState extends GameState {
 		Game.getInstance().setInventoryHolder(p);
 
 		Game.getInstance().setInvenPopUp(new DialogPane(400, 200, p, false));
-		i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer(), i, selectedInvenPos);
+		i2 = new InventorySelector(400, 200, Game.getInstance().getPlayer(), equippedIC, selectedInvenPos);
 		Game.getInstance().getInvenPopUp().getRoot().add(i2);
 		i2.setOpaque(false);
 		//invenPopUp.requestVisible(false);
@@ -359,8 +387,8 @@ public class PlayState extends GameState {
 		player.setIntVelocity(intent_vel);
 
 		// get the collision normals (if any)
-		Vec3 colNorm = Game.getInstance().getLevel().preCollision(player, true);
-
+		Vec3 colNorm = Game.getInstance().getLevel().preCollisionNorm(player, true);
+		
 		// if there was a collision set the velocity appropriately
 		/*
 		 * if(colNorm != null){ //vector magic colNorm = colNorm.flattenY(); Vec3 intentUnit = intent_vel.unit(); double
