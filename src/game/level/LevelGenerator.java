@@ -1,9 +1,7 @@
 package game.level;
 
-import game.level.impl.DefualtLevel;
+import game.level.impl.ClosedEndLevel;
 import game.level.impl.EmptyLevel;
-
-import java.util.HashMap;
 
 public class LevelGenerator {
 
@@ -14,8 +12,9 @@ public class LevelGenerator {
 	public LevelGenerator(long _seed){
 		seed = _seed;
 		floorGen = new FloorGenerator(_seed);
-		levelPlan = new EmptyLevel(_seed);
+//		levelPlan = new EmptyLevel(_seed);
 //		levelPlan = new DefualtLevel(_seed);
+		levelPlan = new ClosedEndLevel(_seed);
 	}
 	
 	public void loadLevel(int _level){

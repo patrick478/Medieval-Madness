@@ -16,5 +16,5 @@ public abstract class AbstractLevelPlanner {
 		return this.seed;
 	}
 	
-	public abstract Level designLevel(Floor _floor);
+	public abstract void designLevel(Floor _floor);
 }

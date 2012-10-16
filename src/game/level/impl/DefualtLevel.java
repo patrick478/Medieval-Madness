@@ -21,7 +21,7 @@ public class DefualtLevel extends AbstractLevelPlanner{
 	}
 
 	@Override
-	public Level designLevel(Floor _floor) {
+	public void designLevel(Floor _floor) {
 		Random rand = new Random(_floor.getSize()*getSeed());
 		List<Spot> deadEnds = new ArrayList<Spot>();
 		List<Spot> corridors = new ArrayList<Spot>();
@@ -50,7 +50,6 @@ public class DefualtLevel extends AbstractLevelPlanner{
 //		entities.add(new DoorEntity(Vec3.create(doorSpot.x, 0, doorSpot.z)));
 		
 //		Level level = new Level();
-		return null;//TODO later
 	}
 	
 	private boolean keyReachable(Floor _floor, Spot keySpot, Spot doorSpot, Random rand){
