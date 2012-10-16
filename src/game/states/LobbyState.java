@@ -87,7 +87,6 @@ public class LobbyState extends GameState {
 		{
 			pane.getRoot().add(this.startButton);
 			pane.getRoot().repaint();
-			System.out.println("here");
 		}
 	}
 

@@ -118,8 +118,6 @@ public class LoadingGameState extends GameState implements ContentRequest {
 		{
 			Game.getInstance().changeState(new PlayState());
 		}
-//		else
-//			System.out.printf("Loading %.2f complete..\n", loadProgress);
 	}
 
 	@Override
