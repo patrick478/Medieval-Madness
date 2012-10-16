@@ -10,7 +10,13 @@ import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.LevelFinishEvent;
 import game.item.Item;
+import game.modelloader.Content;
 
+import initial3d.engine.Color;
+import initial3d.engine.Material;
+import initial3d.engine.Mesh;
+import initial3d.engine.MeshContext;
+import initial3d.engine.MovableReferenceFrame;
 import initial3d.engine.Scene;
 import initial3d.engine.Vec3;
 
@@ -49,7 +55,7 @@ public class Level {
 		this.addEntity(
 				new StaticTriggerEntity(Entity.freeID(), 
 				new LevelFinishEvent(), 
-				new BoundingSphere(Vec3.create(_floor.getSize()-2, 0, _floor.getSize()-2), 2))//TODO chnage radius maybe?
+				new BoundingSphere(Vec3.create(_floor.getSize()-2, 0, _floor.getSize()-2), 2))
 		);
 	}
 	
@@ -68,6 +74,16 @@ public class Level {
 				}
 			}
 		}
+		
+		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
+				new Color(0.2f, 0.2f, 0f), 2f, 1f);
+		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");
+		MovableReferenceFrame mrf = new MovableReferenceFrame(null);
+		mrf.setPosition(Vec3.create(3, 0, 3));
+		MeshContext mc1 = new MeshContext(m1, mat1, mrf);
+		// mc1.setScale(0.1);
+		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
+		_scene.addDrawable(mc1);
 	}
 	
 	public Floor getFloor() {

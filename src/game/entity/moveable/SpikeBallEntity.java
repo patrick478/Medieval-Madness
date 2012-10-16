@@ -71,10 +71,15 @@ public class SpikeBallEntity extends EnemyEntity{
 						distance = p.getPosition().sub(this.getPosition()).mag();
 					}
 				}
-				if(distance > sight){
-					target = origin;
+//				if(distance > sight){
+//					target = origin;
+//				}
+				Vec3 vel = target.sub(getPosition());
+				if(vel.mag()>0){
+					vel = vel.unit().scale(speed);
 				}
-				Game.getInstance().moveMob(this.id, getPosition(), target.sub(getPosition()).unit().scale(speed), getOrientation());
+				
+				Game.getInstance().moveMob(this.id, getPosition(), vel, getOrientation());
 			}
 			
 		}

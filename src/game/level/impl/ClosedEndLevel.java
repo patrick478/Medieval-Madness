@@ -27,7 +27,7 @@ public class ClosedEndLevel extends AbstractLevelPlanner{
 		Space[][] floor = _floor.getData();
 		int size = _floor.getSize();
 		Random rand = new Random(size *getSeed());
-		
+		//add in the doors around the end
 		for(int i=0; i<3; i++){
 			if(floor[size-4][size-4+i].type==Space.EMPTY){
 				doors.add(new DoorEntity(Entity.freeID(), Vec3.create(size-4, 0, size-4+i)));
@@ -40,10 +40,10 @@ public class ClosedEndLevel extends AbstractLevelPlanner{
 		List<Entity> entities = new ArrayList<Entity>(doors);
 		List<Item> items = new ArrayList<Item>();
 		
+		//generate and distrubute the keys fr those doors
 		for(DoorEntity d : doors){
 			int xPos = 1;
 			int zPos = 1;
-			
 			do{
 				xPos = (int) ((size-5)*rand.nextDouble()+2);
 				zPos = (int) ((size-5)*rand.nextDouble()+2);
@@ -51,11 +51,11 @@ public class ClosedEndLevel extends AbstractLevelPlanner{
 			Vec3 position = Vec3.create(xPos, 0.15, zPos);
 			items.add(d.generatekey(position));
 		}
-		System.out.println(size);
-		System.out.println((size-5)/3);
+		
+		//create spike ball entities
 		for(int i = 0; i<((size-5)/3); i++){
 			Vec3 pos = Vec3.create(((size-5)*rand.nextDouble()+5), 0.25, (size-5)*rand.nextDouble()+5);
-			entities.add(new SpikeBallEntity(Entity.freeID(), size*5, -size+8, pos, (double)size/50));
+			entities.add(new SpikeBallEntity(Entity.freeID(), size*5, -size+8, pos, size/(double)50));
 		}
 		
 		new Level(_floor, entities, items);

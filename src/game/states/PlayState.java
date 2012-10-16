@@ -70,17 +70,6 @@ public class PlayState extends GameState {
 		rwin.setCrosshairVisible(true);
 		rwin.setCursorVisible(false);
 
-
-//		Material mat1 = new Material(Color.GRAY, new Color(0.1f, 0.08f, 0.036f), new Color(0.91f, 0.82f, 0.54f),
-//				new Color(0.2f, 0.2f, 0f), 2f, 1f);
-//		Mesh m1 = Content.loadContent("resources/models/grail/grail.obj");
-//		MovableReferenceFrame mrf = new MovableReferenceFrame(null);
-//		mrf.setPosition(Vec3.create(3, 0, 3));
-//		MeshContext mc1 = new MeshContext(m1, mat1, mrf);
-//		// mc1.setScale(0.1);
-//		mc1.setHint(MeshContext.HINT_SMOOTH_SHADING);
-//		scene.addDrawable(mc1);
-
 		Game.getInstance().getLevel().init(scene);
 
 		cameraRf_3 = new MovableReferenceFrame(Game.getInstance().getPlayer());
