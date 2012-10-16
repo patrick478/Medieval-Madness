@@ -128,11 +128,11 @@ public class PlayState extends GameState {
 		scene.addDrawable(Game.getInstance().getInventoryHolder());
 
 		
-	/*	// stats
+		// stats
 		Pane statpane = new StatPane();
 		statpane.setPosition(-100, 240);
 		statpane.requestVisible(true);
-		scene.addDrawable(statpane);*/
+		scene.addDrawable(statpane);
 
 		// minimap
 		mappane = new MapPane();
