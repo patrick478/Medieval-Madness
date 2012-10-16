@@ -6,7 +6,7 @@ import game.entity.Entity;
 import game.entity.trigger.StaticTriggerEntity;
 import game.entity.trigger.TriggerEntity;
 import game.event.AbstractEvent;
-import game.event.ContainsItemEvent;
+import game.event.ContainsKeyEvent;
 import game.event.PlayerOnlyEvent;
 import game.event.RemoveEntityEvent;
 import game.item.Item;
@@ -56,13 +56,11 @@ public class DoorEntity extends MoveableEntity{
 		return new BoundingBox(position, radius);
 	}
 	
-//	public Item generatekey(){
-////		Item key = new Key(null, "A key that unlocks a door somewhere...");//TODO change later
-////		AbstractEvent ae = doorTrigger.getEvent();
-////		doorTrigger = new StaticTriggerEntity(new ContainsItemEvent(key), new BoundingBox(position, radius.scale(2)));
-////		doorTrigger.addEvent(ae);
-////		return key;
-//		
-//		// BEN ANDERSON COMMENTED THIS OUT - IT NEEDS REDOING
-//	}
+	public Item generatekey(Vec3 _pos){
+		Key key = new Key(_pos);
+		AbstractEvent ae = doorTrigger.getEvent();
+		doorTrigger = new StaticTriggerEntity(Entity.freeID(), new ContainsKeyEvent(key), new BoundingBox(position, radius.scale(2)));
+		doorTrigger.addEvent(ae);
+		return key;
+	}
 }

@@ -14,8 +14,8 @@ public class EmptyLevel extends AbstractLevelPlanner{
 	}
 
 	@Override
-	public Level designLevel(Floor _floor) {
-		return new Level(_floor, new ArrayList<Entity>());
+	public void designLevel(Floor _floor) {
+		new Level(_floor, new ArrayList<Entity>());
 	}
 
 }
