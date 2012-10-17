@@ -207,6 +207,12 @@ public class PlayState extends GameState {
 			}
 
 		}
+		if (rwin.pollKey(KeyEvent.VK_Q)) {
+			Game.getInstance().getPlayer().getInventory().removeItem(Game.getInstance().getPlayer().getInventory().getItem(selectedInvenPos));
+			Game.getInstance().getPlayer().getEquippedItems()[selectedInvenPos] = null;
+			equippedIC.repaint();
+			invenSelector.repaint();
+		}
 
 		if (rwin.pollKey(KeyEvent.VK_F1)) {
 			cam.trackReferenceFrame(cameraRf_1);
